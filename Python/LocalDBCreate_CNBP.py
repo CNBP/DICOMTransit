@@ -10,11 +10,11 @@ def LocalDBCreate_CNBP(Path):
     TableName = 'id_table'
 
     #Create the PRIMARY KEY column.
-    KeyField = 'DBKEY'
+    KeyField = 'MRN'
 
     #Create the variable array that store the columns information to be used later in loop for column creation
-    NewColumns = ['MRN', 'CNBPID', 'CNNID', 'CNFUNID', 'Hash1', 'Hash2', 'Hash3']
-    NewColumnsTypes = ['INTEGER', 'TEXT', 'INTEGER', 'INTEGER', 'TEXT', 'TEXT', 'TEXT']
+    NewColumns = ['CNBPID', 'CNNID', 'CNFUNID', 'Hash1', 'Hash2', 'Hash3']
+    NewColumnsTypes = ['TEXT', 'INTEGER', 'INTEGER', 'TEXT', 'TEXT', 'TEXT']
     NewColumnSpec = zip(NewColumns, NewColumnsTypes)
     NewColumnSpecList = list(NewColumnSpec)
 
