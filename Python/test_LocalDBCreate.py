@@ -13,7 +13,7 @@ def test_LocalDBCreate():
     # if SQL already exist, quit script.
     SQLPath = Path(PathString)
 
-    # check if path is a fiela nd exist.
+    # check if path is a fiel and exist.
     if SQLPath.is_file():
         logger.info('Test SQLite database file already exist. Gonna mess with it!')
         ''''Delete current database! During testing only'''
@@ -78,10 +78,10 @@ def test_LocalDBCreate_CNBP():
     fetchallResult = c.fetchall()
 
     # must pappend DBKEY creaed as the indexer column.
-    newColumns = ['DBKEY', 'MRN','CNBPID','CNNID','CNFUNID','Hash1','Hash2','Hash3']
-    newColumnsTypes = ['INTEGER', 'INTEGER', 'TEXT', 'INTEGER', 'INTEGER', 'TEXT', 'TEXT', 'TEXT']
+    newColumns = ['MRN','CNBPID','CNNID','CNFUNID','Hash1','Hash2','Hash3']
+    newColumnsTypes = ['INTEGER', 'TEXT', 'INTEGER', 'INTEGER', 'TEXT', 'TEXT', 'TEXT']
 
-    for index in range(0, 8):
+    for index in range(0, 7):
         print(fetchallResult[index][1])
         assert fetchallResult[index][1] == newColumns[index]
         print(fetchallResult[index][2])

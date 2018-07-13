@@ -3,23 +3,46 @@ import os
 import argparse
 import getpass
 import logging
+import sqlite3
+from pathlib import Path
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logger = logging.getLogger('upload_bom')
 
-if __name__ == '__main__':
+def CheckSubjectExist(DatabasePath, Table, ColumnName, ColumnValue):
+    logger = logging.getLogger('')
 
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('-u', '--user', dest='email', type=str, help='Username/Email used for login')
-    parser.add_argument('-p', '--production', dest='production', action='store_true', help='Example of boolean arg')
-    parser.add_argument('-o', '--option', dest='option', type=str, help='Example of str arg')
+    # if SQL already exist, quit script.
+    SQLPath = Path(DatabasePath)
 
-    parser.add_argument('file', metavar='file', type=str, help='Example of a positional argument')
+    # check if path is a fiel and exist.
+    if not SQLPath.is_file():
+        logger.info('SQLite database file does not exist!')
+        return False
 
-    args = parser.parse_args()
-    logger.info('--------------')
+    #Try to connect the database to start the process:
+    try:
+        # Create on Connecting to the database file
+        ConnectedDatabase = sqlite3.connect(DatabasePath)
+        c = ConnectedDatabase.cursor()
 
-    # Never ask for a password in command-line. Manually ask for it here
-    password = getpass.getpass()
+        logger.info('Creating PRIMARY KEY DBKEY column in database.')
 
-    logger.info('Hello World!')
+        # Creating a new SQLite table with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
+        c.execute('SELECT * FROM {tablename} WHERE {columnname}={columnvalue}'.format(tablename=Table, columnname=ColumnName, columnvalue=ColumnValue))
+
+        ResultRows = c.fetchall()
+    except:
+        raise IOError()
+
+    # Closing the connection to the database file
+    ConnectedDatabase.close()
+
+    if len(ResultRows) > 0:
+        return True
+    else:
+        return False
+
+#def CreateSubject(database, table, CNBPID)
+
+#if __name__ == '__main__':
+
