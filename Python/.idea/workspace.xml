@@ -11,7 +11,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Python$LocalDBCreate_CNBP.coverage" NAME="LocalDBCreate_CNBP Coverage Results" MODIFIED="1531496028001" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Python$test_LocalDBQuery.coverage" NAME="test_LocalDBQuery Coverage Results" MODIFIED="1531516360669" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Python$test_LocalDBQuery.coverage" NAME="test_LocalDBQuery Coverage Results" MODIFIED="1531567456118" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$test_LocalDBCreate.coverage" NAME="test_LocalDBCreate Coverage Results" MODIFIED="1531501190068" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$LORISQuery.coverage" NAME="LORISQuery Coverage Results" MODIFIED="1531514806799" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
@@ -30,7 +30,20 @@
     <select />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf>
+      <file leaf-file-name="test_LocalDBCreate.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test_LocalDBCreate.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="728">
+              <caret line="94" column="26" selection-start-line="94" selection-start-column="26" selection-end-line="94" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#64#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -59,9 +72,9 @@
         <option value="$PROJECT_DIR$/LORISAPI_Reference.php" />
         <option value="$PROJECT_DIR$/LORISQuery.py" />
         <option value="$PROJECT_DIR$/LocalDBCreate_CNBP.py" />
-        <option value="$PROJECT_DIR$/test_LocalDBCreate.py" />
-        <option value="$PROJECT_DIR$/test_LocalDBQuery.py" />
         <option value="$PROJECT_DIR$/LocalDBQuery.py" />
+        <option value="$PROJECT_DIR$/test_LocalDBQuery.py" />
+        <option value="$PROJECT_DIR$/test_LocalDBCreate.py" />
       </list>
     </option>
   </component>
@@ -85,6 +98,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -96,7 +110,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -234,24 +247,24 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="84" width="2576" height="1364" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49920508" weight="0.32917705" />
-      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5071542" side_tool="true" visible="true" weight="0.44804657" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5063593" side_tool="true" visible="true" weight="0.19783874" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.79769474" weight="0.32917705" />
+      <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.7972973" weight="0.32917705" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4972178" weight="0.3416459" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49483308" weight="0.19783874" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16852146" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4936407" visible="true" weight="0.19783874" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16971382" />
       <window_info anchor="right" id="R Packages" order="6" weight="0.3298887" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="R Graphics" order="4" weight="0.3298887" />
       <window_info anchor="right" id="Database" order="5" visible="true" weight="0.032591414" />
       <window_info anchor="right" id="SciView" order="3" weight="0.3298887" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Concurrent Activities Diagram" sideWeight="0.49880764" weight="0.32917705" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49284577" weight="0.44804657" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49244833" weight="0.44804657" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -259,6 +272,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info active="true" anchor="bottom" id="Find" order="1" sideWeight="0.49920508" visible="true" weight="0.32917705" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" sideWeight="0.49880764" weight="0.32917705" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -275,7 +289,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test_LocalDBCreate.py</url>
-          <line>77</line>
+          <line>80</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -290,7 +304,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test_LocalDBQuery.py</url>
-          <line>49</line>
+          <line>46</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>
@@ -605,31 +619,9 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cnn_redcap_update.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/LORISAPI_Reference.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="20" column="26" lean-forward="true" selection-start-line="20" selection-start-column="26" selection-end-line="20" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_LocalDBCreate.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="62" column="25" selection-start-line="62" selection-start-column="25" selection-end-line="62" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/LORISAPI_Reference.php" />
     <entry file="file://$PROJECT_DIR$/LocalDBCreate_CNBP.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
@@ -664,27 +656,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_LocalDBQuery.py">
+    <entry file="file://$PROJECT_DIR$/.env">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="43" column="12" lean-forward="true" selection-start-line="43" selection-start-column="11" selection-end-line="43" selection-end-column="12" />
+        <state relative-caret-position="48">
+          <caret line="3" column="29" lean-forward="true" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/LocalDBQuery.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="828">
-          <caret line="36" column="49" lean-forward="true" selection-start-line="36" selection-start-column="49" selection-end-line="36" selection-end-column="49" />
+        <state relative-caret-position="515">
+          <caret line="40" selection-start-line="40" selection-end-line="40" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.env">
+    <entry file="file://$PROJECT_DIR$/test_LocalDBQuery.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="3" column="29" lean-forward="true" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="29" />
+        <state relative-caret-position="800">
+          <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_LocalDBCreate.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="728">
+          <caret line="94" column="26" selection-start-line="94" selection-start-column="26" selection-end-line="94" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -28,7 +28,7 @@ def CheckSubjectExist(DatabasePath, Table, ColumnName, ColumnValue):
         logger.info('Creating PRIMARY KEY DBKEY column in database.')
 
         # Creating a new SQLite table with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-        c.execute('SELECT * FROM {tablename} WHERE {columnname}={columnvalue}'.format(tablename=Table, columnname=ColumnName, columnvalue=ColumnValue))
+        c.execute('SELECT * FROM {tablename} WHERE {columnname}="{columnvalue}"'.format(tablename=Table, columnname=ColumnName, columnvalue=ColumnValue))
 
         ResultRows = c.fetchall()
     except:
