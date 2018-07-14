@@ -51,6 +51,9 @@ def test_LocalDBCreate():
     ConnectedDatabase.commit()
     ConnectedDatabase.close()
 
+    # remove test database
+    os.remove(PathString)
+
     return True
 
 def test_LocalDBCreate_CNBP():
@@ -88,5 +91,8 @@ def test_LocalDBCreate_CNBP():
         assert fetchallResult[index][2] == newColumnsTypes[index]
     ConnectedDatabase.commit()
     ConnectedDatabase.close()
+
+    # remove test database
+    os.remove(PathString)
 
     return True
