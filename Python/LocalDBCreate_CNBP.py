@@ -6,7 +6,7 @@ from LocalDBCreate import LocalDBCreate
 
 def LocalDBCreate_CNBP(Path):
 
-    # name of the table to be created
+    # name of the TableName to be created
     TableName = 'id_table'
 
     #Create the PRIMARY KEY column.
