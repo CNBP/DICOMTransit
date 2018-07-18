@@ -1,4 +1,4 @@
-from LocalDBQuery import CheckSubjectExist, UpdateEntry, CreateEntry
+from LocalDBQuery import CheckValue, UpdateEntry, CreateEntry
 from LocalDBCreate_CNBP import LocalDBCreate_CNBP
 import sqlite3
 from pathlib import Path
@@ -90,8 +90,8 @@ def test_CheckSubjectExist():
     logger.info('Test SQLite database successfully inserted with mock records. Gonna mess with it!')
 
     # Create on Connecting to the database file
-    assert(CheckSubjectExist(PathString, tableName, "MRN", 291010))
-    assert(CheckSubjectExist(PathString, tableName, "CNBPID", "CNBP0010001"))
+    assert(CheckValue(PathString, tableName, "MRN", 291010))
+    assert(CheckValue(PathString, tableName, "CNBPID", "CNBP0010001"))
 
     # Remove test data base created
     os.remove(PathString)
@@ -126,11 +126,11 @@ def test_CreateSubjectCheckExist():
     CreateEntry(PathString, tableName, MRNColumn, 364573)
     CreateEntry(PathString, tableName, MRNColumn, 7424141)
 
-    assert not (CheckSubjectExist(PathString, tableName, MRNColumn, 7129112))
-    assert (CheckSubjectExist(PathString, tableName, MRNColumn, 2918210))
-    assert not (CheckSubjectExist(PathString, tableName, MRNColumn, 712921))
-    assert not (CheckSubjectExist(PathString, tableName, MRNColumn, 742))
-    assert (CheckSubjectExist(PathString, tableName, MRNColumn, 364573))
+    assert not (CheckValue(PathString, tableName, MRNColumn, 7129112))
+    assert (CheckValue(PathString, tableName, MRNColumn, 2918210))
+    assert not (CheckValue(PathString, tableName, MRNColumn, 712921))
+    assert not (CheckValue(PathString, tableName, MRNColumn, 742))
+    assert (CheckValue(PathString, tableName, MRNColumn, 364573))
 
     logger.info('Tested SQLIte database entry. ')
 
@@ -172,11 +172,11 @@ def test_SubjectUpdate():
     UpdateEntry(PathString, tableName, MRNColumn, 2918210, CNBPIDColumn, "CNBPID0010003")
     UpdateEntry(PathString, tableName, MRNColumn, 273411, CNBPIDColumn, "CNBPID0010004")
 
-    assert not (CheckSubjectExist(PathString, tableName, CNBPIDColumn, 'CNBPID0010006'))
-    assert (CheckSubjectExist(PathString, tableName, CNBPIDColumn, 'CNBPID0010001'))
-    assert not (CheckSubjectExist(PathString, tableName, CNBPIDColumn, 55555))
-    assert not (CheckSubjectExist(PathString, tableName, CNBPIDColumn, 742))
-    assert (CheckSubjectExist(PathString, tableName, CNBPIDColumn, 'CNBPID0010003'))
+    assert not (CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010006'))
+    assert (CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010001'))
+    assert not (CheckValue(PathString, tableName, CNBPIDColumn, 55555))
+    assert not (CheckValue(PathString, tableName, CNBPIDColumn, 742))
+    assert (CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010003'))
 
     logger.info('Tested SQLIte database entry. ')
 

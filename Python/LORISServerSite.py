@@ -8,21 +8,13 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 
-def DICOMMonitor():
-    '''
-    Monitor the DICOM folders of Orthanc output.
-    :
-    '''
-    logger = logging.getLogger('DICOMMonitor')
+def ServerResponse(InstitutionID, protocolName):
+    logger = logging.getLogger('LORISServerResponse')
 
-    default_locations = "example path"
-    default_monitoring_duration = 60 #seconds
-    default_DCMTK = "DCMTK path"
-    default_os = "ubuntu"
-
-    #Check for all the new batch if they contain any of the known existing DICOM string.
+    #Resolved protocolname to CNBPID pattern.
 
 
+    #if "protocol"
 
 
 
