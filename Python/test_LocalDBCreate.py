@@ -4,6 +4,7 @@ from pathlib import Path
 import logging
 import os
 import sys
+import LocalDB_schema
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -81,10 +82,9 @@ def test_LocalDBCreate_CNBP():
     fetchallResult = c.fetchall()
 
     # must pappend DBKEY creaed as the indexer column.
-    newColumns = ['MRN','CNBPID','CNNID','CNFUNID','Hash1','Hash2','Hash3']
-    newColumnsTypes = ['INTEGER', 'TEXT', 'INTEGER', 'INTEGER', 'TEXT', 'TEXT', 'TEXT']
+    newColumns, newColumnsTypes = LocalDB_schema.concatenatedSchema()
 
-    for index in range(0, 7):
+    for index in range(0, len(newColumns)):
         print(fetchallResult[index][1])
         assert fetchallResult[index][1] == newColumns[index]
         print(fetchallResult[index][2])
@@ -96,3 +96,6 @@ def test_LocalDBCreate_CNBP():
     os.remove(PathString)
 
     return True
+
+if __name__ == '__main__':
+    test_LocalDBCreate_CNBP()

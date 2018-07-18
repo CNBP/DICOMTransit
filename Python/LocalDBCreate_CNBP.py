@@ -2,19 +2,30 @@
 #Creation: 2018-07-11T160228EST
 #Author: Yang Ding
 
+import os
+from dotenv import load_dotenv
 from LocalDBCreate import LocalDBCreate
+import LocalDB_schema
 
 def LocalDBCreate_CNBP(Path):
 
     # name of the TableName to be created
-    TableName = 'id_table'
+
 
     #Create the PRIMARY KEY column.
-    KeyField = 'MRN'
 
-    #Create the variable array that store the columns information to be used later in loop for column creation
-    NewColumns = ['CNBPID', 'CNNID', 'CNFUNID', 'PSCID', 'DCCID', 'Timpoint', 'Hash1', 'Hash2', 'Hash3']
-    NewColumnsTypes = ['TEXT', 'INTEGER', 'INTEGER', 'TEXT', 'INTEGER', 'INTEGER', 'TEXT', 'TEXT', 'TEXT']
+
+    load_dotenv()
+
+    username = os.getenv("LORISusername")
+    password = os.getenv("LORISpassword")
+
+    # Create the variable array that store the columns information to be used later in loop for column creation
+    TableName = LocalDB_schema.CNBP_schema_table_name
+    KeyField = LocalDB_schema.CNBP_schema_keyfield
+    NewColumns = LocalDB_schema.CNBP_schema
+    NewColumnsTypes = LocalDB_schema.CNBP_schema_types
+
     NewColumnSpec = zip(NewColumns, NewColumnsTypes)
     NewColumnSpecList = list(NewColumnSpec)
 
