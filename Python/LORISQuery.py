@@ -13,17 +13,21 @@ logger = logging.getLogger('LORISQuery')
 
 
 def is_response_success(status_code):
+    """
+    A simple function to determine the success of the status code
+    :param status_code:
+    :return: boolean value
+    """
     if status_code == 200:
         return True
     else:
         return False
 
-
 def login():
-    '''
+    """
     Logs into LORIS using the stored credential.
     :return: BOOL if or not it is successful. also, the JSON token that is necessary to conduct further transactions.
-    '''
+    """
     logger = logging.getLogger('LORIS_login')
 
     #Load environmental variables.
@@ -36,18 +40,18 @@ def login():
     updatedurl = url+"login"
 
     r = requests.post(updatedurl, data={'username': username, 'password': password})
-    print(r.status_code, r.reason)
+    logger.info(r.status_code)
+    logger.info(r.reason)
 
     return is_response_success(r.status_code), r.json().get('token')
 
 
 def getCNBP(endpoint):
-    '''
+    """
     Get from a CNBP LORIS database endpoint
-    :param site:
-    :param study:
+    :param endpoint:
     :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
-    '''
+    """
     load_dotenv()
     url = os.getenv("LORISurl")
     updatedurl = url + endpoint
@@ -70,12 +74,12 @@ def getCNBP(endpoint):
 
 
 def postCNBP(endpoint, data):
-    '''
+    """
     post some data to a LORIS end point.
     :param endpoint:
     :param data:
     :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
-    '''
+    """
     load_dotenv()
     url = os.getenv("LORISurl")
     updatedurl = url + endpoint
