@@ -6,6 +6,7 @@ import os
 import sys
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 def test_LORIS_login():
     success, token = login()
     assert success
