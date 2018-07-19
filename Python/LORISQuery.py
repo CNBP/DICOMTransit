@@ -5,7 +5,9 @@ import argparse
 import getpass
 import logging
 import requests
-from requests.auth import HTTPBasicAuth
+import pycurl
+import certifi
+from io import BytesIO
 from dotenv import load_dotenv
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -23,9 +25,10 @@ def is_response_success(status_code):
     else:
         return False
 
+
 def login():
     """
-    Logs into LORIS using the stored credential.
+    Logs into LORIS using the stored credential. Must use PyCurl as Requests is not working.
     :return: BOOL if or not it is successful. also, the JSON token that is necessary to conduct further transactions.
     """
     logger = logging.getLogger('LORIS_login')
@@ -35,15 +38,35 @@ def login():
     username = os.getenv("LORISusername")
     password = os.getenv("LORISpassword")
 
+    data = json.dumps({"username":username, "password":password})
+
     #Login URL
     url = os.getenv("LORISurl")
-    updatedurl = url+"login"
+    updated_url = url + 'login'
 
-    r = requests.post(updatedurl, data={'username': username, 'password': password})
+    '''
+    # requests style login # NOT WORKING!
+    #r = requests.put(updated_url, data)
     logger.info(r.status_code)
-    logger.info(r.reason)
+    logger.info(r.reason)    
+    '''
+    data_out = BytesIO()
+    # pycurl style login
+    c = pycurl.Curl()
+    c.setopt(pycurl.URL, updated_url)
+    c.setopt(pycurl.POST, 1)
+    c.setopt(pycurl.POSTFIELDS, data)
+    c.setopt(pycurl.CAINFO, certifi.where())
+    c.setopt(pycurl.HTTPHEADER, ['X-Postmark-Server-Token: API_TOKEN_HERE', 'Accept: application/json'])
+    c.setopt(pycurl.WRITEFUNCTION, data_out.write)
+    c.perform()
 
-    return is_response_success(r.status_code), r.json().get('token')
+    logger.info(c.getinfo(pycurl.RESPONSE_CODE))
+    #logger.info(r.reason)
+
+    response_json = json.loads(data_out.getvalue())
+
+    return is_response_success(c.getinfo(pycurl.RESPONSE_CODE)), response_json.get('token')
 
 
 def getCNBP(endpoint):
@@ -85,6 +108,8 @@ def postCNBP(endpoint, data):
     updatedurl = url + endpoint
 
     response_success, token = login()
+    if not is_response_success(response_success):
+        return response_success, None
 
     HEADERS = {'Authorization': 'token {}'.format(token)}
 
@@ -94,6 +119,7 @@ def postCNBP(endpoint, data):
         print(r.status_code, r.reason)
         print(r.json())
         return is_response_success(r.status_code), r.json()
+
 
 def checkPSCIDExist(proposed_PSCID):
     '''
@@ -137,6 +163,7 @@ def checkPSCIDExist(proposed_PSCID):
 
     return False
 
+
 def checkDCCIDExist(proposed_DCCID):
     '''
     Check if Site/Study already contain the PSCID
@@ -164,6 +191,7 @@ def checkDCCIDExist(proposed_DCCID):
             return response_success, True
     return response_success, False
 
+
 def findlatestTimePoint(DCCID):
     load_dotenv()
     response_success, candidate_json = getCNBP(r"candidates/" + DCCID) #should exist as earlier check revealed.
@@ -173,6 +201,7 @@ def findlatestTimePoint(DCCID):
     if len(candidate_visits) > 0:
         return candidate_visits[len(candidate_visits)]
     return None
+
 
 def createCandidateCNBP(proposded_PSCID):
 
@@ -245,8 +274,8 @@ if($result && $result->Meta && $result->Meta->CandID){
 
 # Only executed when running directly.
 if __name__ == '__main__':
-    #login()
+    #print(login())
     #getCNBP("projects")
-    assert(checkPSCIDExist("CNBP0020002"))
+    #assert(checkPSCIDExist("CNBP0020002"))
     createCandidateCNBP("Test123")
-    print("Test complete")
+    #print("Test complete")
