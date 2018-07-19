@@ -22,8 +22,25 @@ def is_response_success(status_code):
     """
     if status_code == 200:
         return True
+    elif status_code ==201:
+        return True
     else:
         return False
+
+
+def check_json(data):
+    """
+    Check if the data input is JSON format compatible.
+    :param data:
+    :return:
+    """
+    try:
+        JSON = json.loads(data)
+        return True, JSON
+    except ValueError:
+        return False, None
+    except:
+        return False, None
 
 
 def login():
@@ -44,97 +61,79 @@ def login():
     url = os.getenv("LORISurl")
     updated_url = url + 'login'
 
-    '''
+
     # requests style login # NOT WORKING!
-    #r = requests.put(updated_url, data)
+    r = requests.post(updated_url, data=data)
     logger.info(r.status_code)
-    logger.info(r.reason)    
-    '''
-    data_out = BytesIO()
-    # pycurl style login
-    c = pycurl.Curl()
-    c.setopt(pycurl.URL, updated_url)
-    c.setopt(pycurl.POST, 1)
-    c.setopt(pycurl.POSTFIELDS, data)
-    c.setopt(pycurl.CAINFO, certifi.where())
-    c.setopt(pycurl.HTTPHEADER, ['X-Postmark-Server-Token: API_TOKEN_HERE', 'Accept: application/json'])
-    c.setopt(pycurl.WRITEFUNCTION, data_out.write)
-    c.perform()
+    logger.info(r.reason)
 
-    logger.info(c.getinfo(pycurl.RESPONSE_CODE))
-    #logger.info(r.reason)
+    response_json = r.json()
 
-    response_json = json.loads(data_out.getvalue())
-
-    return is_response_success(c.getinfo(pycurl.RESPONSE_CODE)), response_json.get('token')
+    return is_response_success(r.status_code), response_json.get('token')
 
 
-def getCNBP(endpoint):
+def getCNBP(token, endpoint):
     """
     Get from a CNBP LORIS database endpoint
     :param endpoint:
     :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
     """
+    logger = logging.getLogger('LORIS_get')
+    logger.info("Getting LORIS endpoing: "+endpoint)
     load_dotenv()
     url = os.getenv("LORISurl")
     updatedurl = url + endpoint
-
-    response_success, token = login()
-
-    # return early false if failed to login
-    if not response_success:
-        return response_success, None
 
     HEADERS = {'Authorization': 'token {}'.format(token)}
 
     with requests.Session() as s:
         s.headers.update(HEADERS)
         r = s.get(updatedurl)
-        print(r.status_code, r.reason)
-        print(r.json())
+        logger.info(r.status_code)
+        logger.info(r.reason)
 
         return is_response_success(r.status_code), r.json()
 
 
-def postCNBP(endpoint, data):
+def postCNBP(token, endpoint, data):
     """
     post some data to a LORIS end point.
     :param endpoint:
     :param data:
     :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
     """
+    logger = logging.getLogger('LORIS_post')
+    logger.info("Posting data to: "+endpoint)
+    logger.info("Data: "+data)
     load_dotenv()
     url = os.getenv("LORISurl")
     updatedurl = url + endpoint
-
-    response_success, token = login()
-    if not is_response_success(response_success):
-        return response_success, None
 
     HEADERS = {'Authorization': 'token {}'.format(token)}
 
     with requests.Session() as s:
         s.headers.update(HEADERS)
-        r = s.post(updatedurl, data)
-        print(r.status_code, r.reason)
-        print(r.json())
-        return is_response_success(r.status_code), r.json()
+        r = s.post(updatedurl, data=data)
+        logger.info(r.status_code)
+        logger.info(r.reason)
+        return is_response_success(r.status_code)
 
 
-def checkPSCIDExist(proposed_PSCID):
+def checkPSCIDExist(token, proposed_PSCID):
     '''
     Check if Site/Study already contain the PSCID
     :param site:
     :param study:
     :return: bool for connection, bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
     '''
-
+    logger = logging.getLogger('LORIS_checkPSCIDExist')
+    logger.info("Checking if PSCID exist: "+proposed_PSCID)
     load_dotenv()
     institution_check = os.getenv("institutionID")
 
 
     #Get list of projects
-    response_success, loris_project = getCNBP(r"projects/loris")
+    response_success, loris_project = getCNBP(token, r"projects/loris")
     if not response_success:
         return response_success, None
 
@@ -143,7 +142,7 @@ def checkPSCIDExist(proposed_PSCID):
     print(candidates)
 
     for DCCID in candidates: #these candidates should really be only from the same ID regions.
-        response_success, candidate_json = getCNBP(r"candidates/"+DCCID)
+        response_success, candidate_json = getCNBP(token, r"candidates/"+DCCID)
         if not response_success:
             return response_success, False
         # Each site following the naming convention should have SITE prefix and PI prefix and PROJECT prefix to avoid collision
@@ -164,19 +163,20 @@ def checkPSCIDExist(proposed_PSCID):
     return False
 
 
-def checkDCCIDExist(proposed_DCCID):
+def checkDCCIDExist(token, proposed_DCCID):
     '''
     Check if Site/Study already contain the PSCID
     :param site:
     :param study:
     :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
     '''
-
+    logger = logging.getLogger('LORIS_checkDCCIDExist')
+    logger.info("Checking if DCCID exist: "+proposed_DCCID)
     load_dotenv()
     institution_check = os.getenv("institutionID")
 
     #Get list of projects
-    response_success, loris_project = getCNBP(r"projects/loris")
+    response_success, loris_project = getCNBP(token, r"projects/loris")
     if not response_success:
         return response_success, None
 
@@ -193,10 +193,15 @@ def checkDCCIDExist(proposed_DCCID):
 
 
 def findlatestTimePoint(DCCID):
+    '''
+    Find and return the latest timepoint.
+    :param DCCID:
+    :return:
+    '''
     load_dotenv()
     response_success, candidate_json = getCNBP(r"candidates/" + DCCID) #should exist as earlier check revealed.
     if not response_success:
-        return None
+        return response_success, None
     candidate_visits = candidate_json.get("Visits")
     if len(candidate_visits) > 0:
         return candidate_visits[len(candidate_visits)]
@@ -204,24 +209,31 @@ def findlatestTimePoint(DCCID):
 
 
 def createCandidateCNBP(proposded_PSCID):
-
+    """
+    Create a candidate using the given PSCID
+    :param proposded_PSCID:
+    :return:
+    """
+    logger = logging.getLogger('LORIS_CreateCNBPCandidates')
+    logger.info("Creating CNBP Candidates")
+    logger.info(proposded_PSCID)
     PSCID_exist = checkPSCIDExist(proposded_PSCID)
-    if PSCID_exist: return False
+    if PSCID_exist:
+        return False
 
-    data = {}
-    data['Project']='loris'
-    data['DOB'] = '2018-05-04'
-    data['Gender'] = 'Female'
+    Candidate = {}
+    Candidate['Project']='loris'
+    Candidate['PSCID'] = proposded_PSCID
+    Candidate['DOB'] = '2018-05-04'
+    Candidate['Gender'] = 'Female'
+
+    data = {"Candidate":Candidate}
 
     data_json = json.dumps(data)
 
-    response_success, r = postCNBP("Candidates", data_json)
-    if not response_success:
-        return False
+    response_success, JSON = postCNBP("candidates", data_json)
 
-    print (r.text)
-
-    return True
+    return response_success
 
 def incrementTimepoint(DCCID):
     subject_exist = checkDCCIDExist(DCCID)
