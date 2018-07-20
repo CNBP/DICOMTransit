@@ -5,8 +5,6 @@ import argparse
 import getpass
 import logging
 import requests
-import pycurl
-import certifi
 from io import BytesIO
 from dotenv import load_dotenv
 
@@ -116,7 +114,7 @@ def postCNBP(token, endpoint, data):
         r = s.post(updatedurl, data=data)
         logger.info(r.status_code)
         logger.info(r.reason)
-        return is_response_success(r.status_code)
+        return r.status_code, r.json()
 
 
 def checkPSCIDExist(token, proposed_PSCID):
@@ -208,7 +206,7 @@ def findlatestTimePoint(DCCID):
     return None
 
 
-def createCandidateCNBP(proposded_PSCID):
+def createCandidateCNBP(token, proposded_PSCID):
     """
     Create a candidate using the given PSCID
     :param proposded_PSCID:
@@ -217,23 +215,26 @@ def createCandidateCNBP(proposded_PSCID):
     logger = logging.getLogger('LORIS_CreateCNBPCandidates')
     logger.info("Creating CNBP Candidates")
     logger.info(proposded_PSCID)
-    PSCID_exist = checkPSCIDExist(proposded_PSCID)
+    PSCID_exist = checkPSCIDExist(token, proposded_PSCID)
     if PSCID_exist:
         return False
 
     Candidate = {}
     Candidate['Project']='loris'
     Candidate['PSCID'] = proposded_PSCID
-    Candidate['DOB'] = '2018-05-04'
+    Candidate['DoB'] = '2018-05-04'
     Candidate['Gender'] = 'Female'
 
     data = {"Candidate":Candidate}
 
     data_json = json.dumps(data)
 
-    response_success, JSON = postCNBP("candidates", data_json)
+    response_code, JSON = postCNBP(token, "candidates", data_json)
 
-    return response_success
+    if (response_code != 201):
+        return False
+
+    return True
 
 def incrementTimepoint(DCCID):
     subject_exist = checkDCCIDExist(DCCID)
@@ -289,5 +290,6 @@ if __name__ == '__main__':
     #print(login())
     #getCNBP("projects")
     #assert(checkPSCIDExist("CNBP0020002"))
-    createCandidateCNBP("Test123")
+    Success, token = login()
+    createCandidateCNBP(token, "CNBP9998888")
     #print("Test complete")
