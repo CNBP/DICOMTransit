@@ -8,6 +8,7 @@ from pathlib import Path
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
+
 def CheckValue(database_path, table_name, ColumnName, ColumnValue):
     '''
     Check if a subject exist in the given database and given table
@@ -38,17 +39,18 @@ def CheckValue(database_path, table_name, ColumnName, ColumnValue):
         # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
         c.execute('SELECT * FROM {table_name} WHERE {columnname}="{columnvalue}"'.format(table_name=table_name, columnname=ColumnName, columnvalue=ColumnValue))
 
-        ResultRows = c.fetchall()
+        result_rows = c.fetchall()
+
     except:
         raise IOError()
 
     # Closing the connection to the database file
     ConnectedDatabase.close()
 
-    if len(ResultRows) > 0:
-        return True
+    if len(result_rows) > 0:
+        return True, result_rows
     else:
-        return False
+        return False, result_rows
 
 
 def CreateEntry(database_path, table_name, key_field, key_field_value):
