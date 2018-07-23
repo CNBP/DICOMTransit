@@ -10,12 +10,16 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/Python$DICOM.coverage" NAME="DICOM Coverage Results" MODIFIED="1532113994703" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Python$test.coverage" NAME="test Coverage Results" MODIFIED="1532293745792" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Python$LORIS_helper.coverage" NAME="LORIS_helper Coverage Results" MODIFIED="1532186772748" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$LocalDBCreate_CNBP.coverage" NAME="LocalDBCreate_CNBP Coverage Results" MODIFIED="1531937470498" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$test_LocalDBQuery.coverage" NAME="test_LocalDBQuery Coverage Results" MODIFIED="1531750130299" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$LocalDB_schema.coverage" NAME="LocalDB_schema Coverage Results" MODIFIED="1531937118513" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$test_LocalDBCreate.coverage" NAME="test_LocalDBCreate Coverage Results" MODIFIED="1531937653878" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Python$test_DICOM.coverage" NAME="test_DICOM Coverage Results" MODIFIED="1532102283205" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$test_LORIS_Query.coverage" NAME="test_LORIS_Query Coverage Results" MODIFIED="1531940245103" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Python$LORISQuery.coverage" NAME="LORISQuery Coverage Results" MODIFIED="1532027899193" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Python$LORISQuery.coverage" NAME="LORISQuery Coverage Results" MODIFIED="1532189290842" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -32,32 +36,105 @@
     <select />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="DICOM.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/DICOM.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="18" column="7" lean-forward="true" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Scheduler.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Scheduler.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-line="6" selection-end-column="58" />
-              <folding>
-                <element signature="e#0#10#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.490991">
+      <split-first>
+        <leaf>
+          <file leaf-file-name="LORISQuery.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/LORISQuery.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1123">
+                  <caret line="151" selection-start-line="151" selection-end-line="151" />
+                  <folding>
+                    <element signature="e#0#10#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="LORIS_helper.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/LORIS_helper.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="64">
+                  <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="LORIS_timepoint.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/LORIS_timepoint.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="360">
+                  <caret line="105" column="27" lean-forward="true" selection-start-line="105" selection-start-column="27" selection-end-line="105" selection-end-column="27" />
+                  <folding>
+                    <element signature="e#349#629#0" />
+                    <element signature="e#675#1212#0" />
+                    <element signature="e#675#759#1" />
+                    <element signature="e#1256#2400#0" />
+                    <element signature="e#1256#1577#1" />
+                    <element signature="e#1582#1694#0" />
+                    <element signature="e#2064#2363#0" />
+                    <element signature="e#2454#2939#0" />
+                    <element signature="e#2454#2620#1" />
+                    <element signature="e#3012#3309#0" />
+                    <element signature="e#3012#3027#0" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="LORIS_candidates.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/LORIS_candidates.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state>
+                  <caret column="10" selection-start-column="10" selection-end-column="10" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="test_LocalDBQuery.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/test_LocalDBQuery.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="755">
+                  <caret line="206" column="24" lean-forward="true" selection-start-line="206" selection-start-column="24" selection-end-line="206" selection-end-column="24" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name=".env" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/.env">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="112">
+                  <caret line="7" column="16" selection-start-line="7" selection-end-line="7" selection-end-column="16" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="LocalDBQuery.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/LocalDBQuery.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-273">
+                  <caret line="41" column="19" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
+                  <folding>
+                    <element signature="e#240#650#1" />
+                    <element signature="e#0#63#1" />
+                    <element signature="e#1851#3306#0" />
+                    <element signature="e#1851#2302#1" />
+                    <element signature="e#2518#2590#0" />
+                    <element signature="e#2665#3142#0" />
+                    <element signature="e#3405#3706#1" />
+                    <element signature="e#3923#3995#0" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -74,6 +151,9 @@
       <find>conn</find>
       <find>Table</find>
       <find>logger.inf</find>
+      <find>json.dump</find>
+      <find>len(</find>
+      <find>str(len(</find>
     </findStrings>
     <replaceStrings>
       <replace>PathString</replace>
@@ -83,6 +163,8 @@
       <replace>ConnectedDatabase</replace>
       <replace>TableName</replace>
       <replace>response_success</replace>
+      <replace>str(len(</replace>
+      <replace>len(str(</replace>
     </replaceStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -91,18 +173,23 @@
         <option value="$PROJECT_DIR$/UT_LocalDBCreate.py" />
         <option value="$PROJECT_DIR$/LORISAPI_Reference.php" />
         <option value="$PROJECT_DIR$/LocalDBCreate.py" />
-        <option value="$PROJECT_DIR$/test_LocalDBQuery.py" />
-        <option value="$PROJECT_DIR$/LocalDBQuery.py" />
         <option value="$PROJECT_DIR$/Scheduler.py" />
         <option value="$PROJECT_DIR$/LORISServerSite.py" />
         <option value="$PROJECT_DIR$/venv/test_LORIS_Query.py" />
         <option value="$PROJECT_DIR$/LocalDB_schema.py" />
         <option value="$PROJECT_DIR$/LocalDBCreate_CNBP.py" />
         <option value="$PROJECT_DIR$/test_LocalDBCreate.py" />
-        <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/test_LORIS_Query.py" />
-        <option value="$PROJECT_DIR$/LORISQuery.py" />
+        <option value="$PROJECT_DIR$/test_DICOM.py" />
         <option value="$PROJECT_DIR$/DICOM.py" />
+        <option value="$PROJECT_DIR$/.env" />
+        <option value="$PROJECT_DIR$/LORIS_candidates.py" />
+        <option value="$PROJECT_DIR$/LORIS_helper.py" />
+        <option value="$PROJECT_DIR$/LORISQuery.py" />
+        <option value="$PROJECT_DIR$/test.py" />
+        <option value="$PROJECT_DIR$/LORIS_timepoint.py" />
+        <option value="$PROJECT_DIR$/LocalDBQuery.py" />
+        <option value="$PROJECT_DIR$/test_LocalDBQuery.py" />
       </list>
     </option>
   </component>
@@ -131,7 +218,7 @@
         <subPane>
           <expand>
             <path>
-              <item name="Python" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DICOMTransit" type="b2602c69:ProjectViewProjectNode" />
               <item name="Python" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -146,9 +233,12 @@
     <property name="com.intellij.database.dataSource.DataSourceTemplate" value="Sqlite (Xerial)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\GitHub\DICOMTransit\Python" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\GitHub\DICOMTransit\Python" />
     </key>
@@ -165,9 +255,28 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.LORISQuery">
+  <component name="RunManager" selected="Python.test">
+    <configuration name="DICOM" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="DICOMTransit" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DICOM.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <configuration name="LORISQuery" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Python" />
+      <module name="DICOMTransit" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -185,8 +294,8 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="LocalDBCreate_CNBP" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Python" />
+    <configuration name="LORIS_helper" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="DICOMTransit" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -198,14 +307,14 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/LocalDBCreate_CNBP.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/LORIS_helper.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="LocalDB_schema" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Python" />
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="DICOMTransit" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -217,14 +326,14 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/LocalDB_schema.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="test_LORIS_Query" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Python" />
+    <configuration name="test_DICOM" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="DICOMTransit" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -236,45 +345,26 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_LORIS_Query.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="test_LocalDBCreate" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="Python" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_LocalDBCreate.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_DICOM.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
     <list>
-      <item itemvalue="Python.LocalDBCreate_CNBP" />
-      <item itemvalue="Python.test_LocalDBCreate" />
       <item itemvalue="Python.LORISQuery" />
-      <item itemvalue="Python.LocalDB_schema" />
-      <item itemvalue="Python.test_LORIS_Query" />
+      <item itemvalue="Python.test_DICOM" />
+      <item itemvalue="Python.DICOM" />
+      <item itemvalue="Python.LORIS_helper" />
+      <item itemvalue="Python.test" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test" />
         <item itemvalue="Python.LORISQuery" />
-        <item itemvalue="Python.test_LORIS_Query" />
-        <item itemvalue="Python.test_LocalDBCreate" />
-        <item itemvalue="Python.LocalDBCreate_CNBP" />
-        <item itemvalue="Python.LocalDB_schema" />
+        <item itemvalue="Python.LORIS_helper" />
+        <item itemvalue="Python.DICOM" />
+        <item itemvalue="Python.test_DICOM" />
       </list>
     </recent_temporary>
   </component>
@@ -305,17 +395,18 @@
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49736148" weight="0.32914573" />
-      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.51510334" side_tool="true" visible="true" weight="0.29758936" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5155008" side_tool="true" weight="0.29758936" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.78895074" weight="0.27514547" />
+      <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.78855324" weight="0.27514547" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49562797" weight="0.3416459" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.48489666" visible="true" weight="0.29758936" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.10969793" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.48449922" visible="true" weight="0.29758936" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.08465819" />
       <window_info anchor="right" id="R Packages" order="6" weight="0.3298887" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="R Graphics" order="4" weight="0.3298887" />
-      <window_info anchor="right" id="Database" order="5" visible="true" weight="0.032591414" />
+      <window_info anchor="right" id="Database" order="5" visible="true" weight="0.032988872" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49841017" weight="0.32917705" />
       <window_info anchor="right" id="SciView" order="3" weight="0.3298887" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -326,9 +417,34 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49841017" weight="0.32917705" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" sideWeight="0.49880764" weight="0.32917705" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.08346582" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" weight="0.3298887" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="R Graphics" order="4" weight="0.3298887" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49736148" weight="0.32914573" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49562797" weight="0.3416459" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49841017" weight="0.32917705" />
+      <window_info anchor="right" id="R Packages" order="6" weight="0.3298887" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.8887122" weight="0.3059019" />
+      <window_info anchor="right" id="Database" order="5" visible="true" weight="0.032591414" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.48449922" weight="0.29758936" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5155008" side_tool="true" weight="0.29758936" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" sideWeight="0.49880764" weight="0.32917705" />
+      <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.78855324" weight="0.27514547" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -349,7 +465,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/LocalDBQuery.py</url>
-          <line>38</line>
+          <line>39</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -359,18 +475,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test_LocalDBQuery.py</url>
-          <line>169</line>
+          <line>178</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test_LocalDBQuery.py</url>
-          <line>188</line>
+          <line>206</line>
           <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/LORISQuery.py</url>
-          <line>229</line>
-          <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://C:/ProgramData/Anaconda3/Lib/codecs.py</url>
@@ -379,8 +490,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test_LocalDBQuery.py</url>
-          <line>132</line>
+          <line>141</line>
           <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_DICOM.py</url>
+          <line>12</line>
+          <option name="timeStamp" value="61" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/DICOM.py</url>
+          <line>20</line>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test.py</url>
+          <line>7</line>
+          <option name="timeStamp" value="76" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -390,61 +516,10 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="61" />
+      <option name="time" value="77" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/LocalDBCreate.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="784">
-          <caret line="55" column="16" selection-start-line="55" selection-start-column="16" selection-end-line="55" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26608">
-          <caret line="1663" selection-start-line="1663" selection-end-line="1663" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LORISQuery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="9" selection-start-line="9" selection-end-line="9" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LocalDBQuery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="7" column="40" selection-start-line="7" selection-start-column="40" selection-end-line="7" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <element signature="e#240#1772#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_LocalDBCreate.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="35" column="44" selection-start-line="35" selection-start-column="44" selection-end-line="35" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#64#0" expanded="true" />
-            <element signature="e#232#2072#0" />
-            <element signature="e#2109#3675#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LocalDBCreate_CNBP.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="320">
@@ -485,8 +560,14 @@
         <state relative-caret-position="48">
           <caret line="7" column="40" selection-start-line="7" selection-start-column="40" selection-end-line="7" selection-end-column="40" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <element signature="e#240#1772#0" />
+            <element signature="e#240#650#1" />
+            <element signature="e#0#63#1" />
+            <element signature="e#1851#3306#0" />
+            <element signature="e#1851#2302#1" />
+            <element signature="e#2518#2590#0" />
+            <element signature="e#2665#3142#0" />
+            <element signature="e#3405#3706#1" />
+            <element signature="e#3923#3995#0" />
           </folding>
         </state>
       </provider>
@@ -530,8 +611,14 @@
         <state>
           <caret selection-end-line="7" selection-end-column="40" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <element signature="e#240#1772#0" />
+            <element signature="e#240#650#1" />
+            <element signature="e#0#63#1" />
+            <element signature="e#1851#3306#0" />
+            <element signature="e#1851#2302#1" />
+            <element signature="e#2518#2590#0" />
+            <element signature="e#2665#3142#0" />
+            <element signature="e#3405#3706#1" />
+            <element signature="e#3923#3995#0" />
           </folding>
         </state>
       </provider>
@@ -554,8 +641,14 @@
         <state relative-caret-position="48">
           <caret line="7" column="39" selection-start-line="7" selection-start-column="39" selection-end-line="7" selection-end-column="39" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <element signature="e#240#1772#0" />
+            <element signature="e#240#650#1" />
+            <element signature="e#0#63#1" />
+            <element signature="e#1851#3306#0" />
+            <element signature="e#1851#2302#1" />
+            <element signature="e#2518#2590#0" />
+            <element signature="e#2665#3142#0" />
+            <element signature="e#3405#3706#1" />
+            <element signature="e#3923#3995#0" />
           </folding>
         </state>
       </provider>
@@ -578,8 +671,14 @@
         <state relative-caret-position="48">
           <caret line="7" column="39" selection-start-line="7" selection-start-column="39" selection-end-line="7" selection-end-column="39" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <element signature="e#240#1772#0" />
+            <element signature="e#240#650#1" />
+            <element signature="e#0#63#1" />
+            <element signature="e#1851#3306#0" />
+            <element signature="e#1851#2302#1" />
+            <element signature="e#2518#2590#0" />
+            <element signature="e#2665#3142#0" />
+            <element signature="e#3405#3706#1" />
+            <element signature="e#3923#3995#0" />
           </folding>
         </state>
       </provider>
@@ -648,17 +747,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LocalDBQuery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="10" column="67" selection-start-line="10" selection-start-column="67" selection-end-line="10" selection-end-column="67" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <element signature="e#240#1772#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LocalDBCreate_CNBP.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="560">
@@ -706,64 +794,136 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.env">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="40" selection-start-column="40" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_LocalDBQuery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="134" column="46" lean-forward="true" selection-start-line="134" selection-start-column="46" selection-end-line="134" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/ProgramData/Anaconda3/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="310" selection-start-line="310" selection-end-line="310" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LORISQuery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="245" column="3" lean-forward="true" selection-start-line="245" selection-start-column="3" selection-end-line="245" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test_LORIS_Query.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="464">
           <caret line="29" column="68" selection-start-line="29" selection-start-column="68" selection-end-line="29" selection-end-column="68" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Scheduler.py">
+    <entry file="file://$PROJECT_DIR$/test_DICOM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="6" selection-end-column="58" />
+        <state relative-caret-position="336">
+          <caret line="21" column="15" selection-start-line="21" selection-start-column="15" selection-end-line="21" selection-end-column="15" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/DICOM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="18" column="7" lean-forward="true" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
+        <state relative-caret-position="563">
+          <caret line="145" column="43" selection-start-line="145" selection-start-column="43" selection-end-line="145" selection-end-column="43" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Scheduler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="10" column="19" lean-forward="true" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/ProgramData/Anaconda3/Lib/re.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="221" selection-start-line="221" selection-end-line="221" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/ProgramData/Anaconda3/Lib/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="310" selection-start-line="310" selection-end-line="310" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.env">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="7" column="16" selection-start-line="7" selection-end-line="7" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LORIS_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LORIS_candidates.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="10" selection-start-column="10" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LORISQuery.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1123">
+          <caret line="151" selection-start-line="151" selection-end-line="151" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LORIS_timepoint.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="105" column="27" lean-forward="true" selection-start-line="105" selection-start-column="27" selection-end-line="105" selection-end-column="27" />
+          <folding>
+            <element signature="e#349#629#0" />
+            <element signature="e#675#1212#0" />
+            <element signature="e#675#759#1" />
+            <element signature="e#1256#2400#0" />
+            <element signature="e#1256#1577#1" />
+            <element signature="e#1582#1694#0" />
+            <element signature="e#2064#2363#0" />
+            <element signature="e#2454#2939#0" />
+            <element signature="e#2454#2620#1" />
+            <element signature="e#3012#3309#0" />
+            <element signature="e#3012#3027#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LocalDBQuery.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-273">
+          <caret line="41" column="19" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
+          <folding>
+            <element signature="e#240#650#1" />
+            <element signature="e#0#63#1" />
+            <element signature="e#1851#3306#0" />
+            <element signature="e#1851#2302#1" />
+            <element signature="e#2518#2590#0" />
+            <element signature="e#2665#3142#0" />
+            <element signature="e#3405#3706#1" />
+            <element signature="e#3923#3995#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_LocalDBQuery.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="755">
+          <caret line="206" column="24" lean-forward="true" selection-start-line="206" selection-start-column="24" selection-end-line="206" selection-end-column="24" />
         </state>
       </provider>
     </entry>

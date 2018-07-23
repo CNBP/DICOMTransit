@@ -126,11 +126,20 @@ def test_CreateSubjectCheckExist():
     CreateEntry(PathString, tableName, MRNColumn, 364573)
     CreateEntry(PathString, tableName, MRNColumn, 7424141)
 
-    assert not (CheckValue(PathString, tableName, MRNColumn, 7129112))
-    assert (CheckValue(PathString, tableName, MRNColumn, 2918210))
-    assert not (CheckValue(PathString, tableName, MRNColumn, 712921))
-    assert not (CheckValue(PathString, tableName, MRNColumn, 742))
-    assert (CheckValue(PathString, tableName, MRNColumn, 364573))
+    success, _ = CheckValue(PathString, tableName, MRNColumn, 7129112)
+    assert not success
+
+    success, _ = CheckValue(PathString, tableName, MRNColumn, 2918210)
+    assert success
+
+    success, _ = CheckValue(PathString, tableName, MRNColumn, 712921)
+    assert not success
+
+    success, _ = CheckValue(PathString, tableName, MRNColumn, 742)
+    assert not success
+
+    success, _ = CheckValue(PathString, tableName, MRNColumn, 364573)
+    assert success
 
     logger.info('Tested SQLIte database entry. ')
 
@@ -172,11 +181,20 @@ def test_SubjectUpdate():
     UpdateEntry(PathString, tableName, MRNColumn, 2918210, CNBPIDColumn, "CNBPID0010003")
     UpdateEntry(PathString, tableName, MRNColumn, 273411, CNBPIDColumn, "CNBPID0010004")
 
-    assert not (CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010006'))
-    assert (CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010001'))
-    assert not (CheckValue(PathString, tableName, CNBPIDColumn, 55555))
-    assert not (CheckValue(PathString, tableName, CNBPIDColumn, 742))
-    assert (CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010003'))
+    success, _ = CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010006')
+    assert not success
+
+    success, _ = CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010001')
+    assert success
+
+    success, _ = CheckValue(PathString, tableName, CNBPIDColumn, 55555)
+    assert not success
+
+    success, _ = CheckValue(PathString, tableName, CNBPIDColumn, 742)
+    assert not success
+
+    success, _ = CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010003')
+    assert success
 
     logger.info('Tested SQLIte database entry. ')
 
