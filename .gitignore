@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+*.sqlite
+Python/0000000A
+Python/0000000B
+Python/0000000C
+Python/0000000D
+Python/0000000E
