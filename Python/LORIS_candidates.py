@@ -84,7 +84,7 @@ def checkPSCIDExist(token, proposed_PSCID):
 
     #Get list of candidates (Candidates in v0.0.1)
     candidates = loris_project.get("Candidates")
-    print(candidates)
+    logger.info(candidates)
 
     for DCCID in candidates: #these candidates should really be only from the same ID regions.
         response_success, candidate_json = getCNBP(token, r"candidates/"+DCCID)
