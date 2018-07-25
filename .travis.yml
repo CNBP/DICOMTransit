@@ -9,5 +9,5 @@ script:
   - pytest
   # - nosetests --with-coverage
 after_success:
-  - coverage run Python\Coverage\coverage_setup.py
+  - coverage run ./Python/Coverage/coverage_setup.py
   - coveralls
