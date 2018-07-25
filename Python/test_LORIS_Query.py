@@ -41,3 +41,6 @@ def test_checkDCCIDExist():
     response_success, exist = checkDCCIDExist(token, 272264)
     assert response_success
     assert exist
+
+if __name__ == '__main__':
+    test_checkPSCIDExist()
