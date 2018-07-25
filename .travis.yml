@@ -9,5 +9,8 @@ script:
   - pytest
   # - nosetests --with-coverage
 after_success:
-  - coverage run ./Python/Coverage/coverage_setup.py
-  - coveralls
+  - coverage run ./Python/Coverage/coverage_setup.py  
+  - coverage report -m
+  - coveralls --rcfile=./Python/.coveragerc
+ notifications:
+    slack: neonatalbrainplatform:vaySGjAHlfWEsyJEiyR0fbhq
