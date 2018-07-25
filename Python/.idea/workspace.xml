@@ -44,7 +44,7 @@
       <file leaf-file-name="LocalDB_query.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/LocalDB_query.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="262">
+            <state relative-caret-position="2064">
               <caret line="136" column="4" selection-start-line="136" selection-start-column="4" selection-end-line="136" selection-end-column="4" />
             </state>
           </provider>
@@ -53,7 +53,7 @@
       <file leaf-file-name="LORIS_query.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/LORIS_query.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
+            <state relative-caret-position="192">
               <caret line="41" column="12" selection-start-line="41" selection-start-column="12" selection-end-line="41" selection-end-column="12" />
               <folding>
                 <element signature="e#312#528#0" />
@@ -61,28 +61,16 @@
                 <element signature="e#558#810#0" />
                 <element signature="e#558#654#1" />
                 <element signature="e#672#721#0" />
-                <element signature="e#830#1640#0" />
                 <element signature="e#830#1052#1" />
-                <element signature="e#1718#2326#0" />
-                <element signature="e#1677#1843#1" />
-                <element signature="e#2193#2353#0" />
-                <element signature="e#2355#3124#0" />
-                <element signature="e#2355#2547#1" />
-                <element signature="e#2959#3124#0" />
-                <element signature="e#3166#3933#0" />
-                <element signature="e#3166#3357#1" />
-                <element signature="e#3769#3933#0" />
-                <element signature="e#4007#4104#0" />
-                <element signature="e#4007#4022#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_LORIS_Query.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test_LORIS_Query.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_LORIS_Query.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
+            <state relative-caret-position="368">
               <caret line="23" column="35" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
@@ -91,11 +79,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="codecs.py" pinned="false" current-in-tab="false">
-        <entry file="file://C:/ProgramData/Anaconda3/Lib/codecs.py">
+      <file leaf-file-name=".env" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.env">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="310" selection-start-line="310" selection-end-line="310" />
+            <state relative-caret-position="32">
+              <caret line="2" selection-start-line="2" selection-end-line="2" />
             </state>
           </provider>
         </entry>
@@ -104,7 +92,7 @@
         <entry file="file://$PROJECT_DIR$/LocalDB_schema.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="272">
-              <caret line="17" column="47" lean-forward="true" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
+              <caret line="17" column="47" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -112,7 +100,7 @@
       <file leaf-file-name="Intermediate_LORIS_LocalDB.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Intermediate_LORIS_LocalDB.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="507">
+            <state relative-caret-position="1024">
               <caret line="64" selection-start-line="64" selection-end-line="64" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
@@ -124,11 +112,8 @@
       <file leaf-file-name="test_Intermediate_Server.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_Intermediate_Server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="700">
+            <state relative-caret-position="496">
               <caret line="35" column="18" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="18" />
-              <folding>
-                <element signature="e#1#30#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -160,7 +145,7 @@
       <file leaf-file-name="LocalDB_create.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/LocalDB_create.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="403">
+            <state relative-caret-position="944">
               <caret line="59" selection-start-line="59" selection-end-line="59" />
               <folding>
                 <element signature="e#116#126#0" expanded="true" />
@@ -228,7 +213,6 @@
         <option value="$PROJECT_DIR$/test_LocalDBQuery.py" />
         <option value="$PROJECT_DIR$/test_DICOM.py" />
         <option value="$PROJECT_DIR$/LocalDB_create_CNBP.py" />
-        <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/LORIS_candidates.py" />
         <option value="$PROJECT_DIR$/LORIS_query.py" />
         <option value="$PROJECT_DIR$/LocalDB_query.py" />
@@ -239,6 +223,7 @@
         <option value="$PROJECT_DIR$/test_Intermediate_Server.py" />
         <option value="$PROJECT_DIR$/test_LocalDBCreate.py" />
         <option value="$PROJECT_DIR$/test_LORIS_Query.py" />
+        <option value="$PROJECT_DIR$/.env" />
       </list>
     </option>
   </component>
@@ -450,12 +435,11 @@
       <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.7881558" weight="0.27514547" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49483308" weight="0.3416459" />
       <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.48330683" weight="0.29758936" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.06915739" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.06955485" />
       <window_info anchor="right" id="R Packages" order="6" weight="0.3298887" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="R Graphics" order="4" weight="0.3298887" />
       <window_info anchor="right" id="Database" order="5" visible="true" weight="0.032988872" />
-      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49562797" weight="0.32917705" />
       <window_info anchor="right" id="SciView" order="3" weight="0.3298887" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -466,33 +450,34 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49562797" weight="0.32917705" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" sideWeight="0.49880764" weight="0.32917705" />
     </layout>
     <layout-to-restore>
-      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49562797" weight="0.3416459" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.08346582" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49736148" weight="0.32914573" />
       <window_info anchor="right" id="R Graphics" order="4" weight="0.3298887" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49562797" weight="0.3416459" />
       <window_info anchor="right" id="R Packages" order="6" weight="0.3298887" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.78855324" weight="0.27514547" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49841017" weight="0.32917705" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.8887122" weight="0.3059019" />
       <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.48449922" weight="0.29758936" />
       <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5155008" side_tool="true" weight="0.29758936" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="SciView" order="3" weight="0.3298887" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="right" id="Database" order="5" visible="true" weight="0.032591414" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" sideWeight="0.49880764" weight="0.32917705" />
-      <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.78855324" weight="0.27514547" />
+      <window_info id="Favorites" order="2" side_tool="true" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -805,13 +790,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.env">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="7" selection-start-line="7" selection-end-line="7" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LORIS_candidates.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="647">
@@ -834,7 +812,7 @@
     </entry>
     <entry file="file://C:/ProgramData/Anaconda3/Lib/codecs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
+        <state relative-caret-position="4960">
           <caret line="310" selection-start-line="310" selection-end-line="310" />
         </state>
       </provider>
@@ -842,13 +820,13 @@
     <entry file="file://$PROJECT_DIR$/LocalDB_schema.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
-          <caret line="17" column="47" lean-forward="true" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
+          <caret line="17" column="47" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Intermediate_LORIS_LocalDB.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
+        <state relative-caret-position="1024">
           <caret line="64" selection-start-line="64" selection-end-line="64" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
@@ -858,11 +836,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test_Intermediate_Server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="700">
+        <state relative-caret-position="496">
           <caret line="35" column="18" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="18" />
-          <folding>
-            <element signature="e#1#30#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -878,7 +853,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/LocalDB_create.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
+        <state relative-caret-position="944">
           <caret line="59" selection-start-line="59" selection-end-line="59" />
           <folding>
             <element signature="e#116#126#0" expanded="true" />
@@ -888,7 +863,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/LocalDB_query.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
+        <state relative-caret-position="2064">
           <caret line="136" column="4" selection-start-line="136" selection-start-column="4" selection-end-line="136" selection-end-column="4" />
         </state>
       </provider>
@@ -905,7 +880,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/LORIS_query.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
+        <state relative-caret-position="192">
           <caret line="41" column="12" selection-start-line="41" selection-start-column="12" selection-end-line="41" selection-end-column="12" />
           <folding>
             <element signature="e#312#528#0" />
@@ -913,30 +888,25 @@
             <element signature="e#558#810#0" />
             <element signature="e#558#654#1" />
             <element signature="e#672#721#0" />
-            <element signature="e#830#1640#0" />
             <element signature="e#830#1052#1" />
-            <element signature="e#1718#2326#0" />
-            <element signature="e#1677#1843#1" />
-            <element signature="e#2193#2353#0" />
-            <element signature="e#2355#3124#0" />
-            <element signature="e#2355#2547#1" />
-            <element signature="e#2959#3124#0" />
-            <element signature="e#3166#3933#0" />
-            <element signature="e#3166#3357#1" />
-            <element signature="e#3769#3933#0" />
-            <element signature="e#4007#4104#0" />
-            <element signature="e#4007#4022#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test_LORIS_Query.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
+        <state relative-caret-position="368">
           <caret line="23" column="35" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.env">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
         </state>
       </provider>
     </entry>
