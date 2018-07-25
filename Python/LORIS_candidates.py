@@ -4,15 +4,19 @@ import json
 import argparse
 import getpass
 import logging
-import requests
-from io import BytesIO
 from dotenv import load_dotenv
-from LORISQuery import *
+from LORIS_query import getCNBP, postCNBP, is_response_success
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 #logger = logging.getLogger('LORISQuery')
 
+
 def check_DCCID(DCCID):
+    """
+    Check if DCCID id conform.
+    :param DCCID:
+    :return:
+    """
     if not len(str(DCCID)) == 6:
         return False
     elif not str(DCCID).isnumeric():
@@ -23,6 +27,7 @@ def check_DCCID(DCCID):
         return False
     else:
         return True
+
 
 def createCandidateCNBP(token, proposded_PSCID):
     """
@@ -98,18 +103,18 @@ def checkPSCIDExist(token, proposed_PSCID):
         elif candidate_pscID == proposed_PSCID:
             return response_success, True
 
-            #latest_timepoint = findlatestTimePoint(DCCID)
+            #latest_timepoint = findLatestTimePoint(DCCID)
 
     return False
 
 
 def checkDCCIDExist(token, proposed_DCCID):
-    '''
+    """
     Check if Site/Study already contain the PSCID
-    :param site:
-    :param study:
-    :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
-    '''
+    :param token: 
+    :param proposed_DCCID: 
+    :return: 
+    """
     logger = logging.getLogger('LORIS_checkDCCIDExist')
     logger.info("Checking if DCCID exist: "+str(proposed_DCCID))
     load_dotenv()
@@ -118,15 +123,18 @@ def checkDCCIDExist(token, proposed_DCCID):
     assert (check_DCCID(proposed_DCCID))
 
     #Get list of projects
-    response_success, loris_project = getCNBP(token, r"projects/loris")
+    response, loris_project = getCNBP(token, r"projects/loris")
+    response_success = is_response_success(response, 200)
+
     if not response_success:
+        logger.info("FAILED log response: " + str(response))
         return response_success, None
 
     #Get list of candidates (Candidates in v0.0.1)
     candidates = loris_project.get("Candidates")
     logger.info(candidates)
 
-    for DCCID in candidates: #todo: these candidates should really be only from the same ID regions.
+    for DCCID in candidates:
         if str(proposed_DCCID) == DCCID:
             return response_success, True
         else:

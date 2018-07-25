@@ -19,4 +19,4 @@ def test():
     ds.PatientSetupSequence[0].PatientPosition = "HFP"
     ds.save_as("rtplan2.dcm")
     os.remove("rtplan2.dcm")
-    return True
+    return False

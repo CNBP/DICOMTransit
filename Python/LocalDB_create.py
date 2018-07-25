@@ -7,6 +7,7 @@ import os
 import sqlite3
 import logging
 from pathlib import Path
+from LocalDB_schema import *
 import argparse
 import getpass
 
@@ -14,6 +15,15 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('LocalDBCreate')
 
 def LocalDBCreate(PathString, TableName, KeyFieldString, ColumnsNameTypeList):
+    """
+    Create the local database based on sceham.
+    :param PathString:
+    :param TableName:
+    :param KeyFieldString:
+    :param ColumnsNameTypeList:
+    :return:
+    """
+
 
     # if SQL already exist, quit script.
     SQLPath = Path(PathString)
@@ -27,7 +37,7 @@ def LocalDBCreate(PathString, TableName, KeyFieldString, ColumnsNameTypeList):
         logger.info('DEBUG: database file already exist. Deleted it!')'''
 
     #Create the PRIMARY KEY column.
-    KeyFieldType = 'INTEGER'  # column data type
+    KeyFieldType = CNBP_schema_keyfield_type  # column data type
 
     #Try to connect the database to start the process:
 

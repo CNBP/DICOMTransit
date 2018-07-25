@@ -5,11 +5,12 @@ import getpass
 import logging
 import sqlite3
 from pathlib import Path
+from LocalDB_schema import *
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-def CheckValue(database_path, table_name, ColumnName, ColumnValue):
+def check_value(database_path, table_name, ColumnName, ColumnValue):
     '''
     Check if a subject exist in the given database and given table
     :param database_path: path to the SQLite database
@@ -20,7 +21,7 @@ def CheckValue(database_path, table_name, ColumnName, ColumnValue):
     '''
     logger = logging.getLogger('LORISQuery_CheckSubjectExist')
 
-    # if SQL already exist, quit script.
+
     SQLPath = Path(database_path)
 
     # check if path is a file and exist.
@@ -28,13 +29,13 @@ def CheckValue(database_path, table_name, ColumnName, ColumnValue):
         logger.info('SQLite database file does not exist!')
         return False
 
-    #Try to connect the database to start the process:
+    # Try to connect the database to start the process:
     try:
         # Create on Connecting to the database file
         ConnectedDatabase = sqlite3.connect(database_path)
         c = ConnectedDatabase.cursor()
 
-        logger.info('Creating PRIMARY KEY DBKEY column in database.')
+        logger.info("Checking key value: " + str(ColumnValue) + " in " + ColumnName + " in SQLite database.")
 
         # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
         c.execute('SELECT * FROM {table_name} WHERE {columnname}="{columnvalue}"'.format(table_name=table_name, columnname=ColumnName, columnvalue=ColumnValue))
@@ -53,7 +54,7 @@ def CheckValue(database_path, table_name, ColumnName, ColumnValue):
         return False, result_rows
 
 
-def CreateEntry(database_path, table_name, key_field, key_field_value):
+def create_entry(database_path, table_name, key_field, key_field_value):
     '''
     A general function to create entries into the database BY providing the name of the KEYValue field and KEYvalue value to be created
     Note it MUST be the keyfield.
@@ -92,7 +93,7 @@ def CreateEntry(database_path, table_name, key_field, key_field_value):
     return True
 
 
-def UpdateEntry(database_path, table_name, key_field, key_field_value, field, field_value):
+def update_entry(database_path, table_name, key_field, key_field_value, field, field_value):
     '''
     A general function to create entries into the database BY providing the name of the KEYValue field and KEYvalue value to be created
     :param database_path:
@@ -131,6 +132,99 @@ def UpdateEntry(database_path, table_name, key_field, key_field_value, field, fi
     # Closing the connection to the database file
     ConnectedDatabase.commit()
     ConnectedDatabase.close()
+
+
+def check_header(database_path, table_name):
+    """
+    Finds the table, connect to it, and then return the header.
+    :param database_path:
+    :param table_name:
+    :return:
+    """
+
+    logger = logging.getLogger('SQLite check_header check')
+
+    table_header = None
+
+    try:
+        # Create on Connecting to the database file
+        ConnectedDatabase = sqlite3.connect(database_path)
+
+        c = ConnectedDatabase.cursor()
+        c.execute('PRAGMA TABLE_INFO({})'.format(table_name))
+
+        table_header = c.fetchall()
+
+        ConnectedDatabase.commit()
+        ConnectedDatabase.close()
+
+        return table_header  # zero indexed, LIST class of tuple of 5 elements.
+
+    except IOError:
+        return None
+
+
+def check_header_index(database_path, table_name, field):
+    """
+    Parse the list of the header and then check it against the field provided to return the index.
+    :param database_path:
+    :param table_name:
+    :param field:
+    :return:
+    """
+
+    try:
+        header_list = check_header(database_path, table_name)  # header list is a list of 5 elements tuples.
+
+        if header_list is not None:
+            global header_index
+            for table_column in header_list:
+                if table_column[1] == field:      # 1 is field name.
+                    global header_index
+                    header_index = table_column[0]    # 0 is the index
+                    break
+            return header_index
+    except IOError:
+        return None
+
+def validateLocalTableAndSchema(database_path, table_name, field):
+    """
+    Does a comprehensitve check to ensure the field, 1) exist in the schema, 2) exist in the local table and then are the SAME!
+    :param database_path:
+    :param table_name:
+    :param field: the string of the field name that is to be searched.
+    :return:
+    """
+    logger = logging.getLogger('LORISQuery_validateLocalTableAndSchema')
+    field_table_index = -1
+    field_schema_index = -2
+
+
+    # Schema check: note that schema contains keyfield
+    if field not in CNBP_schema:
+        return False, "Current planned schema does not contain " + field
+    else:
+        field_schema_index = CNBP_schema.index(field)
+
+    # Table header check: table also must contain keyfield
+    try:
+        field_table_index = check_header_index(database_path, table_name, field)
+        if field_table_index is None:
+            return False, "SQLite table HEADER does not contain " + field
+        else:
+            logger.info("SQLite table HEADER for the field " + field + " is " + str(field_table_index))
+    except IOError:
+        return False, "Database not reachable"
+
+    if field_table_index < 0 or field_schema_index < 0:
+        return False, "Check program for bugs. Default values not modified"
+
+    # This ensure we checking the right column for field information by validating against both schema and table.
+    if field_table_index != field_schema_index:
+        return False, "Schema & Table definition not matching"
+
+    return True, "Database and Schema congruently support this field and its position"
+
 
 #if __name__ == '__main__':
 

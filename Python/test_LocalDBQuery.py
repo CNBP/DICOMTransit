@@ -1,5 +1,5 @@
-from LocalDBQuery import CheckValue, UpdateEntry, CreateEntry
-from LocalDBCreate_CNBP import LocalDBCreate_CNBP
+from LocalDB_query import check_value, update_entry, create_entry
+from LocalDB_create_CNBP import create_localDB_CNBP
 import sqlite3
 from pathlib import Path
 import logging
@@ -22,14 +22,14 @@ def test_CreateSubject():
         os.remove(PathString)
 
     # Create the database
-    assert LocalDBCreate_CNBP(PathString)
+    assert create_localDB_CNBP(PathString)
     logger.info('Test SQLite database successfully created. Gonna mess with it!')
 
     tableName = 'id_table'  # All CNBP database should have this table name.
     MRNColumn = "MRN"
     CNBPIDColumn = "CNBPID"
 
-    CreateEntry(PathString,tableName,MRNColumn,291033)
+    create_entry(PathString, tableName, MRNColumn, 291033)
     logger.info('Test SQLite database successfully inserted with mock records. Gonna check!')
 
     # Populate the table with some fake records.
@@ -64,7 +64,7 @@ def test_CheckSubjectExist():
         os.remove(PathString)
 
     # Create the database
-    assert LocalDBCreate_CNBP(PathString)
+    assert create_localDB_CNBP(PathString)
     logger.info('Test SQLite database successfully created. Gonna mess with it!')
 
     tableName = 'id_table'  # All CNBP database should have this table name.
@@ -90,8 +90,8 @@ def test_CheckSubjectExist():
     logger.info('Test SQLite database successfully inserted with mock records. Gonna mess with it!')
 
     # Create on Connecting to the database file
-    assert(CheckValue(PathString, tableName, "MRN", 291010))
-    assert(CheckValue(PathString, tableName, "CNBPID", "CNBP0010001"))
+    assert(check_value(PathString, tableName, "MRN", 291010))
+    assert(check_value(PathString, tableName, "CNBPID", "CNBP0010001"))
 
     # Remove test data base created
     os.remove(PathString)
@@ -112,33 +112,33 @@ def test_CreateSubjectCheckExist():
         os.remove(PathString)
 
     # Create the database
-    assert LocalDBCreate_CNBP(PathString)
+    assert create_localDB_CNBP(PathString)
     logger.info('Test SQLite database successfully created. Gonna mess with it!')
 
     tableName = 'id_table'  # All CNBP database should have this table name.
     MRNColumn = "MRN"
     CNBPIDColumn = "CNBPID"
 
-    CreateEntry(PathString, tableName, MRNColumn, 2918210)
-    CreateEntry(PathString, tableName, MRNColumn, 23452346)
-    CreateEntry(PathString, tableName, MRNColumn, 2345234)
-    CreateEntry(PathString, tableName, MRNColumn, 273411)
-    CreateEntry(PathString, tableName, MRNColumn, 364573)
-    CreateEntry(PathString, tableName, MRNColumn, 7424141)
+    create_entry(PathString, tableName, MRNColumn, 2918210)
+    create_entry(PathString, tableName, MRNColumn, 23452346)
+    create_entry(PathString, tableName, MRNColumn, 2345234)
+    create_entry(PathString, tableName, MRNColumn, 273411)
+    create_entry(PathString, tableName, MRNColumn, 364573)
+    create_entry(PathString, tableName, MRNColumn, 7424141)
 
-    success, _ = CheckValue(PathString, tableName, MRNColumn, 7129112)
+    success, _ = check_value(PathString, tableName, MRNColumn, 7129112)
     assert not success
 
-    success, _ = CheckValue(PathString, tableName, MRNColumn, 2918210)
+    success, _ = check_value(PathString, tableName, MRNColumn, 2918210)
     assert success
 
-    success, _ = CheckValue(PathString, tableName, MRNColumn, 712921)
+    success, _ = check_value(PathString, tableName, MRNColumn, 712921)
     assert not success
 
-    success, _ = CheckValue(PathString, tableName, MRNColumn, 742)
+    success, _ = check_value(PathString, tableName, MRNColumn, 742)
     assert not success
 
-    success, _ = CheckValue(PathString, tableName, MRNColumn, 364573)
+    success, _ = check_value(PathString, tableName, MRNColumn, 364573)
     assert success
 
     logger.info('Tested SQLIte database entry. ')
@@ -162,38 +162,38 @@ def test_SubjectUpdate():
         os.remove(PathString)
 
     # Create the database
-    assert LocalDBCreate_CNBP(PathString)
+    assert create_localDB_CNBP(PathString)
     logger.info('Test SQLite database successfully created. Gonna mess with it!')
 
     tableName = 'id_table'  # All CNBP database should have this table name.
     MRNColumn = "MRN"
     CNBPIDColumn = "CNBPID"
 
-    CreateEntry(PathString, tableName, MRNColumn, 2918210)
-    CreateEntry(PathString, tableName, MRNColumn, 23452346)
-    CreateEntry(PathString, tableName, MRNColumn, 2345234)
-    CreateEntry(PathString, tableName, MRNColumn, 273411)
-    CreateEntry(PathString, tableName, MRNColumn, 364573)
-    CreateEntry(PathString, tableName, MRNColumn, 7424141)
+    create_entry(PathString, tableName, MRNColumn, 2918210)
+    create_entry(PathString, tableName, MRNColumn, 23452346)
+    create_entry(PathString, tableName, MRNColumn, 2345234)
+    create_entry(PathString, tableName, MRNColumn, 273411)
+    create_entry(PathString, tableName, MRNColumn, 364573)
+    create_entry(PathString, tableName, MRNColumn, 7424141)
 
-    UpdateEntry(PathString, tableName, MRNColumn, 7424141, CNBPIDColumn, "CNBPID0010001")
-    UpdateEntry(PathString, tableName, MRNColumn, 2345234, CNBPIDColumn, "CNBPID0010002")
-    UpdateEntry(PathString, tableName, MRNColumn, 2918210, CNBPIDColumn, "CNBPID0010003")
-    UpdateEntry(PathString, tableName, MRNColumn, 273411, CNBPIDColumn, "CNBPID0010004")
+    update_entry(PathString, tableName, MRNColumn, 7424141, CNBPIDColumn, "CNBPID0010001")
+    update_entry(PathString, tableName, MRNColumn, 2345234, CNBPIDColumn, "CNBPID0010002")
+    update_entry(PathString, tableName, MRNColumn, 2918210, CNBPIDColumn, "CNBPID0010003")
+    update_entry(PathString, tableName, MRNColumn, 273411, CNBPIDColumn, "CNBPID0010004")
 
-    success, _ = CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010006')
+    success, _ = check_value(PathString, tableName, CNBPIDColumn, 'CNBPID0010006')
     assert not success
 
-    success, _ = CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010001')
+    success, _ = check_value(PathString, tableName, CNBPIDColumn, 'CNBPID0010001')
     assert success
 
-    success, _ = CheckValue(PathString, tableName, CNBPIDColumn, 55555)
+    success, _ = check_value(PathString, tableName, CNBPIDColumn, 55555)
     assert not success
 
-    success, _ = CheckValue(PathString, tableName, CNBPIDColumn, 742)
+    success, _ = check_value(PathString, tableName, CNBPIDColumn, 742)
     assert not success
 
-    success, _ = CheckValue(PathString, tableName, CNBPIDColumn, 'CNBPID0010003')
+    success, _ = check_value(PathString, tableName, CNBPIDColumn, 'CNBPID0010003')
     assert success
 
     logger.info('Tested SQLIte database entry. ')
