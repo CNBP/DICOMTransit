@@ -48,6 +48,9 @@ def login():
 
     #Load environmental variables.
     load_dotenv()
+
+    is_travis = 'TRAVIS' in os.environ
+
     username = os.getenv("LORISusername")
     password = os.getenv("LORISpassword")
 
@@ -60,8 +63,7 @@ def login():
 
     # requests style login # NOT WORKING!
     r = requests.post(updated_url, data=data)
-    logger.info(r.status_code)
-    logger.info(r.reason)
+    logger.info(str(r.status_code) + r.reason)
 
     response_json = r.json()
 
@@ -75,20 +77,19 @@ def getCNBP(token, endpoint):
     :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
     """
     logger = logging.getLogger('LORIS_get')
-    logger.info("Getting LORIS endpoing: "+endpoint)
+    logger.info("Getting LORIS endpoing: "+ endpoint + "at")
     load_dotenv()
     url = os.getenv("LORISurl")
     updatedurl = url + endpoint
-
+    logger.info(updatedurl)
     HEADERS = {'Authorization': 'token {}'.format(token)}
 
     with requests.Session() as s:
         s.headers.update(HEADERS)
         r = s.get(updatedurl)
-        logger.info(r.status_code)
-        logger.info(r.reason)
+        logger.info("Get Result:" + str(r.status_code) + r.reason)
 
-        return is_response_success(r.status_code, 200), r.json()
+        return r.status_code, r.json()
 
 
 def postCNBP(token, endpoint, data):
@@ -111,8 +112,7 @@ def postCNBP(token, endpoint, data):
     with requests.Session() as s:
         s.headers.update(HEADERS)
         r = s.post(updatedurl, data=data)
-        logger.info(r.status_code)
-        logger.info(r.reason)
+        logger.info("Post Result:" + str(r.status_code) + r.reason)
 
         return r.status_code, r
 
@@ -137,8 +137,7 @@ def putCNBP(token, endpoint, data):
     with requests.Session() as s:
         s.headers.update(HEADERS)
         r = s.put(updatedurl, data=data)
-        logger.info(r.status_code)
-        logger.info(r.reason)
+        logger.info("Put Result:" + str(r.status_code) + r.reason)
 
         return r.status_code, r
 

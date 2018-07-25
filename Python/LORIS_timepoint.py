@@ -4,16 +4,22 @@ import json
 import argparse
 import getpass
 import logging
-import requests
-from io import BytesIO
 from dotenv import load_dotenv
-from LORISQuery import *
-from LORIS_candidates import *
+from LORIS_query import number_extraction, getCNBP, putCNBP, login
+from LORIS_candidates import check_DCCID, checkDCCIDExist
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-#logger = logging.getLogger('LORISQuery')
+
 
 def visit_number_extraction(string):
+    """
+    A wrapper for number_extraction by calling it on a string and then return the latest one.
+    Used to deal with visitnumber list.
+    :param string:
+    :return:
+    """
+    logger = logging.getLogger('visit_number_extraction')
+
     number_extracted = number_extraction(string)
 
     #return last number from the timepoint string: usually it should be V2 or T3 things like that.
@@ -23,26 +29,26 @@ def visit_number_extraction(string):
         return number_extracted[0]
 
 
-def findlatestTimePoint(token, DCCID):
+def findLatestTimePoint(token, DCCID):
     '''
-    Find and return the latest timepoint.
+    Find and return the latest timepoint. Note that since DCCID exist, the record MUST ALREADY exist within the local SQLite database!
     :param DCCID:
     :return:
     '''
+    logger = logging.getLogger('')
     assert(check_DCCID(DCCID)) # Ensure it actually first exist.
 
     response_success, candidate_json = getCNBP(token, r"candidates/" + str(DCCID)) # should exist as earlier check revealed.
 
-    # repliminary exit condition
+    # preliminary exit condition
     if not response_success:
         return response_success, None
 
-    candidate_visits = candidate_json.get("Visits")
+    candidate_visits_list = candidate_json.get("Visits")
 
-    if len(candidate_visits) > 0:
-        return candidate_visits[len(candidate_visits)-1]
+    if len(candidate_visits_list) > 0:
+        return candidate_visits_list[len(candidate_visits_list)-1] # return the LAST TIME POINT!
     return None
-
 
 def increaseTimepoint(token, DCCID):
     """
@@ -56,9 +62,10 @@ def increaseTimepoint(token, DCCID):
     # ensure valid input and subject actually exist.
     assert (check_DCCID(DCCID))
     success, subject_exist = checkDCCIDExist(token, DCCID)
-    if not subject_exist or not success: return False, None
+    if not subject_exist or not success:
+        return False, None
 
-    latest_timepoint = findlatestTimePoint(token, DCCID)
+    latest_timepoint = findLatestTimePoint(token, DCCID)
 
     if latest_timepoint is None:
         success = createTimepoint(token, DCCID, "V1")
@@ -95,12 +102,12 @@ def createTimepoint(token, DCCID, time_point):
 
 # Only executed when running directly.
 if __name__ == '__main__':
-    #print(login())
-    #getCNBP("projects")
-    #assert(checkPSCIDExist("CNBP0020002"))
+    # print(login())
+    # getCNBP("projects")
+    # assert(checkPSCIDExist("CNBP0020002"))
     Success, token = login()
-    #createTimePoint(token, 559776, "V9")
+    # createTimePoint(token, 559776, "V9")
     success, latest_timepoint = increaseTimepoint(token, 635425)
     print (success)
     print (latest_timepoint)
-    #print("Test complete")
+    # print("Test complete")
