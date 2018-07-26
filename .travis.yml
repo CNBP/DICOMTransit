@@ -13,4 +13,4 @@ after_success:
   - coverage report -m
   - coveralls --rcfile=./Python/.coveragerc
  notifications:
-    slack: neonatalbrainplatform:vaySGjAHlfWEsyJEiyR0fbhq
+    slack: 'neonatalbrainplatform:vaySGjAHlfWEsyJEiyR0fbhq'

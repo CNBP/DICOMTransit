@@ -51,7 +51,7 @@
           <file leaf-file-name="test_DICOM.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/test_DICOM.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="299">
+                <state relative-caret-position="600">
                   <caret line="30" column="11" selection-start-line="30" selection-start-column="11" selection-end-line="30" selection-end-column="11" />
                   <folding>
                     <element signature="e#0#14#0" expanded="true" />
@@ -162,7 +162,7 @@
           <file leaf-file-name="DICOM.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/DICOM.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="364">
+                <state relative-caret-position="443">
                   <caret line="155" selection-start-line="155" selection-end-line="155" />
                   <folding>
                     <element signature="e#221#397#0" />
@@ -475,7 +475,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="84" width="2576" height="1364" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49736148" weight="0.3283458" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5166932" side_tool="true" weight="0.29758936" />
@@ -484,7 +483,7 @@
       <window_info anchor="bottom" id="Python Console" order="13" sideWeight="0.7881558" weight="0.27514547" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49483308" weight="0.3416459" />
       <window_info anchor="right" id="Coverage" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.48330683" weight="0.29758936" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.48330683" visible="true" weight="0.29758936" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10214626" />
       <window_info anchor="right" id="R Packages" order="6" weight="0.3298887" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
@@ -494,7 +493,7 @@
       <window_info anchor="right" id="SciView" order="3" weight="0.3298887" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.69395864" visible="true" weight="0.3632585" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.69395864" weight="0.3632585" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -991,7 +990,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DICOM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
+        <state relative-caret-position="443">
           <caret line="155" selection-start-line="155" selection-end-line="155" />
           <folding>
             <element signature="e#221#397#0" />
@@ -1004,7 +1003,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test_DICOM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
+        <state relative-caret-position="600">
           <caret line="30" column="11" selection-start-line="30" selection-start-column="11" selection-end-line="30" selection-end-column="11" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
