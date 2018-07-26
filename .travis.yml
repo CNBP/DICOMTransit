@@ -15,7 +15,4 @@ script:
 after_success:
   - coverage run ./Python/Coverage/coverage_setup.py  
   - coverage report -m
-  - coveralls
-
-notifications:
-	slack: neonatalbrainplatform:GFWHNXeNtYI7PnecsXOR1eNt
+  - coveralls --rcfile=./Python/.coveragerc
