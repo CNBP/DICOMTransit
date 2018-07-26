@@ -143,7 +143,7 @@ def DICOM_retrieveMRN(file_path):
     return True, MRN_number
 
 
-def DICOM_TransferSyntaxCheck(transfer_syntax):
+def DICOM_RequireDecompression(transfer_syntax):
     """
     Determine if the transfer syntax symbolize LEE or JPEG compressed!
     :param transfer_syntax:
@@ -153,9 +153,9 @@ def DICOM_TransferSyntaxCheck(transfer_syntax):
     if not ("1.2.840.10008.1.2" in transfer_syntax):
         raise ValueError
     elif transfer_syntax == "1.2.840.10008.1.2" or transfer_syntax[18] == '1' or transfer_syntax[18] == '2':
-        return True
-    elif transfer_syntax[18] == '4' or transfer_syntax[18] == '5' or transfer_syntax[18] == '6':
         return False
+    elif transfer_syntax[18] == '4' or transfer_syntax[18] == '5' or transfer_syntax[18] == '6':
+        return True
     else:
         raise ValueError
 

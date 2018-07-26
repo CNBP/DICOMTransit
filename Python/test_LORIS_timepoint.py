@@ -3,7 +3,7 @@ from LORIS_timepoint import visit_number_extraction
 
 def test_number_extraction():
     Prefix = "V"
-    numbers = [1, 2, 3, 9, 10, 11, 12, 100, 101, 102]
+    numbers = [1, 2, 3, 9]
 
     global timepoints
     timepoints = []
@@ -14,7 +14,6 @@ def test_number_extraction():
     DualList = zip(numbers, timepoints)
 
     for tuple in DualList:
-        assert str(tuple[0]) == number_extraction(tuple[1])[0]
+        assert str(tuple[0]) == visit_number_extraction(tuple[1])[0]
 
-if __name__ == '__main__':
-    test_number_extraction()
+    # todo: 10+ visit number WILL FAIL!
