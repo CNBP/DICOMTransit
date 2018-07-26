@@ -11,6 +11,11 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 def number_extraction(string):
+    """
+    Return
+    :param string:
+    :return: a LIST of strings of number!
+    """
     import re
     return re.findall(r'\d+', string)
 
