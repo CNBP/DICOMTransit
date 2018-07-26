@@ -12,7 +12,7 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/DICOMTransit$setup.coverage" NAME="setup Coverage Results" MODIFIED="1532541315857" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Coverage" />
     <SUITE FILE_PATH="coverage/Python$LORIS_helper.coverage" NAME="LORIS_helper Coverage Results" MODIFIED="1532186772748" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/DICOMTransit$test_LORIS_helper.coverage" NAME="test_LORIS_helper Coverage Results" MODIFIED="1532545935674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DICOMTransit$test_LORIS_helper.coverage" NAME="test_LORIS_helper Coverage Results" MODIFIED="1532630594552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DICOMTransit$test_LocalDBCreate.coverage" NAME="test_LocalDBCreate Coverage Results" MODIFIED="1532505584239" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$test_LocalDBQuery.coverage" NAME="test_LocalDBQuery Coverage Results" MODIFIED="1531750130299" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$LocalDB_schema.coverage" NAME="LocalDB_schema Coverage Results" MODIFIED="1531937118513" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -20,10 +20,10 @@
     <SUITE FILE_PATH="coverage/Python$test_DICOM.coverage" NAME="test_DICOM Coverage Results" MODIFIED="1532102283205" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$test_LORIS_Query.coverage" NAME="test_LORIS_Query Coverage Results" MODIFIED="1531940245103" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$DICOM.coverage" NAME="DICOM Coverage Results" MODIFIED="1532113994703" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/DICOMTransit$test_DICOM.coverage" NAME="test_DICOM Coverage Results" MODIFIED="1532629414818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DICOMTransit$test_DICOM.coverage" NAME="test_DICOM Coverage Results" MODIFIED="1532639727531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$test.coverage" NAME="test Coverage Results" MODIFIED="1532293745792" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$LocalDBCreate_CNBP.coverage" NAME="LocalDBCreate_CNBP Coverage Results" MODIFIED="1531937470498" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/DICOMTransit$test_file_ops.coverage" NAME="test_file_ops Coverage Results" MODIFIED="1532629117736" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DICOMTransit$test_file_ops.coverage" NAME="test_file_ops Coverage Results" MODIFIED="1532639574639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DICOMTransit$test_LocalDBQuery.coverage" NAME="test_LocalDBQuery Coverage Results" MODIFIED="1532507079407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$test_LocalDBCreate.coverage" NAME="test_LocalDBCreate Coverage Results" MODIFIED="1531937653878" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DICOMTransit$test.coverage" NAME="test Coverage Results" MODIFIED="1532359914277" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -51,8 +51,8 @@
           <file leaf-file-name="test_DICOM.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/test_DICOM.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="643">
-                  <caret line="60" column="36" selection-start-line="60" selection-start-column="36" selection-end-line="60" selection-end-column="36" />
+                <state relative-caret-position="299">
+                  <caret line="30" column="11" selection-start-line="30" selection-start-column="11" selection-end-line="30" selection-end-column="11" />
                   <folding>
                     <element signature="e#0#14#0" expanded="true" />
                   </folding>
@@ -60,11 +60,67 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="codecs.py" pinned="false" current-in-tab="false">
-            <entry file="file://C:/ProgramData/Anaconda3/Lib/codecs.py">
+          <file leaf-file-name="LORIS_query.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/LORIS_query.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="544">
+                  <caret line="66" selection-start-line="66" selection-end-line="66" />
+                  <folding>
+                    <element signature="e#312#528#0" />
+                    <element signature="e#312#440#1" />
+                    <element signature="e#558#810#0" />
+                    <element signature="e#558#654#1" />
+                    <element signature="e#672#721#0" />
+                    <element signature="e#830#1052#1" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="test_LORIS_timepoint.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/test_LORIS_timepoint.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="288">
+                  <caret line="18" column="39" selection-start-line="18" selection-start-column="39" selection-end-line="18" selection-end-column="39" />
+                  <folding>
+                    <element signature="e#0#42#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="test_LORIS_Query.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/test_LORIS_Query.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="461">
+                  <caret line="31" column="45" selection-start-line="31" selection-start-column="30" selection-end-line="31" selection-end-column="45" />
+                  <folding>
+                    <element signature="e#0#38#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="test_LORIS_helper.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/test_LORIS_helper.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="304">
-                  <caret line="310" selection-start-line="310" selection-end-line="310" />
+                  <caret line="19" column="28" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
+                  <folding>
+                    <element signature="e#0#42#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="LORIS_helper.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/LORIS_helper.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="192">
+                  <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+                  <folding>
+                    <element signature="e#0#10#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -72,11 +128,29 @@
           <file leaf-file-name="test_file_ops.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/test_file_ops.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="572">
-                  <caret line="26" column="24" lean-forward="true" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
+                <state relative-caret-position="814">
+                  <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
                   <folding>
                     <element signature="e#0#9#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="data_manager.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/pydicom/data/data_manager.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="255">
+                  <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="codecs.py" pinned="false" current-in-tab="false">
+            <entry file="file://C:/ProgramData/Anaconda3/Lib/codecs.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="48">
+                  <caret line="310" selection-start-line="310" selection-end-line="310" />
                 </state>
               </provider>
             </entry>
@@ -88,16 +162,13 @@
           <file leaf-file-name="DICOM.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/DICOM.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="283">
-                  <caret line="75" selection-start-line="75" selection-end-line="75" />
+                <state relative-caret-position="364">
+                  <caret line="155" selection-start-line="155" selection-end-line="155" />
                   <folding>
                     <element signature="e#221#397#0" />
                     <element signature="e#221#317#1" />
-                    <element signature="e#439#615#0" />
-                    <element signature="e#4754#5174#0" />
-                    <element signature="e#5217#5743#0" />
-                    <element signature="e#5783#6074#0" />
-                    <element signature="e#6128#6652#0" />
+                    <element signature="e#2535#3061#0" />
+                    <element signature="e#3102#3393#0" />
                   </folding>
                 </state>
               </provider>
@@ -106,8 +177,8 @@
           <file leaf-file-name="file_operation.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/file_operation.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="400">
-                  <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
+                <state relative-caret-position="1580">
+                  <caret line="96" column="33" selection-start-line="96" selection-start-column="33" selection-end-line="96" selection-end-column="33" />
                   <folding>
                     <element signature="e#0#11#0" expanded="true" />
                   </folding>
@@ -188,6 +259,7 @@
         <option value="$PROJECT_DIR$/.coveragerc" />
         <option value="$PROJECT_DIR$/LORIS_helper.py" />
         <option value="$PROJECT_DIR$/test_LORIS_helper.py" />
+        <option value="$PROJECT_DIR$/test_LORIS_timepoint.py" />
         <option value="$PROJECT_DIR$/DICOM.py" />
         <option value="$PROJECT_DIR$/file_operation.py" />
         <option value="$PROJECT_DIR$/test_file_ops.py" />
@@ -227,6 +299,10 @@
               <item name="DICOMTransit" type="b2602c69:ProjectViewProjectNode" />
               <item name="Python" type="462c0819:PsiDirectoryNode" />
               <item name="Coverage" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="DICOMTransit" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
@@ -407,7 +483,8 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="13" sideWeight="0.7881558" weight="0.27514547" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49483308" weight="0.3416459" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.48330683" visible="true" weight="0.29758936" />
+      <window_info anchor="right" id="Coverage" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.48330683" weight="0.29758936" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10214626" />
       <window_info anchor="right" id="R Packages" order="6" weight="0.3298887" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
@@ -417,7 +494,7 @@
       <window_info anchor="right" id="SciView" order="3" weight="0.3298887" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.69395864" weight="0.3632585" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.69395864" visible="true" weight="0.3632585" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -540,6 +617,36 @@
           <line>42</line>
           <option name="timeStamp" value="123" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_file_ops.py</url>
+          <line>31</line>
+          <option name="timeStamp" value="126" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_file_ops.py</url>
+          <line>30</line>
+          <option name="timeStamp" value="127" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_file_ops.py</url>
+          <line>40</line>
+          <option name="timeStamp" value="128" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_file_ops.py</url>
+          <line>26</line>
+          <option name="timeStamp" value="130" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_DICOM.py</url>
+          <line>27</line>
+          <option name="timeStamp" value="131" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test_DICOM.py</url>
+          <line>60</line>
+          <option name="timeStamp" value="132" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -548,24 +655,10 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="124" />
+      <option name="time" value="133" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/LORIS_query.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="9" selection-start-line="9" selection-end-line="9" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LocalDB_query.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="7" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LocalDB_create_CNBP.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="960">
@@ -723,16 +816,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_LORIS_Query.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="496">
-          <caret line="31" column="45" selection-start-line="31" selection-start-column="30" selection-end-line="31" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LocalDB_query.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="262">
@@ -803,20 +886,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_LORIS_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="3" column="29" lean-forward="true" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LORIS_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="16" column="41" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LORIS_timepoint.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="344">
@@ -831,60 +900,112 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LORIS_query.py">
+    <entry file="file://$PROJECT_DIR$/LORIS_helper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="709">
-          <caret line="139" column="60" lean-forward="true" selection-start-line="139" selection-start-column="60" selection-end-line="139" selection-end-column="60" />
+        <state relative-caret-position="192">
+          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_LORIS_Query.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="461">
+          <caret line="31" column="45" selection-start-line="31" selection-start-column="30" selection-end-line="31" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_LORIS_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="19" column="28" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/file_operation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
+        <state relative-caret-position="1580">
+          <caret line="96" column="33" selection-start-line="96" selection-start-column="33" selection-end-line="96" selection-end-column="33" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DICOM.py">
+    <entry file="file://$PROJECT_DIR$/LORIS_query.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="75" selection-start-line="75" selection-end-line="75" />
+        <state relative-caret-position="544">
+          <caret line="66" selection-start-line="66" selection-end-line="66" />
           <folding>
-            <element signature="e#221#397#0" />
-            <element signature="e#221#317#1" />
-            <element signature="e#439#615#0" />
-            <element signature="e#4754#5174#0" />
-            <element signature="e#5217#5743#0" />
-            <element signature="e#5783#6074#0" />
-            <element signature="e#6128#6652#0" />
+            <element signature="e#312#528#0" />
+            <element signature="e#312#440#1" />
+            <element signature="e#558#810#0" />
+            <element signature="e#558#654#1" />
+            <element signature="e#672#721#0" />
+            <element signature="e#830#1052#1" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_LORIS_timepoint.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="18" column="39" selection-start-line="18" selection-start-column="39" selection-end-line="18" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/pydicom/data/data_manager.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://C:/ProgramData/Anaconda3/Lib/codecs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
+        <state relative-caret-position="48">
           <caret line="310" selection-start-line="310" selection-end-line="310" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test_file_ops.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="572">
-          <caret line="26" column="24" lean-forward="true" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
+        <state relative-caret-position="814">
+          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/DICOM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="155" selection-start-line="155" selection-end-line="155" />
+          <folding>
+            <element signature="e#221#397#0" />
+            <element signature="e#221#317#1" />
+            <element signature="e#2535#3061#0" />
+            <element signature="e#3102#3393#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/test_DICOM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="643">
-          <caret line="60" column="36" selection-start-line="60" selection-start-column="36" selection-end-line="60" selection-end-column="36" />
+        <state relative-caret-position="299">
+          <caret line="30" column="11" selection-start-line="30" selection-start-column="11" selection-end-line="30" selection-end-column="11" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
