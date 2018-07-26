@@ -4,7 +4,6 @@ import os
 import argparse
 import getpass
 import logging
-import pillow
 from pydicom.data import get_testdata_files
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -22,7 +21,6 @@ def DICOM_decompressor(path):
     ds.save_as("Test.dcm")
 
 
-
 def DICOM_anonymizer(path, PSCID):
     """
     Anonymize the DICOMS to remove any identifiable information
@@ -31,96 +29,26 @@ def DICOM_anonymizer(path, PSCID):
     :return:
     """
 
-    # authors : Guillaume Lemaitre <g.lemaitre58@gmail.com>
-    # license : MIT
+    return DICOM_anonymizer_save_as(path, PSCID, path)
+
+
+def DICOM_anonymizer_save_as(path, PSCID, out_path):
     """
-    ====================
-    Anonymize DICOM data
-    ====================
-
-    This example is a starting point to anonymize DICOM data.
-
-    It shows how to read data and replace tags: person names, patient id,
-    optionally remove curves and private tags, and write the results in a new file.
-
+    Anonymize the DICOMS to remove any identifiable information
+    :param path:
+    :param PSCID:
+    :return:
     """
 
-    # authors : Guillaume Lemaitre <g.lemaitre58@gmail.com>
-    # license : MIT
+    success, dataset = DICOM_validator(path)
+    if not success:
+        return False
 
-    import tempfile
+    dataset.PatientID = PSCID
+    dataset.PatientName = PSCID
+    dataset.save_as(out_path)
 
-    import pydicom
-    from pydicom.data import get_testdata_files
-
-    print(__doc__)
-
-    ###############################################################################
-    # Anonymize a single file
-    ###############################################################################
-
-    filename = get_testdata_files('MR_small.dcm')[0]
-    dataset = pydicom.dcmread(filename)
-
-    data_elements = ['PatientID',
-                     'PatientBirthDate']
-    for de in data_elements:
-        print(dataset.data_element(de))
-
-    ###############################################################################
-    # We can define a callback function to find all tags corresponding to a person
-    # names inside the dataset. We can also define a callback function to remove
-    # curves tags.
-
-    def person_names_callback(dataset, data_element):
-        if data_element.VR == "PN":
-            data_element.value = "anonymous"
-
-    def curves_callback(dataset, data_element):
-        if data_element.tag.group & 0xFF00 == 0x5000:
-            del dataset[data_element.tag]
-
-    ###############################################################################
-    # We can use the different callback function to iterate through the dataset but
-    # also some other tags such that patient ID, etc.
-
-    dataset.PatientID = "id"
-    dataset.walk(person_names_callback)
-    dataset.walk(curves_callback)
-
-    ###############################################################################
-    # pydicom allows to remove private tags using ``remove_private_tags`` method
-
-    dataset.remove_private_tags()
-
-    ###############################################################################
-    # Data elements of type 3 (optional) can be easily deleted using ``del`` or
-    # ``delattr``.
-
-    if 'OtherPatientIDs' in dataset:
-        delattr(dataset, 'OtherPatientIDs')
-
-    if 'OtherPatientIDsSequence' in dataset:
-        del dataset.OtherPatientIDsSequence
-
-    ###############################################################################
-    # For data elements of type 2, this is possible to blank it by assigning a
-    # blank string.
-
-    tag = 'PatientBirthDate'
-    if tag in dataset:
-        dataset.data_element(tag).value = '01011900'
-
-    ##############################################################################
-    # Finally, this is possible to store the image
-
-    data_elements = ['PatientID',
-                     'PatientBirthDate']
-    for de in data_elements:
-        print(dataset.data_element(de))
-
-    output_filename = tempfile.NamedTemporaryFile().name
-    dataset.save_as(output_filename)
+    return True
 
 
 def DICOM_recursive_loader(path, action):
@@ -130,21 +58,106 @@ def DICOM_recursive_loader(path, action):
     :return:
     """
 
+
 def DICOM_validator(file_path):
     """
     validate to check if the DICOM file is an actual DICOM file.
     :param file_path:
-    :return: boolean value.
+    :return:
+    """
+    logger = logging.getLogger(__name__)
+
+    global dicom
+    dicom = None
+
+    from pydicom.filereader import InvalidDicomError
+    from pydicom.filereader import read_file
+    try:
+        dicom = read_file(file_path)
+    except InvalidDicomError:
+        logger.info(file_path + " is not a DICOM file. Skipping")
+        return False, None
+    return True, dicom
+
+
+def DICOM_batchValidator(dir_path):
+    """
+    Some basic information of the participants must be consistent across the files, such as the SCAN DATE (assuming they are not scanning across MIDNIGHT POINT)
+    Birthday date, subject name, etc MUST BE CONSISTENT across a SINGLE subject's folder, RIGHT!
+
+    :param dir_path:
+    :return:
     """
 
-def person_names_callback(dataset, data_element):
-    if data_element.VR == "PN":
-        data_element.value = "anonymous"
+
+def DICOM_TransferSyntax(file_path):
+    """
+    Used to find if a file is compressed
+    :param file_path:
+    :return:
+    """
+    from pydicom.filereader import read_file_meta_info
+
+    # Validity check:
+    success, DICOM = DICOM_validator(file_path)
+    if not success:
+        raise IOError
+
+    # Now read the meta information.
+    dicom_file = read_file_meta_info(file_path)
+    transfer_syntax = dicom_file.TransferSyntaxUID
+
+    return transfer_syntax
 
 
-def curves_callback(dataset, data_element):
-    if data_element.tag.group & 0xFF00 == 0x5000:
-        del dataset[data_element.tag]
+def DICOM_computeScanAge(file_path):
+    """
+    Read the PatientID field which normally used as MRN number.
+    :param file_path:
+    :return: Age as a relative delta time object.
+    """
+
+    from dateutil.relativedelta import relativedelta
+
+    success, DICOM = DICOM_validator(file_path)
+    if not success:
+        return False, None
+    from datetime import datetime
+    scan_date = datetime.strptime(DICOM.SeriesDate, "%Y%m%d")
+    birthday = datetime.strptime(DICOM.PatientBirthDate, "%Y%m%d")
+    age = relativedelta(scan_date, birthday)
+    return True, age
+
+
+def DICOM_retrieveMRN(file_path):
+    """
+    Read the PatientID field which normally used as MRN number.
+    :param file_path:
+    :return: MRN number, as a STRING
+    """
+    success, DICOM = DICOM_validator(file_path)
+    if not success:
+        return False, None
+
+    MRN_number = DICOM.PatientID
+    return True, MRN_number
+
+
+def DICOM_TransferSyntaxCheck(transfer_syntax):
+    """
+    Determine if the transfer syntax symbolize LEE or JPEG compressed!
+    :param transfer_syntax:
+    :return: whether the DICOM files are compressed.
+    """
+
+    if not ("1.2.840.10008.1.2" in transfer_syntax):
+        raise ValueError
+    elif transfer_syntax == "1.2.840.10008.1.2" or transfer_syntax[18] == '1' or transfer_syntax[18] == '2':
+        return True
+    elif transfer_syntax[18] == '4' or transfer_syntax[18] == '5' or transfer_syntax[18] == '6':
+        return False
+    else:
+        raise ValueError
 
 
 if __name__ == '__main__':
