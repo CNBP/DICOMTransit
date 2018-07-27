@@ -50,7 +50,7 @@
         <entry file="file://$PROJECT_DIR$/tests/test_file_ops.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="112">
-              <caret line="7" column="74" selection-start-line="7" selection-start-column="74" selection-end-line="7" selection-end-column="74" />
+              <caret line="7" column="73" selection-start-line="7" selection-start-column="73" selection-end-line="7" selection-end-column="73" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -383,7 +383,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="84" width="2576" height="1364" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49736148" weight="0.3283458" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.51748806" side_tool="true" visible="true" weight="0.31255195" />
@@ -391,8 +390,8 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="13" sideWeight="0.60294116" weight="0.27514547" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49483308" weight="0.3416459" />
-      <window_info anchor="bottom" id="Terminal" order="12" sideWeight="0.48251194" visible="true" weight="0.31255195" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15500794" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.48251194" visible="true" weight="0.31255195" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15500794" />
       <window_info anchor="right" id="R Packages" order="7" weight="0.3298887" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="R Graphics" order="5" weight="0.3298887" />
@@ -922,7 +921,7 @@
     <entry file="file://$PROJECT_DIR$/tests/test_file_ops.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="112">
-          <caret line="7" column="74" selection-start-line="7" selection-start-column="74" selection-end-line="7" selection-end-column="74" />
+          <caret line="7" column="73" selection-start-line="7" selection-start-column="73" selection-end-line="7" selection-end-column="73" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>

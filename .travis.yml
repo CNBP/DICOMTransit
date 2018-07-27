@@ -14,6 +14,7 @@ script:
   # - nosetests --with-coverage
 
 after_success:
-  - coverage run ./Coverage/coverage_setup.py  
-  - coverage report -m
-  - coveralls --rcfile=./.coveragerc
+  - coverage run ./Coverage/coverage_setup.py  # Run Coverage
+  - coverage report -m # Run Coverage report
+  - ls -lmh # list the files in the root dir # Used to check voerage file generation
+  - coveralls -d ./.coverage # Ask coverall to send the coverage file generated to coverall
