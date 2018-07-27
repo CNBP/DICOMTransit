@@ -1,11 +1,9 @@
 import sys
 import os
 import json
-import argparse
-import getpass
 import logging
 from dotenv import load_dotenv
-from LORIS_query import getCNBP, postCNBP, is_response_success
+from LORIS.query import getCNBP, postCNBP, is_response_success
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 #logger = logging.getLogger('LORISQuery')

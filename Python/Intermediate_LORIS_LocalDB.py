@@ -1,7 +1,7 @@
 import logging
-from LocalDB_query import validateLocalTableAndSchema, check_value, update_entry, check_header_index
-from LORIS_timepoint import findLatestTimePoint
-from LocalDB_schema import *
+from LocalDB.query import validateLocalTableAndSchema, check_value, update_entry, check_header_index
+from LORIS.timepoint import findLatestTimePoint
+from LocalDB.schema import *
 
 
 def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):

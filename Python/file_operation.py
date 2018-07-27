@@ -1,8 +1,6 @@
-import time
 import os
 import logging
-import sys
-from DICOM import DICOM_validator, DICOM_RequireDecompression, DICOM_TransferSyntax
+from DICOM.DICOM import DICOM_validator, DICOM_RequireDecompression, DICOM_TransferSyntax
 
 def recursive_list_files(root_dicom_path):
     """

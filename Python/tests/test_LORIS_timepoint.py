@@ -1,4 +1,4 @@
-from ..LORIS_timepoint import visit_number_extraction
+from LORIS.timepoint import visit_number_extraction
 
 def test_visit_number_extraction():
     Prefix = "V"
