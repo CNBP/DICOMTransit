@@ -5,7 +5,7 @@ from file_operation import recursive_list_files, copy_files_to_flat_folder
 def test_recursive_load():
     file_list = recursive_list_files(os.getcwd())
     print(file_list)
-    assert len(file_list) > 87
+    assert len(file_list) > 56 # the current files within the source code
 
 def test_copy_files_to_flat_folder():
 
@@ -30,8 +30,6 @@ def test_copy_files_to_flat_folder():
     shutil.rmtree(folder)
 
 
-
 if __name__ == '__main__':
     test_recursive_load()
-    test_get_file_name()
     test_copy_files_to_flat_folder()
