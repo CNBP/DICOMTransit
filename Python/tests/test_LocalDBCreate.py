@@ -1,10 +1,11 @@
-from LocalDB_create_CNBP import LocalDBCreate, create_localDB_CNBP
-from LocalDB_query import check_header
-from LocalDB_schema import *
 from pathlib import Path
 import logging
 import os
 import sys
+from ..LocalDB_create_CNBP import LocalDBCreate, create_localDB_CNBP
+from ..LocalDB_query import check_header
+from ..LocalDB_schema import *
+
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
