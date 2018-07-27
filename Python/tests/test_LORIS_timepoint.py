@@ -1,7 +1,7 @@
 from LORIS_helper import number_extraction
 from LORIS_timepoint import visit_number_extraction
 
-def test_number_extraction():
+def test_visit_number_extraction():
     Prefix = "V"
     numbers = [1, 2, 3, 9]
 

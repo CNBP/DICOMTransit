@@ -1,8 +1,3 @@
-import sys
-import os
-import json
-import argparse
-import getpass
 import logging
 from LocalDB_query import validateLocalTableAndSchema, check_value, update_entry, check_header_index
 from LORIS_timepoint import findLatestTimePoint
@@ -68,5 +63,5 @@ def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
 if __name__ == '__main__':
 
     # Unit test
-    from test_Intermediate_Server import test_updateLocalTimepoint
+    from tests.test_Intermediate_Server import test_updateLocalTimepoint
     test_updateLocalTimepoint()
