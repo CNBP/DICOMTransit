@@ -21,7 +21,7 @@ def test_DICOM_validator():
     success, data = DICOM_validator(file_name)
     assert success
 
-    file_name = "DICOM.py"
+    file_name = get_testdata_files("README.txt")[0]
     success, data = DICOM_validator(file_name)
     assert not success
 

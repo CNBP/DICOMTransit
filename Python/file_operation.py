@@ -21,10 +21,6 @@ def recursive_list_files(root_dicom_path):
     return file_list
 
 
-def get_file_name(path):
-    file_name = os.path.basename(path)
-    return file_name
-
 def decompress_folder(file_list):
     """
     Decompress all compressed file within the lsit.
@@ -72,7 +68,7 @@ def copy_files_to_flat_folder(file_list, destination_path):
             continue
 
         # get the final path name.
-        file_name = get_file_name(file)
+        file_name = os.path.basename(file)
         destination_path_name = os.path.join(destination_path, file_name)
 
         # check if the final path is unique.
