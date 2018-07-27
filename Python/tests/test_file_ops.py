@@ -1,5 +1,5 @@
 import os
-from file_operation import recursive_list_files, copy_files_to_flat_folder
+from oshelper.file_operation import copy_files_to_flat_folder, recursive_list_files
 
 
 def test_recursive_load():

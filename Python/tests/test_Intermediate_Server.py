@@ -2,7 +2,7 @@ from LORIS.query import login
 from LocalDB.create_CNBP import create_localDB_CNBP
 from LocalDB.schema import *
 from LocalDB.query import create_entry, update_entry
-from Intermediate_LORIS_LocalDB import findTimePointUpdateDatabase
+from Integration.Intermediate_LORIS_LocalDB import findTimePointUpdateDatabase
 
 
 def test_updateLocalTimepoint():

@@ -46,14 +46,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test_file_ops.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/tests/test_file_ops.py">
+      <file leaf-file-name="elements.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/DICOM/elements.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="112">
-              <caret line="7" column="73" selection-start-line="7" selection-start-column="73" selection-end-line="7" selection-end-column="73" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="32">
+              <caret line="2" column="10" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -144,7 +141,13 @@
         <option value="$PROJECT_DIR$/Intermediate_LORIS_LocalDB.py" />
         <option value="$PROJECT_DIR$/tests/test_DICOM.py" />
         <option value="$PROJECT_DIR$/tests/test_Intermediate_Server.py" />
+        <option value="$PROJECT_DIR$/DICOM/DICOM.py" />
         <option value="$PROJECT_DIR$/tests/test_file_ops.py" />
+        <option value="$PROJECT_DIR$/oshelper/file_operation.py" />
+        <option value="$PROJECT_DIR$/DICOM/decompress.py" />
+        <option value="$PROJECT_DIR$/DICOM/validate.py" />
+        <option value="$PROJECT_DIR$/DICOM/anonymize.py" />
+        <option value="$PROJECT_DIR$/DICOM/elements.py" />
       </list>
     </option>
   </component>
@@ -189,12 +192,22 @@
             <path>
               <item name="DICOMTransit" type="b2602c69:ProjectViewProjectNode" />
               <item name="Python" type="462c0819:PsiDirectoryNode" />
+              <item name="Integration" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="DICOMTransit" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Python" type="462c0819:PsiDirectoryNode" />
               <item name="LocalDB" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="DICOMTransit" type="b2602c69:ProjectViewProjectNode" />
               <item name="Python" type="462c0819:PsiDirectoryNode" />
               <item name="LORIS" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="DICOMTransit" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Python" type="462c0819:PsiDirectoryNode" />
+              <item name="oshelper" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="DICOMTransit" type="b2602c69:ProjectViewProjectNode" />
@@ -212,26 +225,28 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="refacto&#9;ACTION&#9;Refactorings.QuickListPopupAction" />
+    <property name="SearchEverywhereHistoryKey" value="query&#9;FILE&#9;file://C:/GitHub/DICOMTransit/Python/tests/test_LocalDBQuery.py&#10;refactor&#9;ACTION&#9;RefactoringMenu&#10;refacto&#9;ACTION&#9;Refactorings.QuickListPopupAction" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.database.dataSource.DataSourceTemplate" value="Sqlite (Xerial)" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/oshelper" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\GitHub\DICOMTransit\Python\oshelper" />
+      <recent name="C:\GitHub\DICOMTransit\Python\Integration" />
       <recent name="C:\GitHub\DICOMTransit\Python" />
       <recent name="C:\GitHub\DICOMTransit\Python\DICOM" />
       <recent name="C:\GitHub\DICOMTransit\Python\LocalDB" />
-      <recent name="C:\GitHub\DICOMTransit\Python\LORIS" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\GitHub\DICOMTransit\Python\oshelper" />
+      <recent name="C:\GitHub\DICOMTransit\Python\helper" />
+      <recent name="C:\GitHub\DICOMTransit\Python\Integration" />
       <recent name="C:\GitHub\DICOMTransit\Python\redcap" />
       <recent name="C:\GitHub\DICOMTransit\Python\DICOM" />
-      <recent name="C:\GitHub\DICOMTransit\Python\LocalDB" />
-      <recent name="C:\GitHub\DICOMTransit\Python\LORIS" />
-      <recent name="C:\GitHub\DICOMTransit\Python\tests" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -383,6 +398,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="84" width="2576" height="1364" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49736148" weight="0.3283458" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.51748806" side_tool="true" visible="true" weight="0.31255195" />
@@ -390,8 +406,8 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Python Console" order="13" sideWeight="0.60294116" weight="0.27514547" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49483308" weight="0.3416459" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.48251194" visible="true" weight="0.31255195" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15500794" />
+      <window_info anchor="bottom" id="Terminal" order="12" sideWeight="0.48251194" visible="true" weight="0.31255195" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15500794" />
       <window_info anchor="right" id="R Packages" order="7" weight="0.3298887" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="R Graphics" order="5" weight="0.3298887" />
@@ -492,7 +508,7 @@
           <option name="timeStamp" value="55" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/DICOM/DICOM.py</url>
+          <url>file://$PROJECT_DIR$/DICOM/validate.py</url>
           <line>19</line>
           <option name="timeStamp" value="62" />
         </line-breakpoint>
@@ -502,7 +518,7 @@
           <option name="timeStamp" value="95" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Intermediate_LORIS_LocalDB.py</url>
+          <url>file://$PROJECT_DIR$/Integration/Intermediate_LORIS_LocalDB.py</url>
           <line>49</line>
           <option name="timeStamp" value="96" />
         </line-breakpoint>
@@ -512,7 +528,7 @@
           <option name="timeStamp" value="97" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Intermediate_LORIS_LocalDB.py</url>
+          <url>file://$PROJECT_DIR$/Integration/Intermediate_LORIS_LocalDB.py</url>
           <line>66</line>
           <option name="timeStamp" value="100" />
         </line-breakpoint>
@@ -553,21 +569,21 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/tests/test_DICOM.py</url>
-          <line>49</line>
+          <line>52</line>
           <option name="timeStamp" value="133" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/tests/test_DICOM.py</url>
-          <line>79</line>
+          <line>82</line>
           <option name="timeStamp" value="135" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/DICOM/DICOM.py</url>
+          <url>file://$PROJECT_DIR$/DICOM/validate.py</url>
           <line>198</line>
           <option name="timeStamp" value="137" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/DICOM/DICOM.py</url>
+          <url>file://$PROJECT_DIR$/DICOM/validate.py</url>
           <option name="timeStamp" value="138" />
         </line-breakpoint>
       </breakpoints>
@@ -582,35 +598,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/ProgramData/Anaconda3/Lib/pathlib.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="1339" selection-start-line="1339" selection-end-line="1340" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LORISAPI_Reference.php" />
-    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/dotenv/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="676">
-          <caret line="248" selection-start-line="248" selection-end-line="248" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/requests/sessions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="491" column="22" lean-forward="true" selection-start-line="491" selection-start-column="22" selection-end-line="491" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/requests/hooks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/requests/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="16">
@@ -642,7 +629,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Scheduler.py">
+    <entry file="file://$PROJECT_DIR$/oshelper/Scheduler.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
           <caret line="10" column="19" lean-forward="true" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
@@ -667,24 +654,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LocalDB/schema.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="17" column="47" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.env">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
           <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LocalDB/query.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="136" column="4" selection-start-line="136" selection-start-column="4" selection-end-line="136" selection-end-column="4" />
         </state>
       </provider>
     </entry>
@@ -731,16 +704,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LORIS/helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/pydicom/dataset.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7984">
@@ -766,16 +729,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="310" selection-start-line="310" selection-end-line="310" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file_operation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="15" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -841,7 +794,7 @@
     <entry file="file://$PROJECT_DIR$/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/Intermediate_LORIS_LocalDB.py">
+    <entry file="file://$PROJECT_DIR$/Integration/Intermediate_LORIS_LocalDB.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1024">
           <caret line="64" selection-start-line="64" selection-end-line="64" />
@@ -867,13 +820,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_LocalDBQuery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="6" column="7" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests/test_LocalDBCreate.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="112">
@@ -891,19 +837,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DICOM/DICOM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-            <element signature="e#221#317#1" />
-            <element signature="e#439#562#1" />
-            <element signature="e#678#801#1" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tests/test_LORIS_timepoint.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -918,13 +851,97 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/LocalDB/schema.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="17" column="47" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LocalDB/query.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="148" lean-forward="true" selection-start-line="148" selection-end-line="148" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/oshelper/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Integration/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DICOM/validate.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="592">
+          <caret line="37" selection-start-line="37" selection-end-line="37" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tests/test_file_ops.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="7" column="73" selection-start-line="7" selection-start-column="73" selection-end-line="7" selection-end-column="73" />
+        <state relative-caret-position="32">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LORIS/helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/oshelper/file_operation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="11" column="7" lean-forward="true" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_LocalDBQuery.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="6" column="7" lean-forward="true" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DICOM/anonymize.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="9" column="12" lean-forward="true" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DICOM/decompress.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="15" column="26" lean-forward="true" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DICOM/elements.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="2" column="10" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
         </state>
       </provider>
     </entry>
