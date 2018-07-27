@@ -1,11 +1,5 @@
-import sys
-import os
-import json
-import argparse
-import getpass
-import logging
 import requests
-from LORIS_helper import *
+from LORIS.helper import *
 from dotenv import load_dotenv
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)

@@ -1,11 +1,8 @@
 import sys
-import os
-import argparse
-import getpass
 import logging
 import sqlite3
 from pathlib import Path
-from LocalDB_schema import *
+from LocalDB.schema import *
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 

@@ -1,4 +1,4 @@
-from ..LORIS_helper import number_extraction
+from LORIS.helper import number_extraction
 
 def test_number_extraction():
     Prefix = "V"

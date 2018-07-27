@@ -1,7 +1,7 @@
 import logging
 import sys
-from ..LORIS_query import login, getCNBP
-from ..LORIS_candidates import checkDCCIDExist, checkPSCIDExist
+from LORIS.query import login, getCNBP
+from LORIS.candidates import checkDCCIDExist, checkPSCIDExist
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 

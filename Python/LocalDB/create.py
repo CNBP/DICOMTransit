@@ -3,13 +3,10 @@
 #Author: Yang Ding
 
 import sys
-import os
 import sqlite3
 import logging
 from pathlib import Path
-from LocalDB_schema import *
-import argparse
-import getpass
+from LocalDB.schema import *
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('LocalDBCreate')
