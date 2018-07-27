@@ -5,7 +5,8 @@ import argparse
 import getpass
 import logging
 import unittest
-from DICOM import DICOM_RequireDecompression, DICOM_validator, DICOM_retrieveMRN, DICOM_computeScanAge, DICOM_anonymizer
+from DICOM import DICOM_RequireDecompression, DICOM_validator, DICOM_retrieveMRN, DICOM_computeScanAge, DICOM_anonymizer, DICOM_updateElement, DICOM_retrieveElements
+from pydicom.data import get_testdata_files
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -20,7 +21,7 @@ def test_DICOM_validator():
     success, data = DICOM_validator(file_name)
     assert success
 
-    file_name = ".coverage"
+    file_name = "DICOM.py"
     success, data = DICOM_validator(file_name)
     assert not success
 
@@ -31,35 +32,53 @@ def test_DICOM_RequireDecompression():
     assert (DICOM_RequireDecompression('1.2.840.10008.1.2.4'))
     assert (DICOM_RequireDecompression('1.2.840.10008.1.2.4.57'))
 
+
 class MyTestCase(unittest.TestCase):
     def test_wrong_syntax(self):
         self.assertRaises(ValueError, DICOM_RequireDecompression, 'FakeTest')
 
 
+def test_DICOM_anonymizer():
+    file_names = get_testdata_files("emri")
+    for file_name in file_names:
+        success = DICOM_anonymizer(file_name, "CNBP0010001")
+        assert success
+    for file_name in file_names:
+        success, value = DICOM_retrieveElements(file_name, "PatientID")
+        assert success
+        assert (value == "CNBP0010001")
+
+
 def test_DICOM_retrieveMRN():
-    file_name = get_test_DICOM_path()
-    success, MRN = DICOM_retrieveMRN(file_name)
+    path = get_testdata_files("emri_small_big_endian")[0]
+    success, MRN = DICOM_retrieveMRN(path)
     assert success
     assert (MRN == 'CNBP0010001')
 
+
+def test_DICOM_update():
+    path = get_testdata_files("emri")
+    for file in path:
+        success, _ = DICOM_updateElement(file, "PatientBirthDate", "19950101", file)
+        assert success
+    for file in path:
+
+        success, value = DICOM_retrieveElements(file, "PatientBirthDate")
+        assert success
+        assert(value == "19950101")
+
 def test_DICOM_computerScanAge():
     logger = logging.getLogger("DICOM compute age")
-    success, Age = DICOM_computeScanAge("0000000A")
+
+    path = get_testdata_files("emri_small_RLE")[0]
+
+
+    success, Age = DICOM_computeScanAge(path)
     assert success
     logger.info(Age.day)
 
-def test_DICOM_anonymizer():
-    file_name = get_test_DICOM_path()
-    success = DICOM_anonymizer(file_name, "CNBP0010001")
-    assert success
+
 
 
 if __name__ == '__main__':
-    test_DICOM_validator()
-    Test = MyTestCase()
-    Test.test_wrong_syntax()
-    test_DICOM_RequireDecompression()
-    test_DICOM_computerScanAge()
-    test_DICOM_validator()
-    test_DICOM_anonymizer()
-    test_DICOM_retrieveMRN()
+    test_DICOM_update()

@@ -5,7 +5,7 @@ from file_operation import recursive_list_files, get_file_name, copy_files_to_fl
 def test_recursive_load():
     file_list = recursive_list_files(os.getcwd())
     print(file_list)
-    assert len(file_list) > 1000
+    assert len(file_list) > 87
 
 def test_get_file_name():
     path1 = "C:\Windows\Sysmte32\Crapware"
