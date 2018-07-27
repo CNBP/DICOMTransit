@@ -1,5 +1,3 @@
-import sys
-sys.path.append('../..')
 from LORIS_helper import number_extraction
 from LORIS_timepoint import visit_number_extraction
 

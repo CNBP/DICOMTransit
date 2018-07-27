@@ -1,13 +1,10 @@
+from LocalDB_query import check_value, update_entry, create_entry
+from LocalDB_create_CNBP import create_localDB_CNBP
 import sqlite3
 from pathlib import Path
 import logging
 import os
 import sys
-sys.path.append('../..')
-
-from LocalDB_query import check_value, update_entry, create_entry
-from LocalDB_create_CNBP import create_localDB_CNBP
-
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 

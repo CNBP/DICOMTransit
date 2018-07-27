@@ -1,6 +1,5 @@
 import pydicom
 import sys
-sys.path.append('../..')
 import os
 import argparse
 import getpass
@@ -8,7 +7,6 @@ import logging
 import unittest
 from DICOM import DICOM_RequireDecompression, DICOM_validator, DICOM_retrieveMRN, DICOM_computeScanAge, DICOM_anonymizer, DICOM_updateElement, DICOM_retrieveElements
 from pydicom.data import get_testdata_files
-
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
