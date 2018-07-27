@@ -44,10 +44,13 @@ def DICOM_anonymizer_save_as(path, PSCID, out_path):
     if not success:
         return False
 
-    dataset.PatientID = PSCID
-    dataset.PatientName = PSCID
-    dataset.save_as(out_path)
+    success1, _ = DICOM_updateElement(path, "PatientID", PSCID, out_path)
+    success2, _ = DICOM_updateElement(path, "PatientName", PSCID, out_path)
 
+    if success1 and success2:
+        return True
+    else:
+        return False
     return True
 
 
@@ -135,12 +138,12 @@ def DICOM_retrieveMRN(file_path):
     :param file_path:
     :return: MRN number, as a STRING
     """
-    success, DICOM = DICOM_validator(file_path)
+    success, value = DICOM_retrieveElements(file_path, "PatientID")
+
     if not success:
         return False, None
-
-    MRN_number = DICOM.PatientID
-    return True, MRN_number
+    else:
+        return True, value
 
 
 def DICOM_RequireDecompression(transfer_syntax):
@@ -158,6 +161,47 @@ def DICOM_RequireDecompression(transfer_syntax):
         return True
     else:
         raise ValueError
+
+
+def DICOM_retrieveElements(file_path, data_element):
+    """
+    A low level function used to retrieve elements from DICOM and return a LIST of matching element. ACCEPT PARTIAL MATCH
+    :param file_path:
+    :param data_element:
+    :return: LIST of all data elements that match the pattern provided in the data_element and their value.  NO Regular EXPRESSION.
+    """
+    success, DICOM = DICOM_validator(file_path)
+    if not success:
+        return False, None, None
+
+    # Get a list of all data elements that can have element label.
+    element_values = DICOM.data_element(data_element).value
+
+    return True, element_values
+
+
+def DICOM_updateElement(file_path, data_element, element_value, out_path):
+    """
+    Update a particular data_element to the desired value, then write back to the SOURCE FILE!
+    :param file_path:
+    :param data_element:
+    :param element_value:
+    :return: bool on operation success, and string on reason.
+    """
+
+    """BE AWARE that if the key does not exist, it will not be created currently!"""
+    logger = logging.getLogger(__name__)
+    success, DICOM = DICOM_validator(file_path)
+    if not success:
+        return False, "DICOM not valid."
+
+    try:
+        DICOM.data_element(data_element).value = element_value
+    except KeyError:
+        logger.info("Key " + data_element + " does not exist, creating the key.")
+        return False, "DICOM key field does not exist. Not sure how to create one yet. "
+    DICOM.save_as(out_path)
+    return True, "Data element update completed."
 
 
 if __name__ == '__main__':
