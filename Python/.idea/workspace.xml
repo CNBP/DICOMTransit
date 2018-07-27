@@ -45,86 +45,55 @@
     <select />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.38786766">
-      <split-first>
-        <leaf>
-          <file leaf-file-name="test_DICOM.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/test_DICOM.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="602">
-                  <caret line="76" column="18" lean-forward="true" selection-start-line="76" selection-start-column="18" selection-end-line="76" selection-end-column="18" />
-                  <folding>
-                    <element signature="e#0#14#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="codecs.py" pinned="false" current-in-tab="false">
-            <entry file="file://C:/ProgramData/Anaconda3/Lib/codecs.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="240">
-                  <caret line="310" selection-start-line="310" selection-end-line="310" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="test_file_ops.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/test_file_ops.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <caret line="21" column="11" selection-start-line="21" selection-start-column="11" selection-end-line="21" selection-end-column="11" />
-                  <folding>
-                    <element signature="e#0#9#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="DICOM.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/DICOM.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="456">
-                  <caret line="191" column="81" selection-start-line="191" selection-start-column="81" selection-end-line="191" selection-end-column="81" />
-                  <folding>
-                    <element signature="e#221#397#0" />
-                    <element signature="e#221#317#1" />
-                    <element signature="e#439#562#1" />
-                    <element signature="e#678#801#1" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="dataset.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/pydicom/dataset.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="7984">
-                  <caret line="519" selection-start-line="519" selection-end-line="519" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="file_operation.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/file_operation.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-2">
-                  <caret line="58" column="60" lean-forward="true" selection-start-line="58" selection-start-column="60" selection-end-line="58" selection-end-column="60" />
-                  <caret line="59" column="28" lean-forward="true" selection-start-line="59" selection-start-column="28" selection-end-line="59" selection-end-column="28" />
-                  <folding>
-                    <element signature="e#0#11#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf>
+      <file leaf-file-name="file_operation.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/file_operation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_file_ops.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test_file_ops.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="16">
+              <caret line="1" column="47" selection-start-line="1" selection-start-column="47" selection-end-line="1" selection-end-column="47" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_DICOM.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test_DICOM.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-80">
+              <caret line="25" column="22" lean-forward="true" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DICOM.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DICOM.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="110">
+              <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="30" />
+              <folding>
+                <element signature="e#221#317#1" />
+                <element signature="e#439#562#1" />
+                <element signature="e#678#801#1" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -196,10 +165,10 @@
         <option value="$PROJECT_DIR$/LORIS_helper.py" />
         <option value="$PROJECT_DIR$/test_LORIS_helper.py" />
         <option value="$PROJECT_DIR$/test_LORIS_timepoint.py" />
+        <option value="$PROJECT_DIR$/DICOM.py" />
+        <option value="$PROJECT_DIR$/test_DICOM.py" />
         <option value="$PROJECT_DIR$/file_operation.py" />
         <option value="$PROJECT_DIR$/test_file_ops.py" />
-        <option value="$PROJECT_DIR$/test_DICOM.py" />
-        <option value="$PROJECT_DIR$/DICOM.py" />
       </list>
     </option>
   </component>
@@ -409,13 +378,13 @@
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49736148" weight="0.3283458" />
-      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5170906" side_tool="true" weight="0.22111388" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5170906" side_tool="true" weight="0.22111388" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="13" sideWeight="0.78696346" visible="true" weight="0.27514547" />
+      <window_info anchor="bottom" id="Python Console" order="13" sideWeight="0.78696346" weight="0.27514547" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49483308" weight="0.3416459" />
       <window_info anchor="right" id="Coverage" order="0" sideWeight="0.5012626" side_tool="true" weight="0.033386327" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.48290938" weight="0.22111388" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.48290938" visible="true" weight="0.22111388" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15381558" />
       <window_info anchor="right" id="R Packages" order="7" weight="0.3298887" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
@@ -425,14 +394,14 @@
       <window_info anchor="right" id="SciView" order="4" weight="0.3298887" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.57233703" weight="0.39235246" />
+      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.57233703" weight="0.39235246" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" sideWeight="0.49880764" weight="0.32917705" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="11" sideWeight="0.49880764" weight="0.32917705" />
     </layout>
     <layout-to-restore>
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="12" sideWeight="0.49880764" weight="0.32917705" />
@@ -541,22 +510,22 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test_file_ops.py</url>
-          <line>31</line>
+          <line>16</line>
           <option name="timeStamp" value="126" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test_file_ops.py</url>
-          <line>30</line>
+          <line>15</line>
           <option name="timeStamp" value="127" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test_file_ops.py</url>
-          <line>40</line>
+          <line>25</line>
           <option name="timeStamp" value="128" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test_file_ops.py</url>
-          <line>26</line>
+          <line>11</line>
           <option name="timeStamp" value="130" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -827,16 +796,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_file_ops.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="21" column="11" selection-start-line="21" selection-start-column="11" selection-end-line="21" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LORIS_helper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -889,17 +848,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file_operation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2">
-          <caret line="58" column="60" lean-forward="true" selection-start-line="58" selection-start-column="60" selection-end-line="58" selection-end-column="60" />
-          <caret line="59" column="28" lean-forward="true" selection-start-line="59" selection-start-column="28" selection-end-line="59" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/pydicom/data/data_manager.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="335">
@@ -921,26 +869,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/DICOM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="17" column="4" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="30" />
+          <folding>
+            <element signature="e#221#317#1" />
+            <element signature="e#439#562#1" />
+            <element signature="e#678#801#1" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/test_DICOM.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="602">
-          <caret line="76" column="18" lean-forward="true" selection-start-line="76" selection-start-column="18" selection-end-line="76" selection-end-column="18" />
+        <state relative-caret-position="-80">
+          <caret line="25" column="22" lean-forward="true" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DICOM.py">
+    <entry file="file://$PROJECT_DIR$/file_operation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="191" column="81" selection-start-line="191" selection-start-column="81" selection-end-line="191" selection-end-column="81" />
+        <state relative-caret-position="176">
+          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
           <folding>
-            <element signature="e#221#397#0" />
-            <element signature="e#221#317#1" />
-            <element signature="e#439#562#1" />
-            <element signature="e#678#801#1" />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_file_ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="1" column="47" selection-start-line="1" selection-start-column="47" selection-end-line="1" selection-end-column="47" />
         </state>
       </provider>
     </entry>
