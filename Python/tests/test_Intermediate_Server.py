@@ -1,3 +1,5 @@
+import sys
+sys.path.append('../..')
 from LORIS_query import login
 from LocalDB_create_CNBP import create_localDB_CNBP
 from LocalDB_schema import *

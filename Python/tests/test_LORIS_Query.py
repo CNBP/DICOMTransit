@@ -1,10 +1,12 @@
-from LORIS_query import login, getCNBP
-from LORIS_candidates import checkDCCIDExist, checkPSCIDExist
 import sqlite3
 from pathlib import Path
 import logging
 import os
 import sys
+sys.path.append('../..')
+from LORIS_query import login, getCNBP
+from LORIS_candidates import checkDCCIDExist, checkPSCIDExist
+
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
