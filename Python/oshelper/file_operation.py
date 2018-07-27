@@ -1,6 +1,8 @@
 import os
 import logging
-from DICOM.DICOM import DICOM_validator, DICOM_RequireDecompression, DICOM_TransferSyntax
+from DICOM.validate import DICOM_validator
+from DICOM.decompress import DICOM_RequireDecompression, DICOM_TransferSyntax
+
 
 def recursive_list_files(root_dicom_path):
     """

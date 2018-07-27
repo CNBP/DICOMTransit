@@ -3,7 +3,10 @@ import sys
 import logging
 import unittest
 
-from DICOM.DICOM import DICOM_RequireDecompression, DICOM_validator, DICOM_retrieveMRN, DICOM_computeScanAge, DICOM_anonymizer, DICOM_updateElement, DICOM_retrieveElements
+from DICOM.validate import DICOM_validator
+from DICOM.decompress import DICOM_RequireDecompression
+from DICOM.anonymize import DICOM_anonymizer
+from DICOM.elements import DICOM_retrieveElements, DICOM_updateElement, DICOM_retrieveMRN, DICOM_computeScanAge
 from pydicom.data import get_testdata_files
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
