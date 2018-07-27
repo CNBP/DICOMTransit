@@ -1,5 +1,3 @@
-import sys
-sys.path.append('../..')
 import os
 from file_operation import recursive_list_files, copy_files_to_flat_folder
 
