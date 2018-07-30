@@ -23,10 +23,18 @@ def test_DICOM_decompress():
 
     # Get all test files with "JPEG" in them.
     file_names = get_testdata_files("JPEG")
+
+    logger.info("List of files to try to decompress:")
+    logger.info(file_names)
+
     success_counter = 0
     fail_counter = 0
+
     for file in file_names:
+        logger.info("Processing: " + file)
+
         decompressed_file = file+"DECOM"
+
         success, reason = DICOM_decompress(file, decompressed_file)
 
         logger.info(reason)
@@ -34,10 +42,10 @@ def test_DICOM_decompress():
         if success:
             success_counter += 1
             os.remove(decompressed_file) # restore the test environment to its former state.
+            logger.info("Successful.")
         else:
             fail_counter += 1
-
-
+            logger.info("Failed. Reason:" + reason)
     assert success_counter == 7 # within the test data folder, there should be SEVEN files with JPEG in their name that CAN be successfully loaded.
     assert fail_counter == 4 # within the test data folder, there should be FOUR files with JPEG in their name that CANNOT be successfully loaded.
 
