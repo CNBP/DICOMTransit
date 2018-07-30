@@ -63,5 +63,5 @@ def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
 if __name__ == '__main__':
 
     # Unit test
-    from tests.test_Intermediate_Server import test_updateLocalTimepoint
+    from Integration.test_Integration import test_updateLocalTimepoint
     test_updateLocalTimepoint()
