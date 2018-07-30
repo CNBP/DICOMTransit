@@ -3,14 +3,14 @@ omit =
 	*/python?.?.?/*	
 	*__init__*
 	*venv*
-	*/tests/*
+	*tests_*
 	*/Coverage/*
 [report]
 omit = 
 	*/python?.?.?/*	
 	*__init__*
 	*venv*
-	*/tests/*
+	*tests_*
 	*/Coverage/*
 exclude_lines =
     pragma: no cover

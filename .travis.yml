@@ -2,17 +2,24 @@ language: python
 
 python:
   - "3.6"
+
 # command to install dependencies
-
 install:
+  
+  # install Python dependencies
   - pip install -r requirements.txt
-# command to run tests
 
+  # install dcmtk dependencies necessary for the decompression() function
+  - sudo apt-get update
+  - sudo apt-get install -y dcmtk
+
+# command to run tests
 script:
   - cd "Python"
   - python -m pytest
-  # - nosetests --with-coverage
+  
 
+# After successful test, run coverage and send data to Coverall
 after_success:
   - coverage run ./Coverage/coverage_setup.py  # Run Coverage
   - coverage report -m # Run Coverage report
