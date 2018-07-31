@@ -22,7 +22,7 @@ def test_DICOM_decompress():
     logger = logging.getLogger(__name__)
 
     # Get all test files with "JPEG" in them.
-    file_names = get_testdata_files("JPEG")
+    file_names = get_testdata_files("[Jj][Pp][Ee][Gg]")
 
     logger.info("List of files to try to decompress:")
     logger.info(file_names)
