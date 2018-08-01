@@ -1,3 +1,4 @@
+from subprocess import check_call
 import sys
 import os
 import json
@@ -28,23 +29,48 @@ def check_DCCID(DCCID):
         return True
 
 
-def createCandidateCNBP(token, proposded_PSCID):
+def deleteCandidateCNBP(token, DCCID, PSCID):
+    logger = logging.getLogger('UT_LORIS_delete_subject')
+
+    # Load the hard coded variables.
+    load_dotenv()
+    ProxyIP = os.getenv("ProxyIP")
+    ProxyUsername = os.getenv("ProxyUsername")
+    ProxyPassword = os.getenv("ProxyPassword")
+    LORISHostPassword = os.getenv("LORISHostPassword")
+    LORISHostUsername = os.getenv("LORISHostUsername")
+    LORISHostIP = os.getenv("LORISHostIP")
+    DeletionScript = os.getenv("DeletionScript")
+
+    # Export some variables for subsequent deletion clean script against production database (yes... because we could not automate LORIS development...):
+    command_string = ["sshpass", "-p", ProxyPassword, "ssh", ProxyUsername + "@" + ProxyIP, "-t", "sshpass", "-p",
+                      LORISHostPassword, "ssh", "-L", "3001:localhost:22",
+                      LORISHostUsername + "@" + LORISHostIP, "php", DeletionScript, "delete_candidate", str(DCCID),
+                      PSCID, "confirm"]
+
+    logger.info(command_string)
+    if 'TRAVIS' in os.environ:
+        logger.info("Running LORIS delete candidate that was created for: " + PSCID)
+        check_call(command_string)
+
+
+def createCandidateCNBP(token, proposeded_PSCID):
     """
     Create a candidate using the given PSCID
-    :param proposded_PSCID:
+    :param proposeded_PSCID:
     :return: DCCID
     """
     logger = logging.getLogger('LORIS_CreateCNBPCandidates')
-    logger.info("Creating CNBP Candidates: " + proposded_PSCID)
+    logger.info("Creating CNBP Candidates: " + proposeded_PSCID)
 
-    PSCID_exist = checkPSCIDExist(token, proposded_PSCID)
+    PSCID_exist = checkPSCIDExist(token, proposeded_PSCID)
     if PSCID_exist:
         logger.info("PSCID already exist. Quitting.")
         return False
 
     Candidate = {}
     Candidate['Project'] = 'loris'
-    Candidate['PSCID'] = proposded_PSCID
+    Candidate['PSCID'] = proposeded_PSCID
     Candidate['DoB'] = '2018-05-04'
     Candidate['Gender'] = 'Female'
 
