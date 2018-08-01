@@ -7,13 +7,13 @@ import sys
 from dotenv import load_dotenv
 
 def test_create_subject():
-    logger = logging.getLogger('UT_LORIS_DCCID_check')
+    logger = logging.getLogger('UT_LORIS_create_subject_check')
     response_success, token = login()
 
     if not response_success:
         raise ConnectionError
 
-    PSCID = "CNBP9861234"
+    PSCID = "CNBP9851234"
 
     success, CandID = createCandidateCNBP(token, PSCID)
 
@@ -33,8 +33,8 @@ def test_create_subject():
 
     logger.info(command_string)
     if 'TRAVIS' in os.environ:
-        logger.info("Running LORIS delete candidate that was created. ")
-        # call(command_string)
+        logger.info("Running LORIS delete candidate that was created for: " + PSCID)
+        call(command_string)
 
 if __name__ == "__main__":
     test_create_subject()
