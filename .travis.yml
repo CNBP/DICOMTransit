@@ -22,7 +22,6 @@ script:
   
 # After successful test, run coverage and send data to Coverall
 after_success:  
-  - coverage report -m # Run Coverage report
   - ls -lah # list the files in the root dir # Used to check voerage file generation
   - coveralls -d ./.coverage # Ask coverall to send the coverage file generated to coverall
   

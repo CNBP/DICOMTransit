@@ -1,8 +1,8 @@
 import logging
-from LORIS.candidates import createCandidateCNBP
+from LORIS.candidates import createCandidateCNBP, deleteCandidateCNBP
 from LORIS.query import login
 import os
-from subprocess import call
+from subprocess import check_call
 import sys
 from dotenv import load_dotenv
 
@@ -13,28 +13,21 @@ def test_create_subject():
     if not response_success:
         raise ConnectionError
 
-    PSCID = "CNBP9851234"
+    PSCID = "CNBP8881234"
 
-    success, CandID = createCandidateCNBP(token, PSCID)
+    success, DCCID = createCandidateCNBP(token, PSCID)
 
-    load_dotenv()
+    deleteCandidateCNBP(token, DCCID, PSCID)
 
-    ProxyIP = os.getenv("ProxyIP")
-    ProxyUsername = os.getenv("ProxyUsername")
-    ProxyPassword = os.getenv("ProxyPassword")
-    LORISHostPassword = os.getenv("LORISHostPassword")
-    LORISHostUsername = os.getenv("LORISHostUsername")
-    LORISHostIP = os.getenv("LORISHostIP")
-    DeletionScript = os.getenv("DeletionScript")
+def test_delete_subjects():
+    logger = logging.getLogger('UT_LORIS_create_subject_check')
+    response_success, token = login()
 
-    #Export some variables for subsequent deletion clean script against production database (yes... because we could not automate LORIS development...):
-    command_string =["sshpass", "-p", ProxyPassword, "ssh", ProxyUsername + "@" + ProxyIP, "-t", "sshpass", "-p", LORISHostPassword, "ssh", "-L", "3001:localhost:22",
-          LORISHostUsername + "@" + LORISHostIP, "php", DeletionScript, "delete_candidate", str(CandID), PSCID, "confirm"]
 
-    logger.info(command_string)
-    if 'TRAVIS' in os.environ:
-        logger.info("Running LORIS delete candidate that was created for: " + PSCID)
-        call(command_string)
+    DCCID = "881417"
+    PSCID = "CNBP9991234"
+    # one time runnable code:
+    deleteCandidateCNBP(token, DCCID, PSCID)
 
 if __name__ == "__main__":
     test_create_subject()
