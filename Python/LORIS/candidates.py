@@ -35,10 +35,11 @@ def createCandidateCNBP(token, proposded_PSCID):
     :return: DCCID
     """
     logger = logging.getLogger('LORIS_CreateCNBPCandidates')
-    logger.info("Creating CNBP Candidates")
-    logger.info(proposded_PSCID)
+    logger.info("Creating CNBP Candidates: " + proposded_PSCID)
+
     PSCID_exist = checkPSCIDExist(token, proposded_PSCID)
     if PSCID_exist:
+        logger.info("PSCID already exist. Quitting.")
         return False
 
     Candidate = {}

@@ -1,8 +1,12 @@
 import requests
 import logging
 import os
+import shutil
+import zipfile
 import sys
 from dotenv import load_dotenv
+from oshelper.file_operation import is_file_name_unique
+
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('Orthanc Query:')
@@ -65,25 +69,59 @@ def deleteOrthanc(endpoint):
         r = s.delete(updatedurl)
         logger.info("Deletion Result:" + str(r.status_code) + r.reason)
 
-        return r.status_code, r.json()
+    return r.status_code, r.json()
 
-"""
-def zipOrthanc(endpoint):
-    query = orthanc_url + '/studies/' + orthanc_study_id + '/archive'
-    response_study = requests.get(query, verify=False, \
-                                  auth=(orthanc_user, orthanc_password))
-    if response_study.status_code != 200:
-        print
-        'Problem retrieving study: ' + orthanc_study_id
-        print
-        response_study.status, response_study.reason
-        continue
-    print
-    '   Retrieved: %s' % orthanc_study_id
-    zip_content = response_study.content
 
-    file_like_object = io.BytesIO(zip_content)
-    zip_object = zipfile.ZipFile(file_like_object)
-    for zip_name in zip_object.namelist():
-        zip_object.extract(zip_name, some_destination_dir)
-"""
+def getPatientZipOrthanc(endpoint):
+    """
+    Get Orthanc endpoint archive ZIP files.
+    :param endpoint:
+    :return:
+    """
+    logger = logging.getLogger('Orthanc_getzip')
+    logger.info("Downloading Orthanc endpoint: " + endpoint + " at")
+    load_dotenv()
+    url = os.getenv("OrthancURL")
+
+    # endpiont should be something like /studies/SUTDY_UUID/
+    query = url + "patients/" + endpoint + '/archive'
+    logger.info(query)
+
+    with requests.Session() as s:
+        r = s.get(query, stream=True, verify=False)  # auth=(orthanc_user, orthanc_password)
+
+        local_filename = endpoint + ".zip"
+        # NOTE the stream=True parameter
+        with open(local_filename, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=1024):
+                if chunk:  # filter out keep-alive new chunks
+                    f.write(chunk)
+                    # f.flush() commented by recommendation from J.F.Sebastian
+    logger.info(str(r.status_code) + r.reason)
+    return r.status_code, local_filename
+
+def flatUnZip(input_zip, out_dir):
+    """
+    Inpsired by https://stackoverflow.com/questions/4917284/extract-files-from-zip-without-keeping-the-structure-using-python-zipfile
+    Added function to hanlde non-unique file names which are probably standarderized by Orthanc.
+    :param input_zip:
+    :param out_dir:
+    :return:
+    """
+
+    with zipfile.ZipFile(input_zip) as zip_file:
+        for member in zip_file.namelist():
+            filename = os.path.basename(member)
+            # skip directories
+            if not filename:
+                continue
+
+            # copy file (taken from zipfile's extract)
+            source = zip_file.open(member)
+
+            proposed_filename = os.path.join(out_dir, filename)
+            # handle duplicate names!
+            _, unique_output_filename = is_file_name_unique(proposed_filename)
+            target = open(unique_output_filename, "wb")
+            with source, target:
+                shutil.copyfileobj(source, target)

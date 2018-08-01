@@ -1,5 +1,5 @@
 import os
-from oshelper.file_operation import copy_files_to_flat_folder, recursive_list_files
+from oshelper.file_operation import copy_files_to_flat_folder, recursive_list_files, is_file_name_unique
 
 
 def test_recursive_load():
@@ -30,6 +30,18 @@ def test_copy_files_to_flat_folder():
     shutil.rmtree(folder)
 
 
+def test_uniqueFileIdentifier():
+    file = "Test.txt"
+    open(file, 'a').close()
+    isUnique, unique_name = is_file_name_unique(file)
+    assert not isUnique
+    print(unique_name)
+    os.remove(file)
+    isUnique, unique_name = is_file_name_unique(file)
+    assert isUnique
+
+
 if __name__ == '__main__':
-    test_recursive_load()
-    test_copy_files_to_flat_folder()
+    #test_recursive_load()
+    #test_copy_files_to_flat_folder()
+    test_uniqueFileIdentifier()

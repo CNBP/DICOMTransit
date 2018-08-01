@@ -1,5 +1,7 @@
 import os
+import datetime
 import logging
+import shutil
 from DICOM.validate import DICOM_validator
 from DICOM.decompress import DICOM_RequireDecompression, DICOM_TransferSyntax
 
@@ -80,19 +82,23 @@ def copy_files_to_flat_folder(file_list, destination_path):
 
         copyfile(file, destination_path_name)
 
+
 def is_file_name_unique(path):
     """
     Determine if the proposed file exist and suggest alternative name.
     :param path:
     :return:
     """
-    import datetime
-    timestamp = datetime.datetime.now().isoformat()
-    timestamp = timestamp.replace(':','') # string : which are incompatible with path
     if os.path.exists(path):
-        return False, path + "_" + timestamp
+        timestamp = datetime.datetime.now().isoformat()
+        timestamp = timestamp.replace(':', '')  # Remove : which are not compatible with string
+
+        file, ext = os.path.splitext(path)
+
+        return False, file + "_" + timestamp + "_" + ext
     else:
         return True, path
 
-def zip_with_name(path, name):
-    return
+
+def zip_with_name(folder_path, output_filename):
+    shutil.make_archive(output_filename, 'zip', folder_path)
