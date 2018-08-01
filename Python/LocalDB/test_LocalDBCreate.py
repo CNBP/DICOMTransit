@@ -1,10 +1,11 @@
-from LocalDB_create_CNBP import LocalDBCreate, create_localDB_CNBP
-from LocalDB_query import check_header
-from LocalDB_schema import *
 from pathlib import Path
 import logging
 import os
 import sys
+from LocalDB.create_CNBP import LocalDBCreate, create_localDB_CNBP
+from LocalDB.query import check_header
+from LocalDB.schema import CNBP_schema_table_name, CNBP_schema, CNBP_schema_types
+
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -76,13 +77,12 @@ def test_LocalDBCreate_CNBP():
     os.remove(PathString)
 
     # must pappend DBKEY creaed as the indexer column.
-    newColumns, newColumnsTypes = concatenatedSchema()
 
-    for index in range(0, len(newColumns)):
+    for index in range(0, len(CNBP_schema)):
         print(fetchallResult[index][1])
-        assert fetchallResult[index][1] == newColumns[index]
+        assert fetchallResult[index][1] == CNBP_schema[index]
         print(fetchallResult[index][2])
-        assert fetchallResult[index][2] == newColumnsTypes[index]
+        assert fetchallResult[index][2] == CNBP_schema_types[index]
 
 
     return True

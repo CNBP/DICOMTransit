@@ -1,10 +1,7 @@
-from LORIS_query import login, getCNBP
-from LORIS_candidates import checkDCCIDExist, checkPSCIDExist
-import sqlite3
-from pathlib import Path
 import logging
-import os
 import sys
+from LORIS.query import login, getCNBP
+from LORIS.candidates import checkDCCIDExist, checkPSCIDExist
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -41,3 +38,6 @@ def test_checkDCCIDExist():
     response_success, exist = checkDCCIDExist(token, 272264)
     assert response_success
     assert exist
+
+if __name__ == '__main__':
+    test_checkPSCIDExist()

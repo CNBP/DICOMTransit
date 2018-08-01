@@ -1,5 +1,5 @@
 python-dotenv
 python-coveralls
 coverage
-nose
 pydicom
+python-dateutil

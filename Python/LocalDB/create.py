@@ -1,15 +1,14 @@
-#This file create a SQLite local database for CNBP requirement.
-#Creation: 2018-07-11T160228EST
-#Author: Yang Ding
-
 import sys
-import os
 import sqlite3
 import logging
 from pathlib import Path
-from LocalDB_schema import *
-import argparse
-import getpass
+
+from LocalDB.schema import CNBP_schema_keyfield_type
+
+# This file create a SQLite local database for CNBP requirement.
+# Creation: 2018-07-11T160228EST
+# Author: Yang Ding
+
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('LocalDBCreate')
@@ -72,7 +71,7 @@ def LocalDBCreate(PathString, TableName, KeyFieldString, ColumnsNameTypeList):
         # Committing changes and closing the connection to the database file
         ConnectedDatabase.commit()
         ConnectedDatabase.close()
-    except:
+    except Exception as e:
         logger.info('SQLite database creation/update issue, suspect schema non-compliant SQLite database. Did you corrupt this SQLite database somehow?')
         raise IOError
     return True

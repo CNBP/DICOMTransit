@@ -1,24 +1,21 @@
 import sys
-import os
-import argparse
-import getpass
 import logging
 import sqlite3
 from pathlib import Path
-from LocalDB_schema import *
+from LocalDB.schema import CNBP_schema
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 def check_value(database_path, table_name, ColumnName, ColumnValue):
-    '''
+    """
     Check if a subject exist in the given database and given table
     :param database_path: path to the SQLite database
     :param table_name: the name of the table being queried
     :param ColumnName: the column being queried
     :param ColumnValue: the value of the column being checked
     :return: boolean on if this is ever found in the given database in the given table, in the given column.
-    '''
+    """
     logger = logging.getLogger('LORISQuery_CheckSubjectExist')
 
 
@@ -42,7 +39,7 @@ def check_value(database_path, table_name, ColumnName, ColumnValue):
 
         result_rows = c.fetchall()
 
-    except:
+    except Exception as e:
         raise IOError()
 
     # Closing the connection to the database file
@@ -55,7 +52,7 @@ def check_value(database_path, table_name, ColumnName, ColumnValue):
 
 
 def create_entry(database_path, table_name, key_field, key_field_value):
-    '''
+    """
     A general function to create entries into the database BY providing the name of the KEYValue field and KEYvalue value to be created
     Note it MUST be the keyfield.
     :param database_path: path to the database
@@ -63,7 +60,7 @@ def create_entry(database_path, table_name, key_field, key_field_value):
     :param key_field: KeyFiled in the table to be created
     :param key_field_value: value of the key_field to be created. 
     :return: if the entry has been successfully created.
-    '''
+    """
     logger = logging.getLogger('LORISQuery_CreateSubject')
 
     # if SQL already exist, quit script.
@@ -84,7 +81,7 @@ def create_entry(database_path, table_name, key_field, key_field_value):
 
         # Creating a new SQLite record row (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
         c.execute('INSERT OR IGNORE INTO {tn} ({field}) VALUES ("{value}")'.format(tn=table_name, field=key_field, value=key_field_value))
-    except:
+    except Exception as e:
         raise IOError()
 
     # Closing the connection to the database file
@@ -94,7 +91,7 @@ def create_entry(database_path, table_name, key_field, key_field_value):
 
 
 def update_entry(database_path, table_name, key_field, key_field_value, field, field_value):
-    '''
+    """
     A general function to create entries into the database BY providing the name of the KEYValue field and KEYvalue value to be created
     :param database_path:
     :param table_name:
@@ -103,7 +100,7 @@ def update_entry(database_path, table_name, key_field, key_field_value, field, f
     :param field:
     :param field_value:
     :return:
-    '''
+    """
 
     logger = logging.getLogger('LORISQuery_CreateSubject')
 
@@ -126,7 +123,7 @@ def update_entry(database_path, table_name, key_field, key_field_value, field, f
         # Update SQLite record row where key field values are found (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
         c.execute('UPDATE {tn} SET {f}="{fv}" WHERE {kf}="{kfv}"'.format(tn=table_name, f=field, fv=field_value, kf=key_field, kfv=key_field_value))
 
-    except:
+    except Exception as e:
         raise IOError()
 
     # Closing the connection to the database file
