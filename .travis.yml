@@ -12,6 +12,7 @@ install:
   # install dcmtk dependencies necessary for the decompression() function
   - sudo apt-get update
   - sudo apt-get install -y dcmtk
+  - sudo apt-get install -y orthanc
 
 # command to run tests
 script:

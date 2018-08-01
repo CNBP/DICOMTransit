@@ -1,6 +1,6 @@
 from LORIS.query import login
 from LocalDB.create_CNBP import create_localDB_CNBP
-from LocalDB.schema import *
+from LocalDB.schema import CNBP_schema_keyfield, CNBP_schema_table_name
 from LocalDB.query import create_entry, update_entry
 from Integration.Intermediate_LORIS_LocalDB import findTimePointUpdateDatabase
 
