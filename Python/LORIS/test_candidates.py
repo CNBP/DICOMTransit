@@ -33,7 +33,8 @@ def test_create_subject():
 
     logger.info(command_string)
     if 'TRAVIS' in os.environ:
-        #call(command_string)
+        logger.info("Running LORIS delete candidate that was created. ")
+        # call(command_string)
 
 if __name__ == "__main__":
     test_create_subject()
