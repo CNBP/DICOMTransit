@@ -40,7 +40,6 @@ def test_uniqueFileIdentifier():
     isUnique, unique_name = is_file_name_unique(file)
     assert isUnique
 
-
 if __name__ == '__main__':
     #test_recursive_load()
     #test_copy_files_to_flat_folder()

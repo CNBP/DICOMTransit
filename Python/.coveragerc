@@ -5,7 +5,6 @@ omit =
 	*venv*
 	*tests_*
 	*/Coverage/*
-	*test_*
 [report]
 omit = 
 	*/python?.?.?/*	
