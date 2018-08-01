@@ -14,18 +14,16 @@ install:
   - sudo apt-get install -y dcmtk
   - sudo apt-get install -y orthanc
   - sudo apt-get install -y sshpass
+  - sudo apt-get install -y pytest-cov
 
 # command to run tests
 script:
   - cd "Python"
-  - python -m pytest
+  - python -m pytest --cov # Run test with automated coverage reporting
   
-
 # After successful test, run coverage and send data to Coverall
-after_success:
-  - coverage run ./Coverage/coverage_setup.py  # Run Coverage
+after_success:  
   - coverage report -m # Run Coverage report
   - ls -lah # list the files in the root dir # Used to check voerage file generation
-  - coveralls -d ./.coverage # Ask coverall to send the coverage file generated to coverall 
-  # Clean up the subjects created during the Unit test. 
-  # - sshpass -p $ProxyPassword ssh $ProxyUsername@$ProxyIP -t sshpass -p $LORISHostPassword ssh -L 3001:localhost:22 $LORISHostUsername@$LORISHostIP php $DeletionScript
+  - coveralls -d ./.coverage # Ask coverall to send the coverage file generated to coverall
+  

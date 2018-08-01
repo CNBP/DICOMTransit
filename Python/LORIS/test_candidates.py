@@ -13,7 +13,7 @@ def test_create_subject():
     if not response_success:
         raise ConnectionError
 
-    PSCID = "CNBP9871234"
+    PSCID = "CNBP9861234"
 
     success, CandID = createCandidateCNBP(token, PSCID)
 
