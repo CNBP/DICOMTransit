@@ -3,3 +3,4 @@ python-coveralls
 coverage
 pydicom
 python-dateutil
+pytest-cov

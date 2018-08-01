@@ -14,12 +14,11 @@ install:
   - sudo apt-get install -y dcmtk
   - sudo apt-get install -y orthanc
   - sudo apt-get install -y sshpass
-  - sudo apt-get install -y pytest-cov
 
 # command to run tests
 script:
   - cd "Python"
-  - python -m pytest --cov # Run test with automated coverage reporting
+  - python -m pytest -s --cov # Run test with automated coverage reporting
   
 # After successful test, run coverage and send data to Coverall
 after_success:  
