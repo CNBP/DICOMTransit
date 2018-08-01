@@ -1,36 +1,14 @@
 import requests
-from LORIS.helper import *
+import logging
+import sys
+import os
+import json
 from dotenv import load_dotenv
+from LORIS.helper import is_response_success
+
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('LORISQuery')
-
-def is_response_success(status_code, expected_code):
-    """
-    A simple function to determine the success of the status code
-    :param status_code:
-    :return: boolean value
-    """
-    if status_code == expected_code:
-        return True
-    else:
-        return False
-
-
-
-def check_json(data):
-    """
-    Check if the data input is JSON format compatible.
-    :param data:
-    :return:
-    """
-    try:
-        JSON = json.loads(data)
-        return True, JSON
-    except ValueError:
-        return False, None
-    except:
-        return False, None
 
 
 def login():
@@ -42,8 +20,6 @@ def login():
 
     #Load environmental variables.
     load_dotenv()
-
-    is_travis = 'TRAVIS' in os.environ
 
     username = os.getenv("LORISusername")
     password = os.getenv("LORISpassword")
@@ -57,6 +33,8 @@ def login():
 
     # requests style login # NOT WORKING!
     r = requests.post(updated_url, data=data)
+
+
     logger.info(str(r.status_code) + r.reason)
 
     response_json = r.json()

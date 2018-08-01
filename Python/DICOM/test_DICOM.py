@@ -2,7 +2,6 @@ import os
 import sys
 import logging
 import unittest
-import pydicom
 
 from DICOM.validate import DICOM_validator
 from DICOM.decompress import DICOM_RequireDecompression, DICOM_decompress

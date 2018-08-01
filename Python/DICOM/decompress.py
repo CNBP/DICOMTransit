@@ -1,7 +1,7 @@
 import logging
 import os
 import pydicom, subprocess
-import platform
+
 from DICOM.validate import DICOM_validator
 from pydicom.filereader import read_file_meta_info
 
@@ -27,10 +27,9 @@ def DICOM_decompress(input_file, out_put):
         ErrorMessage = "File type not compatible for " + input_file
         logger.info(ErrorMessage)
         return False, ErrorMessage
-
-    # all other unanticipated errors:
-    except:
-        ErrorMessage = "Exception encountered while calling DCMDJPEG. Contact author to investigate, attach " + input_file
+    except Exception as e:
+        logger.info(e.output)
+        ErrorMessage = "Unknown exception detected. Contact the author about " + input_file
         logger.info(ErrorMessage)
         return False, ErrorMessage
 
@@ -42,13 +41,13 @@ def DICOM_decompress(input_file, out_put):
 
     # Test read the data after writing.
     try:
-        data = pydicom.read_file(out_put)
-    except:
+        pydicom.read_file(out_put)
+    except Exception as e:
         ErrorMessage = "Exception encountered while verifying the proper writing out of the DICOM data. Contact author to investigate, attach " + input_file
         logger.info(ErrorMessage)
         return False, ErrorMessage
 
-    logger.info("Success writen " + input_file + " to " + out_put)
+    logger.info("Success written " + input_file + " to " + out_put)
     return True, "All good"
 
 def DICOM_RequireDecompression(transfer_syntax):

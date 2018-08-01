@@ -3,7 +3,8 @@ import os
 import json
 import logging
 from dotenv import load_dotenv
-from LORIS.query import number_extraction, getCNBP, putCNBP, login
+from LORIS.helper import number_extraction
+from LORIS.query import getCNBP, putCNBP, login
 from LORIS.candidates import check_DCCID, checkDCCIDExist
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
