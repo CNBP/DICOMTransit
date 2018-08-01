@@ -5,6 +5,7 @@ omit =
 	*venv*
 	*tests_*
 	*/Coverage/*
+	*test_*
 [report]
 omit = 
 	*/python?.?.?/*	
@@ -12,6 +13,7 @@ omit =
 	*venv*
 	*tests_*
 	*/Coverage/*
+	*test_*
 exclude_lines =
     pragma: no cover
     def __repr__
@@ -19,4 +21,5 @@ exclude_lines =
     if settings.DEBUG
     raise NotImplementedError
     if 0:
+	def test_*
     if __name__ == .__main__.:

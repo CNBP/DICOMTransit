@@ -35,16 +35,16 @@ test_CreateSubject()
 test_CreateSubjectCheckExist()
 test_SubjectUpdate()
 
-from LORIS.test_LORIS_helper import test_number_extraction
+from LORIS.test_helper import test_number_extraction
 test_number_extraction()
 
-from LORIS.test_LORIS_Query import test_checkPSCIDExist, test_checkDCCIDExist, test_LORIS_get, test_LORIS_login
+from LORIS.test_query import test_checkPSCIDExist, test_checkDCCIDExist, test_LORIS_get, test_LORIS_login
 test_checkPSCIDExist()
 test_checkDCCIDExist()
 test_LORIS_get()
 test_LORIS_login()
 
-from LORIS.test_LORIS_timepoint import test_visit_number_extraction
+from LORIS.test_timepoint import test_visit_number_extraction
 test_visit_number_extraction()
 
 from orthanc.test_orthanc import test_getSubjects, test_deleteSubjects
@@ -54,3 +54,4 @@ test_deleteSubjects()
 from oshelper.test_file_ops import test_recursive_load, test_copy_files_to_flat_folder
 test_recursive_load()
 test_copy_files_to_flat_folder()
+test_recursive_load()
