@@ -1,12 +1,11 @@
 import sys
 import os
 import json
-import argparse
-import getpass
 import logging
 from dotenv import load_dotenv
-from LORIS_query import number_extraction, getCNBP, putCNBP, login
-from LORIS_candidates import check_DCCID, checkDCCIDExist
+from LORIS.helper import number_extraction
+from LORIS.query import getCNBP, putCNBP, login
+from LORIS.candidates import check_DCCID, checkDCCIDExist
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 

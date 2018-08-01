@@ -1,11 +1,10 @@
 import sys
 import os
 import json
-import argparse
-import getpass
 import logging
 from dotenv import load_dotenv
-from LORIS_query import getCNBP, postCNBP, is_response_success
+from LORIS.query import getCNBP, postCNBP
+from LORIS.helper import is_response_success
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 #logger = logging.getLogger('LORISQuery')
@@ -84,7 +83,7 @@ def checkPSCIDExist(token, proposed_PSCID):
 
     #Get list of candidates (Candidates in v0.0.1)
     candidates = loris_project.get("Candidates")
-    print(candidates)
+    logger.info(candidates)
 
     for DCCID in candidates: #these candidates should really be only from the same ID regions.
         response_success, candidate_json = getCNBP(token, r"candidates/"+DCCID)

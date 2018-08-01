@@ -1,12 +1,28 @@
 language: python
+
 python:
   - "3.6"
+
 # command to install dependencies
 install:
+  
+  # install Python dependencies
   - pip install -r requirements.txt
+
+  # install dcmtk dependencies necessary for the decompression() function
+  - sudo apt-get update
+  - sudo apt-get install -y dcmtk
+  - sudo apt-get install -y orthanc
+
 # command to run tests
 script:
-  - pytest
-  # - nosetests --with-coverage
+  - cd "Python"
+  - python -m pytest
+  
+
+# After successful test, run coverage and send data to Coverall
 after_success:
-  - coveralls
+  - coverage run ./Coverage/coverage_setup.py  # Run Coverage
+  - coverage report -m # Run Coverage report
+  - ls -lah # list the files in the root dir # Used to check voerage file generation
+  - coveralls -d ./.coverage # Ask coverall to send the coverage file generated to coverall

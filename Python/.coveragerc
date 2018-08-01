@@ -1,0 +1,22 @@
+[run]
+omit =
+	*/python?.?.?/*	
+	*__init__*
+	*venv*
+	*tests_*
+	*/Coverage/*
+[report]
+omit = 
+	*/python?.?.?/*	
+	*__init__*
+	*venv*
+	*tests_*
+	*/Coverage/*
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:

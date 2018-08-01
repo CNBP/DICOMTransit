@@ -4,8 +4,9 @@
 
 import os
 from dotenv import load_dotenv
-from LocalDB_create import LocalDBCreate
-import LocalDB_schema
+from LocalDB.create import LocalDBCreate
+from LocalDB import schema
+
 
 def create_localDB_CNBP(Path):
 
@@ -21,10 +22,10 @@ def create_localDB_CNBP(Path):
     password = os.getenv("LORISpassword")
 
     # Create the variable array that store the columns information to be used later in loop for column creation
-    TableName = LocalDB_schema.CNBP_schema_table_name
-    KeyField = LocalDB_schema.CNBP_schema_keyfield
-    NewColumns = LocalDB_schema.CNBP_schema_fields
-    NewColumnsTypes = LocalDB_schema.CNBP_schema_fields_types
+    TableName = schema.CNBP_schema_table_name
+    KeyField = schema.CNBP_schema_keyfield
+    NewColumns = schema.CNBP_schema_fields
+    NewColumnsTypes = schema.CNBP_schema_fields_types
 
     NewColumnSpec = zip(NewColumns, NewColumnsTypes)
     NewColumnSpecList = list(NewColumnSpec)
