@@ -42,5 +42,5 @@ ch.setopt(ch.WRITEFUNCTION, buf.write)
 ch.perform()
 ch.close()
 
-print buf.getvalue()
+print(buf.getvalue())
 buf.close()

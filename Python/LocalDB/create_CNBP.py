@@ -1,37 +1,33 @@
-#This file create a SQLite local database for CNBP requirement.
+#This file database a SQLite local database for CNBP requirement.
 #Creation: 2018-07-11T160228EST
 #Author: Yang Ding
 
-import os
 from dotenv import load_dotenv
-from LocalDB.create import LocalDBCreate
-from LocalDB import schema
+from LocalDB.create import LocalDB_create
+from LocalDB.schema import CNBP_blueprint
 
+class LocalDB_createCNBP:
 
-def create_localDB_CNBP(Path):
+    @staticmethod
+    def database(Path):
 
-    # name of the TableName to be created
+        # name of the TableName to be created
 
+        #Create the PRIMARY KEY column.
 
-    #Create the PRIMARY KEY column.
+        load_dotenv()
 
+        # Create the variable array that store the columns information to be used later in loop for column creation
+        TableName = CNBP_blueprint.table_name
+        KeyField = CNBP_blueprint.keyfield
+        NewColumns = CNBP_blueprint.fields
+        NewColumnsTypes = CNBP_blueprint.fields_types
 
-    load_dotenv()
+        NewColumnSpec = zip(NewColumns, NewColumnsTypes)
+        NewColumnSpecList = list(NewColumnSpec)
 
-    username = os.getenv("LORISusername")
-    password = os.getenv("LORISpassword")
-
-    # Create the variable array that store the columns information to be used later in loop for column creation
-    TableName = schema.CNBP_schema_table_name
-    KeyField = schema.CNBP_schema_keyfield
-    NewColumns = schema.CNBP_schema_fields
-    NewColumnsTypes = schema.CNBP_schema_fields_types
-
-    NewColumnSpec = zip(NewColumns, NewColumnsTypes)
-    NewColumnSpecList = list(NewColumnSpec)
-
-    return LocalDBCreate(Path, TableName, KeyField, NewColumnSpecList)
+        return LocalDB_create.database(Path, TableName, KeyField, NewColumnSpecList)
 
 # Only executed when running directly.
 if __name__ == '__main__':
-    create_localDB_CNBP("..\LocalDB\LocalDB_CNBPs.sqlite")
+    LocalDB_createCNBP.database("..\LocalDB\LocalDB_CNBPs.sqlite")

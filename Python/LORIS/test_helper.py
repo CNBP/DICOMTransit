@@ -1,4 +1,4 @@
-from LORIS.helper import number_extraction
+from LORIS.helper import LORIS_helper
 
 def test_number_extraction():
     Prefix = "V"
@@ -12,8 +12,8 @@ def test_number_extraction():
 
     DualList = zip(numbers, timepoints)
 
-    for tuple in DualList:
-        assert str(tuple[0]) == number_extraction(tuple[1])[0]
+    for tupleItem in DualList:
+        assert str(tupleItem[0]) == LORIS_helper.number_extraction(tupleItem[1])[0]
 
 if __name__ == '__main__':
     test_number_extraction()
