@@ -3,11 +3,12 @@ from pathlib import Path
 import logging
 import os
 import sys
-from LocalDB.query import check_value, update_entry, create_entry
-from LocalDB.create_CNBP import create_localDB_CNBP
-
+from LocalDB.query import LocalDB_query
+from LocalDB.create_CNBP import LocalDB_createCNBP
+from dotenv import load_dotenv
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 
 def test_CreateSubject():
     logger = logging.getLogger('UT_CreateSubject')
@@ -23,14 +24,14 @@ def test_CreateSubject():
         os.remove(PathString)
 
     # Create the database
-    assert create_localDB_CNBP(PathString)
+    assert LocalDB_createCNBP.database(PathString)
     logger.info('Test SQLite database successfully created. Gonna mess with it!')
 
     tableName = 'id_table'  # All CNBP database should have this table name.
     MRNColumn = "MRN"
     CNBPIDColumn = "CNBPID"
 
-    create_entry(PathString, tableName, MRNColumn, 291033)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 291033)
     logger.info('Test SQLite database successfully inserted with mock records. Gonna check!')
 
     # Populate the table with some fake records.
@@ -51,6 +52,7 @@ def test_CreateSubject():
 
     return True
 
+
 def test_CheckSubjectExist():
     logger = logging.getLogger('UT_CheckSubjectExist')
     PathString = "TestCNBPQuery.sqlite"
@@ -65,7 +67,7 @@ def test_CheckSubjectExist():
         os.remove(PathString)
 
     # Create the database
-    assert create_localDB_CNBP(PathString)
+    assert LocalDB_createCNBP.database(PathString)
     logger.info('Test SQLite database successfully created. Gonna mess with it!')
 
     tableName = 'id_table'  # All CNBP database should have this table name.
@@ -91,8 +93,8 @@ def test_CheckSubjectExist():
     logger.info('Test SQLite database successfully inserted with mock records. Gonna mess with it!')
 
     # Create on Connecting to the database file
-    assert(check_value(PathString, tableName, "MRN", 291010))
-    assert(check_value(PathString, tableName, "CNBPID", "CNBP0010001"))
+    assert(LocalDB_query.check_value(PathString, tableName, "MRN", 291010))
+    assert(LocalDB_query.check_value(PathString, tableName, "CNBPID", "CNBP0010001"))
 
     # Remove test data base created
     os.remove(PathString)
@@ -113,33 +115,33 @@ def test_CreateSubjectCheckExist():
         os.remove(PathString)
 
     # Create the database
-    assert create_localDB_CNBP(PathString)
+    assert LocalDB_createCNBP.database(PathString)
     logger.info('Test SQLite database successfully created. Gonna mess with it!')
 
     tableName = 'id_table'  # All CNBP database should have this table name.
     MRNColumn = "MRN"
     CNBPIDColumn = "CNBPID"
 
-    create_entry(PathString, tableName, MRNColumn, 2918210)
-    create_entry(PathString, tableName, MRNColumn, 23452346)
-    create_entry(PathString, tableName, MRNColumn, 2345234)
-    create_entry(PathString, tableName, MRNColumn, 273411)
-    create_entry(PathString, tableName, MRNColumn, 364573)
-    create_entry(PathString, tableName, MRNColumn, 7424141)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 2918210)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 23452346)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 2345234)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 273411)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 364573)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 7424141)
 
-    success, _ = check_value(PathString, tableName, MRNColumn, 7129112)
+    success, _ = LocalDB_query.check_value(PathString, tableName, MRNColumn, 7129112)
     assert not success
 
-    success, _ = check_value(PathString, tableName, MRNColumn, 2918210)
+    success, _ = LocalDB_query.check_value(PathString, tableName, MRNColumn, 2918210)
     assert success
 
-    success, _ = check_value(PathString, tableName, MRNColumn, 712921)
+    success, _ = LocalDB_query.check_value(PathString, tableName, MRNColumn, 712921)
     assert not success
 
-    success, _ = check_value(PathString, tableName, MRNColumn, 742)
+    success, _ = LocalDB_query.check_value(PathString, tableName, MRNColumn, 742)
     assert not success
 
-    success, _ = check_value(PathString, tableName, MRNColumn, 364573)
+    success, _ = LocalDB_query.check_value(PathString, tableName, MRNColumn, 364573)
     assert success
 
     logger.info('Tested SQLIte database entry. ')
@@ -163,38 +165,42 @@ def test_SubjectUpdate():
         os.remove(PathString)
 
     # Create the database
-    assert create_localDB_CNBP(PathString)
+    assert LocalDB_createCNBP.database(PathString)
     logger.info('Test SQLite database successfully created. Gonna mess with it!')
 
     tableName = 'id_table'  # All CNBP database should have this table name.
     MRNColumn = "MRN"
     CNBPIDColumn = "CNBPID"
 
-    create_entry(PathString, tableName, MRNColumn, 2918210)
-    create_entry(PathString, tableName, MRNColumn, 23452346)
-    create_entry(PathString, tableName, MRNColumn, 2345234)
-    create_entry(PathString, tableName, MRNColumn, 273411)
-    create_entry(PathString, tableName, MRNColumn, 364573)
-    create_entry(PathString, tableName, MRNColumn, 7424141)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 2918210)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 23452346)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 2345234)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 273411)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 364573)
+    LocalDB_query.create_entry(PathString, tableName, MRNColumn, 7424141)
 
-    update_entry(PathString, tableName, MRNColumn, 7424141, CNBPIDColumn, "CNBPID0010001")
-    update_entry(PathString, tableName, MRNColumn, 2345234, CNBPIDColumn, "CNBPID0010002")
-    update_entry(PathString, tableName, MRNColumn, 2918210, CNBPIDColumn, "CNBPID0010003")
-    update_entry(PathString, tableName, MRNColumn, 273411, CNBPIDColumn, "CNBPID0010004")
+    load_dotenv()
 
-    success, _ = check_value(PathString, tableName, CNBPIDColumn, 'CNBPID0010006')
+    Prefix = os.getenv("institutionID")
+
+    LocalDB_query.update_entry(PathString, tableName, MRNColumn, 7424141, CNBPIDColumn, Prefix + "0010001")
+    LocalDB_query.update_entry(PathString, tableName, MRNColumn, 2345234, CNBPIDColumn, Prefix + "0010002")
+    LocalDB_query.update_entry(PathString, tableName, MRNColumn, 2918210, CNBPIDColumn, Prefix + "0010003")
+    LocalDB_query.update_entry(PathString, tableName, MRNColumn, 273411, CNBPIDColumn, Prefix + "0010004")
+
+    success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, 'CNBPID0010006')
     assert not success
 
-    success, _ = check_value(PathString, tableName, CNBPIDColumn, 'CNBPID0010001')
+    success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, Prefix + "0010001")
     assert success
 
-    success, _ = check_value(PathString, tableName, CNBPIDColumn, 55555)
+    success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, 55555)
     assert not success
 
-    success, _ = check_value(PathString, tableName, CNBPIDColumn, 742)
+    success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, 742)
     assert not success
 
-    success, _ = check_value(PathString, tableName, CNBPIDColumn, 'CNBPID0010003')
+    success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, Prefix + "0010003")
     assert success
 
     logger.info('Tested SQLIte database entry. ')

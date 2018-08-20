@@ -2,9 +2,10 @@ from pathlib import Path
 import logging
 import os
 import sys
-from LocalDB.create_CNBP import LocalDBCreate, create_localDB_CNBP
-from LocalDB.query import check_header
-from LocalDB.schema import CNBP_schema_table_name, CNBP_schema, CNBP_schema_types
+from LocalDB.create_CNBP import LocalDB_createCNBP
+from LocalDB.create import LocalDB_create
+from LocalDB.query import LocalDB_query
+from LocalDB.schema import CNBP_blueprint
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -32,11 +33,9 @@ def test_LocalDBCreate():
     NewColumnSpecList = list(NewColumnSpec)
 
     # Create the database
-    assert LocalDBCreate(PathString, table_name, KeyFieldString, NewColumnSpecList)
+    assert LocalDB_create.database(PathString, table_name, KeyFieldString, NewColumnSpecList)
 
-
-
-    table_header = check_header(PathString, table_name)
+    table_header = LocalDB_query.check_header(PathString, table_name)
 
     # Remove database before assertion that potentially fail.
     os.remove(PathString)
@@ -66,23 +65,23 @@ def test_LocalDBCreate_CNBP():
         os.remove(PathString)
 
     # Create the database
-    assert create_localDB_CNBP(PathString)
+    assert LocalDB_createCNBP.database(PathString)
 
 
-    tableName = CNBP_schema_table_name #All CNBP database should have this table name.
+    tableName = CNBP_blueprint.table_name #All CNBP database should have this table name.
 
-    fetchallResult = check_header(PathString, tableName)
+    fetchallResult = LocalDB_query.check_header(PathString, tableName)
 
     # remove test database
     os.remove(PathString)
 
     # must pappend DBKEY creaed as the indexer column.
 
-    for index in range(0, len(CNBP_schema)):
+    for index in range(0, len(CNBP_blueprint.schema)):
         print(fetchallResult[index][1])
-        assert fetchallResult[index][1] == CNBP_schema[index]
+        assert fetchallResult[index][1] == CNBP_blueprint.schema[index]
         print(fetchallResult[index][2])
-        assert fetchallResult[index][2] == CNBP_schema_types[index]
+        assert fetchallResult[index][2] == CNBP_blueprint.schema_types[index]
 
 
     return True
