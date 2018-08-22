@@ -1,6 +1,7 @@
 import sys
 import logging
 import os
+from tqdm import tqdm
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -66,9 +67,10 @@ class DICOM_validate:
         validated_DICOM_files = []
 
         from DICOM.elements import DICOM_elements
+        logger.info("Checking individual dicom files for patient info consistencies")
 
         # Check individual DICOM file for consistencies.
-        for file in files:
+        for file in tqdm(files):
 
             # Skip current file if they are not DICOM files.
             isDICOM, _ = DICOM_validate.file(file)

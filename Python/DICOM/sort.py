@@ -3,6 +3,7 @@ import logging
 import os
 import shutil
 from DICOM.elements import DICOM_elements
+from tqdm import tqdm
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -39,8 +40,10 @@ class DICOM_sort:
 
         exception_encountered = 0
 
+        logger.info("Sorting files into folders:")
+
         # File here should be the FULL path.
-        for file in file_list:
+        for file in tqdm(file_list):
 
             success1, SeriesNumber = DICOM_elements.retrieve(file, "SeriesNumber")
 
