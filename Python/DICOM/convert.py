@@ -54,10 +54,14 @@ class DICOM_convert:
                 os.rename(file, '0'+ file)
 
     @staticmethod
+    def to_minc(input_folder, output_folder):
+        raise NotImplementedError
+
+    @staticmethod
     def to_BIDS(input_folder, output_folder):
-        return True
+        raise NotImplementedError
 
 
 if __name__ == "__main__":
-    DICOM_convert.fix_series(r"C:\FullyAnonymizedSubjects\2018-08-15_TestSubject2\Test")
+    DICOM_convert.fix_series(r"C:\FullyAnonymizedSubjects\Wed3ConvertResult\raw_sorted")
     #DICOM_convert.to_nii(r"C:\FullyAnonymizedSubjects\2018-08-15_TestSubject2\Wed2-Decompressed", r"C:\FullyAnonymizedSubjects\2018-08-15_TestSubject2\Test")
