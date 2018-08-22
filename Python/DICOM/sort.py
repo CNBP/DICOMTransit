@@ -22,7 +22,7 @@ class DICOM_sort:
         from oshelper.file_operation import oshelper_files
 
         # Get files
-        file_list = oshelper_files.recursive_list_files(input_folder)
+        file_list = oshelper_files.recursive_list(input_folder)
 
         if not os.path.isdir(output_folder):
             os.mkdir(output_folder)
@@ -32,10 +32,10 @@ class DICOM_sort:
         oshelper_files.copy_files_to_flat_folder(file_list, output_folder)
 
         # decompress them if necessary.
-        oshelper_files.decompress_folder(output_folder)
+        # oshelper_files.decompress_folder(output_folder)
 
         # Get files list again.
-        file_list = oshelper_files.recursive_list_files(input_folder)
+        file_list = oshelper_files.recursive_list(output_folder)
 
         exception_encountered = 0
 
@@ -54,6 +54,9 @@ class DICOM_sort:
             # Check MRI Series folder exists
             DestinationFolder = str(SeriesNumber) + '-' + SeriesDescription
             DestinationFolder = DestinationFolder.replace(' ', '_')
+            DestinationFolder = DestinationFolder.replace(':', '_')
+            DestinationFolder = DestinationFolder.replace(r'/', '_')
+            DestinationFolder = DestinationFolder.replace(r'\\', '_')
 
             # Make destination folder if not exist.
             os.chdir(output_folder)
@@ -65,6 +68,7 @@ class DICOM_sort:
 
             shutil.move(file, os.path.join(DestinationFolder, filename))
         logger.info("Total error encoutnered: " + str(exception_encountered))
+
 
 if __name__ == "__main__":
     DICOM_sort.into_folder("C:\FullyAnonymizedSubjects\StreamLineTest", "C:\FullyAnonymizedSubjects\StreamLineTest\Test")

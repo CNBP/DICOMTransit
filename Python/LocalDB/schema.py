@@ -33,4 +33,4 @@ def concatenatedSchema():
 
 
 if __name__ == '__main__':
-    print(CNBP_blueprint.concatenatedSchema())
+    print(concatenatedSchema())

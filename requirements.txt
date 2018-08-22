@@ -4,3 +4,4 @@ coverage
 pydicom
 python-dateutil
 pytest-cov
+heudiconv[all]

@@ -3,7 +3,7 @@ from oshelper.file_operation import oshelper_files
 
 
 def test_recursive_load():
-    file_list = oshelper_files.recursive_list_files(os.getcwd())
+    file_list = oshelper_files.recursive_list(os.getcwd())
     print(file_list)
     assert len(file_list) > 56 # the current files within the source code
 
@@ -15,7 +15,7 @@ def test_copy_files_to_flat_folder():
 
     # Local Computer DICOM test.
     # path1 = r"C:\FullyAnonymizedSubjects\anonymus\brain1"
-    # file_list = recursive_list_files(path1)
+    # file_list = recursive_list(path1)
 
     # Output DIR:
     tmp_folder = os.getcwd()
@@ -34,11 +34,11 @@ def test_copy_files_to_flat_folder():
 def test_uniqueFileIdentifier():
     file = "Test.txt"
     open(file, 'a').close()
-    isUnique, unique_name = oshelper_files.is_file_name_unique(file)
+    isUnique, unique_name = oshelper_files.is_name_unique(file)
     assert not isUnique
     print(unique_name)
     os.remove(file)
-    isUnique, unique_name = oshelper_files.is_file_name_unique(file)
+    isUnique, unique_name = oshelper_files.is_name_unique(file)
     assert isUnique
 
 
