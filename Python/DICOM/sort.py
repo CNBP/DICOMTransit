@@ -55,7 +55,7 @@ class DICOM_sort:
                 continue
 
             # Check MRI Series folder exists
-            DestinationFolder = str(SeriesNumber) + '-' + SeriesDescription
+            DestinationFolder = str(SeriesNumber) + '_' + SeriesDescription
             DestinationFolder = DestinationFolder.replace(' ', '_')
             DestinationFolder = DestinationFolder.replace(':', '_')
             DestinationFolder = DestinationFolder.replace(r'/', '_')
