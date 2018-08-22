@@ -4,7 +4,7 @@ import logging
 import shutil
 from DICOM.validate import DICOM_validate
 from DICOM.decompress import DICOM_decompress
-
+from tqdm import tqdm
 
 class oshelper_files:
 
@@ -33,7 +33,7 @@ class oshelper_files:
         :return:
         """
 
-        for file in file_list:
+        for file in tqdm(file_list):
             logger = logging.getLogger("Compression checking file: " + file)
 
             # find if the file is DICOM, if not, skip this file.
@@ -64,7 +64,7 @@ class oshelper_files:
 
         from shutil import copyfile
 
-        for file in file_list:
+        for file in tqdm(file_list):
 
             # find if the file is DICOM, if not, skip this file.
             is_DICOM_file, _ = DICOM_validate.file(file)

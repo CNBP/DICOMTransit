@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0f8cc772-038e-43b9-96c9-3fc0dc399b16" name="Default" comment="" />
+    <list default="true" id="0f8cc772-038e-43b9-96c9-3fc0dc399b16" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DICOM/sort.py" beforeDir="false" afterPath="$PROJECT_DIR$/DICOM/sort.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DICOM/validate.py" beforeDir="false" afterPath="$PROJECT_DIR$/DICOM/validate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oshelper/file_operation.py" beforeDir="false" afterPath="$PROJECT_DIR$/oshelper/file_operation.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,6 +26,7 @@
     <SUITE FILE_PATH="coverage/Python$test_LORIS_Query.coverage" NAME="test_LORIS_Query Coverage Results" MODIFIED="1531940245103" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$DICOM.coverage" NAME="DICOM Coverage Results" MODIFIED="1532113994703" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DICOMTransit$test_DICOM.coverage" NAME="test_DICOM Coverage Results" MODIFIED="1532715021456" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DICOMTransit$DICOM_universal.coverage" NAME="DICOM_universal Coverage Results" MODIFIED="1534979117855" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Integration" />
     <SUITE FILE_PATH="coverage/Python$test.coverage" NAME="test Coverage Results" MODIFIED="1532293745792" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Python$LocalDBCreate_CNBP.coverage" NAME="LocalDBCreate_CNBP Coverage Results" MODIFIED="1531937470498" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DICOMTransit$test_file_ops.coverage" NAME="test_file_ops Coverage Results" MODIFIED="1532639574639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -46,11 +52,89 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="elements.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="sort.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DICOM/sort.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="366">
+              <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_DICOM.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DICOM/test_DICOM.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="267">
+              <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="validate.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/DICOM/validate.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="69" column="83" selection-start-line="69" selection-start-column="83" selection-end-line="69" selection-end-column="83" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="decompress.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DICOM/decompress.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="144">
+              <caret line="15" column="23" lean-forward="true" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="convert.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DICOM/convert.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="428">
+              <caret line="47" column="33" lean-forward="true" selection-start-line="47" selection-start-column="33" selection-end-line="47" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="elements.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DICOM/elements.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="32">
-              <caret line="2" column="10" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+            <state relative-caret-position="-497">
+              <caret line="2" selection-start-line="2" selection-end-line="2" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="file_operation.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/oshelper/file_operation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="878">
+              <caret line="55" column="8" selection-start-line="55" selection-start-column="8" selection-end-line="55" selection-end-column="8" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DICOM_universal.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Integration/DICOM_universal.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2">
+              <caret line="28" column="17" lean-forward="true" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
+              <folding>
+                <element signature="e#0#33#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -82,6 +166,7 @@
       <find>DCCID_table_index</find>
       <find>DCC</find>
       <find>DCCID</find>
+      <find>for</find>
     </findStrings>
     <replaceStrings>
       <replace>PathString</replace>
@@ -95,6 +180,9 @@
       <replace>len(str(</replace>
       <replace>field</replace>
     </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -143,11 +231,13 @@
         <option value="$PROJECT_DIR$/tests/test_Intermediate_Server.py" />
         <option value="$PROJECT_DIR$/DICOM/DICOM.py" />
         <option value="$PROJECT_DIR$/tests/test_file_ops.py" />
-        <option value="$PROJECT_DIR$/oshelper/file_operation.py" />
         <option value="$PROJECT_DIR$/DICOM/decompress.py" />
-        <option value="$PROJECT_DIR$/DICOM/validate.py" />
         <option value="$PROJECT_DIR$/DICOM/anonymize.py" />
         <option value="$PROJECT_DIR$/DICOM/elements.py" />
+        <option value="$PROJECT_DIR$/oshelper/file_operation.py" />
+        <option value="$PROJECT_DIR$/Integration/DICOM_universal.py" />
+        <option value="$PROJECT_DIR$/DICOM/sort.py" />
+        <option value="$PROJECT_DIR$/DICOM/validate.py" />
       </list>
     </option>
   </component>
@@ -207,12 +297,12 @@
             <path>
               <item name="DICOMTransit" type="b2602c69:ProjectViewProjectNode" />
               <item name="Python" type="462c0819:PsiDirectoryNode" />
-              <item name="oshelper" type="462c0819:PsiDirectoryNode" />
+              <item name="orthanc" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="DICOMTransit" type="b2602c69:ProjectViewProjectNode" />
               <item name="Python" type="462c0819:PsiDirectoryNode" />
-              <item name="tests" type="462c0819:PsiDirectoryNode" />
+              <item name="oshelper" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="DICOMTransit" type="b2602c69:ProjectViewProjectNode" />
@@ -261,7 +351,26 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.test_DICOM">
+  <component name="RunManager" selected="Python.DICOM_universal">
+    <configuration name="DICOM_universal" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="DICOMTransit" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Integration" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Integration/DICOM_universal.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <configuration name="setup" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="DICOMTransit" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -295,25 +404,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="C:\GitHub\DICOMTransit\Python\tests\test_DICOM.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="test_LORIS_Query" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="DICOMTransit" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="C:\GitHub\DICOMTransit\Python\tests\test_LORIS_Query.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -358,19 +448,19 @@
       <option name="MODULE_MODE" value="false" />
     </configuration>
     <list>
-      <item itemvalue="Python.test_LORIS_Query" />
       <item itemvalue="Python.setup" />
       <item itemvalue="Python.test_LORIS_helper" />
       <item itemvalue="Python.test_DICOM" />
       <item itemvalue="Python.test_file_ops" />
+      <item itemvalue="Python.DICOM_universal" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.DICOM_universal" />
         <item itemvalue="Python.test_DICOM" />
         <item itemvalue="Python.test_file_ops" />
         <item itemvalue="Python.test_LORIS_helper" />
         <item itemvalue="Python.setup" />
-        <item itemvalue="Python.test_LORIS_Query" />
       </list>
     </recent_temporary>
   </component>
@@ -397,77 +487,61 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="84" width="2576" height="1364" extended-state="6" />
+    <frame x="-8" y="53" width="2576" height="1395" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49736148" weight="0.3283458" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.51748806" side_tool="true" visible="true" weight="0.31255195" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5170906" side_tool="true" weight="0.22111388" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Python Console" order="13" sideWeight="0.60294116" weight="0.27514547" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Python Console" order="13" sideWeight="0.78696346" weight="0.27471638" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49483308" weight="0.3416459" />
-      <window_info anchor="bottom" id="Terminal" order="12" sideWeight="0.48251194" visible="true" weight="0.31255195" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15500794" />
+      <window_info anchor="bottom" id="Terminal" order="12" sideWeight="0.48290938" weight="0.28768232" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15500794" />
       <window_info anchor="right" id="R Packages" order="7" weight="0.3298887" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="R Graphics" order="5" weight="0.3298887" />
       <window_info anchor="right" id="Database" order="6" sideWeight="0.49873737" weight="0.033386327" />
+      <window_info active="true" anchor="bottom" id="Find" order="1" sideWeight="0.49562797" visible="true" weight="0.32901135" />
       <window_info anchor="right" id="SciView" order="4" weight="0.3298887" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.57233703" weight="0.39235246" />
-      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="11" sideWeight="0.49880764" weight="0.32917705" />
-      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.57233703" weight="0.39235246" />
+      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.57233703" weight="0.3922204" />
+      <window_info anchor="right" id="Coverage" order="0" sideWeight="0.5012626" side_tool="true" weight="0.033386327" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="right" id="Database" order="6" sideWeight="0.49873737" weight="0.033386327" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15381558" />
-      <window_info anchor="right" id="SciView" order="4" weight="0.3298887" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49736148" weight="0.3283458" />
-      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49483308" weight="0.3416459" />
-      <window_info anchor="right" id="R Packages" order="7" weight="0.3298887" />
-      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="R Graphics" order="5" weight="0.3298887" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5170906" side_tool="true" weight="0.22111388" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49562797" weight="0.32917705" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.48290938" visible="true" weight="0.28844556" />
-      <window_info anchor="right" id="Coverage" order="0" sideWeight="0.5012626" side_tool="true" weight="0.033386327" />
-      <window_info anchor="bottom" id="Python Console" order="13" sideWeight="0.78696346" weight="0.27514547" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="11" sideWeight="0.49880764" weight="0.32917705" />
     </layout>
     <layout-to-restore>
-      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.57233703" weight="0.39235246" />
-      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49483308" weight="0.3416459" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15381558" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="R Graphics" order="5" weight="0.3298887" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49736148" weight="0.3283458" />
+      <window_info anchor="right" id="R Graphics" order="5" weight="0.3298887" />
       <window_info anchor="right" id="R Packages" order="7" weight="0.3298887" />
-      <window_info anchor="bottom" id="Python Console" order="13" sideWeight="0.78696346" weight="0.27514547" />
-      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49562797" weight="0.32917705" />
+      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.57233703" weight="0.39235246" />
       <window_info anchor="right" id="Database" order="6" sideWeight="0.49873737" visible="true" weight="0.033386327" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="11" sideWeight="0.49880764" weight="0.32917705" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5170906" side_tool="true" weight="0.22111388" />
-      <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="SciView" order="4" weight="0.3298887" />
-      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49562797" weight="0.32917705" />
       <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.48290938" visible="true" weight="0.22111388" />
       <window_info anchor="right" id="Coverage" order="0" sideWeight="0.5012626" side_tool="true" weight="0.033386327" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="13" sideWeight="0.78696346" weight="0.27514547" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -509,7 +583,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/DICOM/validate.py</url>
-          <line>19</line>
+          <line>20</line>
           <option name="timeStamp" value="62" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -578,13 +652,8 @@
           <option name="timeStamp" value="135" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/DICOM/validate.py</url>
-          <line>198</line>
-          <option name="timeStamp" value="137" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/DICOM/validate.py</url>
-          <option name="timeStamp" value="138" />
+          <url>file://$PROJECT_DIR$/DICOM/sort.py</url>
+          <option name="timeStamp" value="139" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -594,34 +663,10 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="139" />
+      <option name="time" value="140" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/requests/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16">
-          <caret line="244" selection-start-line="244" selection-end-line="244" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/redcap/import_records.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LORIS/ServerSite.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="26" selection-start-line="26" selection-end-line="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="579">
@@ -629,7 +674,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/oshelper/Scheduler.py">
+    <entry file="file://$PROJECT_DIR$/oshelper/scheduler.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
           <caret line="10" column="19" lean-forward="true" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
@@ -749,13 +794,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_LORIS_Query.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="3" column="7" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_LORIS_Query.py" />
     <entry file="file://$PROJECT_DIR$/LORIS/query.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="608">
@@ -771,12 +810,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/__init__.file">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/LORIS.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/__init__.file" />
+    <entry file="file://$PROJECT_DIR$/LORIS.py" />
     <entry file="uml://Python/#C:/GitHub/DICOMTransit/Python/DICOM">
       <provider selected="true" editor-type-id="UmlEditorProvider">
         <state>
@@ -785,9 +820,10 @@
           <nodes />
           <notes />
           <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="1063.0" y="387.5" />
+          <settings layout="Hierarchic Group" zoom="1.0" x="1063.0" y="388.0" />
           <SelectedNodes />
           <Categories />
+          <SCOPE>All</SCOPE>
         </state>
       </provider>
     </entry>
@@ -813,44 +849,11 @@
     <entry file="file://$PROJECT_DIR$/DICOM/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_LORIS_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="18" column="28" lean-forward="true" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_LocalDBCreate.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_Intermediate_Server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="4" column="5" lean-forward="true" selection-start-line="4" selection-start-column="5" selection-end-line="4" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_LORIS_timepoint.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="7" selection-start-column="7" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_DICOM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16">
-          <caret line="1" column="10" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_LORIS_helper.py" />
+    <entry file="file://$PROJECT_DIR$/tests/test_LocalDBCreate.py" />
+    <entry file="file://$PROJECT_DIR$/tests/test_Intermediate_Server.py" />
+    <entry file="file://$PROJECT_DIR$/tests/test_LORIS_timepoint.py" />
+    <entry file="file://$PROJECT_DIR$/tests/test_DICOM.py" />
     <entry file="file://$PROJECT_DIR$/LocalDB/schema.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -871,26 +874,7 @@
     <entry file="file://$PROJECT_DIR$/Integration/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/DICOM/validate.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="592">
-          <caret line="37" selection-start-line="37" selection-end-line="37" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_file_ops.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32">
-          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_file_ops.py" />
     <entry file="file://$PROJECT_DIR$/LORIS/helper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
@@ -901,23 +885,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/oshelper/file_operation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="11" column="7" lean-forward="true" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_LocalDBQuery.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="6" column="7" lean-forward="true" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_LocalDBQuery.py" />
     <entry file="file://$PROJECT_DIR$/DICOM/anonymize.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
@@ -928,20 +896,74 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/DICOM/elements.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-497">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Integration/DICOM_universal.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2">
+          <caret line="28" column="17" lean-forward="true" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/oshelper/file_operation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="878">
+          <caret line="55" column="8" selection-start-line="55" selection-start-column="8" selection-end-line="55" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/DICOM/decompress.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="15" column="26" lean-forward="true" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
+        <state relative-caret-position="144">
+          <caret line="15" column="23" lean-forward="true" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DICOM/elements.py">
+    <entry file="file://$PROJECT_DIR$/DICOM/convert.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="32">
-          <caret line="2" column="10" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+        <state relative-caret-position="428">
+          <caret line="47" column="33" lean-forward="true" selection-start-line="47" selection-start-column="33" selection-end-line="47" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DICOM/sort.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="366">
+          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DICOM/test_DICOM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DICOM/validate.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="69" column="83" selection-start-line="69" selection-start-column="83" selection-end-line="69" selection-end-column="83" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
