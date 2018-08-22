@@ -125,7 +125,7 @@ class orthanc_query:
 
                 proposed_filename = os.path.join(out_dir, filename)
                 # handle duplicate names!
-                _, unique_output_filename = oshelper_files.is_file_name_unique(proposed_filename)
+                _, unique_output_filename = oshelper_files.is_name_unique(proposed_filename)
                 target = open(unique_output_filename, "wb")
                 with source, target:
                     shutil.copyfileobj(source, target)

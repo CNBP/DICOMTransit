@@ -9,7 +9,7 @@ from DICOM.decompress import DICOM_decompress
 class oshelper_files:
 
     @staticmethod
-    def recursive_list_files(root_dicom_path):
+    def recursive_list(root_dicom_path):
         """
         load all the files, validate and then pass to decompress or anonimize.
         :param root_dicom_path:
@@ -26,12 +26,7 @@ class oshelper_files:
         return file_list
 
     @staticmethod
-    def decompress_folder(input_folder):
-        files_list = oshelper_files.recursive_list_files(input_folder)
-        oshelper_files.decompress_files(files_list)
-
-    @staticmethod
-    def decompress_files(file_list):
+    def decompress(file_list):
         """
         Decompress all compressed files in the list OVERWRITE the files.
         :param file_list:
@@ -81,7 +76,7 @@ class oshelper_files:
             destination_path_name = os.path.join(destination_path, file_name)
 
             # check if the final path is unique.
-            unique, new_name = oshelper_files.is_file_name_unique(destination_path_name)
+            unique, new_name = oshelper_files.is_name_unique(destination_path_name)
 
             # append date time microsecond string if the file is not unique.
             if not unique:
@@ -90,7 +85,7 @@ class oshelper_files:
             copyfile(file, destination_path_name)
 
     @staticmethod
-    def is_file_name_unique(path):
+    def is_name_unique(path):
         """
         Determine if the proposed file exist and suggest alternative name.
         :param path:
@@ -105,6 +100,8 @@ class oshelper_files:
             return False, file + "_" + timestamp + "_" + ext
         else:
             return True, path
+    @staticmethod
+
 
     @staticmethod
     def zip_with_name(folder_path, output_filename):
