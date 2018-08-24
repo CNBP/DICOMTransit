@@ -33,3 +33,8 @@ class oshelper_folder:
     def decompress(input_folder):
         files_list = oshelper_files.recursive_list(input_folder)
         oshelper_files.decompress(files_list)
+
+    @staticmethod
+    def anonymize(input_folder, new_ID):
+        files_list = oshelper_files.recursive_list(input_folder)
+        oshelper_files.anonymize(files_list, new_ID)
