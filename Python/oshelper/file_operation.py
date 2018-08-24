@@ -4,6 +4,7 @@ import logging
 import shutil
 from DICOM.validate import DICOM_validate
 from DICOM.decompress import DICOM_decompress
+from DICOM.anonymize import DICOM_anonymize
 from tqdm import tqdm
 
 class oshelper_files:
@@ -32,9 +33,11 @@ class oshelper_files:
         :param file_list:
         :return:
         """
+        logger = logging.getLogger("Decompressing files")
 
         for file in tqdm(file_list):
-            logger = logging.getLogger("Compression checking file: " + file)
+
+            logger.info("Decompressing: " + file)
 
             # find if the file is DICOM, if not, skip this file.
             is_DICOM_file, _ = DICOM_validate.file(file)
@@ -51,6 +54,32 @@ class oshelper_files:
             except ValueError:
                 logger.info("Unknwonw DICOM syntax. You sure it is DICOM?")
                 continue
+    @staticmethod
+    def anonymize(file_list, new_ID):
+        """
+
+        :param file_list:
+        :return:
+        """
+        logger = logging.getLogger("Anonymizing files")
+
+        exception_count = 0
+        exception_files = []
+
+        for file in tqdm(file_list):
+            logger.info("Decompressing: " + file)
+            is_DICOM_file, _ = DICOM_validate.file(file)
+            if not is_DICOM_file:
+                continue
+
+            if False == DICOM_anonymize.save(file, new_ID):
+                exception_count =+ 1
+                exception_files = exception_files.append(file)
+
+        logger.info("Total exception encountered uring anonymization: " + str(exception_count))
+        return exception_files
+
+
 
     @staticmethod
     def copy_files_to_flat_folder(file_list, destination_path):

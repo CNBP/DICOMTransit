@@ -21,8 +21,8 @@ class DICOM_converter:
         else:
             os.chdir(output_folder)
 
-        #DICOM_converter.raw(input_folder, output_folder)
-        #DICOM_converter.raw_sorted(input_folder, output_folder)
+        DICOM_converter.raw(input_folder, output_folder)
+        DICOM_converter.raw_sorted(input_folder, output_folder)
         DICOM_converter.raw_sorted_decompressed(input_folder, output_folder)
         DICOM_converter.nii(input_folder, output_folder)
 

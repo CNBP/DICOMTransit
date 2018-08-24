@@ -99,6 +99,31 @@ def test_DICOM_computerScanAge():
     assert success
     logger.info(Age.day)
 
+def test_DICOM_check_dependency():
+    logger = logging.getLogger("Checking vital system path dependencies:")
+    import subprocess
+
+    try:
+        # SUPER IMPORTANT! MAKE SURE DCMDJPEG is in the system path!
+        subprocess.check_output(['dcmdjpeg'])
+    # When dcmdjpeg has errors
+    except Exception as e:
+        logger.info(e)
+        ErrorMessage = "DCMDJPEG decompression call failed! Make sure DCMDJPEG is in your SYSTEMOS PATH. "
+        logger.info(ErrorMessage)
+        raise ImportError
+
+    try:
+        # SUPER IMPORTANT! MAKE SURE DCMDJPEG is in the system path!
+        subprocess.check_output(['dcm2niix'])
+    # When dcmdjpeg has errors
+    except Exception as e:
+        logger.info(e)
+        ErrorMessage = "DCMDJPEG decompression call failed! Make sure DCMDJPEG is in your SYSTEMOS PATH. "
+        logger.info(ErrorMessage)
+        raise ImportError
+
+    assert(True)
 
 if __name__ == '__main__':
-    test_DICOM_decompress()
+    test_DICOM_check_dependency()
