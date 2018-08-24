@@ -1,19 +1,23 @@
 from LORIS.helper import LORIS_helper
+import unittest
 
-def test_number_extraction():
-    Prefix = "V"
-    numbers = [1, 2, 3, 9, 10, 11, 12, 100, 101, 102]
+class UT_LORISHelper(unittest.TestCase):
 
-    global timepoints
-    timepoints = []
+    @staticmethod
+    def test_number_extraction():
+        Prefix = "V"
+        numbers = [1, 2, 3, 9, 10, 11, 12, 100, 101, 102]
 
-    for number in numbers:
-        timepoints.append(Prefix + str(number))
+        global timepoints
+        timepoints = []
 
-    DualList = zip(numbers, timepoints)
+        for number in numbers:
+            timepoints.append(Prefix + str(number))
 
-    for tupleItem in DualList:
-        assert str(tupleItem[0]) == LORIS_helper.number_extraction(tupleItem[1])[0]
+        DualList = zip(numbers, timepoints)
+
+        for tupleItem in DualList:
+            assert str(tupleItem[0]) == LORIS_helper.number_extraction(tupleItem[1])[0]
 
 if __name__ == '__main__':
-    test_number_extraction()
+    UT_LORISHelper.test_number_extraction()

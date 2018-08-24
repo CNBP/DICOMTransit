@@ -1,18 +1,22 @@
 from LORIS.timepoint import LORIS_timepoint
+import unittest
 
-def test_visit_number_extraction():
-    Prefix = "V"
-    numbers = [1, 2, 3, 9]
+class UT_LORISTimepoint(unittest.TestCase):
 
-    global timepoints
-    timepoints = []
+    @staticmethod
+    def test_visit_number_extraction():
+        Prefix = "V"
+        numbers = [1, 2, 3, 9]
 
-    for number in numbers:
-        timepoints.append(Prefix + str(number))
+        global timepoints
+        timepoints = []
 
-    DualList = zip(numbers, timepoints)
+        for number in numbers:
+            timepoints.append(Prefix + str(number))
 
-    for tupleItem in DualList:
-        assert str(tupleItem[0]) == LORIS_timepoint.visit_number_extraction(tupleItem[1])[0]
+        DualList = zip(numbers, timepoints)
 
-    # todo: 10+ visit number WILL FAIL!
+        for tupleItem in DualList:
+            assert str(tupleItem[0]) == LORIS_timepoint.visit_number_extraction(tupleItem[1])[0]
+
+        # todo: 10+ visit number WILL FAIL!
