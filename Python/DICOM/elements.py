@@ -14,7 +14,7 @@ class DICOM_elements:
         success, DICOM = DICOM_validate.file(file_path)
 
         if not success:
-            return False, None, None
+            return False, None
 
         # Get a list of all data elements that can have element label.
         element_values = DICOM.data_element(data_element).value
@@ -69,7 +69,7 @@ class DICOM_elements:
         :return: Age as a relative delta time object.
         """
 
-        from dateutil.relativedelta import relativedelta
+        #from dateutil.relativedelta import relativedelta
 
         success, DICOM = DICOM_validate.file(file_path)
         if not success:
@@ -77,5 +77,5 @@ class DICOM_elements:
         from datetime import datetime
         scan_date = datetime.strptime(DICOM.SeriesDate, "%Y%m%d")
         birthday = datetime.strptime(DICOM.PatientBirthDate, "%Y%m%d")
-        age = relativedelta(scan_date, birthday)
+        age = scan_date - birthday
         return True, age
