@@ -20,7 +20,9 @@ class LORIS_candidates:
         :param PSCID:
         :return:
         """
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
 
         # Loading regular expression
         re_institution = CNBP_blueprint.PSCID_schema_institution
@@ -54,7 +56,9 @@ class LORIS_candidates:
     def check_projectID_compliance(input_projectID):
 
         # Load ProjectIDs from the environment.
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
 
         projectID_dictionary_json: str = os.getenv("projectID_dictionary")
         projectID_list = json.loads(projectID_dictionary_json)
@@ -130,7 +134,9 @@ class LORIS_candidates:
         logger = logging.getLogger('UT_LORIS_delete_subject')
 
         # Load the hard coded variables.
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
         ProxyIP = os.getenv("ProxyIP")
         ProxyUsername = os.getenv("ProxyUsername")
         ProxyPassword = os.getenv("ProxyPassword")
@@ -197,7 +203,9 @@ class LORIS_candidates:
         """
         logger = logging.getLogger('LORIS_checkPSCIDExist')
         logger.info("Checking if PSCID exist: "+proposed_PSCID)
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
         institution_check = os.getenv("institutionID")
 
 
@@ -241,7 +249,9 @@ class LORIS_candidates:
         """
         logger = logging.getLogger('LORIS_checkDCCIDExist')
         logger.info("Checking if DCCID exist: "+str(proposed_DCCID))
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
         institution_check = os.getenv("institutionID")
 
         assert (LORIS_candidates.check_DCCID(proposed_DCCID))

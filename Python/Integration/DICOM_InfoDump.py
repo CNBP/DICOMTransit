@@ -1,6 +1,5 @@
-from oshelper.folder_operation import oshelper_folder
 import csv
-from oshelper.file_operation import oshelper_files
+from PythonUtils.folder import recursive_list
 from DICOM.validate import DICOM_validate
 from DICOM.elements import DICOM_elements
 
@@ -8,7 +7,7 @@ output=[]
 
 
 def BatchDateCalculation(path):
-    file_list = oshelper_files.recursive_list(path)
+    file_list = recursive_list(path)
     for file in file_list:
 
         if DICOM_validate.file(file):

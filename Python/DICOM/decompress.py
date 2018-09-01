@@ -1,11 +1,14 @@
 import logging
 import os
 import pydicom, subprocess
+from PythonUtils.folder import recursive_list
+from tqdm import tqdm
 
 
 from pydicom.filereader import read_file_meta_info
 
 from DICOM.validate import DICOM_validate
+
 class DICOM_decompress:
 
     @staticmethod
@@ -104,3 +107,37 @@ class DICOM_decompress:
             return True
         else:
             return False
+
+    @staticmethod
+    def filelist(file_list):
+        """
+        Decompress all compressed files in the list OVERWRITE the files.
+        :param file_list:
+        :return:
+        """
+        logger = logging.getLogger("Decompressing files")
+
+        for file in tqdm(file_list):
+
+            logger.info("Decompressing: " + file)
+
+            # find if the file is DICOM, if not, skip this file.
+            is_DICOM_file, _ = DICOM_validate.file(file)
+            if not is_DICOM_file:
+                continue
+
+            # check if the file is compressed.
+            TransferSyntax = DICOM_decompress.get_transferSyntax(file)
+            try:
+                RequireDecompression = DICOM_decompress.check_decompression(TransferSyntax)
+                if RequireDecompression:
+                    DICOM_decompress.save_as(file, file)
+
+            except ValueError:
+                logger.info("Unknwonw DICOM syntax. You sure it is DICOM?")
+                continue
+
+    @staticmethod
+    def decompress_folder(input_folder):
+        files_list = recursive_list(input_folder)
+        DICOM_decompress.filelist(files_list)

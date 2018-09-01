@@ -1,9 +1,10 @@
 from DICOM.sort import DICOM_sort
-from DICOM.convert import DICOM_convert
+from DICOM.decompress import DICOM_decompress
 import os
-from oshelper.folder_operation import oshelper_folder
-from oshelper.file_operation import oshelper_files
+from PythonUtils.folder import create, recursive_list
+from PythonUtils.file import flatcopy
 from DICOM.convert import DICOM_convert
+from DICOM.validate import DICOM_validate
 
 class DICOM_converter:
 
@@ -31,15 +32,15 @@ class DICOM_converter:
         os.chdir(output_folder)
         os.mkdir("raw")
         path_raw = os.path.join(output_folder, "raw")
-        file_list = oshelper_files.recursive_list(input_folder)
-        oshelper_files.copy_files_to_flat_folder(file_list, path_raw)
+        file_list = recursive_list(input_folder)
+        flatcopy(file_list, path_raw, DICOM_validate.file)
         # Raw_BIDS
 
     @staticmethod
     def raw_sorted(input_folder, output_folder):
         os.chdir(output_folder)
         os.chdir(output_folder)
-        oshelper_folder.create("raw_sorted")
+        create("raw_sorted")
         path_raw_sorted = os.path.join(output_folder, "raw_sorted")
         DICOM_sort.into_folder(input_folder, path_raw_sorted)
         DICOM_convert.fix_series(path_raw_sorted)
@@ -47,16 +48,16 @@ class DICOM_converter:
     @staticmethod
     def raw_sorted_decompressed(input_folder, output_folder):
         os.chdir(output_folder)
-        oshelper_folder.create("raw_sorted_decompressed")
+        create("raw_sorted_decompressed")
         path_raw_sorted_decompressed = os.path.join(output_folder, "raw_sorted_decompressed")
         DICOM_sort.into_folder(input_folder, path_raw_sorted_decompressed)
-        oshelper_folder.decompress(path_raw_sorted_decompressed)
+        DICOM_decompress.filelist(path_raw_sorted_decompressed)
         DICOM_convert.fix_series(path_raw_sorted_decompressed)
 
     @staticmethod
     def nii(input_folder, output_folder):
         os.chdir(output_folder)
-        oshelper_folder.create("nii")
+        create("nii")
         path_nii = os.path.join(output_folder, "nii")
         DICOM_convert.to_nii(input_folder, path_nii)
         DICOM_convert.fix_series(path_nii)
