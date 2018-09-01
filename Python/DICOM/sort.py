@@ -3,6 +3,7 @@ import logging
 import os
 import shutil
 from DICOM.elements import DICOM_elements
+from DICOM.validate import DICOM_validate
 from tqdm import tqdm
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -20,23 +21,24 @@ class DICOM_sort:
 
         #Element to check: Series number.
 
-        from oshelper.file_operation import oshelper_files
+        from PythonUtils.file import flatcopy
+        from PythonUtils.folder import recursive_list
 
         # Get files
-        file_list = oshelper_files.recursive_list(input_folder)
+        file_list = recursive_list(input_folder)
 
         if not os.path.isdir(output_folder):
             os.mkdir(output_folder)
 
 
         # copy them to a flat structure to the output folder.
-        oshelper_files.copy_files_to_flat_folder(file_list, output_folder)
+        flatcopy(file_list, output_folder, DICOM_validate.file)
 
         # decompress them if necessary.
         # oshelper_files.decompress_folder(output_folder)
 
         # Get files list again.
-        file_list = oshelper_files.recursive_list(output_folder)
+        file_list = recursive_list(output_folder)
 
         exception_encountered = 0
 

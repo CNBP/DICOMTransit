@@ -49,4 +49,4 @@ class UT_Orthanc(unittest.TestCase):
             shutil.rmtree(temp_dir)
 
 if __name__ == "__main__":
-    tUT_Orthanc.est_getSubjectZip()
+    UT_Orthanc.test_getSubjectZip()

@@ -78,7 +78,10 @@ class LORIS_timepoint:
             visit_number = LORIS_timepoint.visit_number_extraction(latest_timepoint)
             new_visit_number = int(visit_number) + 1
 
-            load_dotenv()
+            success = load_dotenv()
+            if not success:
+                raise ImportError(
+                    "Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
             prefix = os.getenv("timepoint_prefix")
 
             timepoint_label = prefix + str(new_visit_number)
