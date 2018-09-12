@@ -5,7 +5,7 @@ import shutil
 import zipfile
 import sys
 from dotenv import load_dotenv
-from oshelper.file_operation import oshelper_files
+from PythonUtils.file import is_name_unique
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -21,7 +21,9 @@ class orthanc_query:
         """
         logger = logging.getLogger('Orthanc_get')
         logger.info("Getting Orthanc endpoint: "+ endpoint + "at")
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
         url = os.getenv("OrthancURL")
         updatedurl = url + endpoint
         logger.info(updatedurl)
@@ -42,7 +44,9 @@ class orthanc_query:
         """
         logger = logging.getLogger('Orthanc_post')
         logger.info("Post Orthanc endpoint: "+ endpoint + "at")
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
         url = os.getenv("OrthancURL")
         updatedurl = url + endpoint
         logger.info(updatedurl)
@@ -63,7 +67,9 @@ class orthanc_query:
         """
         logger = logging.getLogger('Orthanc_delete')
         logger.info("Deleting Orthanc endpoint: "+ endpoint + "at")
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
         url = os.getenv("OrthancURL")
         updatedurl = url + endpoint
         logger.info(updatedurl)
@@ -83,7 +89,9 @@ class orthanc_query:
         """
         logger = logging.getLogger('Orthanc_getzip')
         logger.info("Downloading Orthanc endpoint: " + endpoint + " at")
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
         url = os.getenv("OrthancURL")
 
         # endpiont should be something like /studies/SUTDY_UUID/
@@ -125,7 +133,7 @@ class orthanc_query:
 
                 proposed_filename = os.path.join(out_dir, filename)
                 # handle duplicate names!
-                _, unique_output_filename = oshelper_files.is_name_unique(proposed_filename)
+                _, unique_output_filename = is_name_unique(proposed_filename)
                 target = open(unique_output_filename, "wb")
                 with source, target:
                     shutil.copyfileobj(source, target)

@@ -20,7 +20,9 @@ class LORIS_query:
         logger = logging.getLogger('LORIS_login')
 
         #Load environmental variables.
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
 
         username = os.getenv("LORISusername")
         password = os.getenv("LORISpassword")
@@ -52,7 +54,9 @@ class LORIS_query:
         """
         logger = logging.getLogger('LORIS_get')
         logger.info("Getting LORIS endpoing: "+ endpoint + "at")
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
         url = os.getenv("LORISurl")
         updatedurl = url + endpoint
         logger.info(updatedurl)
@@ -78,7 +82,9 @@ class LORIS_query:
         logger.info("Posting data to: "+endpoint)
         logger.info("Data: "+data)
         logger.info("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
         url = os.getenv("LORISurl")
         updatedurl = url + endpoint
 
@@ -105,7 +111,9 @@ class LORIS_query:
         logger.info("Data: "+data)
         logger.info("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
 
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
         url = os.getenv("LORISurl")
         updatedurl = url + endpoint
 

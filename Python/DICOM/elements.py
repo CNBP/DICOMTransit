@@ -69,7 +69,7 @@ class DICOM_elements:
         :return: Age as a relative delta time object.
         """
 
-        #from dateutil.relativedelta import relativedelta
+        from dateutil.relativedelta import relativedelta
 
         success, DICOM = DICOM_validate.file(file_path)
         if not success:
@@ -77,5 +77,6 @@ class DICOM_elements:
         from datetime import datetime
         scan_date = datetime.strptime(DICOM.SeriesDate, "%Y%m%d")
         birthday = datetime.strptime(DICOM.PatientBirthDate, "%Y%m%d")
-        age = scan_date - birthday
+        age = relativedelta(scan_date,birthday)
+        # age = scan_date - birthday
         return True, age
