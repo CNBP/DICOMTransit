@@ -1,8 +1,9 @@
 import sys
 import json
 import logging
-
-
+import os
+import paramiko
+from paramiko import SSHClient, SSHConfig, SSHException
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 #logger = logging.getLogger('LORISQuery')
 
@@ -44,6 +45,96 @@ class LORIS_helper:
         except ValueError:
             return False, None
 
+    @staticmethod
+    def upload(remote_ip, remote_path, remote_login, remote_pw, local_file_path):
+        """
+        This routeine is used to upload via SSH.
+        :param remote_path:
+        :param remote_login:
+        :param remote_pw:
+        :param local_file_path:
+        :return:
+        """
+
+        logger = logging.getLogger("Upload logger")
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        #ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
+        ssh.connect(remote_ip, username=remote_login, password=remote_pw)
+        sftp = ssh.open_sftp()
+        remote_full_path = remote_path + "/" + local_file_path
+        logger.info(remote_full_path)
+        sftp.put(local_file_path, remote_full_path)
+        sftp.close()
+        ssh.close()
+
+    @staticmethod
+    def uploadThroughClient(client, remote_path, local_file_path):
+        """
+        This routeine is used to upload via SSH.
+        :param remote_path:
+        :param remote_login:
+        :param remote_pw:
+        :param local_file_path:
+        :return:
+        """
+        logger = logging.getLogger("Upload logger")
+        sftp = client.open_sftp()
+        logger.info(remote_path)
+        sftp.put(local_file_path, remote_path)
+        sftp.close()
+
+    @staticmethod
+    def getSSHClient(proxy_ip, proxy_login, proxy_pw):
+        """
+        Instantiate, setup and return a straight forward proxy SSH client
+        :param proxy_ip:
+        :param proxy_login:
+        :param proxy_pw:
+        :return:
+        """
+        logger = logging.getLogger(__name__)
+        client = paramiko.SSHClient()
+        client.load_system_host_keys()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(proxy_ip, 22, username=proxy_login, password=proxy_pw)
+        return client
+
+    @staticmethod
+    def getProxySSHClient(proxy_ip, proxy_login, proxy_pw, destination_ip, destination_login, destination_pw):
+        """
+        Establish a SSH client through the proxy.
+        :param proxy_ip:    IP address of the proxy server.
+        :param proxy_login: Login of the proxy server
+        :param proxy_pw:    Password of the proxy server user name
+        :param destination_ip:  IP address of the final destination server
+        :param destination_login:   Login of the final destination server
+        :param destination_pw:  Password of the final destination server
+        :return:
+        """
+        # Establish proxy server
+        proxy = LORIS_helper.getSSHClient(proxy_ip, proxy_login, proxy_pw)
+
+        # Establish transport layer through the proxy
+        transport = proxy.get_transport()
+        dest_addr = (destination_ip, 22)
+        local_addr = ('127.0.0.1', 10022)
+        proxy_transport = transport.open_channel('direct-tcpip', dest_addr, local_addr)
+
+        # Create a new paramiko SSH client through the
+        client = paramiko.SSHClient()
+
+        # Load local trust key if needed.
+        client.load_system_host_keys()
+
+        # Auto accept foreign key. Be wary of armageddon
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+        # Connect the client and return it.
+        client.connect(destination_ip, 22, username=destination_login, password=destination_pw, sock=proxy_transport)
+
+        return client
 
 if __name__ == '__main__':
-    print(LORIS_helper.number_extraction("T4"))
+    Client = LORIS_helper.getProxySSHClient("132.219.138.166",  "cnbpadm", "tataupa2", '192.168.106.3', "lorisadmin", "l0r1sAdsvr")
+    LORIS_helper.uploadThroughClient(Client, "//Tmp/test", "JPEG-LL.dcm")
