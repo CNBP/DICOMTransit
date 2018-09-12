@@ -7,33 +7,37 @@ from PythonUtils.folder import recursive_list
 class DICOM_anonymize:
 
     @staticmethod
-    def save(path, PSCID):
+    def save(file_path, NewID):
         """
         Anonymize the DICOMS to remove any identifiable information
-        :param path:
-        :param PSCID:
+        :param file_path: path of the file to be anonymized
+        :param NewID: 
         :return:
         """
 
-        return DICOM_anonymize.save_as(path, PSCID, path)
+        return DICOM_anonymize.save_as(file_path, NewID, file_path)
 
     @staticmethod
-    def save_as(path, PSCID, out_path):
+    def save_as(in_path, NewID, out_path):
         """
         Anonymize the DICOM to remove any identifiable information
-        :param path:
-        :param PSCID:
+        :param in_path:
+        :param NewID:
         :param out_path:
         :return:
         """
 
-        success, dataset = DICOM_validate.file(path)
+        success, dataset = DICOM_validate.file(in_path)
         if not success:
             return False
 
-        success1, _ = DICOM_elements.update(path, "PatientID", PSCID, out_path)
-        success2, _ = DICOM_elements.update(path, "PatientName", PSCID, out_path)
+        # Anonymize PatientID with the NewID provided.
+        success1, _ = DICOM_elements.update(in_path, "PatientID", NewID, out_path)
 
+        # Anonymize PatientName with the NewID provided.
+        success2, _ = DICOM_elements.update(in_path, "PatientName", NewID, out_path)
+
+        # Return after encuring both anonymization process are successful.
         if success1 and success2:
             return True
         else:
