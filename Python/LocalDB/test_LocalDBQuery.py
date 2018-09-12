@@ -185,7 +185,9 @@ class UT_LocalDBCreate(unittest.TestCase):
         LocalDB_query.create_entry(PathString, tableName, MRNColumn, 364573)
         LocalDB_query.create_entry(PathString, tableName, MRNColumn, 7424141)
 
-        load_dotenv()
+        success = load_dotenv()
+        if not success:
+            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
 
         Prefix = os.getenv("institutionID")
 
