@@ -2,6 +2,7 @@ import os
 import unittest
 from LORIS.helper import LORIS_helper
 from dotenv import load_dotenv
+from pathlib import Path
 
 class UT_LORISHelper(unittest.TestCase):
 
@@ -34,9 +35,14 @@ class UT_LORISHelper(unittest.TestCase):
         LORISHostIP = os.getenv("LORISHostIP")
         Client = LORIS_helper.getProxySSHClient(ProxyIP, ProxyUsername, ProxyPassword,
                                                 LORISHostIP, LORISHostUsername, LORISHostPassword)
-        LORIS_helper.uploadThroughClient(Client, "test_helper.py", "test_helper.py")
+
+        testFile = "test_file.txt"
+        Path(testFile).touch()
+
+        LORIS_helper.uploadThroughClient(Client, testFile, testFile)
         sftp = Client.open_sftp()
-        sftp.remove("test_helper.py")
+        sftp.remove(testFile)
+        os.remove(testFile)
         sftp.close()
         Client.close()
 
