@@ -6,3 +6,4 @@ python-dateutil
 pytest-cov
 heudiconv[all]
 tqdm
+paramiko
