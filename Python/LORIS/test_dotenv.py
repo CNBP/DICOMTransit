@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import unittest
 import os
 
-class UT_envCheck(unittest.testcases):
+class UT_envCheck(unittest.TestCase):
 
     def test_env():
         success= load_dotenv()
