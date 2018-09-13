@@ -6,6 +6,9 @@ import logging
 from DICOM.validate import DICOM_validate
 #from LORIS.candidates import  LORIS_candidates
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 class Integration:
 
     @staticmethod
@@ -17,8 +20,6 @@ class Integration:
         """
 
         database_path = load_dotenv("LocalDatabase")
-
-        logger = logging.getLogger(__name__)
 
         for folder in folder_paths:
             success, DICOM_files = DICOM_validate.path(folder)

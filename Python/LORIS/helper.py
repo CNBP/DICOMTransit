@@ -3,9 +3,8 @@ import json
 import logging
 import os
 import paramiko
-from paramiko import SSHClient, SSHConfig, SSHException
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-#logger = logging.getLogger('LORISQuery')
+logger = logging.getLogger(__name__)
 
 class LORIS_helper:
 
