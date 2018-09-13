@@ -2,6 +2,8 @@ import logging
 from LORIS.candidates import LORIS_candidates
 from LORIS.query import LORIS_query
 import unittest
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class UT_LORISCandidates(unittest.TestCase):
 

@@ -114,7 +114,7 @@ class orthanc_query:
     @staticmethod
     def flatUnZip(input_zip, out_dir):
         """
-        Inpsired by https://stackoverflow.com/questions/4917284/extract-files-from-zip-without-keeping-the-structure-using-python-zipfile
+        Inspired by https://stackoverflow.com/questions/4917284/extract-files-from-zip-without-keeping-the-structure-using-python-zipfile
         Added function to hanlde non-unique file names which are probably standarderized by Orthanc.
         :param input_zip:
         :param out_dir:

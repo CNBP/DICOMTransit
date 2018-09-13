@@ -72,7 +72,7 @@ class DICOM_sort:
             _, filename = os.path.split(file)
 
             shutil.move(file, os.path.join(DestinationFolder, filename))
-        logger.info("Total error encoutnered: " + str(exception_encountered))
+        logger.info("Total error encountered: " + str(exception_encountered))
 
 
 if __name__ == "__main__":
