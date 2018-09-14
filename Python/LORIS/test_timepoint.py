@@ -8,7 +8,6 @@ class UT_LORISTimepoint(unittest.TestCase):
         Prefix = "V"
         numbers = [1, 2, 3, 9]
 
-        global timepoints
         timepoints = []
 
         for number in numbers:

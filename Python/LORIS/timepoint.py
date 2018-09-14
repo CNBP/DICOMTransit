@@ -8,6 +8,7 @@ from LORIS.query import LORIS_query
 from LORIS.candidates import LORIS_candidates
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class LORIS_timepoint:
 
@@ -19,8 +20,6 @@ class LORIS_timepoint:
         :param string:
         :return:
         """
-        logger = logging.getLogger('visit_number_extraction')
-
         number_extracted = LORIS_helper.number_extraction(string)
 
         #return last number from the timepoint string: usually it should be V2 or T3 things like that.
@@ -33,11 +32,10 @@ class LORIS_timepoint:
     def findLatestTimePoint(token, DCCID):
         """
         Find and return the latest timepoint. Note that since DCCID exist, the record MUST ALREADY exist within the local SQLite database!
-        :param token: 
-        :param DCCID: 
-        :return: 
+        :param token: the token used to authenticate API actions.
+        :param DCCID: DCCID to retrieve the last timepoint of
+        :return: a string representation of the last time point.
         """
-        logger = logging.getLogger('')
         assert(LORIS_candidates.check_DCCID(DCCID)) # Ensure it actually first exist.
 
         response_success, candidate_json = LORIS_query.getCNBP(token, r"candidates/" + str(DCCID)) # should exist as earlier check revealed.
@@ -103,7 +101,7 @@ class LORIS_timepoint:
         MetaData = {"CandID": DCCID, "Visit": time_point, "Battery":"CNBP"} # default to CNBP for NOW
         Meta = {"Meta": MetaData}
         JSON = json.dumps(Meta)
-        success, response = LORIS_query.putCNBP(token, endpoint, JSON)
+        success, _ = LORIS_query.putCNBP(token, endpoint, JSON)
         # response should be null!
         return success
 

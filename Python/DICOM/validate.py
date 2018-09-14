@@ -62,7 +62,8 @@ class DICOM_validate:
         files = os.listdir(dir_path)
 
         # Used to record the first encountered patientID and name, and will check against subsequent folder for same matching information.
-        global PatientID, PatientName
+        PatientID = ""
+        PatientName = ""
 
         validated_DICOM_files = []
 

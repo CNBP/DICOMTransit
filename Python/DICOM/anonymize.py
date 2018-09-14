@@ -11,7 +11,7 @@ class DICOM_anonymize:
         """
         Anonymize the DICOMS to remove any identifiable information
         :param file_path: path of the file to be anonymized
-        :param NewID: 
+        :param NewID: the new ID used to anonymize the subjects. It will overwrite patient names and IDs
         :return:
         """
 
@@ -27,7 +27,7 @@ class DICOM_anonymize:
         :return:
         """
 
-        success, dataset = DICOM_validate.file(in_path)
+        success, _ = DICOM_validate.file(in_path)
         if not success:
             return False
 

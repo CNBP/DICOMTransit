@@ -11,7 +11,7 @@ class DICOM_convert:
     @staticmethod
     def to_nii(input_folder, output_folder):
         """
-
+        Invoke dcm2niix to carry out the proper conversion.
         :param input_folder: Input_folder can be a root folder or flat.
         :return:
         """

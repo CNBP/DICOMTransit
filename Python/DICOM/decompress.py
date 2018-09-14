@@ -84,7 +84,7 @@ class DICOM_decompress:
         """
 
         # Validity check:
-        success, DICOM = DICOM_validate.file(file_path)
+        success, _ = DICOM_validate.file(file_path)
         if not success:
             raise IOError
 

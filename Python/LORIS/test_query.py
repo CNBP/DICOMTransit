@@ -4,19 +4,19 @@ from LORIS.query import LORIS_query
 from LORIS.candidates import LORIS_candidates
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 import unittest
 class UT_LORISQuery(unittest.TestCase):
 
     @staticmethod
     def test_LORIS_login():
-        logger = logging.getLogger('UT_LORIS_login')
         response_success, token = LORIS_query.login()
         assert response_success
 
         #assert len(token) == 256 #token should always be 256 char long
     @staticmethod
     def test_LORIS_get():
-        logger = logging.getLogger('UT_LORIS_get')
         response_success, token = LORIS_query.login()
         assert response_success
         #assert len(token) == 256  # token should always be 256 char long
@@ -27,7 +27,6 @@ class UT_LORISQuery(unittest.TestCase):
 
     @staticmethod
     def test_checkPSCIDExist():
-        logger = logging.getLogger('UT_LORIS_PSCID_check')
         response_success, token = LORIS_query.login()
         assert response_success
         #assert len(token) == 256  # token should always be 256 char long
@@ -37,7 +36,6 @@ class UT_LORISQuery(unittest.TestCase):
 
     @staticmethod
     def test_checkDCCIDExist():
-        logger = logging.getLogger('UT_LORIS_DCCID_check')
         response_success, token = LORIS_query.login()
         assert response_success
         #assert len(token) == 256  # token should always be 256 char long

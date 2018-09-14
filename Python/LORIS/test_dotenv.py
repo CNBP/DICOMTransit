@@ -4,6 +4,7 @@ import os
 
 class UT_envCheck(unittest.TestCase):
 
+    @staticmethod
     def test_env():
         success= load_dotenv()
         if not success:

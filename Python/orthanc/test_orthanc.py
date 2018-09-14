@@ -31,7 +31,7 @@ class UT_Orthanc(unittest.TestCase):
     def test_deleteSubjects():
         list_subjects = UT_Orthanc.test_getSubjects()
         for subject in list_subjects:
-            reseponse_code, r = orthanc_query.deleteOrthanc("patients/"+subject)
+            reseponse_code, _ = orthanc_query.deleteOrthanc("patients/"+subject)
             assert (LORIS_helper.is_response_success(reseponse_code, 200))
 
     @staticmethod

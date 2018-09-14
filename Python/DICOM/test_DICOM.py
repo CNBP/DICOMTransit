@@ -59,10 +59,8 @@ class UT_DICOMManipulation(unittest.TestCase):
         assert (DICOM_decompress.check_decompression('1.2.840.10008.1.2.4'))
         assert (DICOM_decompress.check_decompression('1.2.840.10008.1.2.4.57'))
 
-
-
-        def test_wrong_syntax(self):
-            self.assertRaises(ValueError, DICOM_decompress.check_decompression, 'FakeTest')
+    def test_wrong_syntax(self):
+        self.assertRaises(ValueError, DICOM_decompress.check_decompression, 'FakeTest')
 
     @staticmethod
     def test_DICOM_anonymizer():

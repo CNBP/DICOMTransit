@@ -9,7 +9,7 @@ from LORIS.query import LORIS_query
 from LORIS.helper import LORIS_helper
 from LocalDB.schema import CNBP_blueprint
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-#logger = logging.getLogger('LORISQuery')
+logger = logging.getLogger(__name__)
 
 class LORIS_candidates:
 

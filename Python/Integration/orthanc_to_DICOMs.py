@@ -38,7 +38,7 @@ def step1_orthanc2DICOM(data_folder_path):
             return False, None
 
         # Create a directory based on the zip file, which has UUID as name and guarnteed to be unique.
-        file, ext = os.path.splitext(zip_file)
+        file, _ = os.path.splitext(zip_file)
         final_folder_name = data_folder_path + file
         os.mkdir(final_folder_name)
         orthanc_query.flatUnZip(zip_file, final_folder_name) #files are guarnteed to be unique and no overwrite of each other. .

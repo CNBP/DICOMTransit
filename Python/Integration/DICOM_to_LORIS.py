@@ -4,6 +4,7 @@ from LocalDB.schema import CNBP_blueprint
 from dotenv import load_dotenv
 import logging
 from DICOM.validate import DICOM_validate
+import sys
 #from LORIS.candidates import  LORIS_candidates
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
