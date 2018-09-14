@@ -34,10 +34,10 @@ class UT_DICOMValidation(unittest.TestCase):
     @staticmethod
     def test_DICOM_validator():
         file_name = get_test_DICOM_path()
-        success, data = DICOM_validate.file(file_name)
+        success, _ = DICOM_validate.file(file_name)
         assert success
 
         file_name = get_testdata_files("README.txt")[0]
-        success, data = DICOM_validate.file(file_name)
+        success, _ = DICOM_validate.file(file_name)
         assert not success
 

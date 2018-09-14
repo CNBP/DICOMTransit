@@ -33,7 +33,6 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         tableName = 'id_table'  # All CNBP database should have this table name.
         MRNColumn = "MRN"
-        CNBPIDColumn = "CNBPID"
 
         LocalDB_query.create_entry(PathString, tableName, MRNColumn, 291033)
         logger.info('Test SQLite database successfully inserted with mock records. Gonna check!')
@@ -125,7 +124,6 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         tableName = 'id_table'  # All CNBP database should have this table name.
         MRNColumn = "MRN"
-        CNBPIDColumn = "CNBPID"
 
         LocalDB_query.create_entry(PathString, tableName, MRNColumn, 2918210)
         LocalDB_query.create_entry(PathString, tableName, MRNColumn, 23452346)
