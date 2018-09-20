@@ -7,6 +7,7 @@ from LocalDB.query import LocalDB_query
 from LocalDB.create_CNBP import LocalDB_createCNBP
 from dotenv import load_dotenv
 import unittest
+from LocalDB.schema import CNBP_blueprint
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -31,10 +32,7 @@ class UT_LocalDBCreate(unittest.TestCase):
         assert LocalDB_createCNBP.database(PathString)
         logger.info('Test SQLite database successfully created. Gonna mess with it!')
 
-        tableName = 'id_table'  # All CNBP database should have this table name.
-        MRNColumn = "MRN"
-
-        LocalDB_query.create_entry(PathString, tableName, MRNColumn, 291033)
+        LocalDB_query.create_entry(PathString, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, 291033)
         logger.info('Test SQLite database successfully inserted with mock records. Gonna check!')
 
         # Populate the table with some fake records.
@@ -42,7 +40,7 @@ class UT_LocalDBCreate(unittest.TestCase):
         c = ConnectedDatabase.cursor()
         c.execute(
             'SELECT * FROM {tablename} WHERE {columnname}="{columnvalue}"'.
-                format(tablename=tableName, columnname=MRNColumn,columnvalue=291033))
+                format(tablename=CNBP_blueprint.table_name, columnname=CNBP_blueprint.keyfield,columnvalue=291033))
         ResultRows = c.fetchall()
 
         assert len(ResultRows) > 0
@@ -73,23 +71,19 @@ class UT_LocalDBCreate(unittest.TestCase):
         assert LocalDB_createCNBP.database(PathString)
         logger.info('Test SQLite database successfully created. Gonna mess with it!')
 
-        tableName = 'id_table'  # All CNBP database should have this table name.
-        MRNColumn = "MRN"
-        CNBPIDColumn = "CNBPID"
-
         # Populate the table with some fake records.
         ConnectedDatabase = sqlite3.connect(PathString)
         c = ConnectedDatabase.cursor()
         c.execute("INSERT INTO {tn} ({mrn},{cnbpid}) VALUES (291010,'CNBP0010001')".
-                  format(tn=tableName, mrn=MRNColumn, cnbpid=CNBPIDColumn))
+                  format(tn=CNBP_blueprint.table_name, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
         c.execute("INSERT INTO {tn} ({mrn},{cnbpid}) VALUES (292010,'CNBP0020001')".
-                  format(tn=tableName, mrn=MRNColumn, cnbpid=CNBPIDColumn))
+                  format(tn=CNBP_blueprint, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
         c.execute("INSERT INTO {tn} ({mrn},{cnbpid}) VALUES (295010,'CNBP0010001')".
-                  format(tn=tableName, mrn=MRNColumn, cnbpid=CNBPIDColumn))
+                  format(tn=CNBP_blueprint, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
         c.execute("INSERT INTO {tn} ({mrn},{cnbpid}) VALUES (297120,'CNBP0030001')".
-                  format(tn=tableName, mrn=MRNColumn, cnbpid=CNBPIDColumn))
+                  format(tn=CNBP_blueprint, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
         c.execute("INSERT INTO {tn} ({mrn},{cnbpid}) VALUES (291310,'CNBP0510001')".
-                  format(tn=tableName, mrn=MRNColumn, cnbpid=CNBPIDColumn))
+                  format(tn=CNBP_blueprint, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
         ConnectedDatabase.commit()
         ConnectedDatabase.close()
 
