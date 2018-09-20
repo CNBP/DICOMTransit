@@ -9,32 +9,24 @@ logger = logging.getLogger(__name__)
 
 class UT_LORISCandidates(unittest.TestCase):
 
-    """
-    def test_create_subject():
-        logger = logging.getLogger('UT_LORIS_create_subject_check')
+    @staticmethod
+    def test_create_delete_subject():
+        """
+        Check both the creation and deletion of the subject for LORIS.
+        :return:
+        """
+
         response_success, token = LORIS_query.login()
 
         if not response_success:
             raise ConnectionError
 
-        PSCID = "CNBP8881234"
+        # Example PSCI ID.
+        PSCID = "CNBP9990987"
 
         success, DCCID = LORIS_candidates.createCandidateCNBP(token, PSCID)
-
-        LORIS_candidates.deleteCandidateCNBP(token, DCCID, PSCID)
-        logger.info("UT_LORIS_create_subject_check PASSED")
-
-
-    def test_delete_subjects():
-        logger = logging.getLogger('UT_LORIS_create_subject_check')
-        response_success, token = LORIS_query.login()
-
-        DCCID = "881417"
-        PSCID = "CNBP9991234"
-        # one time runnable code:
-        LORIS_candidates.deleteCandidateCNBP(token, DCCID, PSCID)
-        logger.info("UT_LORIS_create_subject_check PASSED")
-    """
+        assert success
+        LORIS_candidates.deleteCandidateCNBP(DCCID, PSCID)
 
     @staticmethod
     def test_check_projectID():
