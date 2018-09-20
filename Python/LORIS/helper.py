@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import paramiko
+from dotenv import load_dotenv
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -134,6 +135,30 @@ class LORIS_helper:
 
         return client
 
+    @staticmethod
+    def triggerCommand(client, bash_command_string):
+        """
+        Use the client given to execute a script and print out the output. BE WARY THAT YOU ARE IN THE HOME DIR
+        :param client:
+        :param path_to_bash_script:
+        :return:
+        """
+        logger = logging.getLogger("Ran command: " + bash_command_string)
+
+        # Bind in, out and err prompts after running certain commands.
+        stdin, stdout, stderr = client.exec_command(bash_command_string)
+        print("stderr: ", stderr.readlines())
+        print("pwd: ", stdout.readlines())
+
 if __name__ == '__main__':
-    Client = LORIS_helper.getProxySSHClient("132.219.138.166",  "cnbpadm", "tataupa2", '192.168.106.3', "lorisadmin", "l0r1sAdsvr")
-    LORIS_helper.uploadThroughClient(Client, "//Tmp/test", "JPEG-LL.dcm")
+    assert load_dotenv()
+    ProxyIP = os.getenv("ProxyIP")
+    ProxyUsername = os.getenv("ProxyUsername")
+    ProxyPassword = os.getenv("ProxyPassword")
+    LORISHostIP = os.getenv("LORISHostIP")
+    LORISHostUsername = os.getenv("LORISHostUsername")
+    LORISHostPassword = os.getenv("LORISHostPassword")
+
+    Client = LORIS_helper.getProxySSHClient(ProxyIP,  ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername, LORISHostPassword)
+    # LORIS_helper.uploadThroughClient(Client, "//Tmp/test", "JPEG-LL.dcm")
+    LORIS_helper.triggerCommand(Client, "pwd;cd /opt;pwd;ls")

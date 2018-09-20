@@ -1,4 +1,3 @@
-from subprocess import check_call
 import sys
 import os
 import re
@@ -130,10 +129,10 @@ class LORIS_candidates:
             return True
 
     @staticmethod
-    def deleteCandidateCNBP(token, DCCID, PSCID):
-        logger = logging.getLogger('UT_LORIS_delete_subject')
-
-        # Load the hard coded variables.
+    def deleteCandidateCNBP(DCCID, PSCID):
+        # todo: this should really be done through API. But Currently LORIS does not offer such API.
+        # NOTE! If you EVER get NULL coalese not recognized error, make sure that the PHP version being called from the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER than the bashrc profile.
+        # Load the credential variables.
         success = load_dotenv()
         if not success:
             raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
@@ -146,15 +145,24 @@ class LORIS_candidates:
         DeletionScript = os.getenv("DeletionScript")
 
         # Export some variables for subsequent deletion clean script against production database (yes... because we could not automate LORIS development...):
-        command_string = ["sshpass", "-p", ProxyPassword, "ssh", ProxyUsername + "@" + ProxyIP, "-t", "sshpass", "-p",
-                          LORISHostPassword, "ssh", "-L", "3001:localhost:22",
-                          LORISHostUsername + "@" + LORISHostIP, "php", DeletionScript, "delete_candidate", str(DCCID),
-                          PSCID, "confirm"]
+        # command_string = "testout="+"'php " + DeletionScript + " delete_candidate " + str(DCCID) + " " + PSCID + " confirm';" + "echo $testout > /tmp/output.txt"
+        # NOTE! If you EVER get NULL coalese not recognized error, make sure that the PHP version being called from the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER than the bashrc profile.
+        command_string = "/opt/rh//rh-php70/root/usr/bin/php " + DeletionScript + " delete_candidate " + str(DCCID) + " " + PSCID + " confirm"
+        # command_string = "/opt/php -v > /tmp/output1.txt"
+
 
         logger.info(command_string)
-        if 'TRAVIS' in os.environ:
-            logger.info("Running LORIS delete candidate that was created for: " + PSCID)
-            check_call(command_string)
+
+        # Establish connection to client.
+        Client = LORIS_helper.getProxySSHClient(ProxyIP, ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername,
+                                                LORISHostPassword)
+
+        # Execute the command
+        LORIS_helper.triggerCommand(Client, command_string)
+
+        # Close the client.
+        Client.close()
+
 
     @staticmethod
     def createCandidateCNBP(token, proposed_PSCID):
@@ -167,10 +175,10 @@ class LORIS_candidates:
         logger = logging.getLogger('LORIS_CreateCNBPCandidates')
         logger.info("Creating CNBP Candidates: " + proposed_PSCID)
 
-        PSCID_exist = LORIS_candidates.checkPSCIDExist(token, proposed_PSCID)
+        _, PSCID_exist = LORIS_candidates.checkPSCIDExist(token, proposed_PSCID)
         if PSCID_exist:
             logger.info("PSCID already exist. Quitting.")
-            return False
+            return False ,None
 
         Candidate = {}
         Candidate['Project'] = 'loris'
@@ -276,4 +284,5 @@ class LORIS_candidates:
         return response_success, False
 
 if __name__ == "__main__":
-    print(LORIS_candidates.check_projectID_compliance("GL01"))
+    LORIS_candidates.deleteCandidateCNBP(958607, "CNBP8881234")
+    #print(LORIS_candidates.check_projectID_compliance("GL01"))
