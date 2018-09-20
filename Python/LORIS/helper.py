@@ -48,7 +48,7 @@ class LORIS_helper:
     @staticmethod
     def upload(remote_ip, remote_path, remote_login, remote_pw, local_file_path):
         """
-        This routeine is used to upload via SSH.
+        This routeine is used to upload via a paramiko SSH.
         :param remote_path:
         :param remote_login:
         :param remote_pw:
@@ -56,7 +56,6 @@ class LORIS_helper:
         :return:
         """
 
-        logger = logging.getLogger("Upload logger")
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         #ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
@@ -143,12 +142,12 @@ class LORIS_helper:
         :param path_to_bash_script:
         :return:
         """
-        logger = logging.getLogger("Ran command: " + bash_command_string)
+        logger.info("Ran command: " + bash_command_string)
 
         # Bind in, out and err prompts after running certain commands.
         stdin, stdout, stderr = client.exec_command(bash_command_string)
         print("stderr: ", stderr.readlines())
-        print("pwd: ", stdout.readlines())
+        print("stdout: ", stdout.readlines())
 
 if __name__ == '__main__':
     assert load_dotenv()

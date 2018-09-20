@@ -131,7 +131,11 @@ class LORIS_candidates:
     @staticmethod
     def deleteCandidateCNBP(DCCID, PSCID):
         # todo: this should really be done through API. But Currently LORIS does not offer such API.
-        # NOTE! If you EVER get NULL coalese not recognized error, make sure that the PHP version being called from the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER than the bashrc profile.
+        # NOTE! If you EVER get NULL coalesce not recognized error, make sure that the PHP version being called from
+        # the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER
+        # than the bashrc profile imported edition. Also keep in mind that EVEN if .bashrc import this, it MOST LIKELY
+        # will not apply to the SSH session!
+
         # Load the credential variables.
         success = load_dotenv()
         if not success:
@@ -144,11 +148,13 @@ class LORIS_candidates:
         LORISHostIP = os.getenv("LORISHostIP")
         DeletionScript = os.getenv("DeletionScript")
 
-        # Export some variables for subsequent deletion clean script against production database (yes... because we could not automate LORIS development...):
-        # command_string = "testout="+"'php " + DeletionScript + " delete_candidate " + str(DCCID) + " " + PSCID + " confirm';" + "echo $testout > /tmp/output.txt"
-        # NOTE! If you EVER get NULL coalese not recognized error, make sure that the PHP version being called from the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER than the bashrc profile.
+        # NOTE! If you EVER get NULL coalesce not recognized error, make sure that the PHP version being called from
+        # the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER
+        # than the bashrc profile imported edition. Also keep in mind that EVEN if .bashrc import this, it MOST LIKELY
+        # will not apply to the SSH session!
+
         command_string = "/opt/rh//rh-php70/root/usr/bin/php " + DeletionScript + " delete_candidate " + str(DCCID) + " " + PSCID + " confirm"
-        # command_string = "/opt/php -v > /tmp/output1.txt"
+
 
 
         logger.info(command_string)
@@ -260,7 +266,6 @@ class LORIS_candidates:
         success = load_dotenv()
         if not success:
             raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
-        institution_check = os.getenv("institutionID")
 
         assert (LORIS_candidates.check_DCCID(proposed_DCCID))
 
