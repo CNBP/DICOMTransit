@@ -11,4 +11,3 @@ class DICOM_assign():
         :return:
         """
         raise NotImplementedError
-        pass

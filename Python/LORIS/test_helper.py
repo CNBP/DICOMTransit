@@ -11,7 +11,6 @@ class UT_LORISHelper(unittest.TestCase):
         Prefix = "V"
         numbers = [1, 2, 3, 9, 10, 11, 12, 100, 101, 102]
 
-        global timepoints
         timepoints = []
 
         for number in numbers:

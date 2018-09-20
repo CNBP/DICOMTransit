@@ -11,7 +11,7 @@ class UT_LORISQuery(unittest.TestCase):
 
     @staticmethod
     def test_LORIS_login():
-        response_success, token = LORIS_query.login()
+        response_success, _ = LORIS_query.login()
         assert response_success
 
         #assert len(token) == 256 #token should always be 256 char long
@@ -20,9 +20,9 @@ class UT_LORISQuery(unittest.TestCase):
         response_success, token = LORIS_query.login()
         assert response_success
         #assert len(token) == 256  # token should always be 256 char long
-        response_success, json = LORIS_query.getCNBP(token, "projects")
+        response_success, _ = LORIS_query.getCNBP(token, "projects")
         assert response_success
-        response_success, json = LORIS_query.getCNBP(token, "candidates")
+        response_success, _ = LORIS_query.getCNBP(token, "candidates")
         assert response_success
 
     @staticmethod

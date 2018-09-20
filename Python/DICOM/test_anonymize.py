@@ -18,7 +18,7 @@ class UT_DICOMAnonymization(unittest.TestCase):
 
             # Copy all files
             for file in files:
-                path, fileName = os.path.split(file)
+                _, fileName = os.path.split(file)
                 copyfile(file, os.path.join(temp_folder, fileName))
 
             # Anonymize that folder.
