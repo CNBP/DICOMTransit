@@ -77,21 +77,21 @@ class UT_LocalDBCreate(unittest.TestCase):
         c.execute("INSERT INTO {tn} ({mrn},{cnbpid}) VALUES (291010,'CNBP0010001')".
                   format(tn=CNBP_blueprint.table_name, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
         c.execute("INSERT INTO {tn} ({mrn},{cnbpid}) VALUES (292010,'CNBP0020001')".
-                  format(tn=CNBP_blueprint, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
+                  format(tn=CNBP_blueprint.table_name, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
         c.execute("INSERT INTO {tn} ({mrn},{cnbpid}) VALUES (295010,'CNBP0010001')".
-                  format(tn=CNBP_blueprint, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
+                  format(tn=CNBP_blueprint.table_name, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
         c.execute("INSERT INTO {tn} ({mrn},{cnbpid}) VALUES (297120,'CNBP0030001')".
-                  format(tn=CNBP_blueprint, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
+                  format(tn=CNBP_blueprint.table_name, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
         c.execute("INSERT INTO {tn} ({mrn},{cnbpid}) VALUES (291310,'CNBP0510001')".
-                  format(tn=CNBP_blueprint, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
+                  format(tn=CNBP_blueprint.table_name, mrn=CNBP_blueprint.keyfield, cnbpid=CNBP_blueprint.fiels[1]))
         ConnectedDatabase.commit()
         ConnectedDatabase.close()
 
         logger.info('Test SQLite database successfully inserted with mock records. Gonna mess with it!')
 
         # Create on Connecting to the database file
-        assert(LocalDB_query.check_value(PathString, tableName, "MRN", 291010))
-        assert(LocalDB_query.check_value(PathString, tableName, "CNBPID", "CNBP0010001"))
+        assert(LocalDB_query.check_value(PathString, CNBP_blueprint.table_name, "MRN", 291010))
+        assert(LocalDB_query.check_value(PathString, CNBP_blueprint.table_name, "CNBPID", "CNBP0010001"))
 
         # Remove test data base created
         os.remove(PathString)
