@@ -92,7 +92,6 @@ class LORIS_helper:
         :param proxy_pw:
         :return:
         """
-        logger = logging.getLogger(__name__)
         client = paramiko.SSHClient()
         client.load_system_host_keys()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -145,7 +144,7 @@ class LORIS_helper:
         logger.info("Ran command: " + bash_command_string)
 
         # Bind in, out and err prompts after running certain commands.
-        stdin, stdout, stderr = client.exec_command(bash_command_string)
+        _, stdout, stderr = client.exec_command(bash_command_string)
         print("stderr: ", stderr.readlines())
         print("stdout: ", stdout.readlines())
 
