@@ -3,3 +3,7 @@ python-coveralls
 coverage
 pydicom
 python-dateutil
+pytest-cov
+heudiconv[all]
+tqdm
+paramiko

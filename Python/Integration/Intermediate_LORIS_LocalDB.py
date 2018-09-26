@@ -1,7 +1,7 @@
 import logging
-from LocalDB.query import validateLocalTableAndSchema, check_value, update_entry, check_header_index
-from LORIS.timepoint import findLatestTimePoint
-from LocalDB.schema import CNBP_schema_keyfield
+from LocalDB.query import LocalDB_query
+from LORIS.timepoint import LORIS_timepoint
+from LocalDB.schema import CNBP_blueprint
 
 
 def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
@@ -11,8 +11,6 @@ def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
     :param DCCID:
     :param database_path:
     :param table_name:
-    :param ColumnName:
-    :param ColumnValue:
     :return:
     """
 
@@ -23,7 +21,7 @@ def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
 
     # todo: permission must be checked to ensure we are not geting 401 error! which is an access issue.
     # todo: 2018-07-24 continue debug this code about entry creation.
-    time_point = findLatestTimePoint(token, DCCID)
+    time_point = LORIS_timepoint.findLatestTimePoint(token, DCCID)
 
     # Timepoint Check
     if time_point is None:
@@ -32,12 +30,12 @@ def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
         logger.info("Timepoint retrieved okay:" + time_point)
 
     # Validate table and schema congruency
-    success, reason = validateLocalTableAndSchema(database_path, table_name, "DCCID")
+    success, reason = LocalDB_query.validateLocalTableAndSchema(database_path, table_name, "DCCID")
     if not success:
         return False, reason
 
     # Check local database for the rows with matching DCCID.
-    success, subject_rows = check_value(database_path, table_name, "DCCID", DCCID)
+    success, subject_rows = LocalDB_query.check_value(database_path, table_name, "DCCID", DCCID)
     if not success:
         return False, "No entries with this DCCID!"
 
@@ -45,7 +43,7 @@ def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
     for row in subject_rows:
 
         # Get MRN:
-        DCCID_table_index = check_header_index(database_path, table_name, "DCCID")
+        DCCID_table_index = LocalDB_query.check_header_index(database_path, table_name, "DCCID")
 
         assert (str(DCCID) == str(row[DCCID_table_index]))
 
@@ -53,7 +51,7 @@ def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
         MRN = row[0] # the identifier of the record.
 
         try:
-            update_entry(database_path, table_name, CNBP_schema_keyfield, MRN, "Timepoint", time_point)
+            LocalDB_query.update_entry(database_path, table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", time_point)
         except IOError:
             return False, "Check the database is not read only. "
 
