@@ -1,7 +1,5 @@
 import sys
 
-sys.path.insert(0,"/home/vuyo/Dev/pythony/PycharmProjects/DICOMTransit/Python")
-
 from orthanc.query import orthanc_query
 from LORIS.helper import LORIS_helper
 import os
@@ -227,5 +225,5 @@ def main( ):
     # Simulate a signal from Pacs
     pacs()
 
-# Execute
-main()
+if __name__ == "__main__":
+    main()
