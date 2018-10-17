@@ -1,10 +1,8 @@
-import os
 from pydicom.data import get_testdata_files
-
 from orthanc.query import orthanc_query
-
 from LORIS.helper import LORIS_helper
 import unittest
+import orthanc.API
 
 class UT_Orthanc(unittest.TestCase):
 
@@ -23,9 +21,10 @@ class UT_Orthanc(unittest.TestCase):
     @staticmethod
     def test_getSubjects():
         UT_Orthanc.uploadExamplesToOrthanc()
-        reseponse_code, list_subjects = orthanc_query.getOrthanc("patients/")
-        assert (LORIS_helper.is_response_success(reseponse_code, 200))
-        return list_subjects
+        subject_list = orthanc.API.get_list_of_subjects()
+        assert len(subject_list) > 0
+        return subject_list
+
 
     @staticmethod
     def test_deleteSubjects():
@@ -38,15 +37,7 @@ class UT_Orthanc(unittest.TestCase):
     def test_getSubjectZip():
         list_subjects = UT_Orthanc.test_getSubjects()
         for subject in list_subjects:
-            status, zip_file = orthanc_query.getPatientZipOrthanc(subject)
-            assert(LORIS_helper.is_response_success(status, 200))
-            assert(os.path.exists(zip_file))
-            os.mkdir("temp")
-            temp_dir = os.path.join(os.getcwd(), "temp")
-            orthanc_query.flatUnZip(zip_file, temp_dir)
-            os.remove(zip_file)
-            import shutil
-            shutil.rmtree(temp_dir)
+            orthanc.API.get_subject_zip(subject)
 
 if __name__ == "__main__":
     UT_Orthanc.test_getSubjectZip()

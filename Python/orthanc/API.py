@@ -1,11 +1,9 @@
 import os
-from pydicom.data import get_testdata_files
+
 
 import tempfile
 from orthanc.query import orthanc_query
 from LORIS.helper import LORIS_helper
-from PythonUtils.folder import recursive_list, create
-import unittest
 
 def get_list_of_subjects():
     """

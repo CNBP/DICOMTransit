@@ -1,11 +1,7 @@
-
 from tempfile import TemporaryDirectory
 from DICOM.anonymize import DICOM_anonymize
 from shutil import copyfile
 import os
-
-
-
 
 def anonymize_files(files):
     """

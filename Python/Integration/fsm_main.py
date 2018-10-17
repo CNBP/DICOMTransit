@@ -51,7 +51,12 @@ def check_mrn_exists ( signal, sender ):
     """Currently not used. i.e nothing fires its event"""
     print ('Signal is', signal)
     print ('Signal to check_mrn_exists was sent by', sender)
+
+
+
     # Pretend that MRN found so assign CNBPID
+
+
     cnbpidv = 999
     sa = 'hello'
     dispatcher.send( SIG_ASSIGN_CNBPID, sender=sa, cnbpid=cnbpidv )
@@ -60,6 +65,9 @@ def get_mrn_from_dicom ( signal=None, sender=None, dicom_file=None ):
     """Simple event handler"""
     print ('Signal is', signal)
     print ('Signal to get_mrn_from_dicom was sent by', sender)
+
+
+
     dicom_file.mrn = 'This is a medical record number'
     dispatcher.send( signal=SIG_TASK_COMPLETE, sender=get_mrn_from_dicom,
                     dicomFile=dicom_file,from_signal=signal)
@@ -88,19 +96,29 @@ def get_lorisid_and_visit ( signal=None, sender=None, dicom_file=None, cnbpid=No
                     from_signal=signal, dicomFile=dicom_file)
 
 def get_dicom_file( signal=None, sender=None ):
-    """Simple event handler"""
+    """
+    Event handler to attempt to get DICOM-files using ORTHANC API based on the configuration specified in the .env file
+    :param signal:
+    :param sender:
+    :return:
+    """
     print ('Signal is', signal)
     print ('Signal to get_dicom_file was sent by', sender)
 
-    # Get the list of subjects
+    # Get the list of subjects from Orthanc.
     subjects_list = orthanc.API.get_list_of_subjects()
 
+    # Loop through each orthanc subject UUID
     for subject in subjects_list:
 
         try:
+            # Get the temporary folder object reference
             dicom_folder = orthanc.API.get_subject_zip(subject)
 
+            # Package it
             dicom_package = DICOMPackage(dicom_folder)
+
+            # Send for down stream processing
             dispatcher.send( signal=SIG_HANDLE_DICOM_FILE, sender=get_dicom_file,
                         dicomFile=dicom_package)
         except Exception as ex:
