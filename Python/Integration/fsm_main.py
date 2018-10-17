@@ -1,12 +1,13 @@
-import sys
+import sys, traceback
 
-from orthanc.query import orthanc_query
-from LORIS.helper import LORIS_helper
 import os
 import logging
-
+import orthanc.API
+import DICOM.API
+from PythonUtils.folder import recursive_list
 from pydispatch import dispatcher
 SIGNAL = 'my-first-signal'
+SIG_Error = 'Generic Error'
 SIG_INCOMING_DICOM = 'incoming-dicom'
 SIG_GET_DICOM_FILE = 'get-dicom-file'
 SIG_GET_MRN_FROM_DICOM = 'get-mrn-from-dicom'
@@ -35,10 +36,15 @@ def scanner ( signal, sender ):
     """Simple event handler"""
     print (signal, ' to scanner was sent by', sender)
 
-def orthanc_srvr ( signal, sender ):
-    """Simple event handler"""
-    print (signal, ' to orthanc_srvr was sent by', sender)
-    dispatcher.send( signal=SIG_GET_DICOM_FILE, sender=orthanc_srvr )
+def check_orthanc_srvr (signal, sender):
+    """
+    Check orthanc server using the orthanc module and download the files.
+    :param signal:
+    :param sender:
+    :return:
+    """
+    print (signal, ' to check_orthanc_srvr was sent by', sender)
+    dispatcher.send(signal=SIG_GET_DICOM_FILE, sender=check_orthanc_srvr)
 
 def check_mrn_exists ( signal, sender ):
     """Simple event handler"""
@@ -85,11 +91,23 @@ def get_dicom_file( signal=None, sender=None ):
     """Simple event handler"""
     print ('Signal is', signal)
     print ('Signal to get_dicom_file was sent by', sender)
-    # Get the actual DICOM file and call the postman
-    dicom_filev = "this is the dicom file"
-    dicom_file = DicomFile(dicom_filev)
-    dispatcher.send( signal=SIG_HANDLE_DICOM_FILE, sender=get_dicom_file,
-                    dicomFile=dicom_file)
+
+    # Get the list of subjects
+    subjects_list = orthanc.API.get_list_of_subjects()
+
+    for subject in subjects_list:
+
+        try:
+            dicom_folder = orthanc.API.get_subject_zip(subject)
+
+            dicom_package = DICOMPackage(dicom_folder)
+            dispatcher.send( signal=SIG_HANDLE_DICOM_FILE, sender=get_dicom_file,
+                        dicomFile=dicom_package)
+        except Exception as ex:
+            #traceback.print_exc(file=sys.stdout)
+            dispatcher.send(signal=SIG_Error, sender=get_dicom_file, arglist={"Exception": ex})
+
+
 
 def assign_cnbpid ( signal=None, sender=None, mrn=None, cnbpid=None, dicom_file=None ):
     """Simple event handler"""
@@ -107,7 +125,9 @@ def anonymize_data ( signal=None, sender=None, dicom_file=None):
     """Simple event handler"""
     print ('Signal is', signal)
     print ('Signal to anonymize_data was sent by', sender)
-    dicom_file.dicom_file = 'an anonymized dicom file'
+    # dicom_folder.dicom_folder = 'an anonymized dicom file'
+
+    DICOM.API.anonymize_files(dicom_file.get_dicom_files())
     dicom_file.is_anonymized = 1
     dispatcher.send( signal=SIG_TASK_COMPLETE, sender=anonymize_data,
                     from_signal=signal, dicomFile=dicom_file)
@@ -134,20 +154,21 @@ Postman is then sent a signal by tasks that have finished with the results
 def postman ( signal=None, sender=None, from_signal=None, dicomFile=None, arglist=None ):
     print ('Signal is', signal)
     print ('Signal to postman was sent by', sender)
-    # Check that dicomFile is an instance of DicomFile
+    # Check that dicomFile is an instance of DICOMPackage
     # Based on the signal, pass control to replyto
-    if(not isinstance(dicomFile, DicomFile)):
-        print ('dicomFile not a DicomFile object. Exiting ...')
-        return 0
+    # if(not isinstance(dicomFile, DICOMPackage)):
+    #     print ('dicomFile not a DICOMPackage object. Exiting ...')
+    #     return 0
 
     # 1a. Get dicom file
     if( signal==SIG_HANDLE_DICOM_FILE ):
         if( dicomFile is not None):
             # 1b. Get mrn from DICOM file
-            if(dicomFile.dicom_file != None ):
+            if(dicomFile.dicom_folder != None ):
+                print(dicomFile.dicom_folder)
                 dispatcher.send( signal=SIG_GET_MRN_FROM_DICOM,
                                 sender=postman,dicom_file=dicomFile)
-                #get_mrn_from_dicom(dicom_file=dicom_filev)
+                #get_mrn_from_dicom(dicom_folder=dicom_filev)
 
     # 2., 3. Get CNBPID using MRN
     if(from_signal==SIG_GET_MRN_FROM_DICOM):
@@ -155,7 +176,7 @@ def postman ( signal=None, sender=None, from_signal=None, dicomFile=None, arglis
             if(dicomFile.mrn is not None):
                 dispatcher.send( signal=SIG_GET_AND_ASSIGN_CNBPID_USING_MRN,
                                 sender=postman, dicom_file=dicomFile)
-                #get_and_assign_cnbpid_using_mrn(mrn=mrnv,dicom_file=dicom_filev)
+                #get_and_assign_cnbpid_using_mrn(mrn=mrnv,dicom_folder=dicom_filev)
 
     # 4. Assign cnbpid (to dicom file?)
     if(from_signal==SIG_GET_CNBPID_USING_MRN):
@@ -163,7 +184,7 @@ def postman ( signal=None, sender=None, from_signal=None, dicomFile=None, arglis
             if(dicomFile.cnbpid is not None):
                 dispatcher.send( signal=SIG_ASSIGN_CNBPID, sender=postman,
                                 dicom_file=dicomFile)
-                #assign_cnbpid(cnbpid=cnbpidv,dicom_file=dicom_filev)
+                #assign_cnbpid(cnbpid=cnbpidv,dicom_folder=dicom_filev)
 
     # 5. Get lorisid and visit
     if(from_signal==SIG_GET_AND_ASSIGN_CNBPID_USING_MRN):
@@ -180,7 +201,7 @@ def postman ( signal=None, sender=None, from_signal=None, dicomFile=None, arglis
                 # 6. Anonymize the dicom file
                 dispatcher.send( signal=SIG_ANONYMIZE_DATA,
                                 sender=postman, dicom_file=dicomFile)
-                #anonymize_data(dicom_file=dicom_filev,
+                #anonymize_data(dicom_folder=dicom_filev,
                 #              lorisid_and_visit=lorisid_and_visitv)
 
     # 7. Upload the anonymized dicom file
@@ -191,22 +212,30 @@ def postman ( signal=None, sender=None, from_signal=None, dicomFile=None, arglis
                                 sender=postman,
                                 anon_dicom_file=dicomFile)
                 #r = upload_anonymized_data(anon_dicom_file=anon_dicom_filev)
-
+    if(SIG_Error):
+        # When errored, do something,
+        if arglist is not None:
+            print(arglist["Exception"])
+        traceback.print_exc(file=sys.stdout)
 
 """Dicom file class """
-class DicomFile:
-    def __init__(self, dicom_file=None):
-        self.dicom_file = dicom_file
+class DICOMPackage:
+    def __init__(self, dicom_folder=None):
+        self.dicom_folder = dicom_folder
         self.cnbpid = None
         self.lorisid = None
         self.visit = None
         self.mrn = None
         self.is_anonymized = 0
 
+    def get_dicom_files(self):
+        return recursive_list(self.dicom_folder.name)
+
+
 
 # Connect events to handlers
 dispatcher.connect( handle_event, signal=SIGNAL,sender=dispatcher.Any )
-dispatcher.connect( orthanc_srvr, signal=SIG_INCOMING_DICOM,sender=dispatcher.Any )
+dispatcher.connect(check_orthanc_srvr, signal=SIG_INCOMING_DICOM, sender=dispatcher.Any)
 dispatcher.connect( get_mrn_from_dicom, signal=SIG_GET_MRN_FROM_DICOM,sender=dispatcher.Any )
 dispatcher.connect( check_mrn_exists, signal=SIG_CHECK_MRN_EXISTS,sender=dispatcher.Any )
 #dispatcher.connect( get_cnbpid_using_mrn, signal=SIG_GET_CNBPID_USING_MRN,sender=dispatcher.Any )
@@ -219,6 +248,7 @@ dispatcher.connect( assign_cnbpid, signal=SIG_ASSIGN_CNBPID,sender=dispatcher.An
 dispatcher.connect( get_dicom_file, signal=SIG_GET_DICOM_FILE,sender=dispatcher.Any )
 dispatcher.connect( postman, signal=SIG_HANDLE_DICOM_FILE,sender=dispatcher.Any )
 dispatcher.connect( postman, signal=SIG_TASK_COMPLETE,sender=dispatcher.Any )
+dispatcher.connect(postman, signal=SIG_Error, sender=dispatcher.Any)
 
 # Fire events
 def main( ):
