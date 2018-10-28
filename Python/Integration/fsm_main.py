@@ -37,11 +37,11 @@ def scanner ( signal, sender ):
     print (signal, ' to scanner was sent by', sender)
 
 def check_orthanc_srvr (signal, sender):
-    """
-    Check orthanc server using the orthanc module and download the files.
-    :param signal:
-    :param sender:
-    :return:
+    """Check orthanc server using the orthanc module and download the files.
+
+    :param signal: The signal that this function is listening to.
+    :param sender: The sender that sent this signal.
+    :returns: None.
     """
     print (signal, ' to check_orthanc_srvr was sent by', sender)
     dispatcher.send(signal=SIG_GET_DICOM_FILE, sender=check_orthanc_srvr)
@@ -104,6 +104,8 @@ def get_dicom_file( signal=None, sender=None ):
     """
     print ('Signal is', signal)
     print ('Signal to get_dicom_file was sent by', sender)
+    # Save the function arguments in case of recovery
+    mylocals = locals()
 
     # Get the list of subjects from Orthanc.
     subjects_list = orthanc.API.get_list_of_subjects()
@@ -120,11 +122,12 @@ def get_dicom_file( signal=None, sender=None ):
 
             # Send for down stream processing
             dispatcher.send( signal=SIG_HANDLE_DICOM_FILE, sender=get_dicom_file,
-                        dicomFile=dicom_package)
-        except Exception as ex:
-            #traceback.print_exc(file=sys.stdout)
-            dispatcher.send(signal=SIG_Error, sender=get_dicom_file, arglist={"Exception": ex})
-
+                            dicomFile=dicom_package)
+    except Exception as ex:
+        #traceback.print_exc(file=sys.stdout)
+        args={"Exception": ex,'locals':mylocals}
+        dispatcher.send(signal=SIG_Error, sender=get_dicom_file,
+                        arglist=args)
 
 
 def assign_cnbpid ( signal=None, sender=None, mrn=None, cnbpid=None, dicom_file=None ):
@@ -172,11 +175,6 @@ Postman is then sent a signal by tasks that have finished with the results
 def postman ( signal=None, sender=None, from_signal=None, dicomFile=None, arglist=None ):
     print ('Signal is', signal)
     print ('Signal to postman was sent by', sender)
-    # Check that dicomFile is an instance of DICOMPackage
-    # Based on the signal, pass control to replyto
-    # if(not isinstance(dicomFile, DICOMPackage)):
-    #     print ('dicomFile not a DICOMPackage object. Exiting ...')
-    #     return 0
 
     # 1a. Get dicom file
     if( signal==SIG_HANDLE_DICOM_FILE ):
@@ -230,11 +228,16 @@ def postman ( signal=None, sender=None, from_signal=None, dicomFile=None, arglis
                                 sender=postman,
                                 anon_dicom_file=dicomFile)
                 #r = upload_anonymized_data(anon_dicom_file=anon_dicom_filev)
+
+    # Error handling
     if(SIG_Error):
         # When errored, do something,
         if arglist is not None:
             print(arglist["Exception"])
+            print("Printing function local arguments")
+            print(arglist["locals"])
         traceback.print_exc(file=sys.stdout)
+        # Save State/Transition related info to data store for recovery
 
 """Dicom file class """
 class DICOMPackage:
