@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 class Integration:
 
     @staticmethod
+    #OBSOLETE
     def step2_dicom2LORIS(folder_paths):
         """
         Within each folder, verify they all have the same PatientID.

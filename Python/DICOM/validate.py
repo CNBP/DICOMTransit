@@ -2,6 +2,7 @@ import sys
 import logging
 import os
 from tqdm import tqdm
+from PythonUtils.folder import recursive_list
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -9,6 +10,11 @@ class DICOM_validate:
 
     @staticmethod
     def MRN(input_string):
+        """
+        This validate and check if the MRN is of the proper valid format based on the hospital specification.
+        :param input_string:
+        :return:
+        """
         string=str(input_string)
         if not string.isdigit():
             return False
@@ -49,22 +55,23 @@ class DICOM_validate:
         Birthday date, subject name, etc MUST BE CONSISTENT across a SINGLE subject's folder, RIGHT!
 
         :param dir_path:
-        :return:
+        :returns: 0) if the path is valid, 2) list of ONLY the valid DICOM files.
         """
         logger = logging.getLogger(__name__)
 
-
-        # Input check
+        # Reject bad input check
         if not os.path.exists(dir_path) or not os.path.isdir(dir_path):
             logger.info("Bad data folder path")
-            return False
+            return False, None
 
-        files = os.listdir(dir_path)
+        # Get all possible files from the there.
+        files = recursive_list(dir_path)
 
         # Used to record the first encountered patientID and name, and will check against subsequent folder for same matching information.
         PatientID = ""
         PatientName = ""
 
+        # List to store all validated DICOM files.
         validated_DICOM_files = []
 
         from DICOM.elements import DICOM_elements
@@ -74,19 +81,25 @@ class DICOM_validate:
         for file in tqdm(files):
 
             # Skip current file if they are not DICOM files.
-            isDICOM, _ = DICOM_validate.file(file)
-            if not isDICOM:
+            is_DICOM, _ = DICOM_validate.file(file)
+            if not is_DICOM:
+                logger.info("Bad DICOM files detected: " + file)
                 continue
 
+            # todo: what if one of them is NONE?
+            # todo: what if the date and other things are inconsistent?
             # Record first instance of patient ID and patient name.
             if PatientID is None and PatientName is None:
-                Success, PatientID = DICOM_elements.retrieve(files[0], "PatientID")
-                Success, PatientName = DICOM_elements.retrieve(files[0], "PatientName")
+                Success, PatientID = DICOM_elements.retrieve(files, "PatientID")
+                Success, PatientName = DICOM_elements.retrieve(files, "PatientName")
 
                 # raise issue if not successful
                 if not Success:
-                    logger.info("DICOME meta data retrieval failure.")
-                    return False
+                    logger.info("DICOM meta data retrieval failure EVEN for the first DICOM FILE?! Checking next one.")
+                else:
+                    logger.info("DICOM meta data retrieval success: " + PatientID + PatientName)
+
+                # Regardless of success of failure, must continue to process the next file.
                 continue
 
             # Check consistencies across folders in terms of patient ID, NAME.
@@ -95,7 +108,7 @@ class DICOM_validate:
 
             if not (PatientID == CurrentPatientID) or not (PatientName == CurrentPatientName):
                 logger.info("PatientID or Name mismatch from the dicom archive. .")
-                return False
+                return False, None
 
             validated_DICOM_files.append(file)
 
