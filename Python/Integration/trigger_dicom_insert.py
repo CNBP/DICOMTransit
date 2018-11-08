@@ -27,9 +27,9 @@ def trigger_dicom_insert(scans):
     trigger_dicom_insertion_url = load_dotenv("triggerDicomInsertionURL")
     # Trigger insertion by doing HTTP POST of payload to endpoint
     # Disable complaints about SSL for now by passing verify=False param
-    #s = requests.post("https://dev.cnbp.ca/cnbp/upload_dicoms.php",
-    #                  data=payload, verify=False)
-    #s = requests.post(trigger_dicom_insertion_url, data=payload, verify=False)
+    s = requests.post("https://dev.cnbp.ca/cnbp/upload_dicoms.php",
+                      data=payload)
+    #s = requests.post(trigger_dicom_insertion_url, data=payload)
     print(trigger_dicom_insertion_url)
     #print(s.text)
 
