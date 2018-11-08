@@ -18,4 +18,4 @@ class UT_LORISTimepoint(unittest.TestCase):
         for tupleItem in DualList:
             assert str(tupleItem[0]) == LORIS_timepoint.visit_number_extraction(tupleItem[1])[0]
 
-        # todo: 10+ visit number WILL FAIL!
+        # todo: 10+ timepoint number WILL FAIL!

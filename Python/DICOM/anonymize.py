@@ -72,3 +72,9 @@ class DICOM_anonymize:
     def folder(input_folder, new_ID):
         files_list = recursive_list(input_folder)
         DICOM_anonymize.filelist(files_list, new_ID)
+if __name__ is "__main__":
+
+    # Example script to anonymize some file and then output its name to a compliant format. #todo: formalize this into a fucntion for easier calling.
+    DICOM_anonymize.folder(r"C:\Users\dyt81\Downloads\TestAnonymize", "VTXGL019998_598399_V1")
+    from PythonUtils.file import zip_with_name
+    zip_with_name(r"C:\Users\dyt81\Downloads\TestAnonymize","VTXGL019999_598399_V1")
