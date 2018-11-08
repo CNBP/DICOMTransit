@@ -13,7 +13,39 @@ logger = logging.getLogger(__name__)
 class LORIS_timepoint:
 
     @staticmethod
-    def visit_number_extraction(string):
+    def check_timepoint_compliance(input_string: str):
+        """
+        Validate if the given string is compliant with the timepoint format specified in the .env
+        :param input_string:
+        :return:
+        """
+
+        # Get config defined prefix.
+        load_dotenv()
+        timepoint_prefix = os.getenv("timepoint_prefix")
+
+        # Check it against first letter.
+        if timepoint_prefix != input_string[0]:
+            return False
+
+        timepoint_number = input_string[1:]
+
+        # number should not have alphabet.
+        if timepoint_number.isalpha():
+            return False
+
+        if timepoint_number.isnumeric() and timepoint_number.isdigit(): # be wary of edge case like ³
+            return True
+
+
+        return False
+
+
+
+
+
+    @staticmethod
+    def visit_number_extraction(string: str):
         """
         A wrapper for number_extraction by calling it on a string and then return the latest one.
         Used to deal with visitnumber list.
@@ -36,7 +68,7 @@ class LORIS_timepoint:
         :param DCCID: DCCID to retrieve the last timepoint of
         :return: a string representation of the last time point.
         """
-        assert(LORIS_candidates.check_DCCID(DCCID)) # Ensure it actually first exist.
+        assert(LORIS_candidates.check_DCCID_compliance(DCCID)) # Ensure it actually first exist.
 
         response_success, candidate_json = LORIS_query.getCNBP(token, r"candidates/" + str(DCCID)) # should exist as earlier check revealed.
 
@@ -63,7 +95,7 @@ class LORIS_timepoint:
         timepoint_label = ""
 
         # ensure valid input and subject actually exist.
-        assert (LORIS_candidates.check_DCCID(DCCID))
+        assert (LORIS_candidates.check_DCCID_compliance(DCCID))
         success, subject_exist = LORIS_candidates.checkDCCIDExist(token, DCCID)
         if not subject_exist or not success:
             return False, None

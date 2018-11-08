@@ -61,6 +61,7 @@ class DICOM_elements:
         else:
             return True, value
 
+
     @staticmethod
     def computeScanAge(file_path):
         """

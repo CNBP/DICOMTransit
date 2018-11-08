@@ -24,6 +24,13 @@ def check_MRN(MRN):
                                                          MRN)
     return MRN_exist_in_database
 
+def create_MRN(MRN):
+    database_path = load_dotenv("LocalDatabase")
+
+    # Create the MRN record
+    LocalDB_query.create_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN)
+
+
 def get_CNBP(MRN):
     """
     Assuming the MRN exist, get the CNBPID.
@@ -42,6 +49,7 @@ def get_CNBP(MRN):
     assert(len(KeyRecords) == 1)
     cnbp_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'CNBPID')
     return KeyRecords[cnbp_header_index]
+
 
 def get_DCCID(MRN):
     """
@@ -63,7 +71,8 @@ def get_DCCID(MRN):
 
     return KeyRecords[dcc_header_index]
 
-def get_Timepoint(MRN):
+
+def get_visit(MRN):
     """
     Assuming the MRN exist, get the MRNID.
     :param MRN: the MRN to look for
@@ -83,3 +92,38 @@ def get_Timepoint(MRN):
 
     return KeyRecords[timepoint_header_index]
 
+
+def set_CNBP(MRN, CNBPID):
+    """
+    Update record with proper CNBPID which has particular MRN
+    :param MRN:
+    :return:
+    """
+    database_path = load_dotenv("LocalDatabase")
+
+    # Update the MRN record with CNBPID
+    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "CNBPID", CNBPID, )
+
+
+def set_DCCID(MRN, DCCID):
+    """
+    Update record with proper DCCID which has particular MRN
+    :param MRN:
+    :return:
+    """
+    database_path = load_dotenv("LocalDatabase")
+
+    # Update the MRN record with DCCID
+    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "DCCID", DCCID, )
+
+
+def set_timepoint(MRN, Timepoint):
+    """
+    Update record with proper Timepoint which has particular MRN
+    :param MRN:
+    :return:
+    """
+    database_path = load_dotenv("LocalDatabase")
+
+    # Update the MRN record with Timepoint
+    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", Timepoint, )

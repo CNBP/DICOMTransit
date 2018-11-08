@@ -7,15 +7,19 @@ from dotenv import load_dotenv
 from LORIS.query import LORIS_query
 from LORIS.helper import LORIS_helper
 from LocalDB.schema import CNBP_blueprint
+from PythonUtils.file import dictionary_search
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 class LORIS_candidates:
 
     @staticmethod
-    def parse_PSCID(PSCID):
+    def parse_PSCID(PSCID: str):
         """
         Return three parts of the PSCID: institution, project, subject
+        Example: VTX GL01 9999
+
         :param PSCID:
         :return:
         """
@@ -40,8 +44,14 @@ class LORIS_candidates:
 
         return success, input_institution, input_project, input_subject
 
+
     @staticmethod
-    def check_instutitionID_compliance(input_institutionID):
+    def check_instutitionID_compliance(input_institutionID: str):
+        """
+        Check if the institution ID is compliant per the .env specification. String must STRICTLY match.
+        :param input_institutionID:
+        :return:
+        """
         # Parse from the .env standardization
         InsitituionID = os.getenv("institutionID")
 
@@ -51,8 +61,15 @@ class LORIS_candidates:
         else:
             return True
 
+
     @staticmethod
-    def check_projectID_compliance(input_projectID):
+    def check_projectID_compliance(input_projectID: str):
+        """
+        Provide any string, and it checkss again he dotenv for the proper project KEY which correspond to the ID.
+        DICOM/API has the function to actually retrieve the relevant key, after calling this function.
+        :param input_projectID:
+        :return:
+        """
 
         # Load ProjectIDs from the environment.
         success = load_dotenv()
@@ -62,13 +79,16 @@ class LORIS_candidates:
         projectID_dictionary_json: str = os.getenv("projectID_dictionary")
         projectID_list = json.loads(projectID_dictionary_json)
 
-        # check if project ID is in the projectID list.
-        isRecognized = input_projectID in projectID_list
+        # check if project ID is in the projectID list via a dictionary search
+        key = dictionary_search(projectID_list, input_projectID)
 
-        return isRecognized
+        if key is not None:
+            return True
+        else:
+            return False
 
     @staticmethod
-    def check_subjectID_compliance(input_subjectID):
+    def check_subjectID_compliance(input_subjectID: str):
         if not input_subjectID.isdigit():
             return False
 
@@ -78,7 +98,7 @@ class LORIS_candidates:
             return False
 
     @staticmethod
-    def check_PSCID_compliance(PSCID):
+    def check_PSCID_compliance(PSCID: str):
         """
         Checks PSCID inputed for 1) InstitionID format, 2) ProjectID format, 3) SubjectID format.
         :param PSCID:
@@ -111,7 +131,7 @@ class LORIS_candidates:
         return True
 
     @staticmethod
-    def check_DCCID(DCCID):
+    def check_DCCID_compliance(DCCID):
         """
         Check if DCCID id conform.
         :param DCCID:
@@ -189,8 +209,8 @@ class LORIS_candidates:
         Candidate = {}
         Candidate['Project'] = 'loris'
         Candidate['PSCID'] = proposed_PSCID
-        Candidate['DoB'] = '2018-05-04'
-        Candidate['Gender'] = 'Female'
+        Candidate['DoB'] = '2018-05-04' #TODO URGENTLY! The DOB is not read from the DICOM
+        Candidate['Gender'] = 'Female' #TODO URGENTLY! The GENDER is not read from the DICOM
 
         data = {"Candidate":Candidate}
 
@@ -267,7 +287,7 @@ class LORIS_candidates:
         if not success:
             raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
 
-        assert (LORIS_candidates.check_DCCID(proposed_DCCID))
+        assert (LORIS_candidates.check_DCCID_compliance(proposed_DCCID))
 
         #Get list of projects
         response, loris_project = LORIS_query.getCNBP(token, r"projects/loris")

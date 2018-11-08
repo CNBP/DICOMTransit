@@ -1,8 +1,11 @@
 from DICOM.validate import DICOM_validate
-
-from PythonUtils.folder import recursive_list
+from dotenv import load_dotenv
+from PythonUtils.file import zip_with_name
+from LORIS.candidates import LORIS_candidates
+from LORIS.timepoint import LORIS_timepoint
 import logging
 import sys
+import os
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('DICOMPackage Class')
@@ -10,7 +13,7 @@ logger = logging.getLogger('DICOMPackage Class')
 class DICOMPackage:
     """
     DICOM package class that represents a collection of DICOM
-    files with shared ID, CNBP, visit, MRN etc information usually obtained from the same session
+    files with shared ID, CNBP, timepoint, MRN etc information usually obtained from the same session
     """
     def __init__(self, dicom_folder=None):
         # Set the DICOM_folder attribute
@@ -23,11 +26,15 @@ class DICOMPackage:
         # Update validity and dicom_files
         self.validity, self.dicom_files = DICOM_validate.path(dicom_folder)
 
-        self.cnbpid = None
-        self.lorisid = None
-        self.visit = None
+        self.CNBPID = None # also known as PSCI id
+        self.DCCID = None
+        self.timepoint = None
+
         self.MRN = None # Medical Record Number
+
         self.is_anonymized = False
+        self.zipname = None
+        self.zip_location = None
         logger.info("DICOMPackage initialized based on "+dicom_folder)
 
     def update_MRN(self):
@@ -47,4 +54,41 @@ class DICOMPackage:
             self.MRN = DICOM_elements.retrieveMRN(self.dicom_files)
 
     def get_dicom_files(self):
-        return recursive_list(self.dicom_folder.name)
+        """
+        A more secure way of getting DICOM files instead of directly reading the attribute (as it can be None)
+        :return:
+        """
+        if self.dicom_files is None:
+            self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder)
+        return self.dicom_files
+
+    def anonymize(self):
+        """
+        Thie function will check all the appropriate information are correct before attemping to anonymize the whole bunch of files.
+        :return:
+        """
+        assert(self.CNBPID  is not None)
+        assert(self.DCCID is not None)
+        assert(self.timepoint is not None)
+        LORIS_candidates.check_PSCID_compliance(self.CNBPID)
+        LORIS_candidates.check_DCCID_compliance(self.DCCID)
+        LORIS_timepoint.check_timepoint_compliance(self.timepoint)
+
+        # Set proper variable name and also the ZIP file name for subsequent processing.
+        self.is_anonymized = True
+        self.zipname = self.CNBPID + "_" + self.DCCID + "_" + self.timepoint
+
+        #
+        raise NotImplementedError
+
+
+    def zip(self):
+        load_dotenv()
+        zip_storage_path = os.getenv("zip_storage_location")
+
+        # Change to the storage folder before carrying out the zip operation.
+        os.chdir(zip_storage_path)
+        zip_with_name(self.dicom_folder, self.zipname)
+
+        # update zip location.
+        self.zip_location = os.path.join(zip_storage_path, self.zipname+".zip")

@@ -158,5 +158,5 @@ if __name__ == '__main__':
     LORISHostPassword = os.getenv("LORISHostPassword")
 
     Client = LORIS_helper.getProxySSHClient(ProxyIP,  ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername, LORISHostPassword)
-    # LORIS_helper.uploadThroughClient(Client, "//Tmp/test", "JPEG-LL.dcm")
-    LORIS_helper.triggerCommand(Client, "pwd;cd /opt;pwd;ls")
+    LORIS_helper.uploadThroughClient(Client, "//data/incoming/VTXGL019999_598399_V1.zip", "VTXGL019999_598399_V1.zip")
+    #LORIS_helper.triggerCommand(Client, "pwd;cd /opt;pwd;ls")
