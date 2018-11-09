@@ -91,4 +91,4 @@ class UT_LocalDBCreate(unittest.TestCase):
         return True
 
 if __name__ == '__main__':
-    UT_LocalDBCreate.test_LocalDBCreate()
+    UT_LocalDBCreate.test_LocalDBCreate_CNBP()

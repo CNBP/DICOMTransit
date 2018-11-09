@@ -4,6 +4,8 @@ from LocalDB.schema import CNBP_blueprint
 from dotenv import load_dotenv
 import logging
 import sys
+import os
+from PythonUtils.file import load_dotenv_var
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,7 +17,9 @@ def check_MRN(MRN):
     """
 
     # Load local database from .env file
-    database_path = load_dotenv("LocalDatabase")
+    load_dotenv()
+    database_path = os.getenv("LocalDatabasePath")
+
 
     # Store MRN in database.
     MRN_exist_in_database, _ = LocalDB_query.check_value(database_path,
@@ -99,9 +103,10 @@ def set_CNBP(MRN, CNBPID):
     :param MRN:
     :return:
     """
-    database_path = load_dotenv("LocalDatabase")
+    database_path = load_dotenv_var("LocalDatabasePath")
 
     # Update the MRN record with CNBPID
+    LocalDB_query.create_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN)
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "CNBPID", CNBPID, )
 
 
@@ -111,7 +116,7 @@ def set_DCCID(MRN, DCCID):
     :param MRN:
     :return:
     """
-    database_path = load_dotenv("LocalDatabase")
+    database_path = load_dotenv_var("LocalDatabasePath")
 
     # Update the MRN record with DCCID
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "DCCID", DCCID, )
@@ -123,7 +128,7 @@ def set_timepoint(MRN, Timepoint):
     :param MRN:
     :return:
     """
-    database_path = load_dotenv("LocalDatabase")
+    database_path = load_dotenv_var("LocalDatabasePath")
 
     # Update the MRN record with Timepoint
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", Timepoint, )

@@ -17,14 +17,15 @@ class DICOMPackage:
     """
     def __init__(self, dicom_folder=None):
         # Set the DICOM_folder attribute
-        self.dicom_folder = dicom_folder
+        self.__dicom_folder__ = dicom_folder # reference kept to prevent auto garbage collection
+        self.dicom_folder = dicom_folder.name
 
         # Set default value.
         self.validity = None
         self.dicom_files = None # should already be validated and vetted by the DICOM_validate.path routine
 
         # Update validity and dicom_files
-        self.validity, self.dicom_files = DICOM_validate.path(dicom_folder)
+        self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder) #actual path stored in name.
 
         self.CNBPID = None # also known as PSCI id
         self.DCCID = None
@@ -35,7 +36,7 @@ class DICOMPackage:
         self.is_anonymized = False
         self.zipname = None
         self.zip_location = None
-        logger.info("DICOMPackage initialized based on "+dicom_folder)
+        logger.info("DICOMPackage initialized based on "+self.dicom_folder)
 
     def update_MRN(self):
         """
@@ -50,8 +51,10 @@ class DICOMPackage:
 
         # If they are found tot be valid, time to get the MRN number.
         if self.validity is True:
-            # dicom_files are already vetted, and all of them are consistent in terms of MRN
-            self.MRN = DICOM_elements.retrieveMRN(self.dicom_files)
+            # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the MRN from first file.
+            success, self.MRN = DICOM_elements.retrieveMRN(self.dicom_files[0])
+            assert success
+
 
     def get_dicom_files(self):
         """

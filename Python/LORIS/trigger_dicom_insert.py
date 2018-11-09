@@ -27,8 +27,7 @@ def trigger_dicom_insert(scans):
     #trigger_dicom_insertion_url = load_dotenv("triggerDicomInsertionURL")
 
     # Trigger insertion by doing HTTP POST of payload to endpoint
-    s = requests.post("https://dev.cnbp.ca/cnbp/upload_dicoms.php",
-                      data=payload)
+    s = requests.post("https://dev.cnbp.ca/cnbp/upload_dicoms.php", data=payload)
     # Disable use of dotenv value because i can't make it work for now
     #s = requests.post(trigger_dicom_insertion_url, data=payload)
     #print(trigger_dicom_insertion_url)

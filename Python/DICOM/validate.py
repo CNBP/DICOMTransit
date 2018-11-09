@@ -89,22 +89,26 @@ class DICOM_validate:
             # todo: what if one of them is NONE?
             # todo: what if the date and other things are inconsistent?
             # Record first instance of patient ID and patient name.
-            if PatientID is None and PatientName is None:
-                Success, PatientID = DICOM_elements.retrieve(files, "PatientID")
-                Success, PatientName = DICOM_elements.retrieve(files, "PatientName")
+            if PatientID == '' and PatientName == '':
+                Success, PatientID = DICOM_elements.retrieve(file, "PatientID")
+                Success, PatientName = DICOM_elements.retrieve(file, "PatientName")
 
                 # raise issue if not successful
                 if not Success:
                     logger.info("DICOM meta data retrieval failure EVEN for the first DICOM FILE?! Checking next one.")
                 else:
-                    logger.info("DICOM meta data retrieval success: " + PatientID + PatientName)
+                    logger.info("DICOM meta data retrieval success: " + PatientID + " " + PatientName.original_string)
 
                 # Regardless of success of failure, must continue to process the next file.
                 continue
 
             # Check consistencies across folders in terms of patient ID, NAME.
-            CurrentPatientID = DICOM_elements.retrieve(file, "PatientID")
-            CurrentPatientName = DICOM_elements.retrieve(file, "PatientName")
+            Success1, CurrentPatientID = DICOM_elements.retrieve(file, "PatientID")
+            Success2, CurrentPatientName = DICOM_elements.retrieve(file, "PatientName")
+
+            if not Success1 or not Success2:
+                logger.info("Could not retrieve fields for comparison. At least ONE DICOM file has inconsistent Patient ID/NAME field.")
+                return False, None
 
             if not (PatientID == CurrentPatientID) or not (PatientName == CurrentPatientName):
                 logger.info("PatientID or Name mismatch from the dicom archive. .")

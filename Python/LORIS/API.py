@@ -4,10 +4,25 @@ import os
 from LORIS.helper import LORIS_helper
 from LORIS.query import LORIS_query
 from LORIS.timepoint import LORIS_timepoint
+from LORIS.trigger_dicom_insert import trigger_dicom_insert
 """
 Everything here, should have its own login sessions as tokens are not shared at this high level function.  
-
 """
+
+def trigger_insertion(zip_name):
+    """
+    Todo: refactor this crap made by Yang.
+    :param zip_name:
+    :return:
+    """
+    #zip_name = "VTXGL019996_206839_V1"
+
+    f1={}
+    f1['file'] = "/data/incoming/" + zip_name + ".zip"
+    f1['phantom'] = "N"
+    f1['candidate'] = zip_name
+    scans =[f1]
+    trigger_dicom_insert(scans)
 
 def create_new(CNBPID):
     """
@@ -51,6 +66,7 @@ def upload(local_path):
     file_name = os.path.basename(local_path)
     LORIS_helper.uploadThroughClient(Client, "//data/incoming/"+file_name, local_path)
 
+"""
 def trigger_insertion(file_name):
         import json, requests
 
@@ -78,43 +94,13 @@ def trigger_insertion(file_name):
 
 
         with requests.Session() as s:
-
-
             # Secure version.
-            # r = s.post(r"http://dev.cnbp.ca/cnbp/upload_dicoms.php", data=data_json)
+             r = s.post(r"http://dev.cnbp.ca/cnbp/upload_dicoms.php", data=data_json)
 
             # todo: Non-secure version until we fix the SSL issue
-            r = requests.api.request('post', "https://dev.cnbp.ca/cnbp/upload_dicoms.php", data=data_json, verify=False)
+            # r = requests.api.request('post', "https://dev.cnbp.ca/cnbp/upload_dicoms.php", data=data_json)
 
             print("Post Result:" + str(r.status_code) + r.reason)
 
-
-if __name__ == "__main__":
-    import DICOM.API
-
-    # Grab scans from Orthanc.
-
-    # Check Protocol.
-
-    # Generate CNBPID
-    CNBPID = "VTXGL019996"
-    DCCID = 206839
-
-    #create new PSCID:, get DCCID
-    #success, DCCID = create_new(CNBPID)
-
-    # Create Timepoint 1:
-    # Manually Done for now.
-
-    #Generate new string with everything.
-    zip_name = CNBPID + "_" + str(DCCID) + "_" + "V1"
-    #zip_name = "VTXGL019998"+"_"+"671603"+"_"+"V1"
-
-    # Anonymize to Zip
-    DICOM.API.anonymize_to_zip(r"C:\Users\dyt81\Downloads\TestAnonymize", zip_name)
-
-    # Upload
-    upload(os.path.join(r"C:\GitHub\DICOMTransit\Python\data_archives", zip_name+".zip"))
-
-    # Trigger insertion.
-    #trigger_insertion(zip_name)
+if __name__ ==
+"""
