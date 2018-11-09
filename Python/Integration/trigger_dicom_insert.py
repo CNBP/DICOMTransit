@@ -22,16 +22,17 @@ def trigger_dicom_insert(scans):
     payload = {"file_data": tmp}
     print(payload)
 
-    from dotenv import load_dotenv
     # Need to fix the load_dotenv call. Currently not getting trigger url
-    trigger_dicom_insertion_url = load_dotenv("triggerDicomInsertionURL")
+    #from dotenv import load_dotenv
+    #trigger_dicom_insertion_url = load_dotenv("triggerDicomInsertionURL")
+
     # Trigger insertion by doing HTTP POST of payload to endpoint
-    # Disable complaints about SSL for now by passing verify=False param
-    #s = requests.post("https://dev.cnbp.ca/cnbp/upload_dicoms.php",
-    #                  data=payload, verify=False)
-    #s = requests.post(trigger_dicom_insertion_url, data=payload, verify=False)
-    print(trigger_dicom_insertion_url)
-    #print(s.text)
+    s = requests.post("https://dev.cnbp.ca/cnbp/upload_dicoms.php",
+                      data=payload)
+    # Disable use of dotenv value because i can't make it work for now
+    #s = requests.post(trigger_dicom_insertion_url, data=payload)
+    #print(trigger_dicom_insertion_url)
+    print(s.text)
 
 if __name__ == "__main__":
     zip_name = "VTXGL019996_206839_V1"
