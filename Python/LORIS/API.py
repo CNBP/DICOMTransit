@@ -24,9 +24,10 @@ def create_new(CNBPID):
     PSCID = CNBPID
 
     success, DCCID = LORIS_candidates.createCandidateCNBP(token, PSCID)
+    assert success
 
     success, timepoint = LORIS_timepoint.increaseTimepoint(token, DCCID)
-
+    assert success
     return success, DCCID
 
 
@@ -91,23 +92,29 @@ def trigger_insertion(file_name):
 if __name__ == "__main__":
     import DICOM.API
 
-    #CNBPID = "VTXGL019998"
+    # Grab scans from Orthanc.
+
+    # Check Protocol.
+
+    # Generate CNBPID
+    CNBPID = "VTXGL019996"
+    DCCID = 206839
 
     #create new PSCID:, get DCCID
-    #success, DCCID = create_new("VTXGL019998")
+    #success, DCCID = create_new(CNBPID)
 
-    # Create Timepoint 1.
+    # Create Timepoint 1:
     # Manually Done for now.
 
     #Generate new string with everything.
-    #zip_name = "VTXGL019998"+"_"+DCCID+"_"+"V1"
-    zip_name = "VTXGL019998"+"_"+"671603"+"_"+"V1"
+    zip_name = CNBPID + "_" + str(DCCID) + "_" + "V1"
+    #zip_name = "VTXGL019998"+"_"+"671603"+"_"+"V1"
 
     # Anonymize to Zip
-    #DICOM.API.anonymize_to_zip(r"C:\Users\dyt81\Downloads\TestAnonymize", zip_name)
+    DICOM.API.anonymize_to_zip(r"C:\Users\dyt81\Downloads\TestAnonymize", zip_name)
 
     # Upload
-    #upload(os.path.join(r"C:\GitHub\DICOMTransit\Python\data_archives", zip_name+".zip"))
+    upload(os.path.join(r"C:\GitHub\DICOMTransit\Python\data_archives", zip_name+".zip"))
 
     # Trigger insertion.
-    trigger_insertion(zip_name)
+    #trigger_insertion(zip_name)

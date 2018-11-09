@@ -33,3 +33,12 @@ def trigger_dicom_insert(scans):
     print(trigger_dicom_insertion_url)
     #print(s.text)
 
+if __name__ == "__main__":
+    zip_name = "VTXGL019996_206839_V1"
+
+    f1={}
+    f1['file'] = "/data/incoming/" + zip_name + ".zip"
+    f1['phantom'] = "N"
+    f1['candidate'] = zip_name
+    scans =[f1]
+    trigger_dicom_insert(scans)

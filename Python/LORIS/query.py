@@ -53,7 +53,7 @@ class LORIS_query:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
         logger = logging.getLogger('LORIS_get')
-        logger.info("Getting LORIS endpoing: "+ endpoint + "at")
+        logger.info("Getting LORIS endpoint: " + endpoint + " at")
         success = load_dotenv()
         if not success:
             raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
