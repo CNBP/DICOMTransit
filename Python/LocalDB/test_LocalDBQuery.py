@@ -5,9 +5,9 @@ import os
 import sys
 from LocalDB.query import LocalDB_query
 from LocalDB.create_CNBP import LocalDB_createCNBP
-from dotenv import load_dotenv
 import unittest
 from LocalDB.schema import CNBP_blueprint
+from PythonUtils.env import load_validate_dotenv
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -177,11 +177,7 @@ class UT_LocalDBCreate(unittest.TestCase):
         LocalDB_query.create_entry(PathString, tableName, MRNColumn, 364573)
         LocalDB_query.create_entry(PathString, tableName, MRNColumn, 7424141)
 
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
-
-        Prefix = os.getenv("institutionID")
+        Prefix = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
 
         LocalDB_query.update_entry(PathString, tableName, MRNColumn, 7424141, CNBPIDColumn, Prefix + "0010001")
         LocalDB_query.update_entry(PathString, tableName, MRNColumn, 2345234, CNBPIDColumn, Prefix + "0010002")

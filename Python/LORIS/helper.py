@@ -3,7 +3,8 @@ import json
 import logging
 import os
 import paramiko
-from dotenv import load_dotenv
+from PythonUtils.env import load_validate_dotenv
+from LocalDB.schema import CNBP_blueprint
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -149,13 +150,12 @@ class LORIS_helper:
         print("stdout: ", stdout.readlines())
 
 if __name__ == '__main__':
-    assert load_dotenv()
-    ProxyIP = os.getenv("ProxyIP")
-    ProxyUsername = os.getenv("ProxyUsername")
-    ProxyPassword = os.getenv("ProxyPassword")
-    LORISHostIP = os.getenv("LORISHostIP")
-    LORISHostUsername = os.getenv("LORISHostUsername")
-    LORISHostPassword = os.getenv("LORISHostPassword")
+    ProxyIP = load_validate_dotenv("ProxyIP", CNBP_blueprint.dotenv_variables)
+    ProxyUsername = load_validate_dotenv("ProxyUsername", CNBP_blueprint.dotenv_variables)
+    ProxyPassword = load_validate_dotenv("ProxyPassword", CNBP_blueprint.dotenv_variables)
+    LORISHostIP = load_validate_dotenv("LORISHostIP", CNBP_blueprint.dotenv_variables)
+    LORISHostUsername = load_validate_dotenv("LORISHostUsername", CNBP_blueprint.dotenv_variables)
+    LORISHostPassword = load_validate_dotenv("LORISHostPassword", CNBP_blueprint.dotenv_variables)
 
     Client = LORIS_helper.getProxySSHClient(ProxyIP,  ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername, LORISHostPassword)
     LORIS_helper.uploadThroughClient(Client, "//data/incoming/VTXGL019999_598399_V1.zip", "VTXGL019999_598399_V1.zip")

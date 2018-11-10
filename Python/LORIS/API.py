@@ -1,10 +1,11 @@
 from LORIS.candidates import LORIS_candidates
-from dotenv import load_dotenv
+from PythonUtils.env import load_validate_dotenv
 import os
 from LORIS.helper import LORIS_helper
 from LORIS.query import LORIS_query
 from LORIS.timepoint import LORIS_timepoint
 from LORIS.trigger_dicom_insert import trigger_dicom_insert
+from LocalDB.schema import CNBP_blueprint
 """
 Everything here, should have its own login sessions as tokens are not shared at this high level function.  
 """
@@ -52,13 +53,13 @@ def upload(local_path):
     :param local_path:
     :return:
     """
-    assert load_dotenv()
-    ProxyIP = os.getenv("ProxyIP")
-    ProxyUsername = os.getenv("ProxyUsername")
-    ProxyPassword = os.getenv("ProxyPassword")
-    LORISHostIP = os.getenv("LORISHostIP")
-    LORISHostUsername = os.getenv("LORISHostUsername")
-    LORISHostPassword = os.getenv("LORISHostPassword")
+
+    ProxyIP = load_validate_dotenv("ProxyIP", CNBP_blueprint.dotenv_variables)
+    ProxyUsername = load_validate_dotenv("ProxyUsername", CNBP_blueprint.dotenv_variables)
+    ProxyPassword = load_validate_dotenv("ProxyPassword", CNBP_blueprint.dotenv_variables)
+    LORISHostIP = load_validate_dotenv("LORISHostIP", CNBP_blueprint.dotenv_variables)
+    LORISHostUsername = load_validate_dotenv("LORISHostUsername", CNBP_blueprint.dotenv_variables)
+    LORISHostPassword = load_validate_dotenv("LORISHostPassword", CNBP_blueprint.dotenv_variables)
 
     Client = LORIS_helper.getProxySSHClient(ProxyIP, ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername,
                                             LORISHostPassword)

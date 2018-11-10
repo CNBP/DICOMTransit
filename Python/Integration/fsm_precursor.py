@@ -25,6 +25,7 @@ if __name__ == "__main__":
     MRN_exist = LocalDB.API.check_MRN(MRN)
 
     if MRN_exist:
+
         # Use MRN to retrieve CNBPID, update the dicom-package
         DICOM_package.CNBPID = LocalDB.API.get_CNBP(MRN)
 
@@ -37,6 +38,7 @@ if __name__ == "__main__":
         # Auto increment the VISIT count.
 
         # Write to database and also online.
+
     else:
 
         # Dynamicly generate the new CNBPID based ont he protocol.

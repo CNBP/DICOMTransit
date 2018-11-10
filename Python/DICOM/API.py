@@ -3,7 +3,9 @@ from DICOM.anonymize import DICOM_anonymize
 from shutil import copyfile
 from LORIS.candidates import LORIS_candidates
 from PythonUtils.file import dictionary_search
+from PythonUtils.env import load_validate_dotenv
 from PythonUtils.folder import get_abspath
+from LocalDB.schema import CNBP_blueprint
 import os
 from dotenv import load_dotenv
 
@@ -11,17 +13,20 @@ from dotenv import load_dotenv
 
 def anonymize_to_zip(folder_path, zip_ID):
     """
+    Takes everything within the folder, and zip create a zip file in the DEFAULT .env configured zip storage location.
     #todo!!! Shoddily done for now. MUST REFACTOR!
     :param folder_path:
-    :param zip_ID:
+    :param zip_ID: should be CNBPID_DCCID_VISIT format without .zip extension
     :return:
     """
-    load_dotenv()
 
-    # Find the root fo the project where the zip storage is related to.
+    # Find the root fo the project where the zip storage is related to the location of the current DICOM directory.
     project_root = get_abspath(__file__, 2)
 
-    zip_folder = os.getenv("zip_storage_location")
+
+
+    # Load the name of the storage folder from the configuration file.
+    zip_folder = load_validate_dotenv("zip_storage_location", CNBP_blueprint.dotenv_variables)
     DICOM_anonymize.folder(folder_path, zip_ID)
     from PythonUtils.file import zip_with_name
 
@@ -87,7 +92,7 @@ def study_validation(study):
     if not success:
         raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
 
-    projectID_dictionary_json: str = os.getenv("projectID_dictionary")
+    projectID_dictionary_json: str = load_validate_dotenv("projectID_dictionary", CNBP_blueprint.dotenv_variables)
     projectID_list = json.loads(projectID_dictionary_json)
 
     key = dictionary_search(projectID_list, study)

@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 import logging
 import sys
 import os
-from PythonUtils.file import load_dotenv_var
+from PythonUtils.env import load_validate_dotenv
+
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -17,8 +18,7 @@ def check_MRN(MRN):
     """
 
     # Load local database from .env file
-    load_dotenv()
-    database_path = os.getenv("LocalDatabasePath")
+    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
 
 
     # Store MRN in database.
@@ -103,7 +103,7 @@ def set_CNBP(MRN, CNBPID):
     :param MRN:
     :return:
     """
-    database_path = load_dotenv_var("LocalDatabasePath")
+    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
 
     # Update the MRN record with CNBPID
     LocalDB_query.create_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN)
@@ -116,7 +116,7 @@ def set_DCCID(MRN, DCCID):
     :param MRN:
     :return:
     """
-    database_path = load_dotenv_var("LocalDatabasePath")
+    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
 
     # Update the MRN record with DCCID
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "DCCID", DCCID, )
@@ -128,7 +128,21 @@ def set_timepoint(MRN, Timepoint):
     :param MRN:
     :return:
     """
-    database_path = load_dotenv_var("LocalDatabasePath")
+    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
 
     # Update the MRN record with Timepoint
-    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", Timepoint, )
+    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", Timepoint)
+
+def propose_CNBPID(DICOM_protocol):
+    """
+    This function takes in a string that is representative of the DICOM, and propose a CNBPID composed of three parts:
+        Institution_ID (from the .env configuration file)
+        Project_ID (inferred from the protocol and incremented
+        SubjectCount (kept track by localDB.
+    :param DICOM_protocol:
+    :return:
+    """
+    # Get and retrieve  instition_ID
+    InstitionID = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
+
+    # Check ProjectID string and then return the ProjectID;

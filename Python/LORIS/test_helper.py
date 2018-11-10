@@ -3,7 +3,8 @@ import unittest
 from LORIS.helper import LORIS_helper
 from dotenv import load_dotenv
 from pathlib import Path
-
+from PythonUtils.env import load_validate_dotenv
+from LocalDB.schema import CNBP_blueprint
 class UT_LORISHelper(unittest.TestCase):
 
     @staticmethod
@@ -24,14 +25,14 @@ class UT_LORISHelper(unittest.TestCase):
 
     @staticmethod
     def test_ProxyUpload():
-        assert load_dotenv()
 
-        ProxyIP = os.getenv("ProxyIP")
-        ProxyUsername = os.getenv("ProxyUsername")
-        ProxyPassword = os.getenv("ProxyPassword")
-        LORISHostPassword = os.getenv("LORISHostPassword")
-        LORISHostUsername = os.getenv("LORISHostUsername")
-        LORISHostIP = os.getenv("LORISHostIP")
+
+        ProxyIP = load_validate_dotenv("ProxyIP", CNBP_blueprint.dotenv_variables)
+        ProxyUsername = load_validate_dotenv("ProxyUsername", CNBP_blueprint.dotenv_variables)
+        ProxyPassword = load_validate_dotenv("ProxyPassword", CNBP_blueprint.dotenv_variables)
+        LORISHostPassword = load_validate_dotenv("LORISHostPassword", CNBP_blueprint.dotenv_variables)
+        LORISHostUsername = load_validate_dotenv("LORISHostUsername", CNBP_blueprint.dotenv_variables)
+        LORISHostIP = load_validate_dotenv("LORISHostIP", CNBP_blueprint.dotenv_variables)
         Client = LORIS_helper.getProxySSHClient(ProxyIP, ProxyUsername, ProxyPassword,
                                                 LORISHostIP, LORISHostUsername, LORISHostPassword)
 

@@ -2,10 +2,11 @@ import sys
 import os
 import json
 import logging
-from dotenv import load_dotenv
+from PythonUtils.env import load_validate_dotenv
 from LORIS.helper import LORIS_helper
 from LORIS.query import LORIS_query
 from LORIS.candidates import LORIS_candidates
+from LocalDB.schema import CNBP_blueprint
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -21,8 +22,7 @@ class LORIS_timepoint:
         """
 
         # Get config defined prefix.
-        load_dotenv()
-        timepoint_prefix = os.getenv("timepoint_prefix")
+        timepoint_prefix = load_validate_dotenv("timepoint_prefix", CNBP_blueprint.dotenv_variables)
 
         # Check it against first letter.
         if timepoint_prefix != input_string[0]:
@@ -108,11 +108,8 @@ class LORIS_timepoint:
             visit_number = LORIS_timepoint.visit_number_extraction(latest_timepoint)
             new_visit_number = int(visit_number) + 1
 
-            success = load_dotenv()
-            if not success:
-                raise ImportError(
-                    "Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
-            prefix = os.getenv("timepoint_prefix")
+
+            prefix = load_validate_dotenv("timepoint_prefix", CNBP_blueprint.dotenv_variables)
 
             timepoint_label = prefix + str(new_visit_number)
 

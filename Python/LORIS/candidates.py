@@ -3,7 +3,7 @@ import os
 import re
 import json
 import logging
-from dotenv import load_dotenv
+from PythonUtils.env import load_validate_dotenv
 from LORIS.query import LORIS_query
 from LORIS.helper import LORIS_helper
 from LocalDB.schema import CNBP_blueprint
@@ -23,9 +23,6 @@ class LORIS_candidates:
         :param PSCID:
         :return:
         """
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
 
         # Loading regular expression
         re_institution = CNBP_blueprint.PSCID_schema_institution
@@ -53,7 +50,7 @@ class LORIS_candidates:
         :return:
         """
         # Parse from the .env standardization
-        InsitituionID = os.getenv("institutionID")
+        InsitituionID = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
 
         # Check if institution ID matches
         if not (input_institutionID == InsitituionID):
@@ -72,11 +69,8 @@ class LORIS_candidates:
         """
 
         # Load ProjectIDs from the environment.
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
 
-        projectID_dictionary_json: str = os.getenv("projectID_dictionary")
+        projectID_dictionary_json: str = load_validate_dotenv("projectID_dictionary", CNBP_blueprint.dotenv_variables)
         projectID_list = json.loads(projectID_dictionary_json)
 
         # check if project ID is in the projectID list via a dictionary search
@@ -156,17 +150,14 @@ class LORIS_candidates:
         # than the bashrc profile imported edition. Also keep in mind that EVEN if .bashrc import this, it MOST LIKELY
         # will not apply to the SSH session!
 
-        # Load the credential variables.
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
-        ProxyIP = os.getenv("ProxyIP")
-        ProxyUsername = os.getenv("ProxyUsername")
-        ProxyPassword = os.getenv("ProxyPassword")
-        LORISHostPassword = os.getenv("LORISHostPassword")
-        LORISHostUsername = os.getenv("LORISHostUsername")
-        LORISHostIP = os.getenv("LORISHostIP")
-        DeletionScript = os.getenv("DeletionScript")
+
+        ProxyIP = load_validate_dotenv("ProxyIP", CNBP_blueprint.dotenv_variables)
+        ProxyUsername = load_validate_dotenv("ProxyUsername", CNBP_blueprint.dotenv_variables)
+        ProxyPassword = load_validate_dotenv("ProxyPassword", CNBP_blueprint.dotenv_variables)
+        LORISHostPassword = load_validate_dotenv("LORISHostPassword", CNBP_blueprint.dotenv_variables)
+        LORISHostUsername = load_validate_dotenv("LORISHostUsername", CNBP_blueprint.dotenv_variables)
+        LORISHostIP = load_validate_dotenv("LORISHostIP", CNBP_blueprint.dotenv_variables)
+        DeletionScript = load_validate_dotenv("DeletionScript", CNBP_blueprint.dotenv_variables)
 
         # NOTE! If you EVER get NULL coalesce not recognized error, make sure that the PHP version being called from
         # the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER
@@ -237,11 +228,7 @@ class LORIS_candidates:
         """
         logger = logging.getLogger('LORIS_checkPSCIDExist')
         logger.info("Checking if PSCID exist: "+proposed_PSCID)
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
-        institution_check = os.getenv("institutionID")
-
+        institution_check = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
 
         #Get list of projects
         response_success, loris_project = LORIS_query.getCNBP(token, r"projects/loris")
@@ -283,9 +270,6 @@ class LORIS_candidates:
         """
         logger = logging.getLogger('LORIS_checkDCCIDExist')
         logger.info("Checking if DCCID exist: "+str(proposed_DCCID))
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
 
         assert (LORIS_candidates.check_DCCID_compliance(proposed_DCCID))
 

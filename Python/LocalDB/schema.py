@@ -9,6 +9,26 @@ class CNBP_blueprint:
     fields = ['CNBPID', 'CNNID', 'CNFUNID', 'PSCID', 'DCCID', 'Timepoint', 'Hash1', 'Hash2', 'Hash3']
     fields_types = ['TEXT', 'INTEGER', 'INTEGER', 'TEXT', 'INTEGER', 'INTEGER', 'TEXT', 'TEXT', 'TEXT']
 
+    dotenv_variables = [
+        "LORISurl",
+        "LORISusername",
+        "LORISpassword",
+        "timepoint_prefix",
+        "institutionID",
+        "projectID_dictionary",
+        "LocalDatabase",
+        "LocalDatabasePath",
+        "OrthancURL",
+        "ProxyIP",
+        "ProxyUsername",
+        "ProxyPassword",
+        "LORISHostIP",
+        "LORISHostUsername",
+        "LORISHostPassword",
+        "DeletionScript",
+        "zip_storage_location",
+    ]
+
     import copy
 
     schema = copy.deepcopy(fields)

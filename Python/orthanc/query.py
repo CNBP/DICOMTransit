@@ -6,6 +6,7 @@ import zipfile
 import sys
 from dotenv import load_dotenv
 from PythonUtils.file import is_name_unique
+from PythonUtils.env import load_validate_dotenv
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -21,10 +22,7 @@ class orthanc_query:
         """
         logger = logging.getLogger('Orthanc_get')
         logger.info("Getting Orthanc endpoint: "+ endpoint + "at")
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
-        url = os.getenv("OrthancURL")
+        url = load_validate_dotenv("OrthancURL", CNBP_blueprint.dotenv_variables)
         updatedurl = url + endpoint
         logger.info(updatedurl)
 
@@ -44,10 +42,7 @@ class orthanc_query:
         """
         logger = logging.getLogger('Orthanc_post')
         logger.info("Post Orthanc endpoint: "+ endpoint + "at")
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
-        url = os.getenv("OrthancURL")
+        url = load_validate_dotenv("OrthancURL", CNBP_blueprint.dotenv_variables)
         updatedurl = url + endpoint
         logger.info(updatedurl)
 
@@ -67,10 +62,7 @@ class orthanc_query:
         """
         logger = logging.getLogger('Orthanc_delete')
         logger.info("Deleting Orthanc endpoint: "+ endpoint + "at")
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
-        url = os.getenv("OrthancURL")
+        url = load_validate_dotenv("OrthancURL", CNBP_blueprint.dotenv_variables)
         updatedurl = url + endpoint
         logger.info(updatedurl)
 
@@ -89,10 +81,7 @@ class orthanc_query:
         """
         logger = logging.getLogger('Orthanc_getzip')
         logger.info("Downloading Orthanc endpoint: " + endpoint + " at")
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
-        url = os.getenv("OrthancURL")
+        url = load_validate_dotenv("OrthancURL", CNBP_blueprint.dotenv_variables)
 
         # endpiont should be something like /studies/SUTDY_UUID/
         query = url + "patients/" + endpoint + '/archive'
