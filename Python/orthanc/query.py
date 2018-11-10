@@ -7,6 +7,7 @@ import sys
 from dotenv import load_dotenv
 from PythonUtils.file import is_name_unique
 from PythonUtils.env import load_validate_dotenv
+from LocalDB.schema import CNBP_blueprint
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)

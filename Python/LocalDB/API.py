@@ -133,7 +133,7 @@ def set_timepoint(MRN, Timepoint):
     # Update the MRN record with Timepoint
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", Timepoint)
 
-def propose_CNBPID(DICOM_protocol):
+def propose_CNBPID(DICOM_protocol: str):
     """
     This function takes in a string that is representative of the DICOM, and propose a CNBPID composed of three parts:
         Institution_ID (from the .env configuration file)
@@ -145,4 +145,10 @@ def propose_CNBPID(DICOM_protocol):
     # Get and retrieve  instition_ID
     InstitionID = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
 
+    import DICOM.API
+    ProjectID = DICOM.API.study_validation(DICOM_protocol)
+
+    
+
     # Check ProjectID string and then return the ProjectID;
+

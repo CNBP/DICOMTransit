@@ -7,6 +7,7 @@ from LORIS.helper import LORIS_helper
 from LORIS.query import LORIS_query
 from LORIS.candidates import LORIS_candidates
 from LocalDB.schema import CNBP_blueprint
+from PythonUtils.math import int_incrementor
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -106,7 +107,7 @@ class LORIS_timepoint:
             success = LORIS_timepoint.createTimepoint(token, DCCID, "V1")
         else:
             visit_number = LORIS_timepoint.visit_number_extraction(latest_timepoint)
-            new_visit_number = int(visit_number) + 1
+            new_visit_number = int_incrementor(visit_number)
 
 
             prefix = load_validate_dotenv("timepoint_prefix", CNBP_blueprint.dotenv_variables)

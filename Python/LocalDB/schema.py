@@ -6,8 +6,25 @@ class CNBP_blueprint:
     keyfield = 'MRN'
     keyfield_type = 'INTEGER'
 
-    fields = ['CNBPID', 'CNNID', 'CNFUNID', 'PSCID', 'DCCID', 'Timepoint', 'Hash1', 'Hash2', 'Hash3']
-    fields_types = ['TEXT', 'INTEGER', 'INTEGER', 'TEXT', 'INTEGER', 'INTEGER', 'TEXT', 'TEXT', 'TEXT']
+    fields = ['CNBPID',
+              'CNNID',
+              'CNFUNID',
+              'PSCID',
+              'DCCID',
+              'Timepoint',
+              'Hash1',
+              'Hash2',
+              'Hash3']
+
+    fields_types = ['TEXT',
+                    'INTEGER',
+                    'INTEGER',
+                    'TEXT',
+                    'INTEGER',
+                    'INTEGER',
+                    'TEXT',
+                    'TEXT',
+                    'TEXT']
 
     dotenv_variables = [
         "LORISurl",
@@ -37,6 +54,7 @@ class CNBP_blueprint:
     schema_types = copy.deepcopy(fields_types)
     schema_types.insert(0, keyfield_type)
 
+    # the regular expressino of each component of the parts that makes up the proper CNBPID in total.
     PSCID_schema_institution = "^[A-z][A-z][A-z]"
     PSCID_schema_project = "[A-z][A-z][0-9][0-9]"
     PSCID_schema_subject = "[0-9][0-9][0-9][0-9]"

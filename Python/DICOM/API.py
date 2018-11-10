@@ -87,11 +87,6 @@ def study_validation(study):
     import json
     assert(LORIS_candidates.check_projectID_compliance(study))
 
-    # Load ProjectIDs from the environment.
-    success = load_dotenv()
-    if not success:
-        raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
-
     projectID_dictionary_json: str = load_validate_dotenv("projectID_dictionary", CNBP_blueprint.dotenv_variables)
     projectID_list = json.loads(projectID_dictionary_json)
 
