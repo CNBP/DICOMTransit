@@ -6,6 +6,7 @@ import logging
 import sys
 import os
 from PythonUtils.env import load_validate_dotenv
+from PythonUtils.math import int_incrementor
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -142,13 +143,72 @@ def propose_CNBPID(DICOM_protocol: str):
     :param DICOM_protocol:
     :return:
     """
-    # Get and retrieve  instition_ID
+    # Get and retrieve  institution_ID
     InstitionID = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
 
     import DICOM.API
+    # Check ProjectID string and then return the ProjectID;
     ProjectID = DICOM.API.study_validation(DICOM_protocol)
 
-    
+    # Use those two pieces of information to form a partial query pattern that can run on the SQLite
+    partial_search_input = InstitionID + ProjectID
 
-    # Check ProjectID string and then return the ProjectID;
+    DB_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
 
+    # Partial match search records: (currently has SQL error).
+    success, matched_records = LocalDB_query.check_partial_value(DB_path, CNBP_blueprint.table_name, "CNBPID", partial_search_input)
+
+
+    SubjectID = "0001"
+    if matched_records is None or len(matched_records) == 0:
+        # no previous subjects found. Use default value.
+        pass
+    else:
+        SubjectID = check_all_existing_records(matched_records)
+
+    # Combined all the parts to return the proposed CNBPID
+    proposed_CNBPID = InstitionID + ProjectID + SubjectID
+
+    return proposed_CNBPID
+
+
+def check_all_existing_records(matched_records):
+    """
+    Check the list of records past, find the maximum subject ID and then return the new proposed SubjectID
+    :param matched_records:
+    :return:
+    """
+    max_subject_ID = 0
+    from LORIS.candidates import LORIS_candidates
+
+    # Loop through all subjects belong to this project and ensure that we can track the latest subjects number.
+    for matched_record in matched_records:
+        CNBPID_schema_index: int = CNBP_blueprint.schema.index("CNBPID")
+        CNBPID = matched_record[CNBPID_schema_index]
+
+        # Skip non-compliance records
+        if not LORIS_candidates.check_PSCID_compliance(CNBPID):
+            logger.info(
+                "A non-compliant record has been found in the existing SQLite database, you might want to look into that. ")
+            logger.info(
+                "Will ignore this record and try not to infer subject ID from it as it is not reliable potentially due to following OLD SCHEMA.")
+            continue
+
+        # store as INT for the last 4 digits of the string.
+        current_subject_ID = int(CNBPID[:4])
+
+        # Should the currentID number be bigger than the anticipated, one,
+        if current_subject_ID > max_subject_ID:
+            max_subject_ID = current_subject_ID
+
+    assert(0 < max_subject_ID < 10000)
+
+    subjectID: str = str(max_subject_ID)
+
+    incremented_subjectID = int_incrementor(subjectID)
+
+    # return the zero leading int.
+    return incremented_subjectID
+
+if __name__ == "__main__":
+    propose_CNBPID("GregoryLodygensky012 Study")

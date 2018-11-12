@@ -56,7 +56,7 @@ def anonymize_files(files):
 
 def retrieve_study_descriptions(files):
     """
-    From the list of files, find the names of the study descriptions.
+    From the list of files, find the names of the studies descriptions.
     #(0008,1030)	Study Description	e.g. FUNCTIONAL^Dr.Bohbot
     :param files:
     :return:
@@ -79,7 +79,7 @@ def retrieve_study_descriptions(files):
 
 def study_validation(study):
     """
-    Given a string read from the DICOM study field, check it against the project ID dictionary to see if any of the project belongs.
+    Given a string read from the DICOM studies field, check it against the project ID dictionary to see if any of the project belongs.
     :param study:
     :param projectID_dictionary:
     :return: PROJECT or NONE
@@ -107,9 +107,9 @@ def infer_project_using_protocol(files):
     # Compile unique list of acquisition protocoles
     studies = retrieve_study_descriptions(files)
 
-    # There should only be ONE study specificed in the files provided.
+    # There should only be ONE studies specificed in the files provided.
     if len(studies) > 1:
-        return False, "Files provided have inconsistent study protocols"
+        return False, "Files provided have inconsistent studies protocols"
 
     # INFER project using them.
     projectID = study_validation(studies[0]) # recall, studies can only have one member.

@@ -26,7 +26,7 @@ class LocalDB_query:
         # check if path is a file and exist.
         if not SQLPath.is_file():
             logger.info('SQLite database file does not exist!')
-            return False
+            return False, None
 
         # Try to connect the database to start the process:
         try:
@@ -37,7 +37,58 @@ class LocalDB_query:
             logger.info("Checking key value: " + str(ColumnValue) + " in " + ColumnName + " in SQLite database.")
 
             # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            c.execute('SELECT * FROM {table_name} WHERE {columnname}="{columnvalue}"'.format(table_name=table_name, columnname=ColumnName, columnvalue=ColumnValue))
+            execution_string = 'SELECT * FROM {table_name} WHERE {columnname}="{columnvalue}"'.format(table_name=table_name,
+                                                                                   columnname=ColumnName,
+                                                                                   columnvalue=ColumnValue)
+            c.execute(execution_string)
+
+            result_rows = c.fetchall()
+
+        except Exception as e:
+            logger.info(e)
+            raise IOError()
+
+        # Closing the connection to the database file
+        ConnectedDatabase.close()
+
+        if len(result_rows) > 0:
+            return True, result_rows
+        else:
+            return False, result_rows
+
+    @staticmethod
+    def check_partial_value(database_path, table_name, ColumnName, ColumnValue):
+        """
+        Check if a subject exist in the given database and given table
+        :param database_path: path to the SQLite database
+        :param table_name: the name of the table being queried
+        :param ColumnName: the column being queried
+        :param ColumnValue: the value of the column being checked
+        :return: boolean on if this is ever found in the given database in the given table, in the given column.
+        """
+        logger = logging.getLogger('LORISQuery_CheckSubjectExist')
+
+
+        SQLPath = Path(database_path)
+
+        # check if path is a file and exist.
+        if not SQLPath.is_file():
+            logger.info('SQLite database file does not exist!')
+            return False, None
+
+        # Try to connect the database to start the process:
+        try:
+            # Create on Connecting to the database file
+            ConnectedDatabase = sqlite3.connect(database_path)
+            c = ConnectedDatabase.cursor()
+
+            logger.info("Checking key value: " + str(ColumnValue) + " in " + ColumnName + " in SQLite database.")
+
+            # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
+            execution_string = 'SELECT * FROM {table_name} WHERE {columnname} LIKE "%{columnvalue}%"'.format(table_name=table_name,
+                                                                                          columnname=ColumnName,
+                                                                                          columnvalue=ColumnValue)
+            c.execute(execution_string)
 
             result_rows = c.fetchall()
 

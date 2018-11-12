@@ -32,12 +32,33 @@ class DICOMPackage:
         self.DCCID = None
         self.timepoint = None
 
+        self.studies = None
+
         self.MRN = None # Medical Record Number
 
         self.is_anonymized = False
         self.zipname = None
         self.zip_location = None
         logger.info("DICOMPackage initialized based on "+self.dicom_folder)
+
+    def update_study(self):
+        """
+        Update the studies field based on the protocol
+        :return:
+        """
+        from DICOM.elements import DICOM_elements
+        import DICOM.API
+
+
+        # Update validity and dicom_files if they have not been done before.
+        if self.validity is None:
+            self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder)
+
+        # If they are found tot be valid, time to get the MRN number.
+        if self.validity is True:
+
+            # retrieve all the possible studies.
+            self.studies = DICOM.API.retrieve_study_descriptions(self.dicom_files)
 
     def update_MRN(self):
         """

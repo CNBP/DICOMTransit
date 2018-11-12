@@ -20,8 +20,9 @@ if __name__ == "__main__":
 
     # Check Protocol.
     DICOM_package.update_MRN()
-
+    DICOM_package.update_study()
     MRN = DICOM_package.MRN
+
     MRN_exist = LocalDB.API.check_MRN(MRN)
 
     if MRN_exist:
@@ -43,8 +44,8 @@ if __name__ == "__main__":
 
         # Dynamicly generate the new CNBPID based ont he protocol.
 
-        # Manually assign?
-        DICOM_package.CNBPID = "VABGL074223"
+        # todo: attempt to generate the CNBPID/PSCID based on study protocol.
+        DICOM_package.CNBPID = LocalDB.API.propose_CNBPID(DICOM_package.studies[0])
 
         # create new PSCID and get DCCID
         success, DCCID = LORIS.API.create_new(DICOM_package.CNBPID)

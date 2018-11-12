@@ -293,5 +293,5 @@ class LORIS_candidates:
         return response_success, False
 
 if __name__ == "__main__":
-    LORIS_candidates.deleteCandidateCNBP(958607, "CNBP8881234")
-    #print(LORIS_candidates.check_projectID_compliance("GL01"))
+    #LORIS_candidates.deleteCandidateCNBP(958607, "CNBP8881234")
+    print(LORIS_candidates.check_projectID_compliance("GL01"))
