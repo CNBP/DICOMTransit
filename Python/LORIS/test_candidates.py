@@ -24,7 +24,7 @@ class UT_LORISCandidates(unittest.TestCase):
         # Example PSCI ID.
         PSCID = "CNBP9990987"
 
-        success, DCCID = LORIS_candidates.createCandidateCNBP(token, PSCID)
+        success, DCCID = LORIS_candidates.createCandidate(token, "", "1986-11-18", "Male") #todo: check project ensure it is validated. Might need reassignment
         assert success
         LORIS_candidates.deleteCandidateCNBP(DCCID, PSCID)
 

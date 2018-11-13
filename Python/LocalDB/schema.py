@@ -9,7 +9,6 @@ class CNBP_blueprint:
     fields = ['CNBPID',
               'CNNID',
               'CNFUNID',
-              'PSCID',
               'DCCID',
               'Timepoint',
               'Hash1',
@@ -19,7 +18,6 @@ class CNBP_blueprint:
     fields_types = ['TEXT',
                     'INTEGER',
                     'INTEGER',
-                    'TEXT',
                     'INTEGER',
                     'INTEGER',
                     'TEXT',
@@ -56,10 +54,10 @@ class CNBP_blueprint:
 
     # the regular expressino of each component of the parts that makes up the proper CNBPID in total.
     PSCID_schema_institution = "^[A-z][A-z][A-z]"
-    PSCID_schema_project = "[A-z][A-z][0-9][0-9]"
-    PSCID_schema_subject = "[0-9][0-9][0-9][0-9]"
+    #PSCID_schema_project = "[A-z][A-z][0-9][0-9]"
+    PSCID_schema_subject = "[0-9][0-9][0-9][0-9][0-9][0-9][0-9]"
 
-    PSCID_schema = PSCID_schema_institution + PSCID_schema_project + PSCID_schema_subject
+    PSCID_schema = PSCID_schema_institution + PSCID_schema_subject
 
 
 def concatenatedSchema():

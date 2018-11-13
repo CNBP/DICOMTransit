@@ -182,26 +182,23 @@ class LORIS_candidates:
 
 
     @staticmethod
-    def createCandidateCNBP(token, proposed_PSCID):
+    def createCandidate(token, project, birth_date, gender):
         """
         Create a candidate using the given PSCID
         :param token
-        :param proposed_PSCID:
+        :param birth_date: Birth date MUST Be in YYYY-MM-DD format!
+        :param gender: Gender must be Male or Female!
+        :param project:
         :return: DCCID
         """
         logger = logging.getLogger('LORIS_CreateCNBPCandidates')
-        logger.info("Creating CNBP Candidates: " + proposed_PSCID)
-
-        _, PSCID_exist = LORIS_candidates.checkPSCIDExist(token, proposed_PSCID)
-        if PSCID_exist:
-            logger.info("PSCID already exist. Quitting.")
-            return False ,None
+        logger.info("Creating CNBP Candidates belong to project: " + project)
 
         Candidate = {}
-        Candidate['Project'] = 'loris'
-        Candidate['PSCID'] = proposed_PSCID
-        Candidate['DoB'] = '2018-05-04' #TODO URGENTLY! The DOB is not read from the DICOM
-        Candidate['Gender'] = 'Female' #TODO URGENTLY! The GENDER is not read from the DICOM
+        Candidate['Project'] = project
+        #Candidate['PSCID'] = proposed_PSCID Now auto sequence.
+        Candidate['DoB'] = birth_date
+        Candidate['Gender'] = gender
 
         data = {"Candidate":Candidate}
 

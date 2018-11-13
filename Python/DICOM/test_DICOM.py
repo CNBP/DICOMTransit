@@ -129,3 +129,4 @@ class UT_DICOMManipulation(unittest.TestCase):
 
 if __name__ == '__main__':
     UT_DICOMManipulation.test_DICOM_check_dependency()
+    

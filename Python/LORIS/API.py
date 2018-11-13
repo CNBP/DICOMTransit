@@ -39,7 +39,7 @@ def create_new(CNBPID):
     # Example PSC ID.
     PSCID = CNBPID
 
-    success, DCCID = LORIS_candidates.createCandidateCNBP(token, PSCID)
+    success, DCCID = LORIS_candidates.createCandidate(token, PSCID)
     assert success
 
     success, timepoint = LORIS_timepoint.increaseTimepoint(token, DCCID)

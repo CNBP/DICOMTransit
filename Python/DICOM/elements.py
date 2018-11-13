@@ -1,5 +1,11 @@
 import logging
 from DICOM.validate import DICOM_validate
+from PythonUtils.file import current_funct_name
+from datetime import datetime
+import math
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 
 class DICOM_elements:
 
@@ -61,6 +67,70 @@ class DICOM_elements:
         else:
             return True, value
 
+    @staticmethod
+    def retrieveStudy(file_path):
+        """
+        Read the StudyDescription field which normally used to identify the specific PROJECT.
+        :param file_path:
+        :return: MRN number, as a STRING
+        """
+        logger = logging.getLogger(current_funct_name)
+        success, value = DICOM_elements.retrieve(file_path, "StudyDescription")
+
+        if value=="":
+            logger.info("Optional study not specified, it is EMPTY! Handle with care with project inference")
+            return True, value
+        elif not success or value is None:
+            logger.info("Retrieval of study value failed. Invalid value.")
+            return False, None
+        else:
+            return True, value
+
+    @staticmethod
+    def retrieveBirthday(file_path):
+        """
+        Read the birthdate PatientID field required for CNBPID LORIS generation.
+        :param file_path:
+        :return: MRN number, as a STRING
+        """
+        logger = logging.getLogger(current_funct_name)
+        success, value = DICOM_elements.retrieve(file_path, "PatientBirthDate")
+
+        if not success or value == "" or value is None:
+            logger.info("Retrieval of birthday value failed. Empty/invalid value.")
+            return False, None
+        else:
+            # Sanity check for scan date within the past 100 years.
+            birth_date = datetime.strptime(value, "%Y%m%d")
+            current_date = datetime.now()
+
+            if math.fabs((current_date-birth_date).days) < 36500:
+                return True, value
+            else:
+                logger.info("Patient birthday is more than 100 years in the past? YOU FAILED.")
+                return False, None
+
+    @staticmethod
+    def retrieveSex(file_path):
+        """
+        Read the Sex field which normally used as MRN number.
+        :param file_path:
+        :return: MRN number, as a STRING
+        """
+        logger = logging.getLogger(current_funct_name)
+
+        success, value = DICOM_elements.retrieve(file_path, "PatientSex")
+
+        if not success or value == "" or value is None:
+            logger.info("Retrieval of sex value failed. Empty/invalid value.")
+            return False, None
+        elif value == "M" or value == "O" or value == "F":
+            return True, value
+        else:
+            logger.info("Retrieval of sex value failed. Unexpected value. Should be M, F, O")
+            return False, None
+
+
 
     @staticmethod
     def computeScanAge(file_path):
@@ -81,3 +151,9 @@ class DICOM_elements:
         age = relativedelta(scan_date,birthday)
         # age = scan_date - birthday
         return True, age
+
+if __name__ == "__main__":
+    from pydicom.data import get_testdata_files
+    file_names = get_testdata_files("[Jj][Pp][Ee][Gg]")
+    for file in file_names:
+        retri
