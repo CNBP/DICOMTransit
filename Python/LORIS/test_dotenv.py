@@ -1,8 +1,16 @@
 import unittest
 from PythonUtils.env import load_validate_dotenv
 from LocalDB.schema import CNBP_blueprint
+from dotenv import load_dotenv
+import os
 
 class UT_envCheck(unittest.TestCase):
+
+    @staticmethod
+    def test_env_basic():
+        load_dotenv()
+        variable_a = os.getenv("Variable_A")
+        print(variable_a)
 
     @staticmethod
     def test_env():
@@ -13,3 +21,7 @@ class UT_envCheck(unittest.TestCase):
         # loop through each one and then attempt to load and validate them.
         for variable in list_variables:
             assert load_validate_dotenv(variable, CNBP_blueprint.dotenv_variables) is not None
+
+
+if __name__ == "__main__":
+    UT_envCheck.test_env_basic()
