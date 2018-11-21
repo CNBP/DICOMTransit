@@ -48,6 +48,6 @@ class Integration:
                 # Retrieve the PSCID based on the scanner protocol
                 #DICOM_elements.get_ResearchProtocol()
 
-                #LORIS_candidates.check_PSCID_compliance(PSCID)
+                #LORIS_candidates.validate_CNBPID(PSCID)
 
                 # Contact LORIS to request new MRN number.

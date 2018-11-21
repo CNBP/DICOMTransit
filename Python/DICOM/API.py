@@ -1,7 +1,7 @@
 from tempfile import TemporaryDirectory
 from DICOM.anonymize import DICOM_anonymize
 from shutil import copyfile
-from LORIS.candidates import LORIS_candidates
+from LORIS.validate import LORIS_validation
 from PythonUtils.file import dictionary_search
 from PythonUtils.env import load_validate_dotenv
 from PythonUtils.folder import get_abspath
@@ -85,7 +85,7 @@ def study_validation(study):
     :return: PROJECT or NONE
     """
     import json
-    assert(LORIS_candidates.check_projectID_compliance(study))
+    assert(LORIS_validation.validate_projectID(study))
 
     projectID_dictionary_json: str = load_validate_dotenv("projectID_dictionary", CNBP_blueprint.dotenv_variables)
     projectID_list = json.loads(projectID_dictionary_json)

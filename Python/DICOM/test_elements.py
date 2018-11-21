@@ -1,7 +1,6 @@
 from DICOM.elements import DICOM_elements
 from pydicom.data import get_testdata_files
 import unittest
-import os
 from PythonUtils.folder import recursive_list
 
 class UT_DICOMElement(unittest.TestCase):

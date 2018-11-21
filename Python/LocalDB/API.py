@@ -136,7 +136,7 @@ def set_timepoint(MRN, Timepoint):
 
 def propose_CNBPID(DICOM_protocol: str):
     """
-    This function takes in a string that is representative of the DICOM, and propose a CNBPID composed of three parts:
+    This function takes in a string that is representative of the DICOM acquisition study protocol, and propose a CNBPID composed of three parts:
         Institution_ID (from the .env configuration file)
         Project_ID (inferred from the protocol and incremented
         SubjectCount (kept track by localDB.
@@ -158,16 +158,18 @@ def propose_CNBPID(DICOM_protocol: str):
     # Partial match search records: (currently has SQL error).
     success, matched_records = LocalDB_query.check_partial_value(DB_path, CNBP_blueprint.table_name, "CNBPID", partial_search_input)
 
+    # Default subject ID when no match is found.
+    latest_subject_ID = "0001"
 
-    SubjectID = "0001"
     if matched_records is None or len(matched_records) == 0:
         # no previous subjects found. Use default value.
         pass
     else:
-        SubjectID = check_all_existing_records(matched_records)
+        latest_subject_ID = check_all_existing_records(matched_records)
 
     # Combined all the parts to return the proposed CNBPID
-    proposed_CNBPID = InstitionID + ProjectID + SubjectID
+
+    proposed_CNBPID = InstitionID + ProjectID + latest_subject_ID
 
     return proposed_CNBPID
 

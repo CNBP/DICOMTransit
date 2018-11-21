@@ -6,10 +6,13 @@ import logging
 from PythonUtils.env import load_validate_dotenv
 from LORIS.query import LORIS_query
 from LORIS.helper import LORIS_helper
+from LORIS.validate import LORIS_validation
 from LocalDB.schema import CNBP_blueprint
 from PythonUtils.file import dictionary_search
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
 
 
 class LORIS_candidates:
@@ -17,7 +20,7 @@ class LORIS_candidates:
     @staticmethod
     def parse_PSCID(PSCID: str):
         """
-        Return three parts of the PSCID: institution, project, subject
+        Return three parts of the PSCID: project, subject
         Example: VTX GL01 9999
 
         :param PSCID:
@@ -26,121 +29,22 @@ class LORIS_candidates:
 
         # Loading regular expression
         re_institution = CNBP_blueprint.PSCID_schema_institution
-        re_project = CNBP_blueprint.PSCID_schema_project
+        #re_project = CNBP_blueprint.PSCID_schema_project
         re_subject = CNBP_blueprint.PSCID_schema_subject
 
         # Use expression to extract from the inputted PSCID
         input_institution = re.search(re_institution, PSCID).group(0)
-        input_project = re.search(re_project, PSCID).group(0)
+        #input_project = re.search(re_project, PSCID).group(0)
         input_subject = re.search(re_subject, PSCID).group(0)
 
-        if input_subject is None or input_project is None or input_institution is None:
+        if input_subject is None or input_institution is None:
             success = False
         else:
             success = True
 
-        return success, input_institution, input_project, input_subject
+        return success, input_institution, input_subject
 
 
-    @staticmethod
-    def check_instutitionID_compliance(input_institutionID: str):
-        """
-        Check if the institution ID is compliant per the .env specification. String must STRICTLY match.
-        :param input_institutionID:
-        :return:
-        """
-        # Parse from the .env standardization
-        InsitituionID = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
-
-        # Check if institution ID matches
-        if not (input_institutionID == InsitituionID):
-            return False
-        else:
-            return True
-
-
-    @staticmethod
-    def check_projectID_compliance(input_projectID: str):
-        """
-        Provide any string, and it checkss again he dotenv for the proper project KEY which correspond to the ID.
-        DICOM/API has the function to actually retrieve the relevant key, after calling this function.
-        :param input_projectID:
-        :return:
-        """
-
-        # Load ProjectIDs from the environment.
-
-        projectID_dictionary_json: str = load_validate_dotenv("projectID_dictionary", CNBP_blueprint.dotenv_variables)
-        projectID_list = json.loads(projectID_dictionary_json)
-
-        # check if project ID is in the projectID list via a dictionary search
-        key = dictionary_search(projectID_list, input_projectID)
-
-        if key is not None:
-            return True
-        else:
-            return False
-
-    @staticmethod
-    def check_subjectID_compliance(input_subjectID: str):
-        if not input_subjectID.isdigit():
-            return False
-
-        if int(input_subjectID) < 9999 or int(input_subjectID) > 0:
-            return True
-        else:
-            return False
-
-    @staticmethod
-    def check_PSCID_compliance(PSCID: str):
-        """
-        Checks PSCID inputed for 1) InstitionID format, 2) ProjectID format, 3) SubjectID format.
-        :param PSCID:
-        :return:
-        """
-        logger = logging.getLogger(__name__)
-
-        # Parse from input PSCID
-        success, input_institution, input_project, input_subject = LORIS_candidates.parse_PSCID(PSCID)
-
-        # Ensure parsing success
-        if not success:
-            return False
-
-        # Check institution ID to ensure that
-        if not LORIS_candidates.check_instutitionID_compliance(input_institution):
-            logger.info("Institution not compliant")
-            return False
-
-        # Check if projectID already exist
-        if not LORIS_candidates.check_projectID_compliance(input_project):
-            logger.info("ProjectID not recognized")
-            return False
-
-        # Check last four digits: make sure the last four characters are digits.
-        if not LORIS_candidates.check_subjectID_compliance(str(input_subject)):
-            logger.info("SubjectID not standardized")
-            return False
-
-        return True
-
-    @staticmethod
-    def check_DCCID_compliance(DCCID):
-        """
-        Check if DCCID id conform.
-        :param DCCID:
-        :return:
-        """
-        if not len(str(DCCID)) == 6:
-            return False
-        elif not str(DCCID).isnumeric():
-            return False
-        elif DCCID > 999999:
-            return False
-        elif DCCID < 0:
-            return False
-        else:
-            return True
 
     @staticmethod
     def deleteCandidateCNBP(DCCID, PSCID):
@@ -195,6 +99,11 @@ class LORIS_candidates:
         logger.info("Creating CNBP Candidates belong to project: " + project)
 
         Candidate = {}
+
+        if not LORIS_validation.validate_project(project) or not LORIS_validation.validate_birth_date(birth_date) or not LORIS_validation.validate_gender(gender):
+            logger.info("Non-compliant PSCID component detected. Aborting PSCID creation ")
+            return False, None
+
         Candidate['Project'] = project
         #Candidate['PSCID'] = proposed_PSCID Now auto sequence.
         Candidate['DoB'] = birth_date
@@ -268,7 +177,7 @@ class LORIS_candidates:
         logger = logging.getLogger('LORIS_checkDCCIDExist')
         logger.info("Checking if DCCID exist: "+str(proposed_DCCID))
 
-        assert (LORIS_candidates.check_DCCID_compliance(proposed_DCCID))
+        assert (LORIS_validation.check_DCCID(proposed_DCCID))
 
         #Get list of projects
         response, loris_project = LORIS_query.getCNBP(token, r"projects/loris")

@@ -7,6 +7,7 @@ import os
 
 if __name__ == "__main__":
     """Quick and dirty script that calls various high level APIs to insert a subject from ORTHANC to LORIS"""
+    # Eventually, a finite state machine will be built out of this
 
     # Get list of subjects.
     list_subjects = orthanc.API.get_list_of_subjects()

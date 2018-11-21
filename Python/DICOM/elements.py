@@ -1,8 +1,8 @@
 import logging
 from DICOM.validate import DICOM_validate
 from PythonUtils.file import current_funct_name
-from datetime import datetime
-import math
+from LORIS.validate import LORIS_validation
+import sys
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -60,12 +60,17 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
+        logger = logging.getLogger(current_funct_name())
         success, value = DICOM_elements.retrieve(file_path, "PatientID")
 
         if not success:
+            logger.info("Was not able to access/read the file!")
             return False, None
+        elif (LORIS_validation.validate_MRN(value))[0]: #0 is the True False of the validation result.
+            return True, (LORIS_validation.validate_MRN(value))[1] #1 is the validated MRN string
         else:
-            return True, value
+            logger.info("Was not able to validate the MRN number. Invalid format perhaps? Expected SEVEN digis, got "+value)
+            return False, None
 
     @staticmethod
     def retrieveStudy(file_path):
@@ -74,7 +79,7 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        logger = logging.getLogger(current_funct_name)
+        logger = logging.getLogger(current_funct_name())
         success, value = DICOM_elements.retrieve(file_path, "StudyDescription")
 
         if value=="":
@@ -83,7 +88,7 @@ class DICOM_elements:
         elif not success or value is None:
             logger.info("Retrieval of study value failed. Invalid value.")
             return False, None
-        else:
+        else: #todo see if there are ways to validate this part vs study
             return True, value
 
     @staticmethod
@@ -93,22 +98,19 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        logger = logging.getLogger(current_funct_name)
+        logger = logging.getLogger(current_funct_name())
         success, value = DICOM_elements.retrieve(file_path, "PatientBirthDate")
 
         if not success or value == "" or value is None:
             logger.info("Retrieval of birthday value failed. Empty/invalid value.")
             return False, None
+        elif LORIS_validation.validate_birth_date(value):
+            return True, value
         else:
-            # Sanity check for scan date within the past 100 years.
-            birth_date = datetime.strptime(value, "%Y%m%d")
-            current_date = datetime.now()
+            logger.info("Birthdate failed validation. Bad date. ")
+            return False, None
 
-            if math.fabs((current_date-birth_date).days) < 36500:
-                return True, value
-            else:
-                logger.info("Patient birthday is more than 100 years in the past? YOU FAILED.")
-                return False, None
+
 
     @staticmethod
     def retrieveSex(file_path):
@@ -117,17 +119,17 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        logger = logging.getLogger(current_funct_name)
+        logger = logging.getLogger(current_funct_name())
 
         success, value = DICOM_elements.retrieve(file_path, "PatientSex")
 
         if not success or value == "" or value is None:
             logger.info("Retrieval of sex value failed. Empty/invalid value.")
             return False, None
-        elif value == "M" or value == "O" or value == "F":
+        elif LORIS_validation.validate_sex(value):
             return True, value
         else:
-            logger.info("Retrieval of sex value failed. Unexpected value. Should be M, F, O")
+            logger.info("Unexpected value. Should be M, F, O")
             return False, None
 
 

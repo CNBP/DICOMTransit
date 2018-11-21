@@ -9,25 +9,6 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 class DICOM_validate:
 
     @staticmethod
-    def MRN(input_string):
-        """
-        This validate and check if the MRN is of the proper valid format based on the hospital specification.
-        :param input_string:
-        :return:
-        """
-        string=str(input_string)
-        if not string.isdigit():
-            return False
-        try:
-            MRN = int(string)
-            if 0 < MRN < 9999999:
-                return True
-            else:
-                return False
-        except ValueError:
-            return False
-
-    @staticmethod
     def file(file_path):
         """
         validate to check if the DICOM file is an actual DICOM file.

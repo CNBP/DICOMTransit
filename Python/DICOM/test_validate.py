@@ -2,8 +2,9 @@ import sys
 import logging
 import unittest
 
-from DICOM.validate import DICOM_validate
+from LORIS.validate import LORIS_validation
 from DICOM.test_DICOM import get_test_DICOM_path
+from DICOM.validate import DICOM_validate
 from pydicom.data import get_testdata_files
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -14,22 +15,22 @@ class UT_DICOMValidation(unittest.TestCase):
     @staticmethod
     def test_MRN():
         string = 1234567
-        assert DICOM_validate.MRN(string)
+        assert LORIS_validation.validate_MRN(string)
 
         string = "1234567"
-        assert DICOM_validate.MRN(string)
+        assert LORIS_validation.validate_MRN(string)
 
         string = "12345678"
-        assert not DICOM_validate.MRN(string)
+        assert not LORIS_validation.validate_MRN(string)
 
         string = 12345678
-        assert not DICOM_validate.MRN(string)
+        assert not LORIS_validation.validate_MRN(string)
 
         string = "123456"
-        assert DICOM_validate.MRN(string)
+        assert LORIS_validation.validate_MRN(string)
 
         string = 123456
-        assert DICOM_validate.MRN(string)
+        assert LORIS_validation.validate_MRN(string)
 
     @staticmethod
     def test_DICOM_validator():
