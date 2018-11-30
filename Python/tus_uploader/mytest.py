@@ -9,7 +9,9 @@ from tusclient.storage import filestorage
 #                              headers={'Authorization': 'Basic xxyyZZAAbbCC='})
 # set more headers
 #my_client.set_headers({'HEADER_NAME': 'HEADER_VALUE'})
-my_client = client.TusClient('http://localhost:1080/files/')
+
+# URL is behind a proxy which forwards it to Tusd server listening on port 1080
+my_client = client.TusClient('http://localhost/files/')
 
 # Use filestorage to save upload URLs
 storage = filestorage.FileStorage('storage_file')
