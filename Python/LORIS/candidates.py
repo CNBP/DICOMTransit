@@ -177,7 +177,7 @@ class LORIS_candidates:
         logger = logging.getLogger('LORIS_checkDCCIDExist')
         logger.info("Checking if DCCID exist: "+str(proposed_DCCID))
 
-        assert (LORIS_validation.check_DCCID(proposed_DCCID))
+        assert (LORIS_validation.validate_DCCID(proposed_DCCID))
 
         #Get list of projects
         response, loris_project = LORIS_query.getCNBP(token, r"projects/loris")

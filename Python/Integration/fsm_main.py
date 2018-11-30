@@ -71,7 +71,7 @@ def check_orthanc_srvr(signal, sender):
     mylocals = locals()
 
     try:
-        list_subjects = orthanc.API.get_list_of_subjects()
+        list_subjects = orthanc.API.get_list_of_subjects() #todo: this API call must support authentication. ERROR IMMENENT
         # Pass the signal to get DICOM fils based on the list of subjects given.
         dispatcher.send(signal=SIG_GET_DICOM_FILE,
                         sender=current_funct_name(),

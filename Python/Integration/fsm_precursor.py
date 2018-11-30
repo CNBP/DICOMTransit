@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     assert len(list_subjects) > 0
 
-    # Get subject, loop through them all.
+    # Get ALL subjects, loop through them
     for subject in list_subjects:
 
         subject_url = url + subject

@@ -14,6 +14,7 @@ class orthanc_query:
 
     @staticmethod
     def authenticateOrthanc():
+        #todo: all the get, set can be potentially using a decorator function to authenticate.
         raise NotImplementedError
         pass
 

@@ -7,6 +7,10 @@ from PythonUtils.env import load_dotenv_var
 
 class UT_ProdOrthanc(unittest.TestCase):
 
+    # MUST ensure TravisCI LORIS also deploy with the proper setting with regard to the ORTHANC authentication.
+
+
+
     @staticmethod
     def uploadExamples():
         file_list = get_testdata_files("[Ss][Mm][Aa][Ll][Ll]")
@@ -27,7 +31,8 @@ class UT_ProdOrthanc(unittest.TestCase):
     @staticmethod
     def test_getSubjects():
         UT_ProdOrthanc.uploadExamples()
-        subject_list = orthanc.API.get_list_of_subjects()
+        url, user, password = orthanc.API.get_prod_orthanc_credentials()
+        subject_list = orthanc.API.get_list_of_subjects(url, user, password)
         assert len(subject_list) > 0
         return subject_list
 
@@ -41,9 +46,11 @@ class UT_ProdOrthanc(unittest.TestCase):
 
     @staticmethod
     def test_getSubjectZip():
+        url, user, password = orthanc.API.get_prod_orthanc_credentials()
         list_subjects = UT_ProdOrthanc.test_getSubjects()
         for subject in list_subjects:
-            orthanc.API.get_subject_zip(subject)
+            endpoint = url + "patients/" + subject
+            orthanc.API.get_subject_zip(endpoint, user, password)
 
 if __name__ == "__main__":
     UT_ProdOrthanc.test_getSubjectZip()
