@@ -14,9 +14,11 @@ class UT_ProdOrthanc(unittest.TestCase):
             print(file)
             upload_files = {'upload_file': open(file, 'rb')}
             orthanc_url = load_dotenv_var("ProdOrthancIP")
+            orthanc_user = load_dotenv_var("ProdOrthancUser")
+            orthanc_password = load_dotenv_var("ProdOrthancPassword")
             orthanc_instance_url = orthanc_url + "instances/"
 
-            status, r = orthanc_query.postOrthanc(orthanc_instance_url, upload_files)
+            status, r = orthanc_query.postOrthanc(orthanc_instance_url, orthanc_user, orthanc_password, upload_files)
             assert(LORIS_helper.is_response_success(status, 200))
             assert(r.json())
 

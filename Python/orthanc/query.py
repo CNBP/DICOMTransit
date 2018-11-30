@@ -76,7 +76,7 @@ class orthanc_query:
         with requests.Session() as s:
             r = s.get(endpoint, stream=True, verify=False, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
 
-            local_filename = unique_name() + ".zip" #todo review this part in terms of end point formation naming
+            local_filename = unique_name() + ".zip"
             # NOTE the stream=True parameter
             with open(local_filename, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=1024):
