@@ -18,14 +18,19 @@ def trigger_insertion(zip_name):
     """
     #zip_name = "VTXGL019996_206839_V1"
 
-    f1={}
-    f1['file'] = "/data/incoming/" + zip_name + ".zip"
-    f1['phantom'] = "N"
-    f1['candidate'] = zip_name
-    scans =[f1]
+    # Form the JSON representing the scan.
+    JSON_scan={}
+    JSON_scan['file'] = "/data/incoming/" + zip_name + ".zip"
+    JSON_scan['phantom'] = "N"
+    JSON_scan['candidate'] = zip_name
+
+    # Concatenate the scan.
+    scans =[JSON_scan]
+
+    # Trigger its insertion by calling the API.
     trigger_dicom_insert(scans)
 
-def create_new(CNBPID):
+def create_new(CNBPID, birthday, gender):
     """
     Check both the creation and deletion of the subject for LORIS.
     :return:
@@ -39,7 +44,7 @@ def create_new(CNBPID):
     # Example PSC ID.
     PSCID = CNBPID
 
-    success, DCCID = LORIS_candidates.createCandidate(token, PSCID)
+    success, DCCID = LORIS_candidates.createCandidate(token, PSCID, birthday, gender)
     assert success
 
     success, timepoint = LORIS_timepoint.increaseTimepoint(token, DCCID)

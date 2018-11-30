@@ -134,9 +134,9 @@ def set_timepoint(MRN, Timepoint):
     # Update the MRN record with Timepoint
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", Timepoint)
 
-def propose_CNBPID(DICOM_protocol: str):
+def   propose_CNBPID(DICOM_protocol: str):
     """
-    This function takes in a string that is representative of the DICOM acquisition study protocol, and propose a CNBPID composed of three parts:
+    This function takes in a string that is representative of the DICOM acquisition study protocol, and propose a CNBPID composed of two parts:
         Institution_ID (from the .env configuration file)
         Project_ID (inferred from the protocol and incremented
         SubjectCount (kept track by localDB.

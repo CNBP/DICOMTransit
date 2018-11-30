@@ -1,6 +1,7 @@
 import sys
 import requests
 import json
+from PythonUtils.env import load_dotenv_var
 
 def trigger_dicom_insert(scans):
     """ 
@@ -10,6 +11,7 @@ def trigger_dicom_insert(scans):
     dicom file to insert
     :returns:
     """
+    # todo: 2018-11-30T133155EST should clean up here and ensure loading the URL using .env.
     # Create a dictionary with the required key 'dicoms'. Key value is scans
     p = {}
     p['dicoms'] = scans
@@ -23,14 +25,13 @@ def trigger_dicom_insert(scans):
     print(payload)
 
     # Need to fix the load_dotenv call. Currently not getting trigger url
-    #from dotenv import load_dotenv
-    #trigger_dicom_insertion_url = load_dotenv("triggerDicomInsertionURL")
+
+    trigger_dicom_insertion_url = load_dotenv_var("InsertionScript")
 
     # Trigger insertion by doing HTTP POST of payload to endpoint
-    s = requests.post("https://dev.cnbp.ca/cnbp/upload_dicoms.php", data=payload)
-    # Disable use of dotenv value because i can't make it work for now
-    #s = requests.post(trigger_dicom_insertion_url, data=payload)
-    #print(trigger_dicom_insertion_url)
+    s = requests.post(trigger_dicom_insertion_url, data=payload)
+    # print(trigger_dicom_insertion_url)
+
     print(s.text)
 
 if __name__ == "__main__":

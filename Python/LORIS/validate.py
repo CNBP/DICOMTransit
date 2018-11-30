@@ -141,8 +141,9 @@ class LORIS_validation:
         logger = logging.getLogger(__name__)
 
         # Parse from input CNBPID
-        success, input_institution, input_project, input_subject = LORIS_candidates.parse_PSCID(CNBPID)
+        success, input_institution, input_subject = LORIS_candidates.parse_PSCID(CNBPID)
 
+        '''Guard Block'''
         # Ensure parsing success
         if not success:
             return False
@@ -150,12 +151,6 @@ class LORIS_validation:
         # Check institution ID to ensure that
         if not LORIS_validation.validate_instutitionID(input_institution):
             logger.info("InstitutionID portion of the CNBPID is not compliant")
-            return False
-
-        #todo this needs refactoring as the 
-        # Check if projectID already exist
-        if not LORIS_validation.validate_projectID(input_project):
-            logger.info("ProjectID portion of the CNBPID is not compliant")
             return False
 
         # Check last four digits: make sure the last four characters are digits.
@@ -174,11 +169,10 @@ class LORIS_validation:
         """
         if not len(str(DCCID)) == 6:
             return False
-        elif not str(DCCID).isnumeric():
+        if not str(DCCID).isnumeric():
             return False
-        elif DCCID > 999999:
+        if DCCID > 999999:
             return False
-        elif DCCID < 0:
+        if DCCID < 0:
             return False
-        else:
-            return True
+        return True

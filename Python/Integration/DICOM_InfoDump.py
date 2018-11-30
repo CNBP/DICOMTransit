@@ -15,7 +15,7 @@ def BatchDateCalculation(path):
             # Try to extract these information from the files.
             success1, StudyDate = DICOM_elements.retrieve(file, "StudyDate")
             success2, PatientBirthDate = DICOM_elements.retrieve(file, "PatientBirthDate")
-            success3, age = DICOM_elements.computeScanAge(file)
+            success3, age = DICOM_elements.compute_age(file)
 
             # Skip this file if it is not successful.
             if not success1 or not success2 or not success3:

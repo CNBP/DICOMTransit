@@ -30,7 +30,7 @@ class Integration:
                 return False
 
             # At this point, we know all DICOM files from the folder has the same name.
-            MRN = DICOM_elements.retrieveMRN(DICOM_files[0])
+            MRN = DICOM_elements.retrieve_MRN(DICOM_files[0])
 
             # Store MRN in database.
             mrn_exist_in_database, _ = LocalDB_query.check_value(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN)

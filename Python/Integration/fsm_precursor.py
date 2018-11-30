@@ -12,44 +12,23 @@ if __name__ == "__main__":
     # Get list of subjects.
     list_subjects = orthanc.API.get_list_of_subjects()
 
-    # Get first subject.
+    # Get first subject. #todo: this needs ot handle multiple subjects
     dicom_folder = orthanc.API.get_subject_zip(list_subjects[0]) # if index is 0, no subject in LORIS.
 
-    # Convert it to a DICOMPackage.
+    # Convert it to a DICOMPackage, it checks for a bunch of validity, update a bunch of its meta information regarding the entire archive
     DICOM_package = DICOMPackage(dicom_folder)
 
-
     # Check Protocol.
-    DICOM_package.update_MRN()
-    DICOM_package.update_study()
-    MRN = DICOM_package.MRN
+    MRN_exist = LocalDB.API.check_MRN(DICOM_package.MRN)
 
-    MRN_exist = LocalDB.API.check_MRN(MRN)
-
-    if MRN_exist:
-
-        # Use MRN to retrieve CNBPID, update the dicom-package
-        DICOM_package.CNBPID = LocalDB.API.get_CNBP(MRN)
-
-        # Use MRN to retrieve DCCID, update the dicom-package
-        DICOM_package.DCCID = LocalDB.API.get_DCCID(MRN)
-
-        # Use MRN to retrieve VISIT , update the dicom-package
-        DICOM_package.visit = LocalDB.API.get_visit(MRN)
-
-        # Auto increment the VISIT count.
-
-        # Write to database and also online.
-
-    else:
-
+    if MRN_exist is False:  # most common scenario first
         # Dynamicly generate the new CNBPID based ont he protocol.
 
         # todo: attempt to generate the CNBPID/PSCID based on study protocol.
         DICOM_package.CNBPID = LocalDB.API.propose_CNBPID(DICOM_package.studies[0])
 
         # create new PSCID and get DCCID
-        success, DCCID = LORIS.API.create_new(DICOM_package.CNBPID)
+        success, DCCID = LORIS.API.create_new(DICOM_package.CNBPID, DICOM_package.birthday, DICOM_package.sex)
 
         # Local Variable for anonymization.
         DICOM_package.DCCID = DCCID
@@ -59,6 +38,25 @@ if __name__ == "__main__":
         LocalDB.API.set_CNBP(DICOM_package.MRN, DICOM_package.CNBPID)
         LocalDB.API.set_DCCID(DICOM_package.MRN, DCCID)
         LocalDB.API.set_timepoint(DICOM_package.MRN, "V1")
+
+    elif MRN_exist is True:
+
+        # todo: Check scan dates to see if they have already been inserted.
+
+        # Use MRN to retrieve CNBPID, update the dicom-package
+        DICOM_package.CNBPID = LocalDB.API.get_CNBP(DICOM_package.MRN)
+
+        # Use MRN to retrieve DCCID, update the dicom-package
+        DICOM_package.DCCID = LocalDB.API.get_DCCID(DICOM_package.MRN)
+
+        # Use MRN to retrieve VISIT , update the dicom-package
+        DICOM_package.visit = LocalDB.API.get_visit(DICOM_package.MRN)
+
+        # Auto increment the VISIT count.
+
+        # Write to database and also online.
+    else:
+        raise ValueError
 
     # Generate new string with everything.
     DICOM_package.zipname = DICOM_package.CNBPID + "_" + str(DICOM_package.DCCID) + "_" + DICOM_package.visit

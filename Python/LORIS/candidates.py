@@ -51,7 +51,7 @@ class LORIS_candidates:
         # todo: this should really be done through API. But Currently LORIS does not offer such API.
         # NOTE! If you EVER get NULL coalesce not recognized error, make sure that the PHP version being called from
         # the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER
-        # than the bashrc profile imported edition. Also keep in mind that EVEN if .bashrc import this, it MOST LIKELY
+        # than the .bashrc profile imported edition. Also keep in mind that EVEN if .bashrc import this, it MOST LIKELY
         # will not apply to the SSH session!
 
 

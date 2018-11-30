@@ -54,7 +54,7 @@ class DICOM_elements:
         return True, "Data element update completed."
 
     @staticmethod
-    def retrieveMRN(file_path):
+    def retrieve_MRN(file_path):
         """
         Read the PatientID field which normally used as MRN number.
         :param file_path:
@@ -73,9 +73,9 @@ class DICOM_elements:
             return False, None
 
     @staticmethod
-    def retrieveStudy(file_path):
+    def retrieve_study(file_path):
         """
-        Read the StudyDescription field which normally used to identify the specific PROJECT.
+        Lower level function to Read the StudyDescription field which normally used to identify the specific PROJECT.
         :param file_path:
         :return: MRN number, as a STRING
         """
@@ -92,9 +92,9 @@ class DICOM_elements:
             return True, value
 
     @staticmethod
-    def retrieveBirthday(file_path):
+    def retrieve_birthday(file_path):
         """
-        Read the birthdate PatientID field required for CNBPID LORIS generation.
+        Lower level function to Read the birthdate PatientID field required for CNBPID LORIS generation.
         :param file_path:
         :return: MRN number, as a STRING
         """
@@ -107,15 +107,15 @@ class DICOM_elements:
         elif LORIS_validation.validate_birth_date(value):
             return True, value
         else:
-            logger.info("Birthdate failed validation. Bad date. ")
+            logger.info("Birthdate failed validation. Bad date.")
             return False, None
 
 
 
     @staticmethod
-    def retrieveSex(file_path):
+    def retrieve_sex(file_path):
         """
-        Read the Sex field which normally used as MRN number.
+        Lower level function to Read the Sex field.
         :param file_path:
         :return: MRN number, as a STRING
         """
@@ -135,7 +135,7 @@ class DICOM_elements:
 
 
     @staticmethod
-    def computeScanAge(file_path):
+    def compute_age(file_path):
         """
         Read the PatientID field which normally used as MRN number.
         :param file_path:
@@ -157,5 +157,5 @@ class DICOM_elements:
 if __name__ == "__main__":
     from pydicom.data import get_testdata_files
     file_names = get_testdata_files("[Jj][Pp][Ee][Gg]")
-    for file in file_names:
-        retri
+    #for file in file_names:
+    #    retri

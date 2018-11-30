@@ -76,7 +76,7 @@ class UT_DICOMManipulation(unittest.TestCase):
     @staticmethod
     def test_DICOM_retrieveMRN():
         path = get_testdata_files("emri_small_big_endian")[0]
-        success, MRN = DICOM_elements.retrieveMRN(path)
+        success, MRN = DICOM_elements.retrieve_MRN(path)
         assert success
         assert (MRN == 'CNBP0010001')
 
@@ -96,7 +96,7 @@ class UT_DICOMManipulation(unittest.TestCase):
     def test_DICOM_computerScanAge():
         logger = logging.getLogger("DICOM compute age")
         path = get_testdata_files("emri_small_RLE")[0]
-        success, Age = DICOM_elements.computeScanAge(path)
+        success, Age = DICOM_elements.compute_age(path)
         assert success
         logger.info(Age.day)
 

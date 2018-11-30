@@ -4,10 +4,8 @@ import os
 import shutil
 import zipfile
 import sys
-from dotenv import load_dotenv
-from PythonUtils.file import is_name_unique
-from PythonUtils.env import load_validate_dotenv
-from LocalDB.schema import CNBP_blueprint
+from PythonUtils.file import is_name_unique, unique_name
+from requests.auth import HTTPBasicAuth
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -15,26 +13,28 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 class orthanc_query:
 
     @staticmethod
-    def getOrthanc(endpoint):
+    def authenticateOrthanc():
+        raise NotImplementedError
+        pass
+
+
+    @staticmethod
+    def getOrthanc(endpoint, orthanc_user, orthanc_password):
         """
         Get from a Orthanc endpoint
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
         logger = logging.getLogger('Orthanc_get')
-        logger.info("Getting Orthanc endpoint: "+ endpoint + "at")
-        url = load_validate_dotenv("OrthancURL", CNBP_blueprint.dotenv_variables)
-        updatedurl = url + endpoint
-        logger.info(updatedurl)
+        logger.info("Getting Orthanc endpoint: "+ endpoint)
 
         with requests.Session() as s:
-            r = s.get(updatedurl)
+            r = s.get(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
             logger.info("Get Result:" + str(r.status_code) + r.reason)
-
             return r.status_code, r.json()
 
     @staticmethod
-    def postOrthanc(endpoint, data):
+    def postOrthanc(endpoint, orthanc_user, orthanc_password, data):
         """
         Get from a Orthanc endpoint
         :param endpoint:
@@ -42,20 +42,14 @@ class orthanc_query:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
         logger = logging.getLogger('Orthanc_post')
-        logger.info("Post Orthanc endpoint: "+ endpoint + "at")
-        url = load_validate_dotenv("OrthancURL", CNBP_blueprint.dotenv_variables)
-        updatedurl = url + endpoint
-        logger.info(updatedurl)
-
+        logger.info("Post Orthanc endpoint: "+ endpoint)
         with requests.Session() as s:
-            r = s.post(updatedurl, files=data)
-
+            r = s.post(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password), files=data)
             logger.info("Post Result:" + str(r.status_code) + r.reason)
-
             return r.status_code, r
 
     @staticmethod
-    def deleteOrthanc(endpoint):
+    def deleteOrthanc(endpoint, orthanc_user, orthanc_password):
         """
         Delete from a Orthanc endpoint
         :param endpoint:
@@ -63,35 +57,26 @@ class orthanc_query:
         """
         logger = logging.getLogger('Orthanc_delete')
         logger.info("Deleting Orthanc endpoint: "+ endpoint + "at")
-        url = load_validate_dotenv("OrthancURL", CNBP_blueprint.dotenv_variables)
-        updatedurl = url + endpoint
-        logger.info(updatedurl)
-
         with requests.Session() as s:
-            r = s.delete(updatedurl)
+            r = s.delete(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
             logger.info("Deletion Result:" + str(r.status_code) + r.reason)
-
         return r.status_code, r.json()
 
     @staticmethod
-    def getPatientZipOrthanc(endpoint):
+    def getPatientZipOrthanc(endpoint, orthanc_user, orthanc_password):
         """
         Get Orthanc endpoint archive ZIP files.
         :param endpoint:
         :return: status of the get requests, and the actual local file name saved in the process.
         """
         logger = logging.getLogger('Orthanc_getzip')
-        logger.info("Downloading Orthanc endpoint: " + endpoint + " at")
-        url = load_validate_dotenv("OrthancURL", CNBP_blueprint.dotenv_variables)
+        logger.info("Downloading Orthanc endpoint: " + endpoint)
 
-        # endpiont should be something like /studies/SUTDY_UUID/
-        query = url + "patients/" + endpoint + '/archive'
-        logger.info(query)
 
         with requests.Session() as s:
-            r = s.get(query, stream=True, verify=False)  # auth=(orthanc_user, orthanc_password)
+            r = s.get(endpoint, stream=True, verify=False, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
 
-            local_filename = endpoint + ".zip"
+            local_filename = unique_name() + ".zip" #todo review this part in terms of end point formation naming
             # NOTE the stream=True parameter
             with open(local_filename, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=1024):
