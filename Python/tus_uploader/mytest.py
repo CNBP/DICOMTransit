@@ -11,6 +11,8 @@ from tusclient.storage import filestorage
 #my_client.set_headers({'HEADER_NAME': 'HEADER_VALUE'})
 
 # URL is behind a proxy which forwards it to Tusd server listening on port 1080
+# Apache Proxy to Tusd example at https://github.com/tus/tusd/blob/master/docs/apache2.conf
+# Nginx Proxy to Tusd example at https://github.com/tus/tusd/blob/master/docs/nginx.conf
 my_client = client.TusClient('http://localhost/files/')
 
 # Use filestorage to save upload URLs
