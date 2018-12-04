@@ -1,10 +1,8 @@
-from DICOM.elements import DICOM_elements
 from LocalDB.query import LocalDB_query
 from LocalDB.schema import CNBP_blueprint
-from dotenv import load_dotenv
+from LORIS.validate import LORIS_validation
 import logging
 import sys
-import os
 from PythonUtils.env import load_validate_dotenv
 from PythonUtils.math import int_incrementor
 
@@ -30,7 +28,7 @@ def check_MRN(MRN):
     return MRN_exist_in_database
 
 def create_MRN(MRN):
-    database_path = load_dotenv("LocalDatabase")
+    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
 
     # Create the MRN record
     LocalDB_query.create_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN)
@@ -43,7 +41,7 @@ def get_CNBP(MRN):
     :return: the CNBPID associated with that particular MRN number.
     """
     # Load local database from .env file
-    database_path = load_dotenv("LocalDatabase")
+    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
     MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
                                                                   CNBP_blueprint.table_name,
                                                                   CNBP_blueprint.keyfield,
@@ -63,7 +61,7 @@ def get_DCCID(MRN):
     :return: the CNBPID associated with that particular MRN number.
     """
     # Load local database from .env file
-    database_path = load_dotenv("LocalDatabase")
+    database_path = load_validate_dotenv("LocalDatabasePath")
     MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
                                                                   CNBP_blueprint.table_name,
                                                                   CNBP_blueprint.keyfield,
@@ -84,7 +82,7 @@ def get_visit(MRN):
     :return: the CNBPID associated with that particular MRN number.
     """
     # Load local database from .env file
-    database_path = load_dotenv("LocalDatabase")
+    database_path = load_validate_dotenv("LocalDatabasePath")
     MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
                                                                   CNBP_blueprint.table_name,
                                                                   CNBP_blueprint.keyfield,
@@ -181,7 +179,6 @@ def check_all_existing_records(matched_records):
     :return:
     """
     max_subject_ID = 0
-    from LORIS.candidates import LORIS_candidates
 
     # Loop through all subjects belong to this project and ensure that we can track the latest subjects number.
     for matched_record in matched_records:
@@ -189,7 +186,7 @@ def check_all_existing_records(matched_records):
         CNBPID = matched_record[CNBPID_schema_index]
 
         # Skip non-compliance records
-        if not LORIS_candidates.check_PSCID_compliance(CNBPID):
+        if not LORIS_validation.validate_CNBPID(CNBPID):
             logger.info(
                 "A non-compliant record has been found in the existing SQLite database, you might want to look into that. ")
             logger.info(

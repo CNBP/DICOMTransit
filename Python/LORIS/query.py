@@ -1,12 +1,12 @@
-import requests
+import json
 import logging
 import sys
-import os
-import json
-from PythonUtils.env import load_validate_dotenv
+
+import requests
+
 from LORIS.helper import LORIS_helper
 from LocalDB.schema import CNBP_blueprint
-
+from PythonUtils.env import load_validate_dotenv
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 

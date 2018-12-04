@@ -8,7 +8,7 @@ from PythonUtils.env import load_dotenv_var
 
 def get_local_orthanc_credentials():
     url = load_dotenv_var("TestOrthancIP")
-    user = load_dotenv_var("TestOrthacUser")
+    user = load_dotenv_var("TestOrthancUser")
     password = load_dotenv_var("TestOrthancPassword")
     return url, user, password
 

@@ -40,7 +40,7 @@ class LORIS_validation:
         :param project:
         :return:
         """
-        #todo
+        #todo need to implement project validation.
         pass
 
     @staticmethod

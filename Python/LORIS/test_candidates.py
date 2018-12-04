@@ -1,5 +1,6 @@
 import logging
 from LORIS.candidates import LORIS_candidates
+from LORIS.validate import LORIS_validation
 from LORIS.query import LORIS_query
 import unittest
 import sys
@@ -31,16 +32,16 @@ class UT_LORISCandidates(unittest.TestCase):
     @staticmethod
     def test_check_projectID():
         ProjectID = "GL01"
-        assert LORIS_candidates.check_projectID_compliance(ProjectID)
+        assert LORIS_validation.validate_projectID(ProjectID)
 
         ProjectID = "GL09"
-        assert not LORIS_candidates.check_projectID_compliance(ProjectID)
+        assert not LORIS_validation.validate_projectID(ProjectID)
 
         ProjectID = "AL01"
-        assert not LORIS_candidates.check_projectID_compliance(ProjectID)
+        assert not LORIS_validation.validate_projectID(ProjectID)
 
         ProjectID = "AB01"
-        assert LORIS_candidates.check_projectID_compliance(ProjectID)
+        assert LORIS_validation.validate_projectID(ProjectID)
 
     @staticmethod
     def test_CNBP_PSCID():
@@ -50,11 +51,11 @@ class UT_LORISCandidates(unittest.TestCase):
         PSCID3 = "VXS" + "GL01" + "0001"
         PSCID4 = "VXS" + "GL01" + "0009"
 
-        assert(LORIS_candidates.check_PSCID_compliance(PSCID))
-        assert not LORIS_candidates.check_PSCID_compliance(PSCID1)
-        assert not LORIS_candidates.check_PSCID_compliance(PSCID2)
-        assert LORIS_candidates.check_PSCID_compliance(PSCID3)
-        assert LORIS_candidates.check_PSCID_compliance(PSCID4)
+        assert(LORIS_validation.validate_CNBPID(PSCID))
+        assert not LORIS_validation.validate_CNBPID(PSCID1)
+        assert not LORIS_validation.validate_CNBPID(PSCID2)
+        assert LORIS_validation.validate_CNBPID(PSCID3)
+        assert LORIS_validation.validate_CNBPID(PSCID4)
 
 if __name__ == "__main__":
     UT_LORISCandidates.test_CNBP_PSCID()

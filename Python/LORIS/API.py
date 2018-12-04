@@ -19,13 +19,13 @@ def trigger_insertion(zip_name):
     #zip_name = "VTXGL019996_206839_V1"
 
     # Form the JSON representing the scan.
-    JSON_scan={}
-    JSON_scan['file'] = "/data/incoming/" + zip_name + ".zip"
-    JSON_scan['phantom'] = "N"
-    JSON_scan['candidate'] = zip_name
-
+    JSON_scan = {
+        'file' : "/data/incoming/" + zip_name + ".zip",
+        'phantom' : "N",
+        'candidate': zip_name
+    }
     # Concatenate the scan.
-    scans =[JSON_scan]
+    scans = [JSON_scan]
 
     # Trigger its insertion by calling the API.
     trigger_dicom_insert(scans)

@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class Integration:
 
     @staticmethod
-    #OBSOLETE
+    #OBSOLETE!!!!!!!!!!1
     def step2_dicom2LORIS(folder_paths):
         """
         Within each folder, verify they all have the same PatientID.
@@ -21,7 +21,7 @@ class Integration:
         :return:
         """
 
-        database_path = load_dotenv("LocalDatabase")
+        database_path = load_validate_dotenv("LocalDatabase")
 
         for folder in folder_paths:
             success, DICOM_files = DICOM_validate.path(folder)

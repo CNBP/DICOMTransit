@@ -1,5 +1,4 @@
 from tempfile import TemporaryDirectory
-from DICOM.anonymize import DICOM_anonymize
 from shutil import copyfile
 from LORIS.validate import LORIS_validation
 from PythonUtils.file import dictionary_search
@@ -7,8 +6,6 @@ from PythonUtils.env import load_validate_dotenv
 from PythonUtils.folder import get_abspath
 from LocalDB.schema import CNBP_blueprint
 import os
-from dotenv import load_dotenv
-
 
 
 def anonymize_to_zip(folder_path, zip_ID):
@@ -19,6 +16,7 @@ def anonymize_to_zip(folder_path, zip_ID):
     :param zip_ID: should be CNBPID_DCCID_VISIT format without .zip extension
     :return:
     """
+    from DICOM.anonymize import DICOM_anonymize
 
     # Find the root fo the project where the zip storage is related to the location of the current DICOM directory.
     project_root = get_abspath(__file__, 2)
@@ -43,7 +41,6 @@ def anonymize_to_zip(folder_path, zip_ID):
 def anonymize_files(files):
     """
     Anaonymize the files given using the name provided. WIP!!!
-    :param new_name: the anonymize name for the new subjects
     :param files:
     :return:
     """
@@ -68,6 +65,7 @@ def retrieve_study_descriptions(files):
     :return:
     """
     studies = []
+
     from DICOM.elements import DICOM_elements
 
     # Get DICOM files.
@@ -75,11 +73,11 @@ def retrieve_study_descriptions(files):
 
         # Ensure it exists before attempting to retrieve it.
         assert (os.path.exists(file))
-        success, string = DICOM_elements.retrieve(file, "StudyDescription")
+        success, StudyDescription = DICOM_elements.retrieve(file, "StudyDescription")
 
         # Only add if it is not already in the list (avoid dupliate, ensure unique entries
-        if string not in studies:
-            studies.append(string)
+        if LORIS_validation.validate_projectID(StudyDescription) and StudyDescription not in studies:
+            studies.append(StudyDescription)
 
     return studies
 
@@ -87,7 +85,6 @@ def study_validation(study):
     """
     Given a string read from the DICOM studies field, check it against the project ID dictionary to see if any of the project belongs.
     :param study:
-    :param projectID_dictionary:
     :return: PROJECT or NONE
     """
     import json

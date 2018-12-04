@@ -1,12 +1,13 @@
-import sys
-import os
 import json
 import logging
-from PythonUtils.env import load_validate_dotenv
+import sys
+
+from LORIS.candidates import LORIS_candidates
+from LORIS.validate import LORIS_validation
 from LORIS.helper import LORIS_helper
 from LORIS.query import LORIS_query
-from LORIS.candidates import LORIS_candidates
 from LocalDB.schema import CNBP_blueprint
+from PythonUtils.env import load_validate_dotenv
 from PythonUtils.math import int_incrementor
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -69,13 +70,13 @@ class LORIS_timepoint:
         :param DCCID: DCCID to retrieve the last timepoint of
         :return: a string representation of the last time point.
         """
-        assert(LORIS_candidates.check_DCCID_compliance(DCCID)) # Ensure it actually first exist.
+        assert(LORIS_validation.validate_DCCID(DCCID)) # Ensure it actually first exist.
 
         response_success, candidate_json = LORIS_query.getCNBP(token, r"candidates/" + str(DCCID)) # should exist as earlier check revealed.
 
         # preliminary exit condition
         if not response_success:
-            return response_success, None
+            return None
 
         candidate_visits_list = candidate_json.get("Visits")
 
@@ -96,7 +97,7 @@ class LORIS_timepoint:
         timepoint_label = ""
 
         # ensure valid input and subject actually exist.
-        assert (LORIS_candidates.check_DCCID_compliance(DCCID))
+        assert (LORIS_validation.validate_DCCID(DCCID))
         success, subject_exist = LORIS_candidates.checkDCCIDExist(token, DCCID)
         if not subject_exist or not success:
             return False, None

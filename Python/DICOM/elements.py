@@ -61,15 +61,15 @@ class DICOM_elements:
         :return: MRN number, as a STRING
         """
         logger = logging.getLogger(current_funct_name())
-        success, value = DICOM_elements.retrieve(file_path, "PatientID")
+        success, MRN = DICOM_elements.retrieve(file_path, "PatientID")
 
         if not success:
             logger.info("Was not able to access/read the file!")
             return False, None
-        elif (LORIS_validation.validate_MRN(value))[0]: #0 is the True False of the validation result.
-            return True, (LORIS_validation.validate_MRN(value))[1] #1 is the validated MRN string
+        elif LORIS_validation.validate_MRN(MRN):
+            return True, MRN
         else:
-            logger.info("Was not able to validate the MRN number. Invalid format perhaps? Expected SEVEN digis, got "+value)
+            logger.info("Was not able to validate the MRN number. Invalid format perhaps? Expected SEVEN digis, got "+MRN)
             return False, None
 
     @staticmethod

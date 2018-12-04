@@ -21,27 +21,18 @@
 # General Imports
 #-----------------------------------------------------------------------------------------------------------------------
 
-from array import *
-from io import StringIO
-from json import dumps
-from requests import post	# To install this module (Windows Command Prompt): python -m pip install requests
-from tkinter import *
-from tkinter.messagebox import *
-
-import io
 import json
-import pycurl # To install this module (Windows Command Prompt): python -m pip install pycurl
-import pyodbc # To install this module (Windows Command Prompt): python -m pip install pyodbc
 import sqlite3
-import sys
-import time
-
-
-#-----------------------------------------------------------------------------------------------------------------------
-# Environments
-#-----------------------------------------------------------------------------------------------------------------------
+from json import dumps
+from tkinter import *
 
 import development as environment
+import pyodbc  # To install this module (Windows Command Prompt): python -m pip install pyodbc
+from requests import post  # To install this module (Windows Command Prompt): python -m pip install requests
+
+# -----------------------------------------------------------------------------------------------------------------------
+# Environments
+# -----------------------------------------------------------------------------------------------------------------------
 #import production as environment
 
 #-----------------------------------------------------------------------------------------------------------------------

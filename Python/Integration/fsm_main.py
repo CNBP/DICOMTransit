@@ -1,14 +1,16 @@
-import sys, traceback
-import inspect
-import os
 import logging
-import orthanc.API
-import DICOM.API
-import LocalDB.API
-import LORIS.API
-from PythonUtils.file import current_funct_name
+import sys
+import traceback
+
 from pydispatch import dispatcher
+
+import DICOM.API
+import LORIS.API
+import LocalDB.API
+import orthanc.API
 from DICOM.DICOMPackage import DICOMPackage
+from PythonUtils.file import current_funct_name
+
 SIGNAL          = 'my-first-signal'
 SIG_Error       = 'Generic Error'
 

@@ -57,71 +57,83 @@ class DICOMPackage:
 
         logger.info("DICOMPackage successfully initialized based on "+self.dicom_folder)
 
-    def check_validity(self, package_function):
+
+    def check_validity(self):
         """
-        KEY WRAPPER FUNCTION function to check the validity of the object before conducting anything else.
+        #todo: this KEY WRAPPER FUNCTION function to check the validity of the object before conducting anything else. Currently not working because I am not using decorator functions properly.
         :param package_function: the package_function to be performed
         :return:
         """
-        def wrapper():
 
-            # Update validity and dicom_files if they have not been done before.
-            if self.validity is None:
-                self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder)
 
-            # Check validity before moving forward with the update process:
-            if self.validity is True:
-                package_function()
-                return True
-            else:
-                return False
-        return wrapper
+        # Update validity and dicom_files if they have not been done before.
+        if self.validity is None:
+            self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder)
 
-    @check_validity
+        # Check validity before moving forward with the update process:
+        if self.validity is True:
+            #package_function()
+            return True
+        else:
+            return False
+
+
     def update_study(self):
         """
         Update the studies field based on the protocol
         :return:
         """
-        import DICOM.API
+        if self.check_validity():
+            import DICOM.API
+            # retrieve all the possible studies.
+            self.studies = DICOM.API.retrieve_study_descriptions(self.dicom_files)
+            return True
+        else:
+            return False
 
-        # retrieve all the possible studies.
-        self.studies = DICOM.API.retrieve_study_descriptions(self.dicom_files)
 
-    @check_validity
     def update_birthdate(self):
         """
         After passing the consistency check, update MRN record from one of the DICOM files.
         :return:
         """
-        from DICOM.elements import DICOM_elements
+        if self.check_validity():
+            from DICOM.elements import DICOM_elements
+            # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the birthday from first file.
+            success, self.birthday = DICOM_elements.retrieve_birthday(self.dicom_files[0])
+            assert success
+            return success
+        return False
 
-        # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the birthday from first file.
-        success, self.birthday = DICOM_elements.retrieve_birthday(self.dicom_files[0])
-        assert success
-
-    @check_validity
     def update_sex(self):
         """
         After passing the consistency check, update MRN record from one of the DICOM files.
         :return:
         """
-        from DICOM.elements import DICOM_elements
-        # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the sex from first file.
-        success, self.birthday = DICOM_elements.retrieve_sex(self.dicom_files[0])
-        assert success
+        if self.check_validity():
+            from DICOM.elements import DICOM_elements
+            # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the sex from first file.
+            success, self.sex = DICOM_elements.retrieve_sex(self.dicom_files[0])
+            assert success
+            return success
+        else:
+            return False
 
-    @check_validity
+
     def update_MRN(self):
         """
         After passing the consistency check, update MRN record from one of the DICOM files.
         :return:
         """
-        from DICOM.elements import DICOM_elements
+        if self.check_validity():
+            from DICOM.elements import DICOM_elements
 
-        # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the MRN from first file.
-        success, self.MRN = DICOM_elements.retrieve_MRN(self.dicom_files[0])
-        assert success
+            # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the MRN from first file.
+            success, self.MRN = DICOM_elements.retrieve_MRN(self.dicom_files[0])
+            assert success
+            return success
+        else:
+            return False
 
 
     def get_dicom_files(self):

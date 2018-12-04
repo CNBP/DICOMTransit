@@ -1,7 +1,7 @@
-import sys
-import requests
 import json
+import requests
 from PythonUtils.env import load_dotenv_var
+
 
 def trigger_dicom_insert(scans):
     """ 
@@ -13,8 +13,9 @@ def trigger_dicom_insert(scans):
     """
     # todo: 2018-11-30T133155EST should clean up here and ensure loading the URL using .env.
     # Create a dictionary with the required key 'dicoms'. Key value is scans
-    p = {}
-    p['dicoms'] = scans
+    p = {
+        'dicoms' : scans
+    }
 
     # Convert to json.
     # See https://pythonspot.com/json-encoding-and-decoding-with-python/
@@ -37,9 +38,11 @@ def trigger_dicom_insert(scans):
 if __name__ == "__main__":
     zip_name = "VTXGL019996_206839_V1"
 
-    f1={}
-    f1['file'] = "/data/incoming/" + zip_name + ".zip"
-    f1['phantom'] = "N"
-    f1['candidate'] = zip_name
-    scans =[f1]
+
+    f1={
+        'file' : "/data/incoming/" + zip_name + ".zip",
+        'phantom' : "N",
+        'candidate' : zip_name
+    }
+    scans = [f1]
     trigger_dicom_insert(scans)

@@ -1,10 +1,12 @@
-import sys
 import json
 import logging
-import os
+import sys
+
 import paramiko
-from PythonUtils.env import load_validate_dotenv
+
 from LocalDB.schema import CNBP_blueprint
+from PythonUtils.env import load_validate_dotenv
+
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -73,8 +75,6 @@ class LORIS_helper:
         """
         This routeine is used to upload via SSH.
         :param remote_path:
-        :param remote_login:
-        :param remote_pw:
         :param local_file_path:
         :return:
         """
@@ -139,7 +139,6 @@ class LORIS_helper:
         """
         Use the client given to execute a script and print out the output. BE WARY THAT YOU ARE IN THE HOME DIR
         :param client:
-        :param path_to_bash_script:
         :return:
         """
         logger.info("Ran command: " + bash_command_string)

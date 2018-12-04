@@ -60,7 +60,7 @@ class DICOM_anonymize:
             if not is_DICOM_file:
                 continue
 
-            if False == DICOM_anonymize.save(file, new_ID):
+            if not DICOM_anonymize.save(file, new_ID):
                 exception_count =+ 1
                 exception_files = exception_files.append(file)
 

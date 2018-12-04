@@ -1,14 +1,13 @@
 import sys
-import os
 import re
 import json
 import logging
 from PythonUtils.env import load_validate_dotenv
 from LORIS.query import LORIS_query
 from LORIS.helper import LORIS_helper
-from LORIS.validate import LORIS_validation
+
 from LocalDB.schema import CNBP_blueprint
-from PythonUtils.file import dictionary_search
+
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -99,7 +98,7 @@ class LORIS_candidates:
         logger.info("Creating CNBP Candidates belong to project: " + project)
 
         Candidate = {}
-
+        from LORIS.validate import LORIS_validation
         if not LORIS_validation.validate_project(project) or not LORIS_validation.validate_birth_date(birth_date) or not LORIS_validation.validate_gender(gender):
             logger.info("Non-compliant PSCID component detected. Aborting PSCID creation ")
             return False, None
@@ -174,6 +173,8 @@ class LORIS_candidates:
         :param proposed_DCCID:
         :return:
         """
+        from LORIS.validate import LORIS_validation
+
         logger = logging.getLogger('LORIS_checkDCCIDExist')
         logger.info("Checking if DCCID exist: "+str(proposed_DCCID))
 
@@ -200,4 +201,4 @@ class LORIS_candidates:
 
 if __name__ == "__main__":
     #LORIS_candidates.deleteCandidateCNBP(958607, "CNBP8881234")
-    print(LORIS_candidates.check_projectID_compliance("GL01"))
+    print(LORIS_validation.validate_projectID("GL01"))

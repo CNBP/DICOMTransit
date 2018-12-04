@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # Get ALL subjects, loop through them
     for subject in list_subjects:
 
-        subject_url = url + subject
+        subject_url = url + "patients/" + subject + '/archive' # it must contain patients/ and archive in the path name
 
         dicom_folder = orthanc.API.get_subject_zip(subject_url, user, password)
 
