@@ -13,7 +13,12 @@ from tusclient.storage import filestorage
 # URL is behind a proxy which forwards it to Tusd server listening on port 1080
 # Apache Proxy to Tusd example at https://github.com/tus/tusd/blob/master/docs/apache2.conf
 # Nginx Proxy to Tusd example at https://github.com/tus/tusd/blob/master/docs/nginx.conf
-my_client = client.TusClient('http://localhost/files/')
+
+# Local destination
+#my_client = client.TusClient('http://localhost/files/')
+
+# Remote destination (actually in  VM) Tusd
+my_client = client.TusClient('http://172.23.178.43/files/')
 
 # Use filestorage to save upload URLs
 storage = filestorage.FileStorage('storage_file')
