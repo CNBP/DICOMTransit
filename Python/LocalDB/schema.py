@@ -11,6 +11,7 @@ class CNBP_blueprint:
               'CNFUNID',
               'DCCID',
               'Timepoint',
+              'Date',
               'Hash1',
               'Hash2',
               'Hash3']
@@ -20,6 +21,7 @@ class CNBP_blueprint:
                     'INTEGER',
                     'INTEGER',
                     'INTEGER',
+                    'TEXT',
                     'TEXT',
                     'TEXT',
                     'TEXT']

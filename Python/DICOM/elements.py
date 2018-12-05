@@ -53,6 +53,7 @@ class DICOM_elements:
         DICOM.save_as(out_path)
         return True, "Data element update completed."
 
+
     @staticmethod
     def retrieve_MRN(file_path):
         """
@@ -72,6 +73,37 @@ class DICOM_elements:
             logger.info("Was not able to validate the MRN number. Invalid format perhaps? Expected SEVEN digis, got "+MRN)
             return False, None
 
+
+    @staticmethod
+    def retrieve_scan_date(file_path):
+        """
+        Lower level function to Read the StudyDescription field which normally used to identify the specific PROJECT.
+        :param file_path:
+        :return: MRN number, as a STRING
+        """
+        # todo see if there are ways to validate this part vs study before returning. s
+
+        # todo: to be debugged. Check detailed conditions.
+        from datetime import datetime
+        logger = logging.getLogger(current_funct_name())
+
+        # Retrieve the data element.
+        success, SeriesDate = DICOM_elements.retrieve(file_path, "SeriesDate")
+
+        if not success:
+            logger.info("File failed.")
+            return False, None
+        elif SeriesDate is None:  # null check.
+            logger.info("Date not specified, it is EMPTY! Handle with care with project inference")
+            return False, None
+        elif SeriesDate == "":
+            logger.info("Retrieval of study value failed. Invalid value.")
+            return False, SeriesDate
+        else:
+            # Convert it to date.
+            return True, datetime.strptime(SeriesDate, "%Y%m%d")
+
+
     @staticmethod
     def retrieve_study(file_path):
         """
@@ -90,6 +122,7 @@ class DICOM_elements:
             return False, None
         else: #todo see if there are ways to validate this part vs study
             return True, value
+
 
     @staticmethod
     def retrieve_birthday(file_path):
@@ -141,6 +174,7 @@ class DICOM_elements:
         :param file_path:
         :return: Age as a relative delta time object.
         """
+        # todo: refactor using existing functions.
 
         from dateutil.relativedelta import relativedelta
 

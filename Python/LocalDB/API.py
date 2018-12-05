@@ -61,7 +61,7 @@ def get_DCCID(MRN):
     :return: the CNBPID associated with that particular MRN number.
     """
     # Load local database from .env file
-    database_path = load_validate_dotenv("LocalDatabasePath")
+    database_path = load_validate_dotenv("LocalDatabasePath",CNBP_blueprint.dotenv_variables)
     MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
                                                                   CNBP_blueprint.table_name,
                                                                   CNBP_blueprint.keyfield,
@@ -75,14 +75,14 @@ def get_DCCID(MRN):
     return KeyRecords[dcc_header_index]
 
 
-def get_visit(MRN):
+def get_timepoint(MRN):
     """
     Assuming the MRN exist, get the MRNID.
     :param MRN: the MRN to look for
     :return: the CNBPID associated with that particular MRN number.
     """
     # Load local database from .env file
-    database_path = load_validate_dotenv("LocalDatabasePath")
+    database_path = load_validate_dotenv("LocalDatabasePath",CNBP_blueprint.dotenv_variables)
     MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
                                                                   CNBP_blueprint.table_name,
                                                                   CNBP_blueprint.keyfield,
@@ -95,8 +95,26 @@ def get_visit(MRN):
 
     return KeyRecords[timepoint_header_index]
 
+def get_scan_date(MRN):
+    """
+    Assuming the MRN exist, get the MRNID.
+    :param MRN: the MRN to look for
+    :return: the CNBPID associated with that particular MRN number.
+    """
+    # Load local database from .env file
+    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
+                                                                  CNBP_blueprint.table_name,
+                                                                  CNBP_blueprint.keyfield,
+                                                                  MRN)
+    if MRN_exist_in_database is False:
+        return None
 
-def set_CNBP(MRN, CNBPID):
+    assert(len(KeyRecords) == 1)
+    date_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'Date')
+    return KeyRecords[date_header_index]
+
+def set_CNBP(MRN: int, CNBPID):
     """
     Update record with proper CNBPID which has particular MRN
     :param MRN:
@@ -109,7 +127,7 @@ def set_CNBP(MRN, CNBPID):
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "CNBPID", CNBPID, )
 
 
-def set_DCCID(MRN, DCCID):
+def set_DCCID(MRN: int, DCCID):
     """
     Update record with proper DCCID which has particular MRN
     :param MRN:
@@ -121,7 +139,20 @@ def set_DCCID(MRN, DCCID):
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "DCCID", DCCID, )
 
 
-def set_timepoint(MRN, Timepoint):
+def set_scan_date(MRN: int, scan_date: str):
+    """
+    Update record with proper scan time which has particular MRN
+    :param MRN:
+    :return:
+    """
+    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+
+    # Update the MRN record with Timepoint
+    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Date",
+                               scan_date)
+
+
+def set_timepoint(MRN: int, Timepoint: str):
     """
     Update record with proper Timepoint which has particular MRN
     :param MRN:
@@ -132,7 +163,7 @@ def set_timepoint(MRN, Timepoint):
     # Update the MRN record with Timepoint
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", Timepoint)
 
-def   propose_CNBPID(DICOM_protocol: str):
+def propose_CNBPID(DICOM_protocol: str):
     """
     This function takes in a string that is representative of the DICOM acquisition study protocol, and propose a CNBPID composed of two parts:
         Institution_ID (from the .env configuration file)

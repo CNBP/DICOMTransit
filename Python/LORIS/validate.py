@@ -54,12 +54,16 @@ class LORIS_validation:
         birth_date = datetime.strptime(birth_date, "%Y%m%d")
         current_date = datetime.now()
 
-        if math.fabs((current_date-birth_date).days) < 36500:
+        if 0 < math.fabs((current_date-birth_date).days) < 54750:
             return True
-        else:
-            logger.info("Patient birthday is more than 100 years in the past? YOU FAILED.")
+        elif math.fabs((current_date-birth_date).days) < 0:
+            logger.info("Patient is less than 0 years old. YOU FAILED.")
             return False
-
+        elif math.fabs((current_date-birth_date).days) > 54750:
+            logger.info("Patient is more than 150 years old. YOU FAILED.")
+            return False
+        else:  # Generic catchall false condition
+            return False
 
 
     @staticmethod

@@ -32,4 +32,8 @@ class LocalDB_createCNBP:
 
 # Only executed when running directly.
 if __name__ == '__main__':
-    LocalDB_createCNBP.database("..\LocalDB\LocalDB_CNBPs.sqlite")
+    # Mini script used to create the initial databse
+    from LocalDB.schema import CNBP_blueprint
+    from PythonUtils.env import load_validate_dotenv
+    localDB_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    LocalDB_createCNBP.database(localDB_path)

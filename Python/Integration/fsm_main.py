@@ -288,7 +288,7 @@ def get_VISIT_using_MRN(signal=None, sender=None, DICOM_package: DICOMPackage=No
         MRN = DICOM_package.MRN
         
         # Use MRN to retrieve CNBPID, update the dicom-package
-        DICOM_package.visit = LocalDB.API.get_visit(MRN)
+        DICOM_package.visit = LocalDB.API.get_timepoint(MRN)
 
         dispatcher.send(signal=SIG_TASK_COMPLETE,
                         sender=current_funct_name(),

@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
             # Local Variable for anonymization.
             DICOM_package.DCCID = DCCID
-            DICOM_package.visit = "V1" # auto generated.
+            DICOM_package.timepoint = "V1" # auto generated.
 
             # Update local database storage.
             LocalDB.API.set_CNBP(DICOM_package.MRN, DICOM_package.CNBPID)
@@ -49,7 +49,9 @@ if __name__ == "__main__":
 
         elif MRN_exist is True:
 
-            # todo: Check scan dates to see if they have already been inserted.
+            # Intervention block: Check scan dates to see if they have already been inserted.
+            if (DICOM_package.scan_date == LocalDB.API.get_scan_date(DICOM_package.MRN)):
+                raise ValueError("Scan date already exist in the database. Data likely already exist. Consider manual intervention. ")
 
             # Use MRN to retrieve CNBPID, update the dicom-package
             DICOM_package.CNBPID = LocalDB.API.get_CNBP(DICOM_package.MRN)
@@ -57,14 +59,34 @@ if __name__ == "__main__":
             # Use MRN to retrieve DCCID, update the dicom-package
             DICOM_package.DCCID = LocalDB.API.get_DCCID(DICOM_package.MRN)
 
-            # Use MRN to retrieve VISIT , update the dicom-package
-            DICOM_package.visit = LocalDB.API.get_visit(DICOM_package.MRN)
+            # Get the latest local known timepoint:
+            last_database_timepoint = LocalDB.API.get_timepoint(DICOM_package.MRN)
+
+            # TODO: refactor the loris timepoint into API.
+
+            """
+            from LORIS.timepoint import LORIS_timepoint
+            # Get the latest LORIS known timepoint:
+            last_LORIS_timepoint = LORIS_timepoint.findLatestTimePoint()
+            
+            # Ensure they are consistent. 
+            
+            # Increment timepoint locally.
+            # Increment timepoint on LORIS. 
+            # Update package with the proper time point. 
+
+            """
+
+
 
             # Auto increment the VISIT count.
 
+            # Use MRN to retrieve VISIT , update the dicom-package
+            DICOM_package.timepoint = LocalDB.API.get_timepoint(DICOM_package.MRN)
+
             # Write to database and also online.
         else:
-            raise ValueError
+            raise ValueError("Ambigious MRN existence status. Check code for error.")  # Any unanticipated errors.
 
         # Generate new string with everything.
         DICOM_package.zipname = DICOM_package.CNBPID + "_" + str(DICOM_package.DCCID) + "_" + DICOM_package.visit

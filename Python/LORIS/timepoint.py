@@ -38,12 +38,7 @@ class LORIS_timepoint:
 
         if timepoint_number.isnumeric() and timepoint_number.isdigit(): # be wary of edge case like ³
             return True
-
-
         return False
-
-
-
 
 
     @staticmethod

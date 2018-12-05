@@ -30,6 +30,9 @@ def trigger_insertion(zip_name):
     # Trigger its insertion by calling the API.
     trigger_dicom_insert(scans)
 
+
+
+
 def create_new(CNBPID, birthday, gender):
     """
     Check both the creation and deletion of the subject for LORIS.

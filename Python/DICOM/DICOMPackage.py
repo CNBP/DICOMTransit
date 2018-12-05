@@ -37,6 +37,7 @@ class DICOMPackage:
         self.MRN: int = None # Medical Record Number
         self.birthday = None
         self.sex = None
+        self.scan_date = None
 
         self.is_anonymized: bool = False
         self.zipname: str = None
@@ -47,6 +48,9 @@ class DICOMPackage:
         assert success
 
         success = self.update_study()
+        assert success
+
+        success = self.update_scan_date()
         assert success
 
         success = self.update_birthdate()
@@ -103,7 +107,9 @@ class DICOMPackage:
             success, self.birthday = DICOM_elements.retrieve_birthday(self.dicom_files[0])
             assert success
             return success
-        return False
+        else:
+            return False
+
 
     def update_sex(self):
         """
@@ -114,6 +120,20 @@ class DICOMPackage:
             from DICOM.elements import DICOM_elements
             # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the sex from first file.
             success, self.sex = DICOM_elements.retrieve_sex(self.dicom_files[0])
+            assert success
+            return success
+        else:
+            return False
+
+
+    def update_scan_date(self):
+        """
+        Retrieve the scan date from the DIOCM files and then update the DICOM archive.
+        :return:
+        """
+        if self.check_validity():
+            from DICOM.elements import DICOM_elements
+            success, self.scan_date = DICOM_elements.retrieve_scan_date(self.dicom_files[0])
             assert success
             return success
         else:

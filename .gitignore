@@ -110,3 +110,4 @@ Python/.idea/
 data_*
 development.py
 production.py
+*.driveupload
