@@ -32,12 +32,14 @@ class DICOMPackage:
         self.DCCID: int = None
         self.timepoint: str = None
 
-        self.studies = None
+        self.studies: str = None # study description from raw DICOM
+        self.project: str = None # the actual project ID used on LORIS.
 
         self.MRN: int = None # Medical Record Number
         self.birthday = None
         self.sex = None
         self.scan_date = None
+
 
         self.is_anonymized: bool = False
         self.zipname: str = None
@@ -49,6 +51,8 @@ class DICOMPackage:
 
         success = self.update_study()
         assert success
+
+        success = self.update_project()
 
         success = self.update_scan_date()
         assert success
@@ -95,6 +99,14 @@ class DICOMPackage:
         else:
             return False
 
+    def update_project(self):
+        """
+        Update the actual PROJECT ID that is used on LORIS system.
+        :return:
+        """
+        if self.check_validity():
+            import DICOM.API
+            self.project = DICOM.API.study_validation(self.studies)
 
     def update_birthdate(self):
         """

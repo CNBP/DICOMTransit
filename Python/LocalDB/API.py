@@ -188,7 +188,7 @@ def propose_CNBPID(DICOM_protocol: str):
     success, matched_records = LocalDB_query.check_partial_value(DB_path, CNBP_blueprint.table_name, "CNBPID", partial_search_input)
 
     # Default subject ID when no match is found.
-    latest_subject_ID = "0001"
+    latest_subject_ID = "0000001"
 
     if matched_records is None or len(matched_records) == 0:
         # no previous subjects found. Use default value.

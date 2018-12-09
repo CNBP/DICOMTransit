@@ -88,14 +88,18 @@ def study_validation(study):
     :return: PROJECT or NONE
     """
     import json
-    assert(LORIS_validation.validate_projectID(study))
+
+    # It checks if the key exist first.
+    if LORIS_validation.validate_projectID(study) is False:
+        return False
 
     projectID_dictionary_json: str = load_validate_dotenv("projectID_dictionary", CNBP_blueprint.dotenv_variables)
     projectID_list = json.loads(projectID_dictionary_json)
 
-    key = dictionary_search(projectID_list, study)
-
     # check if project ID is in the projectID list.
+    key = dictionary_search(projectID_list, study)
+    # todo: what if the key does not exist?
+
     return key
 
 
