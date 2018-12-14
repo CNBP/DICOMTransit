@@ -93,8 +93,8 @@ class LORIS_timepoint:
 
         # ensure valid input and subject actually exist.
         assert (LORIS_validation.validate_DCCID(DCCID))
-        success, subject_exist = LORIS_candidates.checkDCCIDExist(token, DCCID)
-        if not subject_exist or not success:
+        subject_exist, _ = LORIS_candidates.checkDCCIDExist(token, DCCID)
+        if not subject_exist:
             return False, None
 
         latest_timepoint = LORIS_timepoint.findLatestTimePoint(token, DCCID)

@@ -39,8 +39,7 @@ class UT_LORISQuery(unittest.TestCase):
         response_success, token = LORIS_query.login()
         assert response_success
         #assert len(token) == 256  # token should always be 256 char long
-        response_success, exist = LORIS_candidates.checkDCCIDExist(token, 272264)
-        assert response_success
+        exist, _ = LORIS_candidates.checkDCCIDExist(token, 836559)
         assert exist
 
 

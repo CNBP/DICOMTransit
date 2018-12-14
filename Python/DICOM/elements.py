@@ -137,8 +137,14 @@ class DICOM_elements:
         if not success or value == "" or value is None:
             logger.info("Retrieval of birthday value failed. Empty/invalid value.")
             return False, None
-        elif LORIS_validation.validate_birth_date(value):
-            return True, value
+        elif LORIS_validation.validate_birth_date_dicom(value):
+
+            # Import stirng to datetime, convert to compliant date time
+            import datetime
+            birthdate = datetime.datetime.strptime(value,'%Y%m%d')
+            birthdate_loris_format = birthdate.strftime('%Y-%m-%d')
+
+            return True, birthdate_loris_format
         else:
             logger.info("Birthdate failed validation. Bad date.")
             return False, None

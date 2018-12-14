@@ -10,5 +10,5 @@ paramiko
 pydispatcher
 gevent
 pyodbc
-pycurl
 requests
+gevents

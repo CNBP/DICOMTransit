@@ -78,7 +78,8 @@ class DICOM_validate:
                 if not Success:
                     logger.info("DICOM meta data retrieval failure EVEN for the first DICOM FILE?! Checking next one.")
                 else:
-                    logger.info("DICOM meta data retrieval success: " + PatientID + " " + PatientName.original_string)
+                    name = PatientName.original_string.decode("latin_1")
+                    logger.info("DICOM meta data retrieval success: " + PatientID + " " + name)
 
                 # Regardless of success of failure, must continue to process the next file.
                 continue

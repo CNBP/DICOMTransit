@@ -38,6 +38,7 @@ class DICOMPackage:
         self.MRN: int = None # Medical Record Number
         self.birthday = None
         self.sex = None
+        self.gender = None
         self.scan_date = None
 
 
@@ -49,10 +50,14 @@ class DICOMPackage:
         success = self.update_MRN()
         assert success
 
-        success = self.update_study()
-        assert success
 
-        success = self.update_project()
+        # todo study inference is not robust. Need debug and refactoring.
+        #success = self.update_study()
+        #assert success
+
+        # todo project inference is not robust. Need debug and refactoring.
+        #success = self.update_project()
+        #assert success
 
         success = self.update_scan_date()
         assert success
@@ -61,6 +66,9 @@ class DICOMPackage:
         assert success
 
         success = self.update_sex()
+        assert success
+
+        success = self.update_gender()
         assert success
 
         logger.info("DICOMPackage successfully initialized based on "+self.dicom_folder)
@@ -94,7 +102,7 @@ class DICOMPackage:
         if self.check_validity():
             import DICOM.API
             # retrieve all the possible studies.
-            self.studies = DICOM.API.retrieve_study_descriptions(self.dicom_files)
+            self.studies = DICOM.API.retrieve_study_protocol(self.dicom_files)
             return True
         else:
             return False
@@ -107,6 +115,7 @@ class DICOMPackage:
         if self.check_validity():
             import DICOM.API
             self.project = DICOM.API.study_validation(self.studies)
+
 
     def update_birthdate(self):
         """
@@ -134,6 +143,21 @@ class DICOMPackage:
             success, self.sex = DICOM_elements.retrieve_sex(self.dicom_files[0])
             assert success
             return success
+        else:
+            return False
+
+
+    def update_gender(self):
+        """
+        After passing the consistency check, update MRN record from one of the DICOM files.
+        :return:
+        """
+        if self.check_validity():
+            if self.sex == "M":
+                self.gender = "Male"
+            elif self.sex == "F":
+                self.gender = "Female"
+            return True
         else:
             return False
 

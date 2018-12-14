@@ -9,6 +9,8 @@ import os
 if __name__ == "__main__":
     """Quick and dirty script that calls various high level APIs to insert a subject from ORTHANC to LORIS"""
     # Eventually, a finite state machine will be built out of this
+
+    #url, user, password = orthanc.API.get_prod_orthanc_credentials()
     url, user, password = orthanc.API.get_local_orthanc_credentials()
 
     # Get list of subjects.
@@ -32,26 +34,32 @@ if __name__ == "__main__":
         if MRN_exist is False:  # most common scenario first
             # Dynamicly generate the new CNBPID based ont he protocol.
 
-            # todo: attempt to generate the CNBPID/PSCID based on study protocol.
-            DICOM_package.CNBPID = LocalDB.API.propose_CNBPID(DICOM_package.studies[0])
+            # Attempt to generate the CNBPID/PSCID based on study protocol.
+            # DICOM_package.CNBPID = LocalDB.API.propose_CNBPID(DICOM_package.studies[0])
+
+            # todo: For now, all project are under LORIS. The projectID etc systems are not being actively used.
+            DICOM_package.project = "loris"
 
             # create new PSCID and get DCCID
-            success, DCCID = LORIS.API.create_new(DICOM_package.CNBPID, DICOM_package.birthday, DICOM_package.sex)
+            success, DCCID, PSCID = LORIS.API.create_new(DICOM_package.project, DICOM_package.birthday, DICOM_package.gender)
 
             # Local Variable for anonymization.
             DICOM_package.DCCID = DCCID
-            DICOM_package.timepoint = "V1" # auto generated.
+            DICOM_package.CNBPID = PSCID
+            DICOM_package.timepoint = "V1"  # auto generated.
 
-            # Update local database storage.
+            # Update local database storage with regard to CNBPID, DCCID, timepoint, and scandate.
             LocalDB.API.set_CNBP(DICOM_package.MRN, DICOM_package.CNBPID)
-            LocalDB.API.set_DCCID(DICOM_package.MRN, DCCID)
-            LocalDB.API.set_timepoint(DICOM_package.MRN, "V1")
+            LocalDB.API.set_DCCID(DICOM_package.MRN, DICOM_package.DCCID)
+            LocalDB.API.set_timepoint(DICOM_package.MRN, DICOM_package.timepoint)
+            LocalDB.API.set_scan_date(DICOM_package.MRN, DICOM_package.scan_date)
 
         elif MRN_exist is True:
 
             # Intervention block: Check scan dates to see if they have already been inserted.
             if (DICOM_package.scan_date == LocalDB.API.get_scan_date(DICOM_package.MRN)):
-                raise ValueError("Scan date already exist in the database. Data likely already exist. Consider manual intervention. ")
+                print("Scan date already exist in the database. Data likely already exist. Consider manual intervention. ")
+                continue
 
             # Use MRN to retrieve CNBPID, update the dicom-package
             DICOM_package.CNBPID = LocalDB.API.get_CNBP(DICOM_package.MRN)
@@ -61,35 +69,22 @@ if __name__ == "__main__":
 
             # Get the latest local known timepoint:
             last_database_timepoint = LocalDB.API.get_timepoint(DICOM_package.MRN)
+            print("Last known timepoint: "+last_database_timepoint)
 
-            # TODO: refactor the loris timepoint into API.
+            # Using LORIS API to create the new timepoint:
+            latest_timepoint = LORIS.API.increment_timepoint(DCCID)
+            DICOM_package.timepoint = latest_timepoint
 
-            """
-            from LORIS.timepoint import LORIS_timepoint
-            # Get the latest LORIS known timepoint:
-            last_LORIS_timepoint = LORIS_timepoint.findLatestTimePoint()
-            
-            # Ensure they are consistent. 
-            
-            # Increment timepoint locally.
-            # Increment timepoint on LORIS. 
-            # Update package with the proper time point. 
-
-            """
-
-
-
-            # Auto increment the VISIT count.
-
-            # Use MRN to retrieve VISIT , update the dicom-package
-            DICOM_package.timepoint = LocalDB.API.get_timepoint(DICOM_package.MRN)
+            # Update the record to use the latest timepoint and the scandate!
+            LocalDB.API.set_timepoint(DICOM_package.MRN, DICOM_package.timepoint)
+            LocalDB.API.set_scan_date(DICOM_package.MRN, DICOM_package.scan_date)
 
             # Write to database and also online.
         else:
             raise ValueError("Ambigious MRN existence status. Check code for error.")  # Any unanticipated errors.
 
         # Generate new string with everything.
-        DICOM_package.zipname = DICOM_package.CNBPID + "_" + str(DICOM_package.DCCID) + "_" + DICOM_package.visit
+        DICOM_package.zipname = DICOM_package.CNBPID + "_" + str(DICOM_package.DCCID) + "_" + DICOM_package.timepoint
 
         # Anonymize to Zip
         DICOM.API.anonymize_to_zip(DICOM_package.dicom_folder, DICOM_package.zipname)

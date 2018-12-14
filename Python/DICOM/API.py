@@ -57,14 +57,14 @@ def anonymize_files(files):
         DICOM_anonymize.folder(temp_folder, "NEW_CONTESTANT")
     pass
 
-def retrieve_study_descriptions(files):
+def retrieve_study_protocol(files):
     """
     From the list of files, find the names of all the possible studies descriptions.
     #(0008,1030)	Study Description	e.g. FUNCTIONAL^Dr.Bohbot
     :param files:
     :return:
     """
-    studies = []
+    protocols = []
 
     from DICOM.elements import DICOM_elements
 
@@ -73,13 +73,13 @@ def retrieve_study_descriptions(files):
 
         # Ensure it exists before attempting to retrieve it.
         assert (os.path.exists(file))
-        success, StudyDescription = DICOM_elements.retrieve(file, "StudyDescription")
+        success, study_protocol = DICOM_elements.retrieve(file, "ProtocolName")
 
         # Only add if it is not already in the list (avoid dupliate, ensure unique entries
-        if LORIS_validation.validate_projectID(StudyDescription) and StudyDescription not in studies:
-            studies.append(StudyDescription)
+        if LORIS_validation.validate_projectID(study_protocol) and study_protocol not in protocols:
+            protocols.append(study_protocol)
 
-    return studies
+    return protocols
 
 def study_validation(study):
     """
@@ -112,7 +112,7 @@ def infer_project_using_protocol(files):
 
     # Check acquisition protocols.
     # Compile unique list of acquisition protocoles
-    studies = retrieve_study_descriptions(files)
+    studies = retrieve_study_protocol(files)
 
     # There should only be ONE studies specificed in the files provided.
     if len(studies) > 1:

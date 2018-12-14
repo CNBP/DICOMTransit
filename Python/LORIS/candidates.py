@@ -44,7 +44,6 @@ class LORIS_candidates:
         return success, input_institution, input_subject
 
 
-
     @staticmethod
     def deleteCandidateCNBP(DCCID, PSCID):
         # todo: this should really be done through API. But Currently LORIS does not offer such API.
@@ -87,7 +86,7 @@ class LORIS_candidates:
     @staticmethod
     def createCandidate(token, project, birth_date, gender):
         """
-        Create a candidate using the given PSCID
+        Create a candidate with a provided project information. This assumes that the PSCID and DCCIDs are automaticly assigned!
         :param token
         :param birth_date: Birth date MUST Be in YYYY-MM-DD format!
         :param gender: Gender must be Male or Female!
@@ -99,7 +98,8 @@ class LORIS_candidates:
 
         Candidate = {}
         from LORIS.validate import LORIS_validation
-        if not LORIS_validation.validate_project(project) or not LORIS_validation.validate_birth_date(birth_date) or not LORIS_validation.validate_gender(gender):
+        if not LORIS_validation.validate_birth_date_loris(birth_date) or \
+           not LORIS_validation.validate_gender(gender): #not LORIS_validation.validate_project(project) or #todo fix this project validation part during creation.
             logger.info("Non-compliant PSCID component detected. Aborting PSCID creation ")
             return False, None
 
@@ -114,7 +114,7 @@ class LORIS_candidates:
 
         response_code, response = LORIS_query.postCNBP(token, "candidates/", data_json)
         if not LORIS_helper.is_response_success(response_code, 201):
-            return False, None
+            return False, None, None
         elif response is not None:  # only try to decode if response is not empty!
             response_json = response.json()
             meta = response_json.get('Meta')
@@ -165,13 +165,14 @@ class LORIS_candidates:
 
         return True, False
 
+
     @staticmethod
     def checkDCCIDExist(token, proposed_DCCID):
         """
         Check if Site/Study already contain the PSCID
         :param token:
         :param proposed_DCCID:
-        :return:
+        :return: True/False on if DCCID exist, PSCID if it exist.
         """
         from LORIS.validate import LORIS_validation
 
@@ -180,24 +181,21 @@ class LORIS_candidates:
 
         assert (LORIS_validation.validate_DCCID(proposed_DCCID))
 
-        #Get list of projects
-        response, loris_project = LORIS_query.getCNBP(token, r"projects/loris")
+        #todo: This area has projects/loris dependency. Refactor to enable multiple projects handling.
+        response, JSON = LORIS_query.getCNBP(token, r"candidates/"+str(proposed_DCCID))
         response_success = LORIS_helper.is_response_success(response, 200)
 
         if not response_success:
             logger.info("FAILED log response: " + str(response))
             return response_success, None
 
-        #Get list of candidates (Candidates in v0.0.1)
-        candidates = loris_project.get("Candidates")
-        logger.info(candidates)
 
-        for DCCID in candidates:
-            if str(proposed_DCCID) == DCCID:
-                return response_success, True
-            else:
-                continue
-        return response_success, False
+        if JSON is not None:  # only try to decode if response is not empty!
+            meta = JSON.get('Meta')
+            PSCID = meta.get('PSCID')
+            return True, PSCID
+        else:
+            return False, None
 
 if __name__ == "__main__":
     #LORIS_candidates.deleteCandidateCNBP(958607, "CNBP8881234")

@@ -31,9 +31,22 @@ def trigger_insertion(zip_name):
     trigger_dicom_insert(scans)
 
 
+def increment_timepoint(DCCID):
+    """
+    Increament the existing timepoint for the subject, return the latest timepoint.
+    :param DCCID:
+    :return:
+    """
+    from LORIS.query import LORIS_query
+    token = LORIS_query.login()
+
+    from LORIS.timepoint import LORIS_timepoint
+    success, timepoint = LORIS_timepoint.increaseTimepoint(token, DCCID)
+    assert success
+    return timepoint
 
 
-def create_new(CNBPID, birthday, gender):
+def create_new(project, birthday, gender):
     """
     Check both the creation and deletion of the subject for LORIS.
     :return:
@@ -44,15 +57,19 @@ def create_new(CNBPID, birthday, gender):
     if not response_success:
         raise ConnectionError
 
-    # Example PSC ID.
-    PSCID = CNBPID
+    success, DCCID = LORIS_candidates.createCandidate(token, project, birthday, gender)
+    assert success
 
-    success, DCCID = LORIS_candidates.createCandidate(token, PSCID, birthday, gender)
+    #responded, success = LORIS_candidates.checkDCCIDExist(token, DCCID)
+    #assert responded
+    #assert success
+
+    success, PSCID = LORIS_candidates.checkDCCIDExist(token, DCCID)
     assert success
 
     success, timepoint = LORIS_timepoint.increaseTimepoint(token, DCCID)
     assert success
-    return success, DCCID
+    return success, DCCID, PSCID
 
 
 def upload(local_path):

@@ -44,7 +44,7 @@ class LORIS_validation:
         pass
 
     @staticmethod
-    def validate_birth_date(birth_date):
+    def validate_birth_date_dicom(birth_date):
         """
         Check if the birth_date is normal
         :param birth_date:
@@ -65,6 +65,28 @@ class LORIS_validation:
         else:  # Generic catchall false condition
             return False
 
+    @staticmethod
+    def validate_birth_date_loris(birth_date):
+        """
+        Check if the birth_date is normal
+        :param birth_date:
+        :return:
+        """
+        # Sanity check for scan date within the past 100 years.
+        birth_date = datetime.strptime(birth_date, "%Y-%m-%d")
+        current_date = datetime.now()
+
+        if 0 < math.fabs((current_date - birth_date).days) < 54750:
+            return True
+        elif math.fabs((current_date - birth_date).days) < 0:
+            logger.info("Patient is less than 0 years old. YOU FAILED.")
+            return False
+        elif math.fabs((current_date - birth_date).days) > 54750:
+            logger.info("Patient is more than 150 years old. YOU FAILED.")
+            return False
+        else:  # Generic catchall false condition
+            return False
+
 
     @staticmethod
     def validate_sex(sex):
@@ -73,14 +95,14 @@ class LORIS_validation:
         :param sex:
         :return:
         """
-        if sex.lower() == "M".lower() or sex.lower() == "O".lower() or sex == "F".lower():
+        if sex.lower() == "M".lower() or sex.lower() == "O".lower() or sex.lower() == "F".lower():
             return True
         else:
             return False
 
     @staticmethod
     def validate_gender(gender):
-        if gender.lower() == "Male".lower() or gender.lower() == "Female".lower():
+        if gender == "Male" or gender == "Female":
             return True
         else:
             return False
