@@ -18,6 +18,20 @@ class orthanc_query:
         raise NotImplementedError
         pass
 
+    @staticmethod
+    def getOrthanc_noauth(endpoint):
+        """
+        Get from a Orthanc endpoint
+        :param endpoint:
+        :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
+        """
+        logger = logging.getLogger('Orthanc_get')
+        logger.info("Getting Orthanc endpoint: "+ endpoint)
+
+        with requests.Session() as s:
+            r = s.get(endpoint)
+            logger.info("Get Result:" + str(r.status_code) + r.reason)
+            return r.status_code, r.json()
 
     @staticmethod
     def getOrthanc(endpoint, orthanc_user, orthanc_password):

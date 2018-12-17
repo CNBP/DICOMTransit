@@ -11,7 +11,7 @@ class DICOM_converter:
     @staticmethod
     def DICOM_universal_convert(input_folder, output_folder):
         """
-
+        A universal converter of inputfolder and check all files in there for DICOM before converting them into a sets of standarized format of various level of update.
         :param input_folder:
         :param output_folder:
         :return:
@@ -51,7 +51,7 @@ class DICOM_converter:
         create("raw_sorted_decompressed")
         path_raw_sorted_decompressed = os.path.join(output_folder, "raw_sorted_decompressed")
         DICOM_sort.into_folder(input_folder, path_raw_sorted_decompressed)
-        DICOM_decompress.filelist(path_raw_sorted_decompressed)
+        DICOM_decompress.decompress_folder(path_raw_sorted_decompressed)
         DICOM_convert.fix_series(path_raw_sorted_decompressed)
 
     @staticmethod
@@ -64,4 +64,4 @@ class DICOM_converter:
 
 
 if __name__ == "__main__":
-    DICOM_converter.DICOM_universal_convert(r'C:\FullyAnonymizedSubjects\2018-08-22_TestSubject3', r'C:\FullyAnonymizedSubjects\Wed3ConvertResult')
+    DICOM_converter.DICOM_universal_convert(r'C:\Users\Yang Ding\Downloads\3216279 DUMAIS BB DE MARIECLAUDE\RA201810507801 IRM crbrale C', r'C:\Users\Yang Ding\Downloads\3216279 DUMAIS BB DE MARIECLAUDE\Test')

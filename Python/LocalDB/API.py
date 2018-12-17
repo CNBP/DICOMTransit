@@ -25,6 +25,8 @@ def check_MRN(MRN):
                                                          CNBP_blueprint.table_name,
                                                          CNBP_blueprint.keyfield,
                                                          MRN)
+    if MRN_exist_in_database:
+        logger.info("MRN found to exist at local database")
     return MRN_exist_in_database
 
 def create_MRN(MRN):
@@ -112,7 +114,8 @@ def get_scan_date(MRN):
 
     assert(len(KeyRecords) == 1)
     date_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'Date')
-    return KeyRecords[date_header_index]
+    scan_date = KeyRecords[0][date_header_index]
+    return scan_date
 
 def set_CNBP(MRN: int, CNBPID):
     """

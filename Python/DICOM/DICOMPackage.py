@@ -17,6 +17,7 @@ class DICOMPackage:
     files with shared ID, CNBP, timepoint, MRN etc information usually obtained from the same session
     """
     def __init__(self, dicom_folder=None):
+        logger.info("Creating subject specific DICOM package class")
         # Set the DICOM_folder attribute
         self.__dicom_folder__ = dicom_folder # reference kept to prevent auto garbage collection
         self.dicom_folder: str = dicom_folder.name
@@ -46,9 +47,12 @@ class DICOMPackage:
         self.zipname: str = None
         self.zip_location: str = None
 
+        logger.info("Commencing subject specific checks. ")
+
         # Update some of the key process related to the DICOM_packages that have just been created.
         success = self.update_MRN()
         assert success
+        logger.info("Subject specific MRN pass check.")
 
 
         # todo study inference is not robust. Need debug and refactoring.
@@ -61,15 +65,19 @@ class DICOMPackage:
 
         success = self.update_scan_date()
         assert success
+        logger.info("Subject specific scan date pass check.")
 
         success = self.update_birthdate()
         assert success
+        logger.info("Subject specific birthdate pass check.")
 
         success = self.update_sex()
         assert success
+        logger.info("Subject specific sex pass check.")
 
         success = self.update_gender()
         assert success
+        logger.info("Subject specific gender pass check.")
 
         logger.info("DICOMPackage successfully initialized based on "+self.dicom_folder)
 
