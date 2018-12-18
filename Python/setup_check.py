@@ -10,7 +10,7 @@ def nii2nifty_check():
     try:
 
         # SUPER IMPORTANT! MAKE SURE dcm2niix by Chris Roden is in the system path!
-        subprocess.check_output(['dcm2niix'])
+        subprocess.check_output(['dcm2niix '])
 
     # When dcmdjpeg has errors
     except subprocess.CalledProcessError as e:
@@ -38,3 +38,7 @@ def dcmdjpeg_check():
         return False, ErrorMessage
 
     return True, "dcmdjpeg dependency check past!"
+
+if __name__=="__main__":
+    assert nii2nifty_check()[0]
+    assert dcmdjpeg_check()[0]
