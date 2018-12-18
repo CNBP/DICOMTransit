@@ -64,4 +64,4 @@ class DICOM_converter:
 
 
 if __name__ == "__main__":
-    DICOM_converter.DICOM_universal_convert(r'C:\Users\Yang Ding\Downloads\3216279 DUMAIS BB DE MARIECLAUDE\RA201810507801 IRM crbrale C', r'C:\Users\Yang Ding\Downloads\3216279 DUMAIS BB DE MARIECLAUDE\Test')
+    DICOM_converter.DICOM_universal_convert(r"//ubuntudev.local/toshiba2/Mathieu's%20MRI/CHD_dTGA/NN_dTGA_001_3143750/MRI", r'C:\Users\Yang Ding\Downloads\3216279 DUMAIS BB DE MARIECLAUDE\Test')

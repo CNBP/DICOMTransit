@@ -4,11 +4,9 @@ coverage
 pydicom
 python-dateutil
 pytest-cov
-heudiconv[all]
 tqdm
 paramiko
 pydispatcher
 gevent
 pyodbc
 requests
-gevents

@@ -13,14 +13,18 @@ setup(name='DICOMTransit',
 	license='MIT',
 	packages=find_packages(),
 	install_requires=[
-        'python-dotenv'
-        'python-coveralls'
-        'coverage'
-        'pydicom'
-        'python-dateutil'
-        'pytest-cov'
-        'heudiconv[all]'
-        'tqdm'
-        'paramiko'
+		'python-dotenv'
+		'python-coveralls'
+		'coverage'
+		'pydicom'
+		'python-dateutil'
+		'pytest-cov'
+		'tqdm'
+		'paramiko'
+		'pydispatcher'
+		'gevent'
+		'pyodbc'
+		'requests'
+		'gevents'
 	],
 	zip_safe=False)
