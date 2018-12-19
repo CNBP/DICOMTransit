@@ -5,6 +5,10 @@ import sys
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 def nii2nifty_check():
+    """
+    Sanity check function that ensure the dcm2niix executable is found in the system OS path!
+    :return:
+    """
     logger = logging.getLogger(__name__)
 
     try:
@@ -20,7 +24,7 @@ def nii2nifty_check():
         return False, ErrorMessage
     except Exception as e:
         logger.info(e)
-        ErrorMessage = "dcm2niix decompression call failed! Make sure dcm2niix is in your SYSTEM OS PATH and then check your input file:"
+        ErrorMessage = "dcm2niix decompression call failed! Make sure dcm2niix is in your SYSTEM OS PATH and then check your input file"
         logger.info(ErrorMessage)
         return False, ErrorMessage
 
@@ -33,7 +37,7 @@ def dcmdjpeg_check():
         subprocess.check_output(['dcmdjpeg'])
     except Exception as e:
         logger.info(e)
-        ErrorMessage = "dcm2niix decompression call failed! Make sure dcmdjpeg is in your SYSTEM OS PATH and then check your input file:"
+        ErrorMessage = "dcmdjpeg decompression call failed! Make sure dcmdjpeg is in your SYSTEM OS PATH and then check your input file"
         logger.info(ErrorMessage)
         return False, ErrorMessage
 

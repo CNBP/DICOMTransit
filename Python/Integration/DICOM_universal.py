@@ -29,6 +29,12 @@ class DICOM_converter:
 
     @staticmethod
     def raw(input_folder, output_folder):
+        """
+        FLATCOPY (with timestampe to avoid naming duplications) to a an output folder with raw prefix.
+        :param input_folder:
+        :param output_folder:
+        :return:
+        """
         os.chdir(output_folder)
         os.mkdir("raw")
         path_raw = os.path.join(output_folder, "raw")
@@ -38,6 +44,12 @@ class DICOM_converter:
 
     @staticmethod
     def raw_sorted(input_folder, output_folder):
+        """
+        FLATCOPY (with timestampe to avoid naming duplications) to a an output folder with raw prefix, then SORT THEM with proper protocole series acquisition number.
+        :param input_folder:
+        :param output_folder:
+        :return:
+        """
         os.chdir(output_folder)
         os.chdir(output_folder)
         create("raw_sorted")
@@ -47,6 +59,12 @@ class DICOM_converter:
 
     @staticmethod
     def raw_sorted_decompressed(input_folder, output_folder):
+        """
+        FLATCOPY (with timestampe to avoid naming duplications) to a an output folder with raw prefix, then SORT THEM with proper protocole series acquisition number, then decompress everything within the folder.
+        :param input_folder:
+        :param output_folder:
+        :return:
+        """
         os.chdir(output_folder)
         create("raw_sorted_decompressed")
         path_raw_sorted_decompressed = os.path.join(output_folder, "raw_sorted_decompressed")
@@ -56,6 +74,12 @@ class DICOM_converter:
 
     @staticmethod
     def nii(input_folder, output_folder):
+        """
+        Create a folder,
+        :param input_folder:
+        :param output_folder:
+        :return:
+        """
         os.chdir(output_folder)
         create("nii")
         path_nii = os.path.join(output_folder, "nii")

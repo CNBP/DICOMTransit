@@ -139,5 +139,10 @@ class DICOM_decompress:
 
     @staticmethod
     def decompress_folder(input_folder):
+        """
+        A wrapped function call to filelist to enable decompression of entire folder. todo: it does not check for DICOM file presence, merely all files.
+        :param input_folder:
+        :return:
+        """
         files_list = recursive_list(input_folder)
         DICOM_decompress.filelist(files_list)

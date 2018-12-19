@@ -127,6 +127,9 @@ class LORIS_candidates:
     def checkPSCIDExist(token, proposed_PSCID):
         """
         Check if Site/Study already contain the PSCID
+        todo: mostly obsolete as now PSCID is completely generated server side.
+        HOWEVER! THere are /candidate_list that can once for all get
+
         :param token:
         :param proposed_PSCID:
         :return: bool for connection, bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
