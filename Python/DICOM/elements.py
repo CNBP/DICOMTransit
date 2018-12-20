@@ -17,15 +17,23 @@ class DICOM_elements:
         :param data_element:
         :return: LIST of all data elements that match the pattern provided in the data_element and their value.  NO Regular EXPRESSION.
         """
+        logger = logging.getLogger(__name__)
         success, DICOM = DICOM_validate.file(file_path)
 
         if not success:
             return False, None
 
-        # Get a list of all data elements that can have element label.
-        element_values = DICOM.data_element(data_element).value
-
-        return True, element_values
+        try:
+            # Get a list of all data elements that can have element label.
+            element_values = DICOM.data_element(data_element).value
+            return True, element_values
+        except KeyError:
+            #todo: dicomdir situation most likely ends here.
+            logger.info("Key Not exist")
+            return False, "Key Not exist"
+        except Exception:
+            logger.info("General catch all exception reached. Contact author with the file to debug")
+            return False, "General catch all exception reached. Contact author with the file to debug"
 
     @staticmethod
     def update(file_path, data_element, element_value, out_path):

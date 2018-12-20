@@ -10,11 +10,14 @@ def nii2nifty_check():
     :return:
     """
     logger = logging.getLogger(__name__)
+    sys.path.append("/opt/mricrogl/")
 
+    #sys.path.append("/opt/DCMTK")
     try:
+        logger.info("Nifty Check")
 
         # SUPER IMPORTANT! MAKE SURE dcm2niix by Chris Roden is in the system path!
-        subprocess.check_output(['dcm2niix'])
+        subprocess.check_output(['dcm2niix', '-h'])
 
     # When dcmdjpeg has errors
     except subprocess.CalledProcessError as e:

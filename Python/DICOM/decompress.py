@@ -21,8 +21,8 @@ class DICOM_decompress:
         """
         logger = logging.getLogger(__name__)
 
-        if os.path.exists(out_put):
-            return False, "Output_exist already."
+        #if os.path.exists(out_put):
+        #    logger.warn("Output_exist already. !!!OVERWRITING!!!")
 
         try:
             # SUPER IMPORTANT! MAKE SURE DCMDJPEG is in the system path!
@@ -119,7 +119,7 @@ class DICOM_decompress:
 
         for file in tqdm(file_list):
 
-            logger.info("Decompressing: " + file)
+            logger.info("Checking decompression status for: " + file)
 
             # find if the file is DICOM, if not, skip this file.
             is_DICOM_file, _ = DICOM_validate.file(file)

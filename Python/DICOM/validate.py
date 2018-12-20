@@ -27,6 +27,9 @@ class DICOM_validate:
         except InvalidDicomError:
             logger.info(file_path + " is not a DICOM file. Skipping")
             return False, None
+
+        #if dicom.
+
         return True, dicom
 
     @staticmethod
