@@ -35,15 +35,21 @@ class CNBP_blueprint:
         "projectID_dictionary",
         "LocalDatabase",
         "LocalDatabasePath",
-        "OrthancURL",
         "ProxyIP",
         "ProxyUsername",
         "ProxyPassword",
         "LORISHostIP",
         "LORISHostUsername",
         "LORISHostPassword",
+        "InsertionAPI",
         "DeletionScript",
         "zip_storage_location",
+        "DevOrthancIP",
+        "DevOrthancUser",
+        "DevOrthancPassword",
+        "ProdOrthancIP",
+        "ProdOrthancUser",
+        "ProdOrthancPassword",
     ]
 
     import copy

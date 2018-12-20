@@ -1,7 +1,7 @@
 import subprocess
 import logging
 import sys
-
+from dotenv import load_dotenv
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 def nii2nifty_check():
@@ -33,6 +33,13 @@ def nii2nifty_check():
 
     return True, "nii2nifty dependency check past!"
 
+def env_check():
+    """
+    Ensure a .env file is SOMEWHERE.
+    :return:
+    """
+    return load_dotenv()
+
 def dcmdjpeg_check():
     logger = logging.getLogger(__name__)
     try:
@@ -46,6 +53,17 @@ def dcmdjpeg_check():
 
     return True, "dcmdjpeg dependency check past!"
 
+def pythonutil_check():
+    """
+    Check to see if we can import from PythonUtils
+    :return:
+    """
+    import PythonUtils.folder
+    import PythonUtils.file
+    return True
+
 if __name__=="__main__":
     assert nii2nifty_check()[0]
     assert dcmdjpeg_check()[0]
+    assert env_check()
+    pythonutil_check()

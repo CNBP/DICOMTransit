@@ -75,10 +75,13 @@ class UT_DICOMManipulation(unittest.TestCase):
 
     @staticmethod
     def test_DICOM_retrieveMRN():
-        path = get_testdata_files("emri_small_big_endian")[0]
-        success, MRN = DICOM_elements.retrieve_MRN(path)
-        assert success
-        assert (MRN == 'CNBP0010001')
+        path = get_testdata_files("emri")
+        for file_name in path:
+            success = DICOM_anonymize.save(file_name, "1234567")
+            assert success
+            success, MRN = DICOM_elements.retrieve_MRN(file_name)
+            assert success
+            assert (MRN == '1234567')
 
     @staticmethod
     def test_DICOM_update():

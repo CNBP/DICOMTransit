@@ -14,7 +14,10 @@ class UT_envCheck(unittest.TestCase):
 
     @staticmethod
     def test_env():
-
+        """
+        This unit test ensures that the variables in .env is the same as the ones specified in the blueprint of the schema
+        :return:
+        """
         # Load the list of predefined variables as defined in the schema.
         list_variables = CNBP_blueprint.dotenv_variables
 

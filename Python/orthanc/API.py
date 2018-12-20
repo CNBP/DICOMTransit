@@ -10,10 +10,10 @@ import sys
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def get_local_orthanc_credentials():
-    url = load_dotenv_var("TestOrthancIP")
-    user = load_dotenv_var("TestOrthancUser")
-    password = load_dotenv_var("TestOrthancPassword")
+def get_dev_orthanc_credentials():
+    url = load_dotenv_var("DevOrthancIP")
+    user = load_dotenv_var("DevOrthancUser")
+    password = load_dotenv_var("DevOrthancPassword")
     return url, user, password
 
 def get_prod_orthanc_credentials():

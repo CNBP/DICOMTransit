@@ -19,7 +19,7 @@ install:
 
 # command to run tests
 script:
-  - cd "Python"
+  - cd "Python" # pytest MUST BE initiaited from the python folder.
   - python -m pytest -s --cov # Run test with automated coverage reporting
   
 # After successful test, run coverage and send data to Coverall

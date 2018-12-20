@@ -3,13 +3,19 @@ from orthanc.query import orthanc_query
 from LORIS.helper import LORIS_helper
 import unittest
 import orthanc.API
-from PythonUtils.env import load_dotenv_var
+from PythonUtils.env import load_dotenv_var, is_travis
+import pytest
+
+if True:
+#if not is_travis():
+    pytest.skip("Skipping test requiring private database access", allow_module_level=True)
 
 class UT_ProdOrthanc(unittest.TestCase):
 
     # MUST ensure TravisCI LORIS also deploy with the proper setting with regard to the ORTHANC authentication.
+    # This attempts to access the production Orthanc from the local environment and then check if upupload and download work.
 
-
+    url, user, password = orthanc.API.get_prod_orthanc_credentials()
 
     @staticmethod
     def uploadExamples():
@@ -17,12 +23,9 @@ class UT_ProdOrthanc(unittest.TestCase):
         for file in file_list:
             print(file)
             upload_files = {'upload_file': open(file, 'rb')}
-            orthanc_url = load_dotenv_var("ProdOrthancIP")
-            orthanc_user = load_dotenv_var("ProdOrthancUser")
-            orthanc_password = load_dotenv_var("ProdOrthancPassword")
-            orthanc_instance_url = orthanc_url + "instances/"
+            orthanc_instance_url = url + "instances/"
 
-            status, r = orthanc_query.postOrthanc(orthanc_instance_url, orthanc_user, orthanc_password, upload_files)
+            status, r = orthanc_query.postOrthanc(orthanc_instance_url, user, self.password, upload_files)
             assert(LORIS_helper.is_response_success(status, 200))
             assert(r.json())
 
@@ -31,7 +34,7 @@ class UT_ProdOrthanc(unittest.TestCase):
     @staticmethod
     def test_getSubjects():
         UT_ProdOrthanc.uploadExamples()
-        url, user, password = orthanc.API.get_prod_orthanc_credentials()
+
         subject_list = orthanc.API.get_list_of_subjects(url, user, password)
         assert len(subject_list) > 0
         return subject_list
@@ -41,7 +44,7 @@ class UT_ProdOrthanc(unittest.TestCase):
     def test_deleteSubjects():
         list_subjects = UT_ProdOrthanc.test_getSubjects()
         for subject in list_subjects:
-            reseponse_code, _ = orthanc_query.deleteOrthanc("patients/"+subject)
+            reseponse_code, _ = orthanc_query.deleteOrthanc("patients/"+subject, user, password)
             assert (LORIS_helper.is_response_success(reseponse_code, 200))
 
     @staticmethod

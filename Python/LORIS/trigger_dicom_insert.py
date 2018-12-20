@@ -27,7 +27,7 @@ def trigger_dicom_insert(scans):
 
     # Need to fix the load_dotenv call. Currently not getting trigger url
 
-    trigger_dicom_insertion_url = load_dotenv_var("InsertionScript")
+    trigger_dicom_insertion_url = load_dotenv_var("InsertionAPI")
 
     # Trigger insertion by doing HTTP POST of payload to endpoint
     s = requests.post(trigger_dicom_insertion_url, data=payload)

@@ -44,7 +44,7 @@ def anonymize_files(files):
     :param files:
     :return:
     """
-
+    from DICOM.anonymize import DICOM_anonymize
     # Copy files to Temporary Folder
     with TemporaryDirectory() as temp_folder:
 
