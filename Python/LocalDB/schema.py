@@ -26,6 +26,7 @@ class CNBP_blueprint:
                     'TEXT',
                     'TEXT']
 
+    # todo: cross checek these with schema.sql from dtconfigurator as well as .env
     dotenv_variables = [
         "LORISurl",
         "LORISusername",

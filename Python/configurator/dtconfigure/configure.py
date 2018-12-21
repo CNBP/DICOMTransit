@@ -46,9 +46,11 @@ def create():
             c.executemany(
                 'INSERT INTO configuration (user_id, port, LORISurl, \
                 LORISusername, LORISpassword, timepoint_prefix, institutionID, \
-                projectID_dictionary, LocalDatabase, OrthancURL, ProxyIP, \
+                projectID_dictionary, LocalDatabase, LocalDatabasePath, ProxyIP, \
                 ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername, \
-                LORISHostPassword, DeletionScript)'
+                LORISHostPassword, InsertionAPI, DeletionScript, zip_storage_location, \
+                DevOrthancIP, DevOrthancuser, DevOrthancPassword, ProdOrthancIP, ProdOrthancUser,\
+                ProdOrthancPassword)'
                 ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 data)
             db.commit()
@@ -81,9 +83,11 @@ def update(id):
                 'UPDATE configuration SET user_id=?, port=?, LORISurl=?,\
                 LORISusername=?, LORISpassword=?, timepoint_prefix=?, \
                 institutionID=?,projectID_dictionary=?, LocalDatabase=?, \
-                OrthancURL=?, ProxyIP=?, ProxyUsername=?, ProxyPassword=?, \
+                LocalDatabasePath=?, ProxyIP=?, ProxyUsername=?, ProxyPassword=?, \
                 LORISHostIP=?, LORISHostUsername=?, LORISHostPassword=?, \
-                DeletionScript=?', data
+                InsertionAPI=?, DeletionScript=?, zip_storage_location=?, DevOrthancIP=?,\
+                DevOrthanUser=?, DevOrthancPassword=?, ProdOrthancIP=?, ProdOrthancUser=?,\
+                ProdOrthancPassword=?', data
             )
             db.commit()
             return redirect(url_for('configure.index'))
@@ -120,14 +124,24 @@ def check_form_inputs(form):
     data.append(form['institutionID'])
     data.append(form['projectID_dictionary'])
     data.append(form['LocalDatabase'])
-    data.append(form['OrthancURL'])
+    data.append(form['LocalDatabasePath'])
     data.append(form['ProxyIP'])
     data.append(form['ProxyUsername'])
     data.append(form['ProxyPassword'])
     data.append(form['LORISHostIP'])
     data.append(form['LORISHostUsername'])
     data.append(form['LORISHostPassword'])
+    data.append(form['InsertionAPI'])
     data.append(form['DeletionScript'])
+    data.append(form['zip_storage_location'])
+    data.append(form['DevOrthancIP'])
+    data.append(form['DevOrthancUser'])
+    data.append(form['DevOrthancPassword'])
+    data.append(form['ProdOrthancIP'])
+    data.append(form['ProdOrthancUser'])
+    data.append(form['ProdOrthancPassword'])
+
+
 
     error = ''
 
@@ -147,8 +161,8 @@ def check_form_inputs(form):
         error += 'ProjectID dictionary is required.'
     if not form['LocalDatabase']:
         error += 'Local Database is required.'
-    if not form['OrthancURL']:
-        error += 'Orthanc URL is required.'
+    if not form['LocalDatabasePath']:
+        error += 'LocalDatabasePath is required.'
     if not form['ProxyIP']:
         error += 'Proxy IP is required.'
     if not form['ProxyUsername']:
@@ -161,8 +175,26 @@ def check_form_inputs(form):
         error += 'LORIS Host username is required.'
     if not form['LORISHostPassword']:
         error += 'LORIS Host password is required.'
+    if not form['InsertionAPI']:
+        error += 'Path to insertion API is required.'
     if not form['DeletionScript']:
         error += 'Path to Deletion script is required.'
+
+    if not form['zip_storage_location']:
+        error += 'zip_storage_location is required.'
+    if not form['DevOrthancIP']:
+        error += 'DevOrthancIP is required.'
+    if not form['DevOrthancUser']:
+        error += 'DevOrthancUser is required.'
+    if not form['DevOrthancPassword']:
+        error += 'DevOrthancPassword is required.'
+    if not form['ProdOrthancIP']:
+        error += 'ProdOrthancIP is required.'
+    if not form['ProdOrthancUser']:
+        error += 'ProdOrthancUser is required.'
+    if not form['ProdOrthancPassword']:
+        error += 'ProdOrthancPassword is required.'
+
 
     # If there are errors then show them and return None
     if error is not None and error!='':

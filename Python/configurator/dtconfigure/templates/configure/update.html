@@ -38,12 +38,11 @@
 
     <label for="LocalDatabase">Local Database</label>
     <input name="LocalDatabase" id="LocalDatabase" value="{{
-    request.form['LocalDatabase'] or configuration['LocalDatabase'] }}" 
-    required>
+    request.form['LocalDatabase'] or configuration['LocalDatabase'] }}" required>
 
-    <label for="OrthancURL">Orthanc URL</label>
-    <input name="OrthancURL" id="OrthancURL" value="{{
-    request.form['OrthancURL'] or configuration['OrthancURL'] }}" required>
+    <label for="LocalDatabasePath">Local Database Path</label>
+    <input name="LocalDatabasePath" id="LocalDatabasePath" value="{{
+    request.form['LocalDatabasePath'] or configuration['LocalDatabasePath'] }}" required>
 
     <label for="ProxyIP">Proxy IP</label>
     <input name="ProxyIP" id="ProxyIP" value="{{
@@ -73,9 +72,43 @@
     request.form['LORISHostPassword'] or configuration['LORISHostPassword'] }}" 
     required>
 
+    <label for="InsertionAPI">Insertion script </label>
+    <input name="InsertionAPI" id="InsertionAPI" value="{{
+    request.form['InsertionAPI'] or configuration['InsertionAPI'] }}"
+    required>
+
     <label for="DeletionScript">Deletion script </label>
     <input name="DeletionScript" id="DeletionScript" value="{{
-    request.form['DeletionScript'] or configuration['DeletionScript'] }}" 
+    request.form['DeletionScript'] or configuration['DeletionScript'] }}" required>
+
+    <label for="zip_storage_location">Zip Files Storage Location Before Uploading to LORIS</label>
+    <input name="zip_storage_location" id="zip_storage_location" value="{{
+    request.form['zip_storage_location'] or configuration['zip_storage_location'] }}"
+    required>
+
+    <label for="DevOrthancIP">Development Orthanc IP Address</label>
+    <input name="DevOrthancIP" id="DevOrthancIP" value="{{
+    request.form['DevOrthancIP'] or configuration['DevOrthancIP'] }}"
+    required>
+
+    <label for="DevOrthancUser">Development Orthanc User </label>
+    <input name="DevOrthancUser" id="DevOrthancUser" value="{{
+    request.form['DevOrthancUser'] or configuration['DevOrthancUser'] }}"
+    required>
+
+    <label for="DevOrthancPassword">Deletion script </label>
+    <input name="DevOrthancPassword" id="DevOrthancPassword" value="{{
+    request.form['DevOrthancPassword'] or configuration['DevOrthancPassword'] }}"
+    required>
+
+    <label for="DeletionScript">Deletion script </label>
+    <input name="DeletionScript" id="DeletionScript" value="{{
+    request.form['DeletionScript'] or configuration['DeletionScript'] }}"
+    required>
+
+    <label for="DeletionScript">Deletion script </label>
+    <input name="DeletionScript" id="DeletionScript" value="{{
+    request.form['DeletionScript'] or configuration['DeletionScript'] }}"
     required>
 
     <input type="submit" value="Save">
