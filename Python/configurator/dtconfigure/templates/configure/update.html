@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block ip %}Edit "{{ configuration['ProxyIP'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="port">Port</label>
+    <input name="port" id="port" value="{{ request.form['port'] or
+    configuration['port'] }}" required />
+
+    <label for="LORISurl">LORIS URL</label>
+    <input name="LORISurl" id="LORISurl" value="{{ request.form['LORISurl'] or 
+    configuration['LORISurl'] }}" required>
+
+    <label for="LORISusername">LORIS Username</label>
+    <input name="LORISusername" id="LORISusername" value="{{
+    request.form['LORISusername'] or configuration['LORISusername'] }}" required>
+    
+    <label for="LORISpassword">LORIS Password</label>
+    <input type=password name="LORISpassword" id="LORISpassword" value="{{
+    request.form['LORISpassword'] or configuration['LORISpassword'] }}" 
+    required>
+    
+    <label for="timepoint_prefix">Timepoint prefix</label>
+    <input name="timepoint_prefix" id="timepoint_prefix" value="{{
+    request.form['timepoint_prefix'] or configuration['timepoint_prefix'] }}" required>
+
+    <label for="institutionID">Institution ID</label>
+    <input name="institutionID" id="institutionID" value="{{
+    request.form['institutionID'] or configuration['institutionID'] }}" required>
+
+    <label for="projectID_dictionary">ProjectID dictionary</label>
+    <input name="projectID_dictionary" id="projectID_dictionary" value="{{
+    request.form['projectID_dictionary'] or 
+    configuration['projectID_dictionary'] }}" required>
+
+    <label for="LocalDatabase">Local Database</label>
+    <input name="LocalDatabase" id="LocalDatabase" value="{{
+    request.form['LocalDatabase'] or configuration['LocalDatabase'] }}" 
+    required>
+
+    <label for="OrthancURL">Orthanc URL</label>
+    <input name="OrthancURL" id="OrthancURL" value="{{
+    request.form['OrthancURL'] or configuration['OrthancURL'] }}" required>
+
+    <label for="ProxyIP">Proxy IP</label>
+    <input name="ProxyIP" id="ProxyIP" value="{{
+    request.form['ProxyIP'] or configuration['ProxyIP'] }}" required>
+
+    <label for="ProxyUsername">Proxy Username</label>
+    <input name="ProxyUsername" id="ProxyUsername" value="{{
+    request.form['ProxyUsername'] or configuration['ProxyUsername'] }}" 
+    required>
+
+    <label for="ProxyPassword">Proxy Password</label>
+    <input type=password name="ProxyPassword" id="ProxyPassword" value="{{
+    request.form['ProxyPassword'] or configuration['ProxyPassword'] }}" 
+    required>
+
+    <label for="LORISHostIP">LORIS Host IP</label>
+    <input name="LORISHostIP" id="LORISHostIP" value="{{
+    request.form['LORISHostIP'] or configuration['LORISHostIP'] }}" required>
+
+    <label for="LORISHostUsername">LORIS Host Username</label>
+    <input name="LORISHostUsername" id="LORISHostUsername" value="{{
+    request.form['LORISHostUsername'] or configuration['LORISHostUsername'] }}" 
+    required>
+
+    <label for="LORISHostPassword">LORIS Host Password</label>
+    <input type=password name="LORISHostPassword" id="LORISHostPassword" value="{{
+    request.form['LORISHostPassword'] or configuration['LORISHostPassword'] }}" 
+    required>
+
+    <label for="DeletionScript">Deletion script </label>
+    <input name="DeletionScript" id="DeletionScript" value="{{
+    request.form['DeletionScript'] or configuration['DeletionScript'] }}" 
+    required>
+
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+  <form action="{{ url_for('configure.delete', id=configuration['id']) }}"
+      method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+  </form>
+{% endblock %}
