@@ -5,6 +5,8 @@ from werkzeug.exceptions import abort
 
 from dtconfigure.auth import login_required
 from dtconfigure.db import get_db
+from LocalDB.schema import CNBP_blueprint
+envvars = CNBP_blueprint.dotenv_variables
 
 bp = Blueprint('configure', __name__)
 
@@ -34,29 +36,40 @@ def create():
 
         # Check form data and get result
         d =  check_form_inputs(request.form)
-
         if d is None:
-            return False
+            return "Could not save data"
         else:
             # Create a list of Tuples because we want to use executemany
             data = [tuple(d)]
             # Get connection to the database and get a cursor
             db = get_db()
             c = db.cursor()
-            c.executemany(
-                'INSERT INTO configuration (user_id, port, LORISurl, \
-                LORISusername, LORISpassword, timepoint_prefix, institutionID, \
-                projectID_dictionary, LocalDatabase, LocalDatabasePath, ProxyIP, \
-                ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername, \
-                LORISHostPassword, InsertionAPI, DeletionScript, zip_storage_location, \
-                DevOrthancIP, DevOrthancuser, DevOrthancPassword, ProdOrthancIP, ProdOrthancUser,\
-                ProdOrthancPassword)'
-                ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                data)
+
+            # Create INSERT SQL string
+            db_frag = 'INSERT INTO configuration ('
+            user_frag = "user_id,"
+            user_val_frag = "?,"
+            cols = ",".join(envvars)
+            end_cols_frag = ") "
+            vals_frag = "VALUES("
+            vals = "?," * len(envvars)
+            # remove trailing comma ,
+            vals = vals.rstrip(',')
+            end_vals_frag = ")"
+            sql = db_frag + user_frag + cols + end_cols_frag + vals_frag + user_val_frag + vals + end_vals_frag
+
+            c.executemany(sql,data)
             db.commit()
             return redirect(url_for('configure.index'))
 
-    return render_template('configure/create.html')
+    # It's not a POST so we are showing files from configuration table
+
+    configurations = {}
+    # Ue list comprehension to create dict of configurations
+    # The dict keys are the samne as the dict values
+    configurations = {v:v for v in envvars}
+    #print({v:v for v in envvars})
+    return render_template('configure/create.html',configurations=configurations)
 
 
 """ The Update View """
@@ -106,94 +119,20 @@ def delete(id):
     return redirect(url_for('configure.index'))
 
 
+""" Check the form inputs """
 def check_form_inputs(form):
     # Create an empty list
     data = []
-
-    """
-    The order of values in the data variable is IMPORTANT!!!
-    """
-    # Insert currently logged in user ID
-    data.append(g.user['id'])
-    # Insert relevant form values
-    data.append(form['port'])
-    data.append(form['LORISurl'])
-    data.append(form['LORISusername'])
-    data.append(form['LORISpassword'])
-    data.append(form['timepoint_prefix'])
-    data.append(form['institutionID'])
-    data.append(form['projectID_dictionary'])
-    data.append(form['LocalDatabase'])
-    data.append(form['LocalDatabasePath'])
-    data.append(form['ProxyIP'])
-    data.append(form['ProxyUsername'])
-    data.append(form['ProxyPassword'])
-    data.append(form['LORISHostIP'])
-    data.append(form['LORISHostUsername'])
-    data.append(form['LORISHostPassword'])
-    data.append(form['InsertionAPI'])
-    data.append(form['DeletionScript'])
-    data.append(form['zip_storage_location'])
-    data.append(form['DevOrthancIP'])
-    data.append(form['DevOrthancUser'])
-    data.append(form['DevOrthancPassword'])
-    data.append(form['ProdOrthancIP'])
-    data.append(form['ProdOrthancUser'])
-    data.append(form['ProdOrthancPassword'])
-
-
-
     error = ''
 
-    if not form['port']:
-        error += 'Port is is required.'
-    if not form['LORISurl']:
-        error += 'LORIS Url is required.'
-    if not form['LORISusername']:
-        error += 'LORIS username is required.'
-    if not form['LORISpassword']:
-        error += 'LORIS password is required.'
-    if not form['timepoint_prefix']:
-        error += 'Time point prefix is required.'
-    if not form['institutionID']:
-        error += 'Institution ID is required.'
-    if not form['projectID_dictionary']:
-        error += 'ProjectID dictionary is required.'
-    if not form['LocalDatabase']:
-        error += 'Local Database is required.'
-    if not form['LocalDatabasePath']:
-        error += 'LocalDatabasePath is required.'
-    if not form['ProxyIP']:
-        error += 'Proxy IP is required.'
-    if not form['ProxyUsername']:
-        error += 'Proxy username is required.'
-    if not form['ProxyPassword']:
-        error += 'Proxy password is required.'
-    if not form['LORISHostIP']:
-        error += 'LORIS Host IP is required.'
-    if not form['LORISHostUsername']:
-        error += 'LORIS Host username is required.'
-    if not form['LORISHostPassword']:
-        error += 'LORIS Host password is required.'
-    if not form['InsertionAPI']:
-        error += 'Path to insertion API is required.'
-    if not form['DeletionScript']:
-        error += 'Path to Deletion script is required.'
-
-    if not form['zip_storage_location']:
-        error += 'zip_storage_location is required.'
-    if not form['DevOrthancIP']:
-        error += 'DevOrthancIP is required.'
-    if not form['DevOrthancUser']:
-        error += 'DevOrthancUser is required.'
-    if not form['DevOrthancPassword']:
-        error += 'DevOrthancPassword is required.'
-    if not form['ProdOrthancIP']:
-        error += 'ProdOrthancIP is required.'
-    if not form['ProdOrthancUser']:
-        error += 'ProdOrthancUser is required.'
-    if not form['ProdOrthancPassword']:
-        error += 'ProdOrthancPassword is required.'
+    # Form keys
+    form_keys = list(form)
+    print('Form keys', form_keys)
+    print('envvars', envvars)
+    if(sorted(form_keys)==sorted(envvars)):
+        data = [g.user['id']] + list(form.values())
+    else:
+        error = 'The form values are invalid. All fields are required'
 
 
     # If there are errors then show them and return None

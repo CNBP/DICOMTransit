@@ -11,7 +11,6 @@ CREATE TABLE configuration (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  port INTEGER NOT NULL,
 
   LORISurl TEXT NOT NULL,
   LORISusername TEXT NOT NULL,
@@ -36,5 +35,6 @@ CREATE TABLE configuration (
   ProdOrthancIP TEXT NOT NULL,
   ProdOrthancUser TEXT NOT NULL,
   ProdOrthancPassword TEXT NOT NULL,
+  
   FOREIGN KEY (user_id) REFERENCES user (id)
 );
