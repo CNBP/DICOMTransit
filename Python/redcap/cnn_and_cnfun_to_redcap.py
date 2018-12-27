@@ -122,7 +122,7 @@ def update_redcap_data():
     label = Label(window, text='Done.')
     label.pack()
 
-    # Get all information about redcap tables name and variables.
+    # Get all information about REDCap table names and fields.
     label = Label(window, text='Loading REDCap Metadata...')
     label.pack()
     load_redcap_metadata()
@@ -154,6 +154,7 @@ def update_redcap_data():
     label = Label(window, text='')
     label.pack()
 
+    # Indicate that the script is completed.
     label = Label(window, text='Command completed.')
     label.pack()
 
@@ -169,11 +170,15 @@ def load_redcap_metadata():
     """
     globalvars.redcap_metadata = []
 
+    # For each REDCap project
     for i in range(1,len(Project) + 1):
+
+        # Get all metadata rows.
         payload = {'token': get_project_token(i), 'format': 'json', 'content': 'metadata'}
         response = post(redcap_api_url, data=payload)
         metadata = response.json()
 
+        # Add each metadata row to local memory.
         for field in metadata:
             globalvars.redcap_metadata.append(
                 [field['field_name'], field['field_type'], field['field_label'], field['form_name']])
@@ -183,12 +188,13 @@ def load_redcap_metadata():
 
 def load_hospital_record_numbers():
     """
-    Loads a list of all hospital record numbers.
+    Loads a list of all hospital record numbers for which we want to transfer data to REDCap.
     :return: None
     """
     globalvars.hospital_record_numbers = []
 
     if environment.USE_LOCAL_HOSPITAL_RECORD_NUMBERS_LIST == 0:
+        # Get the numbers from a dynamic source:
         db = sqlite3.connect('Local_id_table.sqlite')
         cursor = db.cursor()
         cursor.execute('select study_id, MNR from Local_id_table')
@@ -201,6 +207,7 @@ def load_hospital_record_numbers():
         cursor.close
         db.close
     else:
+        # Get the numbers from a static source:
         globalvars.hospital_record_numbers = [
             3143750,
             3144235,
@@ -399,7 +406,7 @@ def initialize_data_import_configuration_matrix():
         [149, 1, 1, 5, 'mstvegfdrugs', 1, 8, 8, None, 1]
     ]
 
-    # Sort data import configuration matrix.
+    # Sort data import configuration matrix by first column ascending (import sequence).
     globalvars.data_import_configuration = sorted(globalvars.data_import_configuration, key=itemgetter(0))
 
     return
@@ -426,7 +433,7 @@ def import_reference_tables():
                 database_column_list = get_database_column_names(globalvars.data_import_configuration[i])
 
                 # Get all the data contained in this table.
-                rows = get_data_rows(globalvars.data_import_configuration[i])
+                rows = get_data_rows_for_reference_table(globalvars.data_import_configuration[i])
 
                 # Clear REDCap Queue.
                 clear_redcap_queue()
@@ -510,7 +517,7 @@ def import_patient_tables():
                     database_column_list = get_database_column_names(globalvars.data_import_configuration[j])
 
                     # Get all data for this patient in this table
-                    rows = get_data_rows_for_patient(globalvars.data_import_configuration[j])
+                    rows = get_data_rows_for_patient_table(globalvars.data_import_configuration[j])
 
                     # If some data was retrieved from the database
                     if rows is not None:
@@ -627,9 +634,9 @@ def add_record_to_redcap_queue(record_text):
     return
 
 
-def get_data_rows(table_info):
+def get_data_rows_for_reference_table(table_info):
     """
-    Gets all rows of data for a reference table.
+    Gets all rows of data for a specific reference table.
     :param table_info: Table Information
     :return: List of all the rows obtained from the query.
     """
@@ -656,9 +663,9 @@ def get_data_rows(table_info):
         return None
 
 
-def get_data_rows_for_patient(table_info):
+def get_data_rows_for_patient_table(table_info):
     """
-    Gets all rows of data for a patient table.
+    Gets all rows of data for a specific patient table.
     :param table_info: Table Information
     :return: List of all the rows obtained from the query.
     """
@@ -667,11 +674,11 @@ def get_data_rows_for_patient(table_info):
 
             primary_key_filter_name = str(get_primary_key_name(table_info[6]))
             primary_key_filter_value = str(get_primary_key_value(table_info[7]))
-            primary_key_data_type = str(get_primary_key_data_type(table_info[7]))
+            primary_key_data_type = get_primary_key_data_type(table_info[7])
 
             if primary_key_filter_name != '' and primary_key_filter_value != '' and primary_key_filter_value != 'None':
 
-                if primary_key_data_type == str(DataType.String.value):
+                if primary_key_data_type == DataType.String.value:
                     select_statement = ("SELECT * FROM [" +
                                         table_info[4] +
                                         "] WHERE [" +
@@ -680,7 +687,7 @@ def get_data_rows_for_patient(table_info):
                                         "'" +
                                         primary_key_filter_value +
                                         "'")
-                elif primary_key_data_type == str(DataType.Integer.value):
+                elif primary_key_data_type == DataType.Integer.value:
                     select_statement = ("SELECT * FROM [" +
                                         table_info[4] +
                                         "] WHERE [" +
@@ -690,7 +697,7 @@ def get_data_rows_for_patient(table_info):
                 else:
                     select_statement = ''
 
-                try:
+                if select_statement != '':
 
                     conn = pyodbc.connect(get_connection_string(table_info[5]))
                     odbc_cursor = conn.cursor()
@@ -702,12 +709,10 @@ def get_data_rows_for_patient(table_info):
                     odbc_cursor.close()
                     conn.close
 
-                except ValueError:
+                    return data
 
-                    raise
-
-                return data
-
+                else:
+                    return None
             else:
                 return None
         else:
@@ -718,7 +723,7 @@ def get_data_rows_for_patient(table_info):
 
 def get_redcap_fields(table_name):
     """
-    Returns a list of fields contained within a REDCap questionnaire (table)
+    Returns a list of fields contained within a specific REDCap questionnaire (table)
     :param table_name: Name of table
     :return: A dictionary (key: Name of field in the database, value: Name of field in REDCap)
     """
@@ -912,12 +917,8 @@ def send_data_to_redcap(project_token):
             # Prepare HTTP request
             payload = {'token': project_token, 'format': 'json', 'content': 'record', 'type': 'flat',
                        'overwriteBehavior': 'overwrite'}
-            to_import_json = dumps([globalvars.redcap_queue], separators=(',', ':'))
-            if to_import_json.startswith("[["):
-                to_import_json = to_import_json[1:]
-            if to_import_json.endswith("]]"):
-                to_import_json = to_import_json[:-1]
-            payload['data'] = to_import_json
+            json_string = dumps(globalvars.redcap_queue, separators=(',', ':'))
+            payload['data'] = json_string
             # Send HTTP request
             response = post(redcap_api_url, data=payload)
             # If the request was successful
