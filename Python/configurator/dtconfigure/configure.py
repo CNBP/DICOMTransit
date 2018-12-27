@@ -3,8 +3,8 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from dtconfigure.auth import login_required
-from dtconfigure.db import get_db
+from configurator.dtconfigure.auth import login_required
+from configurator.dtconfigure.db import get_db
 from LocalDB.schema import CNBP_blueprint
 envvars = CNBP_blueprint.dotenv_variables
 

@@ -10,4 +10,5 @@ gevent
 pyodbc
 requests
 config
-pycurl
+werkzeug
+flask
