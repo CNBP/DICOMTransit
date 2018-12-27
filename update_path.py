@@ -17,7 +17,9 @@ try:
 except Exception as e:
     raise ValueError
 
+# fixme:
+DETACHED_PROCESS = 0x00000008
 try:
-    subprocess.Popen(['flask', "run"]) #todo: wrap this into a starter function to run at will.
+    pid=subprocess.Popen(['flask', "run"], creationflags=DETACHED_PROCESS).pid #todo: wrap this into a starter function to run at will.
 except Exception as e:
     raise ValueError
