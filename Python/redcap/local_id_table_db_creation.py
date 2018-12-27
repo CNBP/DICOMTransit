@@ -1,7 +1,3 @@
-""""
-Script used to generated a SAMPLE database.
-"""
-
 import sqlite3
 import hashlib
 import uuid
