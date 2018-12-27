@@ -93,6 +93,9 @@ redcap_token_cnfun_patient = environment.REDCAP_TOKEN_CNFUN_PATIENT
 redcap_repeat_instrument_key_name = "redcap_repeat_instrument"
 redcap_repeat_instance_key_name = "redcap_repeat_instance"
 
+redcap_complete_status_suffix = "_complete"
+redcap_complete_status_value = 2
+
 cnn_connection_string = environment.CNN_CONNECTION_STRING
 cnfun_connection_string = environment.CNFUN_CONNECTION_STRING
 
@@ -477,6 +480,11 @@ def import_reference_tables():
 
                             pass
 
+                    # Mark this table entry as 'complete'.
+                    redcap_complete_status_key_name = globalvars.data_import_configuration[i][4].lower() + \
+                                                      redcap_complete_status_suffix
+                    record_text[redcap_complete_status_key_name] = redcap_complete_status_value
+
                     # Add this item to the REDCap queue.
                     add_record_to_redcap_queue(record_text)
 
@@ -609,6 +617,11 @@ def import_patient_tables():
                                 except ValueError:
 
                                     pass
+
+                            # Mark this table entry as 'complete'.
+                            redcap_complete_status_key_name = globalvars.data_import_configuration[i][4].lower() + \
+                                                              redcap_complete_status_suffix
+                            record_text[redcap_complete_status_key_name] = redcap_complete_status_value
 
                             # Add this item to the REDCap queue.
                             add_record_to_redcap_queue(record_text)
