@@ -5,7 +5,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from dtconfigure.db import get_db
+from configurator.dtconfigure.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
