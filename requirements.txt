@@ -1,6 +1,5 @@
 python-dotenv
 python-coveralls
-coverage
 pydicom
 python-dateutil
 pytest-cov
@@ -10,3 +9,5 @@ pydispatcher
 gevent
 pyodbc
 requests
+config
+pycurl

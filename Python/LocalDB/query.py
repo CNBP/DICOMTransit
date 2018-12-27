@@ -279,6 +279,43 @@ class LocalDB_query:
 
         return True, "Database and Schema congruently support this field and its position"
 
+    @staticmethod
+    def get_all(database_path, table_name, field_names):
+        logger = logging.getLogger(__name__)
+
+        SQLPath = Path(database_path)
+
+        # check if path is a file and exist.
+        if not SQLPath.is_file():
+            logger.info('SQLite database file does not exist!')
+            return False, None
+
+        # Try to connect the database to start the process:
+        try:
+            # Create on Connecting to the database file
+            ConnectedDatabase = sqlite3.connect(database_path)
+            c = ConnectedDatabase.cursor()
+
+            #logger.info("Checking key value: " + str(ColumnValue) + " in " + ColumnName + " in SQLite database.")
+
+            # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
+            execution_string = 'SELECT {columnname} FROM {table_name} '.format(table_name=table_name,
+                                                                                   columnname=field_names)
+            c.execute(execution_string)
+
+            result_rows = c.fetchall()
+
+        except Exception as e:
+            logger.info(e)
+            raise IOError()
+
+        # Closing the connection to the database file
+        ConnectedDatabase.close()
+
+        if len(result_rows) > 0:
+            return True, result_rows
+        else:
+            return False, result_rows
 
 #if __name__ == '__main__':
 

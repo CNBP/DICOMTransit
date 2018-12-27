@@ -10,6 +10,25 @@ from PythonUtils.math import int_incrementor
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def get_list_MRN():
+    """
+    Return a list_return of all MRN from the database.
+    :return:
+    """
+    # Load local database from .env file
+    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+
+
+    list_MRN = []
+
+    success, result_rows = LocalDB_query.get_all(database_path, CNBP_blueprint.table_name, "MRN")
+
+    for row in result_rows:
+        list_MRN.append(row[0]) # MRN is the first variable requested.
+
+    return list_MRN #todo: verify this is in integer? or string as that has dire consequences.
+
+
 def check_MRN(MRN):
     """
     Return true if the MRN exist within the current database
