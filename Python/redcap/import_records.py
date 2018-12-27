@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
 from config import config
-import pycurl, hashlib, json
-from io import StringIO
+import pycurl, cStringIO, hashlib, json
 
-buf = StringIO.StringIO()
+buf = cStringIO.StringIO()
 
 record = {
     'record_id': hashlib.sha1().hexdigest()[:16],
