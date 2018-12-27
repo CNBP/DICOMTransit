@@ -22,7 +22,7 @@ def index():
     ).fetchall()
 
     # A list of password keys whose content we want to obscure on the UI
-    password_keys = ["LORISpassword","ProxyPassword","LORISHostPassword"]
+    password_keys = ["LORISpassword","ProxyPassword","LORISHostPassword","DevOrthancPassword","ProdOrthancPassword"]
     return render_template('configure/index.html',
                            configurations=configurations,password_keys=password_keys)
 
@@ -63,12 +63,10 @@ def create():
             return redirect(url_for('configure.index'))
 
     # It's not a POST so we are showing files from configuration table
-
     configurations = {}
     # Ue list comprehension to create dict of configurations
     # The dict keys are the samne as the dict values
     configurations = {v:v for v in envvars}
-    #print({v:v for v in envvars})
     return render_template('configure/create.html',configurations=configurations)
 
 
@@ -85,27 +83,42 @@ def update(id):
         d =  check_form_inputs(request.form)
 
         if d is None:
-            return False
+            return "Could not update data"
         else:
             # Create a list of Tuples because we want to use executemany
+            d.append(id)
             data = [tuple(d)]
             # Get connection to the database and get a cursor
             db = get_db()
             c = db.cursor()
-            c.executemany(
-                'UPDATE configuration SET user_id=?, port=?, LORISurl=?,\
-                LORISusername=?, LORISpassword=?, timepoint_prefix=?, \
-                institutionID=?,projectID_dictionary=?, LocalDatabase=?, \
-                LocalDatabasePath=?, ProxyIP=?, ProxyUsername=?, ProxyPassword=?, \
-                LORISHostIP=?, LORISHostUsername=?, LORISHostPassword=?, \
-                InsertionAPI=?, DeletionScript=?, zip_storage_location=?, DevOrthancIP=?,\
-                DevOrthanUser=?, DevOrthancPassword=?, ProdOrthancIP=?, ProdOrthancUser=?,\
-                ProdOrthancPassword=?', data
-            )
+            # Create UPDATE SQL string
+            db_frag = 'UPDATE configuration SET '
+            user_val_frag = "user_id=?,"
+            # Create column assighments from form data and append operator
+            # and placeholder for last element of form element
+            cols_vals = "=?,".join(envvars) + "=?"
+            where_frag = ' WHERE id=?'
+            # Assemble the sql string
+            sql = db_frag + user_val_frag + cols_vals + where_frag
+            # Add logged in user id to data values for WHERE clause
+            # Execute the sql
+            c.executemany(sql,data)
+            # Commit the transaction
             db.commit()
+            # Return by redirecting to index page
             return redirect(url_for('configure.index'))
 
-    return render_template('configure/update.html',configuration=configuration)
+    configurations = {}
+    # Ue list comprehension to create dict of configurations
+    # The dict keys are the samne as the dict values
+    configurations = dict(configuration) 
+    # Remove columns that should not be user editable on the front-end
+    del configurations['user_id']
+    del configurations['created']
+    del configurations['username']
+    password_keys = ["LORISpassword","ProxyPassword","LORISHostPassword","DevOrthancPassword","ProdOrthancPassword"]
+    return render_template('configure/update.html',
+                           configurations=configurations,password_keys=password_keys)
 
 
 """ Delete View """
@@ -127,10 +140,8 @@ def check_form_inputs(form):
 
     # Form keys
     form_keys = list(form)
-    print('Form keys', form_keys)
-    print('envvars', envvars)
     if(sorted(form_keys)==sorted(envvars)):
-        data = [g.user['id']] + list(form.values())
+        data = [str(g.user['id'])] + list(form.values())
     else:
         error = 'The form values are invalid. All fields are required'
 
