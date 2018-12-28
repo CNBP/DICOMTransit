@@ -619,7 +619,7 @@ def import_patient_tables():
                                     pass
 
                             # Mark this table entry as 'complete'.
-                            redcap_complete_status_key_name = globalvars.data_import_configuration[i][4].lower() + \
+                            redcap_complete_status_key_name = globalvars.data_import_configuration[j][4].lower() + \
                                                               redcap_complete_status_suffix
                             record_text[redcap_complete_status_key_name] = redcap_complete_status_value
 
@@ -744,19 +744,26 @@ def get_redcap_fields(table_name):
 
     if len(globalvars.redcap_metadata) > 0 and not table_name == '':
 
-        # For each REDCap field
-        for i in range(len(globalvars.redcap_metadata)):
+        if table_name.lower() not in globalvars.redcap_fields:
 
-            # globalvars.redcap_metadata[i][0] is field_name
-            # globalvars.redcap_metadata[i][2] is field_label
-            # globalvars.redcap_metadata[i][3] is form_name
+            # For each REDCap field
+            for i in range(len(globalvars.redcap_metadata)):
 
-            if ([globalvars.redcap_metadata[i][2], globalvars.redcap_metadata[i][0]] not in
-                    redcap_fields
-                    and globalvars.redcap_metadata[i][3].lower() == table_name.lower()):
+                # globalvars.redcap_metadata[i][0] is field_name
+                # globalvars.redcap_metadata[i][2] is field_label
+                # globalvars.redcap_metadata[i][3] is form_name
 
-                redcap_fields.append([globalvars.redcap_metadata[i][2],
-                                      globalvars.redcap_metadata[i][0]])
+                if ([globalvars.redcap_metadata[i][2], globalvars.redcap_metadata[i][0]] not in
+                        redcap_fields
+                        and globalvars.redcap_metadata[i][3].lower() == table_name.lower()):
+                    redcap_fields.append([globalvars.redcap_metadata[i][2],
+                                          globalvars.redcap_metadata[i][0]])
+
+            globalvars.redcap_fields[table_name.lower()] = redcap_fields
+
+        else:
+
+            redcap_fields = globalvars.redcap_fields[table_name.lower()]
 
     return redcap_fields
 

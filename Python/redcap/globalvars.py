@@ -1,5 +1,6 @@
 data_import_configuration = []
 redcap_metadata = []
+redcap_fields = {}
 database_column_names = {}
 hospital_record_numbers = []
 redcap_queue = []
