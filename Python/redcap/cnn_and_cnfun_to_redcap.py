@@ -253,160 +253,163 @@ def load_hospital_record_numbers():
 def initialize_data_import_configuration_matrix():
     """
     Initialize the data import configuration matrix.
-    Columns: import_sequence, is_import_enabled, is_reference_table, redcap_project, table_name, database,
-             primary_key_name, primary_key_value, authority_on_ids, is_repeatable_instrument
+    Columns: import_sequence, is_import_enabled, is_reference_table, redcap_project, database_table_name, database,
+             primary_key_name, primary_key_value, authority_on_ids, is_repeatable_instrument, redcap_form_name
     :return: None
     """
     globalvars.data_import_configuration = [
-        [1, 1, 0, 1, 'admission', 1, 1, 1, [2, 3], 0],
-        [2, 1, 0, 1, 'admissionChart', 1, 2, 2, None, 1],
-        [3, 1, 0, 1, 'admissionstate', 1, 2, 2, None, 1],
-        [4, 1, 0, 1, 'Born', 1, 2, 2, None, 1],
-        [5, 1, 0, 1, 'Borndiagnosis', 1, 2, 2, None, 1],
-        [6, 1, 0, 1, 'Caffeine', 1, 2, 2, None, 1],
-        [7, 1, 0, 1, 'Congenitalanomalies', 1, 2, 2, None, 1],
-        [8, 1, 0, 1, 'Culturestransfusions', 1, 2, 2, None, 1],
-        [9, 1, 0, 1, 'Diagnosisofinfection', 1, 2, 2, None, 1],
-        [10, 1, 0, 1, 'Diagnosisprocedures', 1, 2, 2, None, 1],
-        [11, 1, 0, 1, 'Discharge', 1, 2, 2, None, 1],
-        [12, 1, 0, 1, 'Encephalopathy', 1, 2, 2, None, 1],
-        [13, 1, 0, 1, 'Eol', 1, 2, 2, None, 1],
-        [14, 1, 0, 1, 'Epiqcentrallines', 1, 2, 2, None, 1],
-        [15, 1, 0, 1, 'Formreviewed', 1, 2, 2, None, 1],
-        [16, 1, 0, 1, 'Ivh', 1, 2, 2, None, 1],
-        [17, 1, 0, 1, 'Nropexams', 1, 2, 2, None, 1],
-        [18, 1, 0, 1, 'Nroptreatments', 1, 2, 2, None, 1],
-        [19, 1, 0, 1, 'Ntiss1', 1, 2, 2, None, 1],
-        [20, 1, 0, 1, 'Ntiss3', 1, 2, 2, None, 1],
-        [21, 1, 0, 1, 'Otherdiagnosis', 1, 2, 2, None, 1],
-        [22, 1, 0, 1, 'Pdatreatment', 1, 2, 2, None, 1],
-        [23, 1, 0, 1, 'Posbloodcsfcultures', 1, 2, 2, None, 1],
-        [24, 1, 0, 1, 'Postnatalsteroids', 1, 2, 2, None, 1],
-        [25, 1, 0, 1, 'Posttransfer', 1, 2, 2, None, 1],
-        [26, 1, 0, 1, 'Rop', 1, 2, 2, None, 1],
-        [27, 1, 0, 1, 'Screenlog', 1, 2, 2, None, 1],
-        [28, 1, 0, 1, 'Snap', 1, 2, 2, None, 1],
-        [29, 1, 0, 1, 'Surfactant', 1, 2, 2, None, 1],
-        [30, 1, 0, 1, 'Transport', 1, 2, 2, None, 1],
-        [31, 1, 0, 1, 'Trips', 1, 2, 2, None, 1],
-        [32, 1, 0, 1, 'Validate', 1, 2, 2, None, 1],
-        [33, 1, 0, 2, 'Baby', 1, 3, 3, [4, 5], 0],
-        [34, 1, 0, 2, 'Bornbaby', 1, 3, 3, None, 1],
-        [35, 1, 0, 2, 'Epiq', 1, 3, 3, None, 1],
-        [36, 1, 0, 2, 'Resuscitation', 1, 3, 3, None, 1],
-        [37, 1, 0, 2, 'Antenatalinterventions', 1, 3, 3, None, 1],
-        [38, 1, 0, 3, 'Mother', 1, 4, 4, None, 0],
-        [39, 1, 0, 3, 'Antenatalintervention', 1, 4, 4, None, 1],
-        [40, 1, 0, 3, 'Bornmother', 1, 4, 4, None, 1],
-        [41, 1, 0, 4, 'Patients', 2, 6, 5, [7], 0],
-        [42, 1, 0, 4, '18MonthAssessments', 2, 7, 7, None, 1],
-        [43, 1, 0, 4, '36MonthAssessments', 2, 7, 7, None, 1],
-        [44, 1, 0, 4, '36MonthStatus', 2, 7, 7, None, 1],
-        [45, 1, 0, 4, '3YearAuditoryAssessments', 2, 7, 7, None, 1],
-        [46, 1, 0, 4, '3YearFamilyInfo', 2, 7, 7, None, 1],
-        [47, 1, 0, 4, '3YearMedicalHistories', 2, 7, 7, None, 1],
-        [48, 1, 0, 4, '3YearPrimaryCaregivers', 2, 7, 7, None, 1],
-        [49, 1, 0, 4, '3YearVisionAssessments', 2, 7, 7, None, 1],
-        [50, 1, 0, 4, 'AuditoryAssessments', 2, 7, 7, None, 1],
-        [51, 1, 0, 4, 'FamilyInfo', 2, 7, 7, None, 1],
-        [52, 1, 0, 4, 'FollowupReasons', 2, 7, 7, None, 1],
-        [53, 1, 0, 4, 'MedicalHistories', 2, 7, 7, None, 1],
-        [54, 1, 0, 4, 'PrimaryCaregivers', 2, 7, 7, None, 1],
-        [55, 1, 0, 4, 'PsychologicalExaminations', 2, 7, 7, None, 1],
-        [56, 1, 0, 4, 'VisionAssessments', 2, 7, 7, None, 1],
-        [57, 1, 1, 5, 'mstadmissioncasetype', 1, 8, 8, None, 1],
-        [58, 1, 1, 5, 'mstadmissioninfantsex', 1, 8, 8, None, 1],
-        [59, 1, 1, 5, 'mstadmissioninternal', 1, 8, 8, None, 1],
-        [60, 1, 1, 5, 'mstadmissionpayor', 1, 8, 8, None, 1],
-        [61, 1, 1, 5, 'mstadmissionstat', 1, 8, 8, None, 1],
-        [62, 1, 1, 5, 'mstborncordbloodteststatus', 1, 8, 8, None, 1],
-        [63, 1, 1, 5, 'mstborncountries', 1, 8, 8, None, 1],
-        [64, 1, 1, 5, 'mstborndrugscreenresult', 1, 8, 8, None, 1],
-        [65, 1, 1, 5, 'mstbornhealthcardtype', 1, 8, 8, None, 1],
-        [66, 1, 1, 5, 'mstbornnewbornfeeding', 1, 8, 8, None, 1],
-        [67, 1, 1, 5, 'mstbornscreeningoffered', 1, 8, 8, None, 1],
-        [68, 1, 1, 5, 'mstbornynu', 1, 8, 8, None, 1],
-        [69, 1, 1, 5, 'mstbpdgrade', 1, 8, 8, None, 1],
-        [70, 1, 1, 5, 'mstcities', 1, 8, 8, None, 1],
-        [71, 1, 1, 5, 'mstcitygroups', 1, 8, 8, None, 1],
-        [72, 1, 1, 5, 'mstcnfunhospitallist', 1, 8, 8, None, 1],
-        [73, 1, 1, 5, 'mstculturesculture', 1, 8, 8, None, 1],
-        [74, 1, 1, 5, 'mstculturesdiagnosis', 1, 8, 8, None, 1],
-        [75, 1, 1, 5, 'mstculturesorganism', 1, 8, 8, None, 1],
-        [76, 1, 1, 5, 'mstdiagnosiscongenitaltype', 1, 8, 8, None, 1],
-        [77, 1, 1, 5, 'mstdiagnosisdiagnosistype', 1, 8, 8, None, 1],
-        [78, 1, 1, 5, 'mstdiagnosishie', 1, 8, 8, None, 1],
-        [79, 1, 1, 5, 'mstdiagnosisintperforation', 1, 8, 8, None, 1],
-        [80, 1, 1, 5, 'mstdiagnosisnecstages', 1, 8, 8, None, 1],
-        [81, 1, 1, 5, 'mstdiagnosispdayes', 1, 8, 8, None, 1],
-        [82, 1, 1, 5, 'mstdiagnosisrds', 1, 8, 8, None, 1],
-        [83, 1, 1, 5, 'mstdiagnosisseizures', 1, 8, 8, None, 1],
-        [84, 1, 1, 5, 'mstdiagnosisthrombosislocationarterial', 1, 8, 8, None, 1],
-        [85, 1, 1, 5, 'mstdiagnosisthrombosislocationvenous', 1, 8, 8, None, 1],
-        [86, 1, 1, 5, 'mstdiagnosisthrombosismethod', 1, 8, 8, None, 1],
-        [87, 1, 1, 5, 'mstdiagnosisthrombosistreatment', 1, 8, 8, None, 1],
-        [88, 1, 1, 5, 'mstdischargedestination', 1, 8, 8, None, 1],
-        [89, 1, 1, 5, 'mstdischargeinpatientarea', 1, 8, 8, None, 1],
-        [90, 1, 1, 5, 'mstdischargeresult', 1, 8, 8, None, 1],
-        [91, 1, 1, 5, 'mstencephalopathyclinicalstatus', 1, 8, 8, None, 1],
-        [92, 1, 1, 5, 'mstencephalopathyclinicalstatusatcompletion', 1, 8, 8, None, 1],
-        [93, 1, 1, 5, 'mstencephalopathymethod', 1, 8, 8, None, 1],
-        [94, 1, 1, 5, 'mstencephalopathyreasonxprematurediscont', 1, 8, 8, None, 1],
-        [95, 1, 1, 5, 'mstencephalopathytargettemp', 1, 8, 8, None, 1],
-        [96, 1, 1, 5, 'msteol', 1, 8, 8, None, 1],
-        [97, 1, 1, 5, 'mstepiqchecklistused', 1, 8, 8, None, 1],
-        [98, 1, 1, 5, 'mstfacilitytype', 1, 8, 8, None, 1],
-        [99, 1, 1, 5, 'msthospitals', 1, 8, 8, None, 1],
-        [100, 1, 1, 5, 'mstivhresponse', 1, 8, 8, None, 1],
-        [101, 1, 1, 5, 'mstivhventricular', 1, 8, 8, None, 1],
-        [102, 1, 1, 5, 'mstmotherantecort', 1, 8, 8, None, 1],
-        [103, 1, 1, 5, 'mstmotheranteintervention', 1, 8, 8, None, 1],
-        [104, 1, 1, 5, 'mstmotherdeliverytype', 1, 8, 8, None, 1],
-        [105, 1, 1, 5, 'mstmotherdiabetes', 1, 8, 8, None, 1],
-        [106, 1, 1, 5, 'mstmotherethnicity', 1, 8, 8, None, 1],
-        [107, 1, 1, 5, 'mstmotherhypertension', 1, 8, 8, None, 1],
-        [108, 1, 1, 5, 'mstmotherlabourinit', 1, 8, 8, None, 1],
-        [109, 1, 1, 5, 'mstmotherpresentation', 1, 8, 8, None, 1],
-        [110, 1, 1, 5, 'mstmotherrom', 1, 8, 8, None, 1],
-        [111, 1, 1, 5, 'mstmothertotalacgiven', 1, 8, 8, None, 1],
-        [112, 1, 1, 5, 'mstnropcomplications', 1, 8, 8, None, 1],
-        [113, 1, 1, 5, 'mstnropdurations', 1, 8, 8, None, 1],
-        [114, 1, 1, 5, 'mstnropfollowup', 1, 8, 8, None, 1],
-        [115, 1, 1, 5, 'mstnropplus', 1, 8, 8, None, 1],
-        [116, 1, 1, 5, 'mstnropstage', 1, 8, 8, None, 1],
-        [117, 1, 1, 5, 'mstnroptreatmenteyes', 1, 8, 8, None, 1],
-        [118, 1, 1, 5, 'mstnroptreatmentlocations', 1, 8, 8, None, 1],
-        [119, 1, 1, 5, 'mstnroptreatmenttypes', 1, 8, 8, None, 1],
-        [120, 1, 1, 5, 'mstnropzone', 1, 8, 8, None, 1],
-        [121, 1, 1, 5, 'mstntissantibiotics', 1, 8, 8, None, 1],
-        [122, 1, 1, 5, 'mstntisschesttube', 1, 8, 8, None, 1],
-        [123, 1, 1, 5, 'mstntisspacemaker', 1, 8, 8, None, 1],
-        [124, 1, 1, 5, 'mstntisstracheostomy', 1, 8, 8, None, 1],
-        [125, 1, 1, 5, 'mstpatientchart', 1, 8, 8, None, 1],
-        [126, 1, 1, 5, 'mstpdatreatment', 1, 8, 8, None, 1],
-        [127, 1, 1, 5, 'mstpostnatalsteroidsindication', 1, 8, 8, None, 1],
-        [128, 1, 1, 5, 'mstpostnatalsteroidsroute', 1, 8, 8, None, 1],
-        [129, 1, 1, 5, 'mstpostnatalsteroidstype', 1, 8, 8, None, 1],
-        [130, 1, 1, 5, 'mstpostnatalsteroidstypeindication', 1, 8, 8, None, 1],
-        [131, 1, 1, 5, 'mstposttransferdest', 1, 8, 8, None, 1],
-        [132, 1, 1, 5, 'mstprovinces', 1, 8, 8, None, 1],
-        [133, 1, 1, 5, 'mstresponse', 1, 8, 8, None, 1],
-        [134, 1, 1, 5, 'mstresponsetostimuli', 1, 8, 8, None, 1],
-        [135, 1, 1, 5, 'mstrespstatus', 1, 8, 8, None, 1],
-        [136, 1, 1, 5, 'mstresuscitationinitialgas', 1, 8, 8, None, 1],
-        [137, 1, 1, 5, 'mstropplus', 1, 8, 8, None, 1],
-        [138, 1, 1, 5, 'mstropstage', 1, 8, 8, None, 1],
-        [139, 1, 1, 5, 'mstroptreatmenteye', 1, 8, 8, None, 1],
-        [140, 1, 1, 5, 'mstroptreatmenttype', 1, 8, 8, None, 1],
-        [141, 1, 1, 5, 'mstropzone', 1, 8, 8, None, 1],
-        [142, 1, 1, 5, 'mstsearchgridcolumns', 1, 8, 8, None, 1],
-        [143, 1, 1, 5, 'mstsnapeffectivefio2', 1, 8, 8, None, 1],
-        [144, 1, 1, 5, 'mstsnapfactor', 1, 8, 8, None, 1],
-        [145, 1, 1, 5, 'mstsnapseizures', 1, 8, 8, None, 1],
-        [146, 1, 1, 5, 'mstsurfactanttype', 1, 8, 8, None, 1],
-        [147, 1, 1, 5, 'mstsystolicbp', 1, 8, 8, None, 1],
-        [148, 1, 1, 5, 'msttemperature', 1, 8, 8, None, 1],
-        [149, 1, 1, 5, 'mstvegfdrugs', 1, 8, 8, None, 1]
+        [1, 1, 0, 1, 'admission', 1, 1, 1, [2, 3], 0, 'admission'],
+        [2, 1, 0, 1, 'admissionChart', 1, 2, 2, None, 1, 'admissionChart'],
+        [3, 1, 0, 1, 'admissionstate', 1, 2, 2, None, 1, 'admissionstate'],
+        [4, 1, 0, 1, 'Born', 1, 2, 2, None, 1, 'Born'],
+        [5, 1, 0, 1, 'Borndiagnosis', 1, 2, 2, None, 1, 'Borndiagnosis'],
+        [6, 1, 0, 1, 'Caffeine', 1, 2, 2, None, 1, 'Caffeine'],
+        [7, 1, 0, 1, 'Congenitalanomalies', 1, 2, 2, None, 1, 'Congenitalanomalies'],
+        [8, 1, 0, 1, 'Culturestransfusions', 1, 2, 2, None, 1, 'Culturestransfusions'],
+        [9, 1, 0, 1, 'Diagnosisofinfection', 1, 2, 2, None, 1, 'Diagnosisofinfection'],
+        [10, 1, 0, 1, 'Diagnosisprocedures', 1, 2, 2, None, 1, 'Diagnosisprocedures'],
+        [11, 1, 0, 1, 'Discharge', 1, 2, 2, None, 1, 'Discharge'],
+        [12, 1, 0, 1, 'Encephalopathy', 1, 2, 2, None, 1, 'Encephalopathy'],
+        [13, 1, 0, 1, 'Eol', 1, 2, 2, None, 1, 'Eol'],
+        [14, 1, 0, 1, 'Epiqcentrallines', 1, 2, 2, None, 1, 'Epiqcentrallines'],
+        [15, 1, 0, 1, 'Formreviewed', 1, 2, 2, None, 1, 'Formreviewed'],
+        [16, 1, 0, 1, 'Ivh', 1, 2, 2, None, 1, 'Ivh'],
+        [17, 1, 0, 1, 'Nropexams', 1, 2, 2, None, 1, 'Nropexams'],
+        [18, 1, 0, 1, 'Nroptreatments', 1, 2, 2, None, 1, 'Nroptreatments'],
+        [19, 1, 0, 1, 'Ntiss1', 1, 2, 2, None, 1, 'Ntiss1'],
+        [20, 1, 0, 1, 'Ntiss3', 1, 2, 2, None, 1, 'Ntiss3'],
+        [21, 1, 0, 1, 'Otherdiagnosis', 1, 2, 2, None, 1, 'Otherdiagnosis'],
+        [22, 1, 0, 1, 'Pdatreatment', 1, 2, 2, None, 1, 'Pdatreatment'],
+        [23, 1, 0, 1, 'Posbloodcsfcultures', 1, 2, 2, None, 1, 'Posbloodcsfcultures'],
+        [24, 1, 0, 1, 'Postnatalsteroids', 1, 2, 2, None, 1, 'Postnatalsteroids'],
+        [25, 1, 0, 1, 'Posttransfer', 1, 2, 2, None, 1, 'Posttransfer'],
+        [26, 1, 0, 1, 'Rop', 1, 2, 2, None, 1, 'Rop'],
+        [27, 1, 0, 1, 'Screenlog', 1, 2, 2, None, 1, 'Screenlog'],
+        [28, 1, 0, 1, 'Snap', 1, 2, 2, None, 1, 'Snap'],
+        [29, 1, 0, 1, 'Surfactant', 1, 2, 2, None, 1, 'Surfactant'],
+        [30, 1, 0, 1, 'Transport', 1, 2, 2, None, 1, 'Transport'],
+        [31, 1, 0, 1, 'Trips', 1, 2, 2, None, 1, 'Trips'],
+        [32, 1, 0, 1, 'Validate', 1, 2, 2, None, 1, 'Validate'],
+        [33, 1, 0, 2, 'Baby', 1, 3, 3, [4, 5], 0, 'Baby'],
+        [34, 1, 0, 2, 'Bornbaby', 1, 3, 3, None, 1, 'Bornbaby'],
+        [35, 1, 0, 2, 'Epiq', 1, 3, 3, None, 1, 'Epiq'],
+        [36, 1, 0, 2, 'Resuscitation', 1, 3, 3, None, 1, 'Resuscitation'],
+        [37, 1, 0, 2, 'Antenatalinterventions', 1, 3, 3, None, 1, 'Antenatalinterventions'],
+        [38, 1, 0, 3, 'Mother', 1, 4, 4, None, 0, 'Mother'],
+        [39, 1, 0, 3, 'Antenatalintervention', 1, 4, 4, None, 1, 'Antenatalintervention'],
+        [40, 1, 0, 3, 'Bornmother', 1, 4, 4, None, 1, 'Bornmother'],
+        [41, 1, 0, 4, 'Patients', 2, 6, 5, [7], 0, 'Patients'],
+        [42, 1, 0, 4, '18MonthAssessments', 2, 7, 7, None, 1, 'EighteenMonthAssessments'],
+        [43, 1, 0, 4, '36MonthAssessments', 2, 7, 7, None, 1, 'ThirtySixMonthAssessments'],
+        [44, 1, 0, 4, '36MonthStatus', 2, 7, 7, None, 1, 'ThirtySixMonthStatus'],
+        [45, 1, 0, 4, '3YearAuditoryAssessments', 2, 7, 7, None, 1, 'ThreeYearAuditoryAssessments'],
+        [46, 1, 0, 4, '3YearFamilyInfo', 2, 7, 7, None, 1, 'ThreeYearFamilyInfo'],
+        [47, 1, 0, 4, '3YearMedicalHistories', 2, 7, 7, None, 1, 'ThreeYearMedicalHistories'],
+        [48, 1, 0, 4, '3YearPrimaryCaregivers', 2, 7, 7, None, 1, 'ThreeYearPrimaryCaregivers'],
+        [49, 1, 0, 4, '3YearVisionAssessments', 2, 7, 7, None, 1, 'ThreeYearVisionAssessments'],
+        [50, 1, 0, 4, 'AuditoryAssessments', 2, 7, 7, None, 1, 'AuditoryAssessments'],
+        [51, 1, 0, 4, 'FamilyInfo', 2, 7, 7, None, 1, 'FamilyInfo'],
+        [52, 1, 0, 4, 'FollowupReasons', 2, 7, 7, None, 1, 'FollowupReasons'],
+        [53, 1, 0, 4, 'MedicalHistories', 2, 7, 7, None, 1, 'MedicalHistories'],
+        [54, 1, 0, 4, 'PrimaryCaregivers', 2, 7, 7, None, 1, 'PrimaryCaregivers'],
+        [55, 1, 0, 4, 'PsychologicalExaminations', 2, 7, 7, None, 1, 'PsychologicalExaminations'],
+        [56, 1, 0, 4, 'VisionAssessments', 2, 7, 7, None, 1, 'VisionAssessments'],
+        [57, 1, 1, 5, 'mstadmissioncasetype', 1, 8, 8, None, 1, 'mstadmissioncasetype'],
+        [58, 1, 1, 5, 'mstadmissioninfantsex', 1, 8, 8, None, 1, 'mstadmissioninfantsex'],
+        [59, 1, 1, 5, 'mstadmissioninternal', 1, 8, 8, None, 1, 'mstadmissioninternal'],
+        [60, 1, 1, 5, 'mstadmissionpayor', 1, 8, 8, None, 1, 'mstadmissionpayor'],
+        [61, 1, 1, 5, 'mstadmissionstat', 1, 8, 8, None, 1, 'mstadmissionstat'],
+        [62, 1, 1, 5, 'mstborncordbloodteststatus', 1, 8, 8, None, 1, 'mstborncordbloodteststatus'],
+        [63, 1, 1, 5, 'mstborncountries', 1, 8, 8, None, 1, 'mstborncountries'],
+        [64, 1, 1, 5, 'mstborndrugscreenresult', 1, 8, 8, None, 1, 'mstborndrugscreenresult'],
+        [65, 1, 1, 5, 'mstbornhealthcardtype', 1, 8, 8, None, 1, 'mstbornhealthcardtype'],
+        [66, 1, 1, 5, 'mstbornnewbornfeeding', 1, 8, 8, None, 1, 'mstbornnewbornfeeding'],
+        [67, 1, 1, 5, 'mstbornscreeningoffered', 1, 8, 8, None, 1, 'mstbornscreeningoffered'],
+        [68, 1, 1, 5, 'mstbornynu', 1, 8, 8, None, 1, 'mstbornynu'],
+        [69, 1, 1, 5, 'mstbpdgrade', 1, 8, 8, None, 1, 'mstbpdgrade'],
+        [70, 1, 1, 5, 'mstcities', 1, 8, 8, None, 1, 'mstcities'],
+        [71, 1, 1, 5, 'mstcitygroups', 1, 8, 8, None, 1, 'mstcitygroups'],
+        [72, 1, 1, 5, 'mstcnfunhospitallist', 1, 8, 8, None, 1, 'mstcnfunhospitallist'],
+        [73, 1, 1, 5, 'mstculturesculture', 1, 8, 8, None, 1, 'mstculturesculture'],
+        [74, 1, 1, 5, 'mstculturesdiagnosis', 1, 8, 8, None, 1, 'mstculturesdiagnosis'],
+        [75, 1, 1, 5, 'mstculturesorganism', 1, 8, 8, None, 1, 'mstculturesorganism'],
+        [76, 1, 1, 5, 'mstdiagnosiscongenitaltype', 1, 8, 8, None, 1, 'mstdiagnosiscongenitaltype'],
+        [77, 1, 1, 5, 'mstdiagnosisdiagnosistype', 1, 8, 8, None, 1, 'mstdiagnosisdiagnosistype'],
+        [78, 1, 1, 5, 'mstdiagnosishie', 1, 8, 8, None, 1, 'mstdiagnosishie'],
+        [79, 1, 1, 5, 'mstdiagnosisintperforation', 1, 8, 8, None, 1, 'mstdiagnosisintperforation'],
+        [80, 1, 1, 5, 'mstdiagnosisnecstages', 1, 8, 8, None, 1, 'mstdiagnosisnecstages'],
+        [81, 1, 1, 5, 'mstdiagnosispdayes', 1, 8, 8, None, 1, 'mstdiagnosispdayes'],
+        [82, 1, 1, 5, 'mstdiagnosisrds', 1, 8, 8, None, 1, 'mstdiagnosisrds'],
+        [83, 1, 1, 5, 'mstdiagnosisseizures', 1, 8, 8, None, 1, 'mstdiagnosisseizures'],
+        [84, 1, 1, 5, 'mstdiagnosisthrombosislocationarterial', 1, 8, 8, None, 1,
+         'mstdiagnosisthrombosislocationarterial'],
+        [85, 1, 1, 5, 'mstdiagnosisthrombosislocationvenous', 1, 8, 8, None, 1, 'mstdiagnosisthrombosislocationvenous'],
+        [86, 1, 1, 5, 'mstdiagnosisthrombosismethod', 1, 8, 8, None, 1, 'mstdiagnosisthrombosismethod'],
+        [87, 1, 1, 5, 'mstdiagnosisthrombosistreatment', 1, 8, 8, None, 1, 'mstdiagnosisthrombosistreatment'],
+        [88, 1, 1, 5, 'mstdischargedestination', 1, 8, 8, None, 1, 'mstdischargedestination'],
+        [89, 1, 1, 5, 'mstdischargeinpatientarea', 1, 8, 8, None, 1, 'mstdischargeinpatientarea'],
+        [90, 1, 1, 5, 'mstdischargeresult', 1, 8, 8, None, 1, 'mstdischargeresult'],
+        [91, 1, 1, 5, 'mstencephalopathyclinicalstatus', 1, 8, 8, None, 1, 'mstencephalopathyclinicalstatus'],
+        [92, 1, 1, 5, 'mstencephalopathyclinicalstatusatcompletion', 1, 8, 8, None, 1,
+         'mstencephalopathyclinicalstatusatcompletion'],
+        [93, 1, 1, 5, 'mstencephalopathymethod', 1, 8, 8, None, 1, 'mstencephalopathymethod'],
+        [94, 1, 1, 5, 'mstencephalopathyreasonxprematurediscont', 1, 8, 8, None, 1,
+         'mstencephalopathyreasonxprematurediscont'],
+        [95, 1, 1, 5, 'mstencephalopathytargettemp', 1, 8, 8, None, 1, 'mstencephalopathytargettemp'],
+        [96, 1, 1, 5, 'msteol', 1, 8, 8, None, 1, 'msteol'],
+        [97, 1, 1, 5, 'mstepiqchecklistused', 1, 8, 8, None, 1, 'mstepiqchecklistused'],
+        [98, 1, 1, 5, 'mstfacilitytype', 1, 8, 8, None, 1, 'mstfacilitytype'],
+        [99, 1, 1, 5, 'msthospitals', 1, 8, 8, None, 1, 'msthospitals'],
+        [100, 1, 1, 5, 'mstivhresponse', 1, 8, 8, None, 1, 'mstivhresponse'],
+        [101, 1, 1, 5, 'mstivhventricular', 1, 8, 8, None, 1, 'mstivhventricular'],
+        [102, 1, 1, 5, 'mstmotherantecort', 1, 8, 8, None, 1, 'mstmotherantecort'],
+        [103, 1, 1, 5, 'mstmotheranteintervention', 1, 8, 8, None, 1, 'mstmotheranteintervention'],
+        [104, 1, 1, 5, 'mstmotherdeliverytype', 1, 8, 8, None, 1, 'mstmotherdeliverytype'],
+        [105, 1, 1, 5, 'mstmotherdiabetes', 1, 8, 8, None, 1, 'mstmotherdiabetes'],
+        [106, 1, 1, 5, 'mstmotherethnicity', 1, 8, 8, None, 1, 'mstmotherethnicity'],
+        [107, 1, 1, 5, 'mstmotherhypertension', 1, 8, 8, None, 1, 'mstmotherhypertension'],
+        [108, 1, 1, 5, 'mstmotherlabourinit', 1, 8, 8, None, 1, 'mstmotherlabourinit'],
+        [109, 1, 1, 5, 'mstmotherpresentation', 1, 8, 8, None, 1, 'mstmotherpresentation'],
+        [110, 1, 1, 5, 'mstmotherrom', 1, 8, 8, None, 1, 'mstmotherrom'],
+        [111, 1, 1, 5, 'mstmothertotalacgiven', 1, 8, 8, None, 1, 'mstmothertotalacgiven'],
+        [112, 1, 1, 5, 'mstnropcomplications', 1, 8, 8, None, 1, 'mstnropcomplications'],
+        [113, 1, 1, 5, 'mstnropdurations', 1, 8, 8, None, 1, 'mstnropdurations'],
+        [114, 1, 1, 5, 'mstnropfollowup', 1, 8, 8, None, 1, 'mstnropfollowup'],
+        [115, 1, 1, 5, 'mstnropplus', 1, 8, 8, None, 1, 'mstnropplus'],
+        [116, 1, 1, 5, 'mstnropstage', 1, 8, 8, None, 1, 'mstnropstage'],
+        [117, 1, 1, 5, 'mstnroptreatmenteyes', 1, 8, 8, None, 1, 'mstnroptreatmenteyes'],
+        [118, 1, 1, 5, 'mstnroptreatmentlocations', 1, 8, 8, None, 1, 'mstnroptreatmentlocations'],
+        [119, 1, 1, 5, 'mstnroptreatmenttypes', 1, 8, 8, None, 1, 'mstnroptreatmenttypes'],
+        [120, 1, 1, 5, 'mstnropzone', 1, 8, 8, None, 1, 'mstnropzone'],
+        [121, 1, 1, 5, 'mstntissantibiotics', 1, 8, 8, None, 1, 'mstntissantibiotics'],
+        [122, 1, 1, 5, 'mstntisschesttube', 1, 8, 8, None, 1, 'mstntisschesttube'],
+        [123, 1, 1, 5, 'mstntisspacemaker', 1, 8, 8, None, 1, 'mstntisspacemaker'],
+        [124, 1, 1, 5, 'mstntisstracheostomy', 1, 8, 8, None, 1, 'mstntisstracheostomy'],
+        [125, 1, 1, 5, 'mstpatientchart', 1, 8, 8, None, 1, 'mstpatientchart'],
+        [126, 1, 1, 5, 'mstpdatreatment', 1, 8, 8, None, 1, 'mstpdatreatment'],
+        [127, 1, 1, 5, 'mstpostnatalsteroidsindication', 1, 8, 8, None, 1, 'mstpostnatalsteroidsindication'],
+        [128, 1, 1, 5, 'mstpostnatalsteroidsroute', 1, 8, 8, None, 1, 'mstpostnatalsteroidsroute'],
+        [129, 1, 1, 5, 'mstpostnatalsteroidstype', 1, 8, 8, None, 1, 'mstpostnatalsteroidstype'],
+        [130, 1, 1, 5, 'mstpostnatalsteroidstypeindication', 1, 8, 8, None, 1, 'mstpostnatalsteroidstypeindication'],
+        [131, 1, 1, 5, 'mstposttransferdest', 1, 8, 8, None, 1, 'mstposttransferdest'],
+        [132, 1, 1, 5, 'mstprovinces', 1, 8, 8, None, 1, 'mstprovinces'],
+        [133, 1, 1, 5, 'mstresponse', 1, 8, 8, None, 1, 'mstresponse'],
+        [134, 1, 1, 5, 'mstresponsetostimuli', 1, 8, 8, None, 1, 'mstresponsetostimuli'],
+        [135, 1, 1, 5, 'mstrespstatus', 1, 8, 8, None, 1, 'mstrespstatus'],
+        [136, 1, 1, 5, 'mstresuscitationinitialgas', 1, 8, 8, None, 1, 'mstresuscitationinitialgas'],
+        [137, 1, 1, 5, 'mstropplus', 1, 8, 8, None, 1, 'mstropplus'],
+        [138, 1, 1, 5, 'mstropstage', 1, 8, 8, None, 1, 'mstropstage'],
+        [139, 1, 1, 5, 'mstroptreatmenteye', 1, 8, 8, None, 1, 'mstroptreatmenteye'],
+        [140, 1, 1, 5, 'mstroptreatmenttype', 1, 8, 8, None, 1, 'mstroptreatmenttype'],
+        [141, 1, 1, 5, 'mstropzone', 1, 8, 8, None, 1, 'mstropzone'],
+        [142, 1, 1, 5, 'mstsearchgridcolumns', 1, 8, 8, None, 1, 'mstsearchgridcolumns'],
+        [143, 1, 1, 5, 'mstsnapeffectivefio2', 1, 8, 8, None, 1, 'mstsnapeffectivefio2'],
+        [144, 1, 1, 5, 'mstsnapfactor', 1, 8, 8, None, 1, 'mstsnapfactor'],
+        [145, 1, 1, 5, 'mstsnapseizures', 1, 8, 8, None, 1, 'mstsnapseizures'],
+        [146, 1, 1, 5, 'mstsurfactanttype', 1, 8, 8, None, 1, 'mstsurfactanttype'],
+        [147, 1, 1, 5, 'mstsystolicbp', 1, 8, 8, None, 1, 'mstsystolicbp'],
+        [148, 1, 1, 5, 'msttemperature', 1, 8, 8, None, 1, 'msttemperature'],
+        [149, 1, 1, 5, 'mstvegfdrugs', 1, 8, 8, None, 1, 'mstvegfdrugs']
     ]
 
     # Sort data import configuration matrix by first column ascending (import sequence).
@@ -430,7 +433,7 @@ def import_reference_tables():
             if globalvars.data_import_configuration[i][2]:
 
                 # Get current table redcap fields.
-                current_table_redcap_fields = get_redcap_fields(globalvars.data_import_configuration[i][4])
+                current_table_redcap_fields = get_redcap_fields(globalvars.data_import_configuration[i][10])
 
                 # Get database columns list.
                 database_column_list = get_database_column_names(globalvars.data_import_configuration[i])
@@ -452,7 +455,7 @@ def import_reference_tables():
 
                     # Set repeatable data (if applicable).
                     if globalvars.data_import_configuration[i][9] == 1:
-                        record_text[redcap_repeat_instrument_key_name] = globalvars.data_import_configuration[i][4].lower()
+                        record_text[redcap_repeat_instrument_key_name] = globalvars.data_import_configuration[i][10].lower()
                         record_text[redcap_repeat_instance_key_name] = str(j+1)
 
                     # For each REDCap field in this table
@@ -481,7 +484,7 @@ def import_reference_tables():
                             pass
 
                     # Mark this table entry as 'complete'.
-                    redcap_complete_status_key_name = globalvars.data_import_configuration[i][4].lower() + \
+                    redcap_complete_status_key_name = globalvars.data_import_configuration[i][10].lower() + \
                                                       redcap_complete_status_suffix
                     record_text[redcap_complete_status_key_name] = redcap_complete_status_value
 
@@ -519,7 +522,7 @@ def import_patient_tables():
                 if not globalvars.data_import_configuration[j][2]:
 
                     # Get current table redcap fields.
-                    current_table_redcap_fields = get_redcap_fields(globalvars.data_import_configuration[j][4])
+                    current_table_redcap_fields = get_redcap_fields(globalvars.data_import_configuration[j][10])
 
                     # Get database columns list.
                     database_column_list = get_database_column_names(globalvars.data_import_configuration[j])
@@ -573,7 +576,7 @@ def import_patient_tables():
                             elif pk_for_value == Field.CaseId.value:
                                 record_text[get_primary_key_name(pk_for_filter).lower()] = globalvars.CaseId
                             elif pk_for_value == Field.CNNPatientUI.value:
-                                record_text[get_primary_key_name(pk_for_filter).lower()] = globalvars.CNNPatientUI
+                                record_text[Field.PatientId.name.lower()] = globalvars.PatientId
                             elif pk_for_value == Field.HospitalRecordNumber.value:
                                 # Special Case: We do not save the Hospital Record Number in REDCap.
                                 # Instead, we save the CaseId.'
@@ -583,14 +586,14 @@ def import_patient_tables():
                             elif pk_for_value == Field.PatientId.value:
                                 record_text[get_primary_key_name(pk_for_filter).lower()] = globalvars.PatientId
                             elif pk_for_value == Field.PatientUI.value:
-                                record_text[get_primary_key_name(pk_for_filter).lower()] = globalvars.PatientUI
+                                record_text[Field.PatientId.name.lower()] = globalvars.PatientId
                             elif pk_for_value == Field.MasterId.value:
                                 record_text[get_primary_key_name(pk_for_filter).lower()] = globalvars.MasterId
 
                             # Set repeatable data (if applicable).
                             if globalvars.data_import_configuration[j][9] == 1:
                                 record_text[redcap_repeat_instrument_key_name] = globalvars.data_import_configuration[j][
-                                    4].lower()
+                                    10].lower()
                                 record_text[redcap_repeat_instance_key_name] = str(k + 1)
 
                             # For each REDCap field in this table
@@ -619,7 +622,7 @@ def import_patient_tables():
                                     pass
 
                             # Mark this table entry as 'complete'.
-                            redcap_complete_status_key_name = globalvars.data_import_configuration[j][4].lower() + \
+                            redcap_complete_status_key_name = globalvars.data_import_configuration[j][10].lower() + \
                                                               redcap_complete_status_suffix
                             record_text[redcap_complete_status_key_name] = redcap_complete_status_value
 
@@ -734,17 +737,17 @@ def get_data_rows_for_patient_table(table_info):
         return None
 
 
-def get_redcap_fields(table_name):
+def get_redcap_fields(redcap_form_name):
     """
     Returns a list of fields contained within a specific REDCap questionnaire (table)
-    :param table_name: Name of table
+    :param redcap_form_name: Name of form in REDCap
     :return: A dictionary (key: Name of field in the database, value: Name of field in REDCap)
     """
     redcap_fields = []
 
-    if len(globalvars.redcap_metadata) > 0 and not table_name == '':
+    if len(globalvars.redcap_metadata) > 0 and not redcap_form_name == '':
 
-        if table_name.lower() not in globalvars.redcap_fields:
+        if redcap_form_name.lower() not in globalvars.redcap_fields:
 
             # For each REDCap field
             for i in range(len(globalvars.redcap_metadata)):
@@ -755,15 +758,15 @@ def get_redcap_fields(table_name):
 
                 if ([globalvars.redcap_metadata[i][2], globalvars.redcap_metadata[i][0]] not in
                         redcap_fields
-                        and globalvars.redcap_metadata[i][3].lower() == table_name.lower()):
+                        and globalvars.redcap_metadata[i][3].lower() == redcap_form_name.lower()):
                     redcap_fields.append([globalvars.redcap_metadata[i][2],
                                           globalvars.redcap_metadata[i][0]])
 
-            globalvars.redcap_fields[table_name.lower()] = redcap_fields
+            globalvars.redcap_fields[redcap_form_name.lower()] = redcap_fields
 
         else:
 
-            redcap_fields = globalvars.redcap_fields[table_name.lower()]
+            redcap_fields = globalvars.redcap_fields[redcap_form_name.lower()]
 
     return redcap_fields
 
@@ -945,6 +948,9 @@ def send_data_to_redcap(project_token):
             if response.status_code == 200:
                 # Empty the queue.
                 clear_redcap_queue()
+            else:
+                error_message_label = Label(window, text='There was an error in the last API call: ' + response.text)
+                error_message_label.pack()
 
     return
 
