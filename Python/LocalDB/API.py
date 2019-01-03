@@ -7,7 +7,7 @@ import logging
 import sys
 from PythonUtils.env import load_validate_dotenv
 from PythonUtils.math import int_incrementor
-from redcap import globalvars, development as environment
+from redcap import development as environment
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -270,14 +270,14 @@ def load_hospital_record_numbers():
     A wrapper funciton of get_list_MRN which allow static loading of a predefined list of all hospital record numbers for which we want to transfer data to REDCap by utilizing API calls.
     :return: None
     """
-    globalvars.hospital_record_numbers = []
+    return_list = []
 
     if environment.USE_LOCAL_HOSPITAL_RECORD_NUMBERS_LIST == 0:
         # Get the numbers from a dynamic source:
-        globalvars.hospital_record_numbers = get_list_MRN()
+        return_list = get_list_MRN()
     else:
         # Get the numbers from a static source:
-        globalvars.hospital_record_numbers = [
+        return_list = [
             3143750,
             3144235,
             3147383,
@@ -313,7 +313,7 @@ def load_hospital_record_numbers():
             3193639,
             3202977
         ]
-    return
+    return return_list
 
 if __name__ == "__main__":
     propose_CNBPID("GregoryLodygensky012 Study")

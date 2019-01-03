@@ -1,59 +1,59 @@
 from json import dumps
-
+from operator import itemgetter
 from requests import post
-import redcap.development as environment
-from redcap import globalvars
 from redcap.enums import Project
-from redcap.constants import redcap_api_url, redcap_token_cnn_admission, redcap_token_cnn_baby, redcap_token_cnn_mother, \
-    redcap_token_cnn_master, redcap_token_cnfun_patient
+from redcap.constants import *
+from redcap.transaction import RedcapTransaction
 
-import os
+import sys
 import logging
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-def get_redcap_fields(redcap_form_name):
+def get_fields(redcap_form_name, transaction: RedcapTransaction):
     """
     Returns a list of fields contained within a specific REDCap form (table)
     :param redcap_form_name: Name of form in REDCap
+    :param transaction: the transaction content to be updated.
     :return: A dictionary (key: Name of field in the database, value: Name of field in REDCap)
     """
     redcap_fields = []
 
-    if len(globalvars.redcap_metadata) > 0 and not redcap_form_name == '':
+    if len(transaction.redcap_metadata) > 0 and not redcap_form_name == '':
 
-        if redcap_form_name.lower() not in globalvars.redcap_fields:
+        if redcap_form_name.lower() not in transaction.redcap_fields:
 
             # For each REDCap field
-            for i in range(len(globalvars.redcap_metadata)):
+            for i in range(len(transaction.redcap_metadata)):
 
-                # globalvars.redcap_metadata[i][0] is field_name
-                # globalvars.redcap_metadata[i][2] is field_label
-                # globalvars.redcap_metadata[i][3] is form_name
+                # transaction.redcap_metadata[i][0] is field_name
+                # transaction.redcap_metadata[i][2] is field_label
+                # transaction.redcap_metadata[i][3] is form_name
 
-                if ([globalvars.redcap_metadata[i][2], globalvars.redcap_metadata[i][0]] not in
+                if ([transaction.redcap_metadata[i][2], transaction.redcap_metadata[i][0]] not in
                         redcap_fields
-                        and globalvars.redcap_metadata[i][3].lower() == redcap_form_name.lower()):
-                    redcap_fields.append([globalvars.redcap_metadata[i][2],
-                                          globalvars.redcap_metadata[i][0]])
+                        and transaction.redcap_metadata[i][3].lower() == redcap_form_name.lower()):
+                    redcap_fields.append([transaction.redcap_metadata[i][2],
+                                          transaction.redcap_metadata[i][0]])
 
-            globalvars.redcap_fields[redcap_form_name.lower()] = redcap_fields
+            transaction.redcap_fields[redcap_form_name.lower()] = redcap_fields
 
         else:
 
-            redcap_fields = globalvars.redcap_fields[redcap_form_name.lower()]
+            redcap_fields = transaction.redcap_fields[redcap_form_name.lower()]
 
     return redcap_fields
 
 
-def load_redcap_metadata():
+def load_metadata(transaction: RedcapTransaction):
     """
     Get all information about REDCap form names and fields.
     :return: None
     """
-    globalvars.redcap_metadata = []
+    transaction.redcap_metadata = []
 
     # For each REDCap project
-    for index_project in range(1,len(Project) + 1):
+    for index_project in range(1, len(Project) + 1):
 
         # Get all metadata rows.
         payload = {'token': get_project_token(index_project), 'format': 'json', 'content': 'metadata'}
@@ -62,49 +62,49 @@ def load_redcap_metadata():
 
         # Add each metadata row to a local list.
         for field in metadata:
-            globalvars.redcap_metadata.append(
+            transaction.redcap_metadata.append(
                 [field['field_name'], field['field_type'], field['field_label'], field['form_name']])
 
-    return
+    return transaction
 
 
-def send_data_to_redcap():
+def send_data(transaction: RedcapTransaction):
     """
     Sends all records in the queue to REDCap.
     :return: None
     """
 
     # If there is at least one record in the queue waiting to be sent to REDCap
-    if len(globalvars.redcap_queue) > 0:
+    if len(transaction.redcap_queue) > 0:
 
         # Sort record queue by second column ascending (project).
-        globalvars.redcap_queue = sorted(globalvars.redcap_queue, key=itemgetter(1))
+        transaction.redcap_queue = sorted(transaction.redcap_queue, key=itemgetter(1))
 
         # For each REDCap project
-        for i in range(1, len(Project) + 1):
+        for index_project in range(1, len(Project) + 1):
 
             batch_of_records = []
 
             # For each record in the global queue
-            for j in range(0, len(globalvars.redcap_queue)):
+            for record_index in range(0, len(transaction.redcap_queue)):
 
                 # If the current record belongs to the current project
-                if globalvars.redcap_queue[j][1] == i:
+                if transaction.redcap_queue[record_index][1] == index_project:
                     # We add this record to the batch of records to send.
-                    batch_of_records.append(globalvars.redcap_queue[j][0])
+                    batch_of_records.append(transaction.redcap_queue[record_index][0])
 
                     # If the maximum number of records per batch has been reached
                 if (len(batch_of_records)) % environment.NUMBER_OF_RECORDS_PER_BATCH == 0:
                     # Send the batch of records to REDCap.
-                    execute_record_import_api_call(batch_of_records, get_project_token(i))
+                    import_records(batch_of_records, get_project_token(index_project))
 
             # Send the batch of records to REDCap.
-            execute_record_import_api_call(batch_of_records, get_project_token(i))
+            import_records(batch_of_records, get_project_token(index_project))
 
     return
 
 
-def execute_record_import_api_call(records, project_token):
+def import_records(records, project_token):
     """
     Executes a REDCap Import Records API call.
     :param records: Batch of records ready to be sent to REDCap
@@ -157,23 +157,5 @@ def get_project_token(project):
         return ''
 
 
-def clear_redcap_queue():
-    """
-    Erase all records in the queue.
-    :return: None
-    """
-    globalvars.redcap_queue = []
-
-    return
 
 
-def add_record_to_redcap_queue(record_text, project):
-    """
-    Adds a record to the list of records to send to REDCap.
-    :param record_text: Record data
-    :param project: Project Configuration Number where this record belongs
-    :return: None
-    """
-    globalvars.redcap_queue.append([record_text, project])
-
-    return

@@ -1,9 +1,8 @@
 from operator import itemgetter
 
-from redcap import globalvars
+from redcap.transaction import RedcapTransaction
 
-
-def initialize_data_import_configuration_matrix():
+def initialize_import_configuration(transaction: RedcapTransaction):
     """
     Initialize the data import configuration matrix.
     Columns:
@@ -20,7 +19,8 @@ def initialize_data_import_configuration_matrix():
         10 REDCAP_FORM_NAME
     :return: None
     """
-    globalvars.data_import_configuration = [
+
+    transaction.data_import_configuration = [
         [1, 1, 0, 1, 'admission', 1, 1, 1, [2, 3], 0, 'admission'],
         [2, 1, 0, 1, 'admissionChart', 1, 2, 2, None, 1, 'admissionChart'],
         [3, 1, 0, 1, 'admissionstate', 1, 2, 2, None, 1, 'admissionstate'],
@@ -176,24 +176,6 @@ def initialize_data_import_configuration_matrix():
     ]
 
     # Sort data import configuration matrix by first column ascending (import sequence).
-    globalvars.data_import_configuration = sorted(globalvars.data_import_configuration, key=itemgetter(0))
+    transaction.data_import_configuration = sorted(transaction.data_import_configuration, key=itemgetter(0))
 
-    return
-
-
-def initialize_ids(hospital_record_number):
-    """
-    Sets the hospital record number and reset all ids related to this hospital record number.
-    :param hospital_record_number: Hospital Record Number
-    :return: None
-    """
-    globalvars.HospitalRecordNumber = hospital_record_number
-    globalvars.CaseId = -1
-    globalvars.BabyId = -1
-    globalvars.MotherId = -1
-    globalvars.PatientUI = -1
-    globalvars.CNNPatientUI = -1
-    globalvars.PatientId = -1
-    globalvars.MasterId = -1
-
-    return
+    return transaction

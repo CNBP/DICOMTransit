@@ -30,8 +30,9 @@ from tkinter import *
 from LocalDB.API import load_hospital_record_numbers
 from redcap.prepare_patient import prepare_patient_tables
 from redcap.prepare_reference import prepare_reference_tables
-from redcap.initialization import initialize_data_import_configuration_matrix
-from redcap.query import load_redcap_metadata, send_data_to_redcap
+from redcap.initialization import initialize_import_configuration
+from redcap.transaction import RedcapTransaction # the class that contain all the configurations and buffer fo the records
+from redcap.query import load_metadata, send_data
 import logging
 
 # Note: You may tell the script to use the values of the development or production constants simply by commenting out
@@ -60,45 +61,48 @@ def update_redcap_data():
     label = Label(window, text='')
     label.pack()
 
+    transaction_stage0 = RedcapTransaction()
+
+
     # Load data import configuration matrix.
     label = Label(window, text='Loading Data Import Configuration...')
     label.pack()
-    initialize_data_import_configuration_matrix()
+    transaction_stage1_initialized = initialize_import_configuration(transaction_stage0)
     label = Label(window, text='Done.')
     label.pack()
 
     # Get all information about REDCap table names and fields.
     label = Label(window, text='Loading REDCap Metadata...')
     label.pack()
-    load_redcap_metadata()
+    transaction_stage2_meta_added = load_metadata(transaction_stage1_initialized)
     label = Label(window, text='Done.')
     label.pack()
 
     # Get all hospital record numbers.
     label = Label(window, text='Loading Hospital Record Numbers...')
     label.pack()
-    load_hospital_record_numbers()
+    transaction_stage2_meta_added.hospital_record_numbers = load_hospital_record_numbers()
     label = Label(window, text='Done.')
     label.pack()
 
     # Update Reference Tables.
     label = Label(window, text='Preparing Reference Data Transfer...')
     label.pack()
-    prepare_reference_tables()
+    reference_done = prepare_reference_tables(transaction_stage2_meta_added)
     label = Label(window, text='Done.')
     label.pack()
 
     # Update Patient Tables.
     label = Label(window, text='Preparing Patient Data Transfer...')
     label.pack()
-    prepare_patient_tables()
+    patient_done = prepare_patient_tables(reference_done)
     label = Label(window, text='Done.')
     label.pack()
 
     # Send data to REDCap.
     label = Label(window, text='Sending ALL data to REDCap...')
     label.pack()
-    send_data_to_redcap()
+    send_data(patient_done)
     label = Label(window, text='Done.')
     label.pack()
 
