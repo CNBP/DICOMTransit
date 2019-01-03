@@ -1,3 +1,5 @@
+import sqlite3
+
 from LocalDB.query import LocalDB_query
 from LocalDB.schema import CNBP_blueprint
 from LORIS.validate import LORIS_validation
@@ -5,7 +7,7 @@ import logging
 import sys
 from PythonUtils.env import load_validate_dotenv
 from PythonUtils.math import int_incrementor
-
+from redcap import globalvars, development as environment
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -261,6 +263,57 @@ def check_all_existing_records(matched_records):
 
     # return the zero leading int.
     return incremented_subjectID
+
+
+def load_hospital_record_numbers():
+    """
+    A wrapper funciton of get_list_MRN which allow static loading of a predefined list of all hospital record numbers for which we want to transfer data to REDCap by utilizing API calls.
+    :return: None
+    """
+    globalvars.hospital_record_numbers = []
+
+    if environment.USE_LOCAL_HOSPITAL_RECORD_NUMBERS_LIST == 0:
+        # Get the numbers from a dynamic source:
+        globalvars.hospital_record_numbers = get_list_MRN()
+    else:
+        # Get the numbers from a static source:
+        globalvars.hospital_record_numbers = [
+            3143750,
+            3144235,
+            3147383,
+            3149523,
+            3152931,
+            3153280,
+            3154386,
+            3154822,
+            3156430,
+            3160223,
+            3161091,
+            3161116,
+            3161146,
+            3162999,
+            3163000,
+            3163509,
+            3163750,
+            3165201,
+            3165984,
+            3166489,
+            3170659,
+            3171022,
+            3172805,
+            3173436,
+            3174439,
+            3176163,
+            3178972,
+            3181830,
+            3187252,
+            3190535,
+            3191237,
+            3191976,
+            3193639,
+            3202977
+        ]
+    return
 
 if __name__ == "__main__":
     propose_CNBPID("GregoryLodygensky012 Study")

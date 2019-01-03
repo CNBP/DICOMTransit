@@ -10,5 +10,3 @@ gevent
 pyodbc
 requests
 config
-werkzeug
-flask
