@@ -4,7 +4,7 @@ from enum import Enum
 #  Enums
 # ----------------------------------------------------------------------------------------------------------------------
 
-class Project(Enum):
+class Projects(Enum):
     admission = 1
     baby = 2
     mother = 3

@@ -33,6 +33,7 @@ from redcap.prepare_reference import prepare_reference_tables
 from redcap.initialization import initialize_import_configuration
 from redcap.transaction import RedcapTransaction # the class that contain all the configurations and buffer fo the records
 from redcap.query import load_metadata, send_data
+from redcap.constants import environment
 import logging
 
 # Note: You may tell the script to use the values of the development or production constants simply by commenting out
@@ -61,6 +62,7 @@ def update_redcap_data():
     label = Label(window, text='')
     label.pack()
 
+    # Initilize the RedcapTransaction class object to be past and returned each step of the way.
     transaction_stage0 = RedcapTransaction()
 
 
@@ -81,28 +83,29 @@ def update_redcap_data():
     # Get all hospital record numbers.
     label = Label(window, text='Loading Hospital Record Numbers...')
     label.pack()
-    transaction_stage2_meta_added.hospital_record_numbers = load_hospital_record_numbers()
+    # Change this flag in env or here to force local of DB loading.
+    transaction_stage2_meta_added.hospital_record_numbers = load_hospital_record_numbers(environment.USE_LOCAL_HOSPITAL_RECORD_NUMBERS_LIST)
     label = Label(window, text='Done.')
     label.pack()
 
     # Update Reference Tables.
     label = Label(window, text='Preparing Reference Data Transfer...')
     label.pack()
-    reference_done = prepare_reference_tables(transaction_stage2_meta_added)
+    transaction_stage3_references_added = prepare_reference_tables(transaction_stage2_meta_added)
     label = Label(window, text='Done.')
     label.pack()
 
     # Update Patient Tables.
     label = Label(window, text='Preparing Patient Data Transfer...')
     label.pack()
-    patient_done = prepare_patient_tables(reference_done)
+    transaction_stage4_patients_added = prepare_patient_tables(transaction_stage3_references_added)
     label = Label(window, text='Done.')
     label.pack()
 
     # Send data to REDCap.
     label = Label(window, text='Sending ALL data to REDCap...')
     label.pack()
-    send_data(patient_done)
+    send_data(transaction_stage4_patients_added)
     label = Label(window, text='Done.')
     label.pack()
 

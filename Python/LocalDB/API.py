@@ -265,14 +265,14 @@ def check_all_existing_records(matched_records):
     return incremented_subjectID
 
 
-def load_hospital_record_numbers():
+def load_hospital_record_numbers(use_predefine: bool):
     """
     A wrapper funciton of get_list_MRN which allow static loading of a predefined list of all hospital record numbers for which we want to transfer data to REDCap by utilizing API calls.
     :return: None
     """
     return_list = []
 
-    if environment.USE_LOCAL_HOSPITAL_RECORD_NUMBERS_LIST == 0:
+    if not use_predefine:
         # Get the numbers from a dynamic source:
         return_list = get_list_MRN()
     else:

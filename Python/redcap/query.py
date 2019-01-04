@@ -1,7 +1,7 @@
 from json import dumps
 from operator import itemgetter
 from requests import post
-from redcap.enums import Project
+from redcap.enums import Projects
 from redcap.constants import *
 from redcap.transaction import RedcapTransaction
 
@@ -53,10 +53,10 @@ def load_metadata(transaction: RedcapTransaction):
     transaction.redcap_metadata = []
 
     # For each REDCap project
-    for index_project in range(1, len(Project) + 1):
+    for project in Projects:
 
         # Get all metadata rows.
-        payload = {'token': get_project_token(index_project), 'format': 'json', 'content': 'metadata'}
+        payload = {'token': get_project_token(project.name), 'format': 'json', 'content': 'metadata'}
         response = post(redcap_api_url, data=payload)
         metadata = response.json()
 
@@ -71,87 +71,93 @@ def load_metadata(transaction: RedcapTransaction):
 def send_data(transaction: RedcapTransaction):
     """
     Sends all records in the queue to REDCap.
-    :return: None
+    :return: successful or not and reason
     """
 
     # If there is at least one record in the queue waiting to be sent to REDCap
-    if len(transaction.redcap_queue) > 0:
+    if not len(transaction.redcap_queue) > 0:
+        return False, "RedCap queue is empty."
 
-        # Sort record queue by second column ascending (project).
-        transaction.redcap_queue = sorted(transaction.redcap_queue, key=itemgetter(1))
 
-        # For each REDCap project
-        for index_project in range(1, len(Project) + 1):
+    # Sort record queue by second column ascending (project).
+    transaction.redcap_queue = sorted(transaction.redcap_queue, key=itemgetter(1))
 
-            batch_of_records = []
+    # For each REDCap project
+    for project in Projects:
 
-            # For each record in the global queue
-            for record_index in range(0, len(transaction.redcap_queue)):
+        batch_of_records = []
 
-                # If the current record belongs to the current project
-                if transaction.redcap_queue[record_index][1] == index_project:
-                    # We add this record to the batch of records to send.
-                    batch_of_records.append(transaction.redcap_queue[record_index][0])
+        # For each record in the global queue
+        for index_record in range(len(transaction.redcap_queue)):
 
-                    # If the maximum number of records per batch has been reached
-                if (len(batch_of_records)) % environment.NUMBER_OF_RECORDS_PER_BATCH == 0:
-                    # Send the batch of records to REDCap.
-                    import_records(batch_of_records, get_project_token(index_project))
+            # If the current record belongs to the current project
+            if transaction.redcap_queue[index_record][1] == project.value: # todo: verifiy it should be using project.value instead of project.name or the like?
 
-            # Send the batch of records to REDCap.
-            import_records(batch_of_records, get_project_token(index_project))
+                # We add this record to the batch of records to send.
+                batch_of_records.append(transaction.redcap_queue[index_record][0])
 
-    return
+                # If the maximum number of records per batch has been reached
+            if (len(batch_of_records)) % environment.NUMBER_OF_RECORDS_PER_BATCH == 0:
+                # Send the batch of records to REDCap.
+                import_records(batch_of_records, get_project_token(project.name))
+
+        # Send the batch of records to REDCap.
+        import_records(batch_of_records, get_project_token(project.name))
+
+    return True, "All RedCap project has been sent. "
 
 
 def import_records(records, project_token):
     """
     Executes a REDCap Import Records API call.
     :param records: Batch of records ready to be sent to REDCap
-    :param project_token: Project Token
-    :return:
+    :param project_token: Projects Token
+    :return: successful or not and reason
     """
     logger = logging.getLogger(__name__)
     # If there is at least one record ready to be sent to REDCap
-    if len(records) > 0:
+    if not len(records) > 0:
+        return False, "Record is empty"
 
-        # If a token was provided
-        if not project_token == '':
+    # If a token was provided
+    if project_token == '' or project_token is None:
+        return False, "Project_token %s is invalid!" % project_token
 
-            # Prepare HTTP request.
-            payload = {'token': project_token, 'format': 'json', 'content': 'record', 'type': 'flat',
-                       'overwriteBehavior': 'overwrite'}
-            json_string = dumps(records, separators=(',', ':'))
-            payload['data'] = json_string
+    # Prepare HTTP request.
+    payload = {'token': project_token, 'format': 'json', 'content': 'record', 'type': 'flat',
+               'overwriteBehavior': 'overwrite'}
+    json_string = dumps(records, separators=(',', ':'))
+    payload['data'] = json_string
 
-            # Send HTTP request.
-            response = post(redcap_api_url, data=payload)
+    # Send HTTP request.
+    response = post(redcap_api_url, data=payload)
 
-            # If the request was not successful
-            if not response.status_code == 200:
-                logger.error('There was an error in an API call: ' + response.text)
-            # Remove all records from batch.
-            records[:] = []
+    # If the request was not successful
+    if not response.status_code == 200:
+        logger.error('There was an error in an API call: ' + response.text)
 
-    return
+    # Remove all records from batch.
+    records[:] = []
+
+    return True, "Success in sending. "
 
 
 
 def get_project_token(project):
     """
-    Get Project Token
-    :param project: Project Configuration Number
-    :return: Project Token
+    Get Projects Token
+    :param project: Projects Configuration Number
+    :return: Projects Token
     """
-    if project == Project.admission.value:
+    if project == Projects.admission.name:
         return redcap_token_cnn_admission
-    elif project == Project.baby.value:
+    elif project == Projects.baby.name:
         return redcap_token_cnn_baby
-    elif project == Project.mother.value:
+    elif project == Projects.mother.name:
         return redcap_token_cnn_mother
-    elif project == Project.master.value:
+    elif project == Projects.master.name:
         return redcap_token_cnn_master
-    elif project == Project.patient.value:
+    elif project == Projects.patient.name:
         return redcap_token_cnfun_patient
     else:
         return ''
