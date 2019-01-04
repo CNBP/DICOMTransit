@@ -13,6 +13,8 @@ os.environ["FLASK_APP"] = "configurator.dtconfigure"
 os.environ["FLASK_ENV"] = "development"
 
 try:
+    os.chdir('Python')
+    subprocess.check_output(['flask', "--help"])  # todo: make sure this process is ONE time only. Check existing db.
     subprocess.check_output(['flask', "init-db"]) #todo: make sure this process is ONE time only. Check existing db.
 except Exception as e:
     raise ValueError
