@@ -1,8 +1,8 @@
 import os
 
 from flask import Flask
-from Python.PythonUtils.file import full_file_path
-from Python.PythonUtils.folder import get_abspath
+from file import full_file_path
+from folder import get_abspath
 
 
 path_current_script = full_file_path(__file__)

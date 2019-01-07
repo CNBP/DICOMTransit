@@ -4,6 +4,7 @@ from LORIS.validate import LORIS_validation
 import logging
 import sys
 from PythonUtils.env import load_validate_dotenv
+from settings import get
 from PythonUtils.math import int_incrementor
 
 
@@ -47,6 +48,7 @@ def check_MRN(MRN):
     if MRN_exist_in_database:
         logger.info("MRN found to exist at local database")
     return MRN_exist_in_database
+
 
 def create_MRN(MRN):
     database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
@@ -116,6 +118,7 @@ def get_timepoint(MRN):
 
     return KeyRecords[timepoint_header_index]
 
+
 def get_scan_date(MRN):
     """
     Assuming the MRN exist, get the MRNID.
@@ -135,6 +138,7 @@ def get_scan_date(MRN):
     date_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'Date')
     scan_date = KeyRecords[0][date_header_index]
     return scan_date
+
 
 def set_CNBP(MRN: int, CNBPID):
     """
@@ -184,6 +188,7 @@ def set_timepoint(MRN: int, Timepoint: str):
 
     # Update the MRN record with Timepoint
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", Timepoint)
+
 
 def propose_CNBPID(DICOM_protocol: str):
     """
@@ -261,6 +266,49 @@ def check_all_existing_records(matched_records):
 
     # return the zero leading int.
     return incremented_subjectID
+
+
+def get_setting(setting_name: str):
+    """
+    Used to access the dtconfigure.sqlite database to retrieve the settings necessary for most other operations.
+    :param setting_name: assumed the string already exist. Prior method need to check that.
+    :return:
+    """
+    from LocalDB.query import LocalDB_query
+    from LocalDB.schema import configuration_blueprint
+    from PythonUtils.env import validate_dotenv_var
+    from datetime import datetime
+
+    # Load env on where the setting database is located.
+    path_config_database = get("config_database") # Default location to dtconfigure.sqlite
+    name_config_table = get("config_table")  # Default location to dtconfigure.sqlite
+
+    # Look for setting variable in the DEFAULT ORDER
+    success, records_setting = LocalDB_query.get_all(path_config_database, name_config_table, setting_name)
+    assert success
+    assert len(records_setting) > 0
+
+    # Ensure that timestamp is still a relevant field in the table. Cross validate against blueprint.
+    assert validate_dotenv_var("created", configuration_blueprint.fields)
+
+    # Retrieve TIMESTAMP of all records. in the DEFAULT ORDER
+    success, records_timestamp = LocalDB_query.get_all(path_config_database, name_config_table, "created")
+    assert success
+    assert len(records_timestamp) > 0
+
+    # Find the index of the record that has the latest timepoint.
+    list_datetime = []
+    for record in records_timestamp:
+        record_time = datetime.strptime(record[0],"%Y-%m-%d %H:%M:%S")
+        list_datetime.append(record_time)
+    timestamp_latest = max(list_datetime)
+    index_timestamp_latest = list_datetime.index(timestamp_latest)
+
+    # in that row, retrieve setting.
+    setting_value = records_setting[index_timestamp_latest][0]
+
+    return setting_value
+
 
 if __name__ == "__main__":
     propose_CNBPID("GregoryLodygensky012 Study")

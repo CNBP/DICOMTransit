@@ -1,0 +1,29 @@
+from PythonUtils.env import validate_dotenv_var
+from LocalDB.API import get_setting
+
+"""
+This class has no set because that is done via the frontend configurator. Setting should be only updated on the frontend.
+Alternatively, the database can be manually edited on the backend but they are NEVER modified by the DICOMTransit itself.
+"""
+
+def get(variable_name):
+    """
+    Validate to see if the variable exist, before loading it into the environment from the database.
+    :param variable_name:
+    :param possible_variables:
+    :return:
+    """
+    from LocalDB.schema import configuration_blueprint
+
+    # Check if variable is an anticipated variable.
+    if validate_dotenv_var(variable_name, configuration_blueprint.fields):
+
+        # Use local databse API to load the variable.
+        env_variable = get_setting(variable_name)
+
+        return env_variable
+
+    else:
+        raise ValueError(
+            "The variable name provided: " + variable_name + " is NOT a sanctioned variable as defined by the schema")
+

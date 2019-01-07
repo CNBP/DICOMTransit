@@ -4,7 +4,6 @@ from LORIS.helper import LORIS_helper
 from orthanc.API import get_dev_orthanc_credentials
 import unittest
 import orthanc.API
-from PythonUtils.env import load_dotenv_var
 
 
 

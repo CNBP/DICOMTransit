@@ -8,6 +8,10 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 class LocalDB_query:
 
+    """
+    Lower level functions that interact with the local database.
+    """
+
     @staticmethod
     def check_value(database_path, table_name, ColumnName, ColumnValue):
         """

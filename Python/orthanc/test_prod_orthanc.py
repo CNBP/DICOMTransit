@@ -3,7 +3,6 @@ from orthanc.query import orthanc_query
 from LORIS.helper import LORIS_helper
 import unittest
 import orthanc.API
-from PythonUtils.env import load_dotenv_var, is_travis
 import pytest
 
 if True:

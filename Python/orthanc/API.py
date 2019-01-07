@@ -3,7 +3,7 @@ import tempfile
 from orthanc.query import orthanc_query
 from LORIS.helper import LORIS_helper
 from PythonUtils.file import unique_name
-from PythonUtils.env import load_dotenv_var
+from settings import get
 import logging
 import sys
 
@@ -11,15 +11,15 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def get_dev_orthanc_credentials():
-    url = load_dotenv_var("DevOrthancIP")
-    user = load_dotenv_var("DevOrthancUser")
-    password = load_dotenv_var("DevOrthancPassword")
+    url = get("DevOrthancIP")
+    user = get("DevOrthancUser")
+    password = get("DevOrthancPassword")
     return url, user, password
 
 def get_prod_orthanc_credentials():
-    url = load_dotenv_var("ProdOrthancIP")
-    user = load_dotenv_var("ProdOrthacUser")
-    password = load_dotenv_var("ProdOrthancPassword")
+    url = get("ProdOrthancIP")
+    user = get("ProdOrthacUser")
+    password = get("ProdOrthancPassword")
     return url, user, password
 
 
