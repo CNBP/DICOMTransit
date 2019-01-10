@@ -148,6 +148,7 @@ class LORIS_helper:
         print("stderr: ", stderr.readlines())
         print("stdout: ", stdout.readlines())
 
+
 if __name__ == '__main__':
     ProxyIP = load_validate_dotenv("ProxyIP", CNBP_blueprint.dotenv_variables)
     ProxyUsername = load_validate_dotenv("ProxyUsername", CNBP_blueprint.dotenv_variables)

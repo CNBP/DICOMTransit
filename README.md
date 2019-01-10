@@ -30,3 +30,7 @@ An intermediate server that built around Orthanc server to include several commo
 # Funding and Support:
 * Maybe Canadian Neonatal Brain Platform, Canada? TBD
 * Maybe Cyclotron Research Centre,  University of Liège, Belgium? TBD
+
+# Continuous Integration:
+- TravisCI
+- Appveyor

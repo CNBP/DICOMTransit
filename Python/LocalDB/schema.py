@@ -135,7 +135,7 @@ class configuration_blueprint:
                     'TEXT',
                     'TEXT']
 
-    dotenv_variables = []
+    dotenv_variables = ["config_database", "config_table"]
 
     import copy
 

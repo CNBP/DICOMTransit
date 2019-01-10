@@ -3,7 +3,7 @@ import tempfile
 from orthanc.query import orthanc_query
 from LORIS.helper import LORIS_helper
 from PythonUtils.file import unique_name
-from settings import get
+
 import logging
 import sys
 
@@ -11,12 +11,14 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def get_dev_orthanc_credentials():
+    from settings import get
     url = get("DevOrthancIP")
     user = get("DevOrthancUser")
     password = get("DevOrthancPassword")
     return url, user, password
 
 def get_prod_orthanc_credentials():
+    from settings import get
     url = get("ProdOrthancIP")
     user = get("ProdOrthacUser")
     password = get("ProdOrthancPassword")

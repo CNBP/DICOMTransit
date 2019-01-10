@@ -280,8 +280,8 @@ def get_setting(setting_name: str):
     from datetime import datetime
 
     # Load env on where the setting database is located.
-    path_config_database = get("config_database") # Default location to dtconfigure.sqlite
-    name_config_table = get("config_table")  # Default location to dtconfigure.sqlite
+    path_config_database = load_validate_dotenv("config_database", configuration_blueprint.dotenv_variables) # Default location to dtconfigure.sqlite
+    name_config_table = load_validate_dotenv("config_table", configuration_blueprint.dotenv_variables)  # Default location to dtconfigure.sqlite
 
     # Look for setting variable in the DEFAULT ORDER
     success, records_setting = LocalDB_query.get_all(path_config_database, name_config_table, setting_name)

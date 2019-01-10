@@ -1,5 +1,5 @@
 from PythonUtils.env import validate_dotenv_var
-from LocalDB.API import get_setting
+
 
 """
 This class has no set because that is done via the frontend configurator. Setting should be only updated on the frontend.
@@ -14,6 +14,7 @@ def get(variable_name):
     :return:
     """
     from LocalDB.schema import configuration_blueprint
+    from LocalDB.API import get_setting
 
     # Check if variable is an anticipated variable.
     if validate_dotenv_var(variable_name, configuration_blueprint.fields):
