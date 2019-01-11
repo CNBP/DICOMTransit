@@ -10,6 +10,39 @@ from LocalDB.schema import CNBP_blueprint
 Everything here, should have its own login sessions as tokens are not shared at this high level function.  
 """
 
+
+def check_status():
+    """
+    Quick check if the LORIS is online.
+    :return:
+    """
+    from LORIS.query import LORIS_query
+    status_LORIS, _ = LORIS_query.login()
+    return status_LORIS
+
+def check_online_status():
+    """
+    Quck to see if the online connection exist
+    :return:
+    """
+
+    import socket
+
+    host = "8.8.8.8"
+    port = 53
+    timeout = 3
+    try:
+        socket.setdefaulttimeout(timeout)
+        test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
+        test_socket.close()
+        return True
+    except:
+        return False
+
+
+
+
+
 def trigger_insertion(zip_name):
     """
     Todo: refactor this crap made by Yang.

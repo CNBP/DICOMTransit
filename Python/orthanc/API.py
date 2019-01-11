@@ -10,6 +10,18 @@ import sys
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def check_status():
+    url, user, password = get_prod_orthanc_credentials()
+    try:
+        endpoint = url + "patients/"
+        reseponse_code, _ = orthanc_query.getOrthanc(endpoint, user, password)
+        success = LORIS_helper.is_response_success(reseponse_code, 200)
+    except:
+        # in case any thing goes wrong
+        return False
+    return success
+
+
 def get_dev_orthanc_credentials():
     from settings import get
     url = get("DevOrthancIP")

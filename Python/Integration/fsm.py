@@ -39,6 +39,17 @@ class DICOMTransitImport(object):
         "created_local_subject",
         "harmonized_timepoints",
 
+        "retry0",
+        "retry1",
+        "retry2",
+        "retry3",
+        "retry4",
+        "retry5",
+        "retry6",
+        "retry7",
+        "retry8",
+        "retry9",
+
         "files_anonymized",
         "files_zipped",
         "zip_uploaded",
@@ -61,30 +72,12 @@ class DICOMTransitImport(object):
         ['CheckMRIScanner', 'waiting', 'detected_new_data'],
     ]
 
-    class Process(object):
-
-        def __init__(self, name: str = "untitled"):
-            self.name = name
-
-        def is_valid(self):
-            return True
-
-        def is_not_valid(self):
-            return False
-
-        def is_also_valid(self):
-            return True
-
-        # graph object is created by the machine
-        def show_graph(self, **kwargs):
-            stream = io.BytesIO()
-            self.get_graph(**kwargs).draw(stream, prog='dot', format='png')
-            object = stream.getvalue()
-            with open(self.name+".png", "wb") as png:
-                png.write(object)
-
-    # Instantiate the process
-    ImportProcess = Process(datetime.datetime.now().isoformat())
+    # Status indicator whether they are reachable/online
+    STATUS_ORTHANC = False
+    STATUS_LORIS = False
+    STATUS_NETWORK = False
+    STATUS_FILE = False
+    STATUS_LOCALDB = False
 
     def __init__(self, name):
 
@@ -95,7 +88,7 @@ class DICOMTransitImport(object):
         self.name = self.time.isoformat()
 
         # Initialize the state machine
-        self.machine = Machine(model=self.ImportProcess,
+        self.machine = Machine(model=self,
                                states=DICOMTransitImport.states,
                                transitions=DICOMTransitImport.actions,
                                #transitions=None,
@@ -113,13 +106,13 @@ class DICOMTransitImport(object):
 
         #
         self.machine.add_transition("DownloadNewData", "detected_new_data", "obtained_new_data",
-                                    before="CheckOrthanc", after="CheckFileCorruption")
+                                    before="CheckOrthanc", after="CheckFile")
 
         self.machine.add_transition("UnpackNewData", "obtained_new_data", "unpacked_new_data",
-                                    before="CheckFileCorruption") # need to check zip file.
+                                    before="CheckFile") # need to check zip file.
 
         self.machine.add_transition("CheckMRN", "unpacked_new_data", "obtained_MRN",
-                                    before="CheckFileCorruption") # # need to check the content of the zip file success
+                                    before="CheckFile") # # need to check the content of the zip file success
 
         # Depending on the result of the MRN check, whether it exist previously or not, this is where the decision tree bifurcate
         self.machine.add_transition("CheckLocalDBMRN", "obtained_MRN", "processing_old_patient",
@@ -137,11 +130,11 @@ class DICOMTransitImport(object):
 
         # New Subject Path
         self.machine.add_transition("RetrieveGender", "processing_new_patient", "obtained_new_subject_gender",
-                                    before="CheckFileCorruption")
+                                    before="CheckFile")
         self.machine.add_transition("RetrieveBirthday", "obtained_new_subject_gender", "obtained_new_subject_birthday",
-                                    before="CheckFileCorruption")
+                                    before="CheckFile")
         #self.machine.add_transition("RetrieveStudy", "obtained_new_subject_birthday", "RetrieveStudy",
-        #                            before="CheckFileCorruption")
+        #                            before="CheckFile")
         self.machine.add_transition("CreateLORISSubject", "obtained_new_subject_birthday", "created_remote_subject",
                                     before=["CheckNetwork", "CheckLORIS"])
         self.machine.add_transition("CreateLocalSubject", "created_remote_subject", "created_local_subject",
@@ -151,7 +144,7 @@ class DICOMTransitImport(object):
 
         # From this point onward, all path are merged:
         self.machine.add_transition("AnonymizeFiles", "harmonized_timepoints", "files_anonymized",
-                                    before="CheckFileCorruption", after="DoubleCheckAnonymization")
+                                    before="CheckFile", after="DoubleCheckAnonymization")
 
         self.machine.add_transition("ZipFiles", "files_anonymized", "files_zipped",
                                     conditions="AreAnonymized", before="CheckFiles", after="CheckFiles")
@@ -162,22 +155,133 @@ class DICOMTransitImport(object):
         self.machine.add_transition("RecordInsertion", "zip_inserted", "waiting",
                                     conditions="AreInserted", before=["CheckNetwork", "CheckLORIS"])
 
-        """            
+        # Retrying block.
+        self.machine.add_transition("reattempt", ["error_orthanc", "error_LORIS", "error_file_corruption", "error_localDB", "error_network"], "=")
+
         # Any time, in ANY state, if these check fails, we should go to error state. There might be additional flags in terms situation specific reactions.
-        self.machine.add_transition("CheckOrthanc",         "*", "error_orthanc",           conditions="OrthancUnavailable")
-        self.machine.add_transition("CheckLORIS",           "*", "error_LORIS",             conditions="LORISUnavailable")
-        self.machine.add_transition("CheckFileCorruption",  "*", "error_file_corruption",   conditions="FileUnavailable")
-        self.machine.add_transition("CheckLocalDB",         "*", "error_localDB",           conditions="LocalDBUnavailable")
-        self.machine.add_transition("CheckNetwork",         "*", "error_network",           conditions="NetworkUnavailable")
+        self.machine.add_transition("CheckOrthanc",         "*", "error_orthanc",           conditions="is_Orthanc_Unavailable")
+        self.machine.add_transition("CheckLORIS",           "*", "error_LORIS",             conditions="is_LORIS_Unavailable")
+        self.machine.add_transition("CheckFile",  "*", "error_file_corruption",   conditions="is_File_Unavailable")
+        self.machine.add_transition("CheckLocalDB",         "*", "error_localDB",           conditions="is_LocalDB_Unavailable")
+        self.machine.add_transition("CheckNetwork",         "*", "error_network",           conditions="is_Network_Unavailable")
 
 
         # At the end, if all else fails, log, ask for help. Ready for next run.
         self.machine.add_transition("AskMeatBagsForHelp", "*", "human_intervention_required")
-        """
 
-    def draw_fsm(self):
-        # draw the whole graph ...
-        self.ImportProcess.show_graph()
+
+    # graph object is created by the machine
+    def show_graph(self, **kwargs):
+        stream = io.BytesIO()
+        self.get_graph(**kwargs).draw(stream, prog='dot', format='png')
+        object = stream.getvalue()
+        with open(self.name + ".png", "wb") as png:
+            png.write(object)
+
+    def CheckOrthancNewData(self):
+        pass
+
+    def DownloadNewData(self):
+        pass
+
+    def UnpackNewData(self):
+        pass
+    def CheckMRN(self):
+        pass
+    def CheckLocalDBMRN(self):
+        pass
+    def RetrieveLatestLocalDBTimepoint(self):
+        pass
+    def IncrementLocalDBTimepoint(self):
+        pass
+    def HarmonizeLatestTimepoint(self):
+        pass
+    def RetrieveGender(self):
+        pass
+    def RetrieveBirthday(self):
+        pass
+    def CreateLORISSubject(self):
+        pass
+    def CreateLocalSubject(self):
+        pass
+    def AnonymizeFiles(self):
+        pass
+    def ZipFiles(self):
+        pass
+    def UploadZip(self):
+        pass
+    def InsertSubjectData(self):
+        pass
+    def RecordInsertion(self):
+        pass
+
+    # Conditions Method
+    def HasNewData(self):
+        return self.HasNewData
+    def Found_MRN(self):
+        pass
+    def NoPreviousMRN(self):
+        pass
+    def AreAnonymized(self):
+        pass
+    def AreInserted(self):
+        pass
+
+
+    # These methods are used to check system unavailiabilites.
+    def is_Orthanc_Unavailable(self):
+        return not self.STATUS_ORTHANC
+
+    def is_LORIS_Unavailable(self):
+        return not self.STATUS_LORIS
+
+    def is_File_Unavailable(self):
+        return not self.STATUS_FILE
+
+    def is_LocalDB_Unavailable(self):
+        return not self.STATUS_LOCALDB
+
+    def is_Network_Unavailable(self):
+        return not self.STATUS_NETWORK
+
+
+    # Check methods which report methods.
+    def CheckLORIS(self):
+        # Ping LORIS production server to check if it is online.
+        # Ping LORIS production server to check if it is online.
+        from LORIS.API import check_status
+        self.STATUS_LORIS = check_status()
+
+    def CheckNetwork(self):
+        # Ping CNBP frontend server.
+        # Ping LORIS server.
+        # Ping Google.
+        from LORIS.API import check_online_status
+        self.STATUS_NETWORK = check_online_status()
+
+    def CheckLocalDB(self):
+        # Read local db. See if it exist based on the setting.
+        from LocalDB.API import check_status
+        self.STATUS_LOCALDB = check_status()
+
+    def CheckFile(self, file_path):
+        # Ensure the file provided exist.
+        # NOTE: this does not check if the valid is the right is CORRECT!
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return True
+        else:
+            return False
+
+    def CheckOrthanc(self):
+        # Check ENV for the predefined Orthanc URL to ensure that it exists.
+        from orthanc.API import check_status
+        self.STATUS_ORTHANC = check_status()
+
+
+    # Meta methods
+    def SaveStatusToDisk(self):
+        raise NotImplementedError
+
 
 if __name__ == "__main__":
     cmd_folder = os.path.realpath(
@@ -188,5 +292,5 @@ if __name__ == "__main__":
         sys.path.insert(0, cmd_folder)
 
     Import1 = DICOMTransitImport("2019")
-    Import1.draw_fsm()
+    Import1.show_graph()
     pass

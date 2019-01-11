@@ -3,6 +3,7 @@ from LocalDB.schema import CNBP_blueprint
 from LORIS.validate import LORIS_validation
 import logging
 import sys
+import os
 from PythonUtils.env import load_validate_dotenv
 from settings import get
 from PythonUtils.math import int_incrementor
@@ -10,6 +11,28 @@ from PythonUtils.math import int_incrementor
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def check_status():
+    # Load local database from .env file
+    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+
+    if not os.path.isfile(database_path):
+        return False
+
+    # Get the name from the blueprint.
+    tableName = CNBP_blueprint.table_name  # All CNBP database should have this table name.
+
+    # do a quick header check.
+    fetchallResult = LocalDB_query.check_header(database_path, tableName)
+
+    # If the table is valid, it should have MORE than one header... I HOPE?
+    if len(fetchallResult) > 0:
+        return True
+    else:
+        return False
+
+
 
 def get_list_MRN():
     """
