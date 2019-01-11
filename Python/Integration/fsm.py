@@ -1,4 +1,6 @@
-from transitions import Machine
+import os, sys, inspect, io
+from transitions import *
+from transitions.extensions import GraphMachine as Machine
 import datetime
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -10,13 +12,6 @@ class DICOMTransitImport(object):
     states = [
         "waiting",
 
-        "orthanc_presence_confirmed"
-        "LORIS_presence_confirmed"
-        "SQLite_presence_confirmed"
-        "Network_presence_confirmed"
-
-        "cannot_obtain_MRN",
-        "no_MRN_obtained",
         "obtained_MRN",
 
         # Orthanc related:
@@ -28,7 +23,7 @@ class DICOMTransitImport(object):
         "obtained_MRN",
 
         # Main analyses path:
-        "process_old_patient",
+        "processing_old_patient",
         "processing_new_patient",
 
         # Existing patient path.
@@ -39,42 +34,57 @@ class DICOMTransitImport(object):
         # New patient path.
         "obtained_new_subject_gender",
         "obtained_new_subject_birthday",
-        "obtained_new_subject_study",
+        #"obtained_new_subject_study",
         "created_remote_subject",
         "created_local_subject",
         "harmonized_timepoints",
 
-        "files_anonymized"
-        "files_zipped"
-        "zip_prepared",
+        "files_anonymized",
+        "files_zipped",
         "zip_uploaded",
         "zip_inserted",
 
-        # Errors:
-        "error_orthanc",
-        "error_LORIS",
-        "error_file_corruption",
-        "error_sqlite",
-        "error_network",
 
-        "human_intervention_required",
     ]
-
+    """
+    # Errors:
+    "error_orthanc",
+    "error_LORIS",
+    "error_file_corruption",
+    "error_sqlite",
+    "error_network",
+    "human_intervention_required",
+    """
 
     # trigger, source, destination
     actions = [
         ['CheckMRIScanner', 'waiting', 'detected_new_data'],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-
-
-
     ]
+
+    class Process(object):
+
+        def __init__(self, name: str = "untitled"):
+            self.name = name
+
+        def is_valid(self):
+            return True
+
+        def is_not_valid(self):
+            return False
+
+        def is_also_valid(self):
+            return True
+
+        # graph object is created by the machine
+        def show_graph(self, **kwargs):
+            stream = io.BytesIO()
+            self.get_graph(**kwargs).draw(stream, prog='dot', format='png')
+            object = stream.getvalue()
+            with open(self.name+".png", "wb") as png:
+                png.write(object)
+
+    # Instantiate the process
+    ImportProcess = Process(datetime.datetime.now().isoformat())
 
     def __init__(self, name):
 
@@ -85,14 +95,17 @@ class DICOMTransitImport(object):
         self.name = self.time.isoformat()
 
         # Initialize the state machine
-        self.machine = Machine(model=self,
+        self.machine = Machine(model=self.ImportProcess,
                                states=DICOMTransitImport.states,
                                transitions=DICOMTransitImport.actions,
+                               #transitions=None,
                                auto_transitions=False,
+                               show_auto_transitions=True,
+                               title="Import Process is Messy",
+                               show_conditions=True,
                                initial="waiting")
 
         #Transitions:
-
 
         # Check orthanc for new data, if has new data, proceed to the next stage. Else, no stage transition happen.
         self.machine.add_transition(trigger="CheckOrthancNewData", source="waiting", dest="detected_new_data",
@@ -117,8 +130,7 @@ class DICOMTransitImport(object):
         # Old Subject Path.
         self.machine.add_transition("RetrieveLatestLocalDBTimepoint", "processing_old_patient", "obtained_LocalDB_timepoint",
                                     before="CheckLocalDB")
-        self.machine.add_transition("IncrementLocalDBTimepoint", "obtained_LocalDB_timepoint", "updated_LocalDB_timepoint"
-                                    "obtained_old_subject_timepoint",
+        self.machine.add_transition("IncrementLocalDBTimepoint", "obtained_LocalDB_timepoint", "updated_LocalDB_timepoint",
                                     before="CheckLocalDB")
         self.machine.add_transition("HarmonizeLatestTimepoint", "updated_LocalDB_timepoint", "harmonized_timepoints",
                                     before=["CheckNetwork", "CheckLORIS"])
@@ -150,6 +162,7 @@ class DICOMTransitImport(object):
         self.machine.add_transition("RecordInsertion", "zip_inserted", "waiting",
                                     conditions="AreInserted", before=["CheckNetwork", "CheckLORIS"])
 
+        """            
         # Any time, in ANY state, if these check fails, we should go to error state. There might be additional flags in terms situation specific reactions.
         self.machine.add_transition("CheckOrthanc",         "*", "error_orthanc",           conditions="OrthancUnavailable")
         self.machine.add_transition("CheckLORIS",           "*", "error_LORIS",             conditions="LORISUnavailable")
@@ -157,5 +170,23 @@ class DICOMTransitImport(object):
         self.machine.add_transition("CheckLocalDB",         "*", "error_localDB",           conditions="LocalDBUnavailable")
         self.machine.add_transition("CheckNetwork",         "*", "error_network",           conditions="NetworkUnavailable")
 
+
         # At the end, if all else fails, log, ask for help. Ready for next run.
         self.machine.add_transition("AskMeatBagsForHelp", "*", "human_intervention_required")
+        """
+
+    def draw_fsm(self):
+        # draw the whole graph ...
+        self.ImportProcess.show_graph()
+
+if __name__ == "__main__":
+    cmd_folder = os.path.realpath(
+        os.path.dirname(
+            os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0])))
+
+    if cmd_folder not in sys.path:
+        sys.path.insert(0, cmd_folder)
+
+    Import1 = DICOMTransitImport("2019")
+    Import1.draw_fsm()
+    pass
