@@ -44,7 +44,8 @@ class DICOMPackage:
 
 
         self.is_anonymized: bool = False
-        self.zipname: str = None
+        self.is_zipped: bool = False
+        self.zipname: str = None # this zip name has NO suffix
         self.zip_location: str = None
 
         logger.info("Commencing subject specific checks. ")
@@ -224,19 +225,25 @@ class DICOMPackage:
 
         # Set proper variable name and also the ZIP file name for subsequent processing.
         self.is_anonymized = True
-        self.zipname = self.CNBPID + "_" + self.DCCID + "_" + self.timepoint
+        self.zipname = self.CNBPID + "_" + str(self.DCCID) + "_" + self.timepoint
 
-        # todo not finished code.
-        raise NotImplementedError
+        from DICOM.anonymize import DICOM_anonymize
+        DICOM_anonymize.folder(self.dicom_folder, self.zipname)
 
 
     def zip(self):
+        """
 
+        :return:
+        """
+
+        # load system default ZIP storage path.
         zip_storage_path = load_validate_dotenv("zip_storage_location", CNBP_blueprint.dotenv_variables)
 
         # Change to the storage folder before carrying out the zip operation.
         os.chdir(zip_storage_path)
         zip_with_name(self.dicom_folder, self.zipname)
 
-        # update zip location.
+        # update zip location, this is the ABSOLUTE path.
         self.zip_location = os.path.join(zip_storage_path, self.zipname+".zip")
+        self.is_zipped = True

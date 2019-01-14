@@ -118,7 +118,7 @@ class DICOMTransitImport(object):
 
 
         # We shall name this with
-        self.name = self.time.isoformat()
+        self.name = self.time.isoformat().replace(":","")
 
         self.url, self.user, self.password = orthanc.API.get_prod_orthanc_credentials()
 
@@ -182,9 +182,9 @@ class DICOMTransitImport(object):
                                     before="CheckFile")
         #self.machine.add_transition("RetrieveStudy", "obtained_new_subject_birthday", "RetrieveStudy",
         #                            before="CheckFile")
-        self.machine.add_transition("CreateLORISSubject", "obtained_new_subject_birthday", "created_remote_subject",
+        self.machine.add_transition("LORISCreateSubject", "obtained_new_subject_birthday", "created_remote_subject",
                                     before=["CheckNetwork", "CheckLORIS"])
-        self.machine.add_transition("CreateLocalSubject", "created_remote_subject", "harmonized_timepoints",
+        self.machine.add_transition("LocalDBCreateSubject", "created_remote_subject", "harmonized_timepoints",
                                     before="CheckLocalDB")
 
         # From this point onward, all path are merged:
@@ -349,11 +349,11 @@ class DICOMTransitImport(object):
         logger.info("Subject specific birthdate pass check.")
 
     def RetrieveStudy(self):
-        #raise NotImplementedError
         # todo: For now, all project are under LORIS. The projectID etc systems are not being actively used.
         self.DICOM_package.project = "loris"
+        # raise NotImplementedError
 
-    def CreateLORISSubject(self):
+    def LORISCreateSubject(self):
         # create new PSCID and get DCCID
         success, DCCID, PSCID = LORIS.API.create_new(self.DICOM_package.project,
                                                      self.DICOM_package.birthday,
@@ -363,22 +363,30 @@ class DICOMTransitImport(object):
         self.DICOM_package.CNBPID = PSCID
         self.DICOM_package.timepoint = "V1"  # auto generated.
 
-    def CreateLocalSubject(self):
+    def LocalDBCreateSubject(self):
         LocalDB.API.set_CNBP(self.DICOM_package.MRN, self.DICOM_package.CNBPID)
         LocalDB.API.set_DCCID(self.DICOM_package.MRN, self.DICOM_package.DCCID)
         LocalDB.API.set_timepoint(self.DICOM_package.MRN, self.DICOM_package.timepoint)
         LocalDB.API.set_scan_date(self.DICOM_package.MRN, self.DICOM_package.scan_date)
 
     def AnonymizeFiles(self):
-        pass
+        # This will also update self.zipname and self.is_anonymized
+        self.DICOM_package.anonymize()
+
     def ZipFiles(self):
-        pass
+        # This will update DICOM_package.zip location.
+        self.DICOM_package.zip()
+
     def UploadZip(self):
-        pass
+        LORIS.API.upload(self.DICOM_package.zip_location)
+
     def InsertSubjectData(self):
-        pass
+        # Trigger insertion.
+        LORIS.API.trigger_insertion(self.DICOM_package.zipname)
+
     def RecordInsertion(self):
-        pass
+        # Set the completion status to ZERO
+        LocalDB.API.set_completion(self.DICOM_package.MRN, 1)
 
     def CheckExistingScan(self):
         return self.scan_already_processed
@@ -473,6 +481,8 @@ if __name__ == "__main__":
         sys.path.insert(0, cmd_folder)
 
     Import1 = DICOMTransitImport("2019")
+    Import1.show_graph()
+
     Import1.CheckOrthanc()
     Import1.DownloadNewData()
     Import1.UnpackNewData()
@@ -481,13 +491,12 @@ if __name__ == "__main__":
 
     Import1.RetrieveCNBPIDDCCID()
     Import1.obtained_DCCID_CNBPID()
-    Import1.IncrementRemoteTimepoint()
+
 
     Import1.RetrieveGender()
     Import1.RetrieveBirthday()
-    Import1.CreateLORISSubject()
-    Import1.CreateLocalSubject()
-    Import1.IncrementRemoteTimepoint()
+    Import1.LORISCreateSubject()
+    Import1.LocalDBCreateSubject()
 
     Import1.AnonymizeFiles()
     Import1.ZipFiles()

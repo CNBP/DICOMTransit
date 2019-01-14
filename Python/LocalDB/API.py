@@ -188,6 +188,18 @@ def set_DCCID(MRN: int, DCCID):
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "DCCID", DCCID, )
 
 
+def set_completion(MRN: int, status: int = 0):
+    """
+    Update record with proper completion status which has particular MRN
+    :param MRN:
+    :return:
+    """
+    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+
+    # Update the MRN record with DCCID
+    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Completed", status)
+
+
 def set_scan_date(MRN: int, scan_date: str):
     """
     Update record with proper scan time which has particular MRN

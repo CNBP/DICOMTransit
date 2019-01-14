@@ -32,7 +32,7 @@ def get_dev_orthanc_credentials():
 def get_prod_orthanc_credentials():
     from settings import get
     url = get("ProdOrthancIP")
-    user = get("ProdOrthacUser")
+    user = get("ProdOrthancUser")
     password = get("ProdOrthancPassword")
     return url, user, password
 

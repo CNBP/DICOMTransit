@@ -17,26 +17,24 @@ def anonymize_to_zip(folder_path, zip_ID):
     :return:
     """
     from DICOM.anonymize import DICOM_anonymize
+    DICOM_anonymize.folder(folder_path, zip_ID)
+
+    change_to_zip_dir()
+
+    from PythonUtils.file import zip_with_name
+    zip_with_name(folder_path, zip_ID)  # todo! it does not check if there are OTHER files in there!
+
+def change_to_zip_dir():
+    # Load the name of the storage folder from the configuration file.
+    folder_to_zip = load_validate_dotenv("zip_storage_location", CNBP_blueprint.dotenv_variables)
 
     # Find the root fo the project where the zip storage is related to the location of the current DICOM directory.
     project_root = get_abspath(__file__, 2)
 
-
-
-    # Load the name of the storage folder from the configuration file.
-    zip_folder = load_validate_dotenv("zip_storage_location", CNBP_blueprint.dotenv_variables)
-
-    # Anonymize the entire folder provided with the ZIP ID.
-    DICOM_anonymize.folder(folder_path, zip_ID)
-
-    from PythonUtils.file import zip_with_name
-
     # Create absolute path to the folder to be zipped
-    zip_path = os.path.join(project_root, zip_folder)
-
+    zip_path = os.path.join(project_root, folder_to_zip)
     #
     os.chdir(zip_path)
-    zip_with_name(folder_path, zip_ID) #todo! it does not check if there are OTHER files in there!
 
 def anonymize_files(files):
     """
