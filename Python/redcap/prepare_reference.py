@@ -25,7 +25,7 @@ def prepare_reference_tables(transaction: RedcapTransaction):
     for index_table in range(len(table_configuration)):
 
         # Process table which update the transaction.redcap_queue
-        process_table(index_table, table_configuration)
+        process_table(index_table, transaction)
 
     return transaction
 

@@ -52,7 +52,7 @@ def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
     primary_key_filter_value = str(transaction.get_primary_key_value(table_info[7]))
     primary_key_data_type = get_primary_key_data_type(table_info[7])
 
-    if primary_key_filter_name == '' or primary_key_filter_value == '' or primary_key_filter_value != 'None':
+    if primary_key_filter_name == '' or primary_key_filter_value == '' or primary_key_filter_value == 'None':
         return None
 
     if primary_key_data_type == DataType.String.value:

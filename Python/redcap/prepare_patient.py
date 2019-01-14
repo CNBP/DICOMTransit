@@ -37,7 +37,7 @@ def process_record(transaction: RedcapTransaction):
         if not table_configuration[index_table][IS_IMPORT_ENABLED]:
             return
 
-        if not table_configuration[index_table][IS_REFERENCE_TABLE]:
+        if table_configuration[index_table][IS_REFERENCE_TABLE]:
             return
 
         process_table(index_table, transaction)
