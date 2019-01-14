@@ -13,7 +13,7 @@ Everything here, should have its own login sessions as tokens are not shared at 
 
 def check_status():
     """
-    Quick check if the LORIS is online.
+    Quick check if the LORIS is online via a login request.
     :return:
     """
     from LORIS.query import LORIS_query

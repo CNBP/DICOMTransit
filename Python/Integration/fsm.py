@@ -245,9 +245,8 @@ class DICOMTransitImport(object):
         return not self.STATUS_NETWORK
 
 
-    # Check methods which report methods.
+    # Check methods which report the status of various settings.
     def CheckLORIS(self):
-
 
         self.STATUS_NETWORK = self.CheckNetwork()
 
