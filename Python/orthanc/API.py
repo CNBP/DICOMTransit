@@ -72,6 +72,11 @@ def get_subject_zip(orthanc_URL_with_UUID, orthaner_user, orthanc_password):
     assert (os.path.exists(zip_file))
 
     logger.info("Subject ZIP downloaded.")
+
+    return zip_file
+
+def unpack_subject_zip(zip_file):
+
     # Create the temporary directory
     folder = tempfile.TemporaryDirectory(prefix=unique_name())
 
@@ -84,5 +89,4 @@ def get_subject_zip(orthanc_URL_with_UUID, orthaner_user, orthanc_password):
     # Remove the zip file.
     os.remove(zip_file)
     logger.info("Removing zip archived.")
-
     return folder

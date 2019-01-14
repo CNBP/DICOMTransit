@@ -49,10 +49,7 @@ class DICOMPackage:
 
         logger.info("Commencing subject specific checks. ")
 
-        # Update some of the key process related to the DICOM_packages that have just been created.
-        success = self.update_MRN()
-        assert success
-        logger.info("Subject specific MRN pass check.")
+
 
 
         # todo study inference is not robust. Need debug and refactoring.
@@ -62,6 +59,9 @@ class DICOMPackage:
         # todo project inference is not robust. Need debug and refactoring.
         #success = self.update_project()
         #assert success
+
+
+        # fixme: these should really be removed as they are now part of FSM.
 
         success = self.update_scan_date()
         assert success

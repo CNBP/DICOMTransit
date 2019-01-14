@@ -24,7 +24,8 @@ if __name__ == "__main__":
         try:
             subject_url = url + "patients/" + subject + '/archive' # it must contain patients/ and archive in the path name
 
-            dicom_folder = orthanc.API.get_subject_zip(subject_url, user, password)
+            zip_file = orthanc.API.get_subject_zip(subject_url, user, password)
+            dicom_folder = orthanc.API.unpack_subject_zip(zip_file)
 
             # Convert it to a DICOMPackage, it checks for a bunch of validity, update a bunch of its meta information regarding the entire archive
             DICOM_package = DICOMPackage(dicom_folder)
@@ -73,8 +74,8 @@ if __name__ == "__main__":
                 DICOM_package.DCCID = LocalDB.API.get_DCCID(DICOM_package.MRN)
 
                 # Get the latest local known timepoint:
-                last_database_timepoint = LocalDB.API.get_timepoint(DICOM_package.MRN)
-                print("Last known timepoint: "+last_database_timepoint)
+                #last_database_timepoint = LocalDB.API.get_timepoint(DICOM_package.MRN)
+                #print("Last known timepoint: "+last_database_timepoint)
 
                 # Using LORIS API to create the new timepoint:
                 latest_timepoint = LORIS.API.increment_timepoint(DCCID)
