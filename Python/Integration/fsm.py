@@ -1,10 +1,23 @@
 import os, sys, inspect, io
-from transitions import *
-from transitions.extensions import GraphMachine as Machine
 import datetime
 import logging
+from transitions import *
+from transitions.extensions import GraphMachine as Machine
+import DICOM.API
+import orthanc.API
+import LORIS.API
+import LocalDB.API
+from DICOM.DICOMPackage import DICOMPackage
+
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('transition').setLevel(logging.INFO)
+
+"""
+HasNewData = Method
+has_new_data = Variable. 
+STATUS_NETWORK = status binary variable. 
+
+"""
 
 class DICOMTransitImport(object):
 
@@ -57,6 +70,8 @@ class DICOMTransitImport(object):
 
 
     ]
+
+
     """
     # Errors:
     "error_orthanc",
@@ -79,13 +94,27 @@ class DICOMTransitImport(object):
     STATUS_FILE = False
     STATUS_LOCALDB = False
 
+    has_new_data = False
+    found_mrn = None
+    no_previous_mrn = None
+    are_anonymized = False
+    are_inserted = False
+
     def __init__(self, name):
+
+
 
         # Timestamp
         self.time = datetime.datetime.now()
 
+        # New Data Status:
+
+
         # We shall name this with
         self.name = self.time.isoformat()
+
+        self.url, self.user, self.password = orthanc.API.get_prod_orthanc_credentials()
+
 
         # Initialize the state machine
         self.machine = Machine(model=self,
@@ -179,7 +208,9 @@ class DICOMTransitImport(object):
             png.write(object)
 
     def CheckOrthancNewData(self):
-        pass
+        list_subjects = orthanc.API.get_list_of_subjects_noauth(self.url)
+        if (len(list_subjects) > 0):
+            self.has_new_data = True
 
     def DownloadNewData(self):
         pass
@@ -217,15 +248,19 @@ class DICOMTransitImport(object):
 
     # Conditions Method
     def HasNewData(self):
-        return self.HasNewData
+        return self.has_new_data
+
     def Found_MRN(self):
-        pass
+        return self.found_mrn
+
     def NoPreviousMRN(self):
-        pass
+        return self.no_previous_mrn
+
     def AreAnonymized(self):
-        pass
+        return self.are_anonymized
+
     def AreInserted(self):
-        pass
+        return self.are_inserted
 
 
     # These methods are used to check system unavailiabilites.
