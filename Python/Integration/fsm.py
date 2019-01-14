@@ -247,7 +247,14 @@ class DICOMTransitImport(object):
 
     # Check methods which report methods.
     def CheckLORIS(self):
-        # Ping LORIS production server to check if it is online.
+
+
+        self.STATUS_NETWORK = self.CheckNetwork()
+
+        # Return false if network is down.
+        if not self.STATUS_NETWORK:
+            self.STATUS_LORIS = self.STATUS_NETWORK
+
         # Ping LORIS production server to check if it is online.
         from LORIS.API import check_status
         self.STATUS_LORIS = check_status()
@@ -278,8 +285,9 @@ class DICOMTransitImport(object):
         self.STATUS_ORTHANC = check_status()
 
 
-    # Meta methods
+    # Meta methods todo
     def SaveStatusToDisk(self):
+
         raise NotImplementedError
 
 

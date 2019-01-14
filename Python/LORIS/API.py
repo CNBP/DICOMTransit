@@ -20,6 +20,7 @@ def check_status():
     status_LORIS, _ = LORIS_query.login()
     return status_LORIS
 
+
 def check_online_status():
     """
     Quck to see if the online connection exist
@@ -27,7 +28,9 @@ def check_online_status():
     """
 
     import socket
+    from LORIS.helper import LORIS_helper
 
+    # DNS check vs Google DNS
     host = "8.8.8.8"
     port = 53
     timeout = 3
@@ -35,12 +38,21 @@ def check_online_status():
         socket.setdefaulttimeout(timeout)
         test_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
         test_socket.close()
-        return True
     except:
         return False
 
+    # WWW check vs Google
+    import urllib.request
+    status_google = urllib.request.urlopen("https://google.com").getcode()
+    if not LORIS_helper.is_response_success(status_google, 200):
+        return False
 
-
+    # WWW check vs CNBP.ca
+    status_cnbp = urllib.request.urlopen("http://www.cnbp.ca").getcode()
+    if not LORIS_helper.is_response_success(status_cnbp, 200):
+        return False
+    else:
+        return True
 
 
 def trigger_insertion(zip_name):
