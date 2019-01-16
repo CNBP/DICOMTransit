@@ -1,11 +1,11 @@
 from LORIS.candidates import LORIS_candidates
-from PythonUtils.env import load_validate_dotenv
 import os
 from LORIS.helper import LORIS_helper
 from LORIS.query import LORIS_query
 from LORIS.timepoint import LORIS_timepoint
 from LORIS.trigger_dicom_insert import trigger_dicom_insert
 from LocalDB.schema import CNBP_blueprint
+from settings import get
 """
 Everything here, should have its own login sessions as tokens are not shared at this high level function.  
 """
@@ -30,8 +30,9 @@ def check_online_status():
     import socket
     from LORIS.helper import LORIS_helper
 
+    """
     # DNS check vs Google DNS
-    host = "8.8.8.8"
+    host = "http://8.8.8.8"
     port = 53
     timeout = 3
     try:
@@ -40,6 +41,7 @@ def check_online_status():
         test_socket.close()
     except:
         return False
+    """
 
     # WWW check vs Google
     import urllib.request
@@ -124,12 +126,12 @@ def upload(local_path):
     :return:
     """
 
-    ProxyIP = load_validate_dotenv("ProxyIP", CNBP_blueprint.dotenv_variables)
-    ProxyUsername = load_validate_dotenv("ProxyUsername", CNBP_blueprint.dotenv_variables)
-    ProxyPassword = load_validate_dotenv("ProxyPassword", CNBP_blueprint.dotenv_variables)
-    LORISHostIP = load_validate_dotenv("LORISHostIP", CNBP_blueprint.dotenv_variables)
-    LORISHostUsername = load_validate_dotenv("LORISHostUsername", CNBP_blueprint.dotenv_variables)
-    LORISHostPassword = load_validate_dotenv("LORISHostPassword", CNBP_blueprint.dotenv_variables)
+    ProxyIP = get("ProxyIP")
+    ProxyUsername = get("ProxyUsername")
+    ProxyPassword = get("ProxyPassword")
+    LORISHostIP = get("LORISHostIP")
+    LORISHostUsername = get("LORISHostUsername")
+    LORISHostPassword = get("LORISHostPassword")
 
     Client = LORIS_helper.getProxySSHClient(ProxyIP, ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername,
                                             LORISHostPassword)

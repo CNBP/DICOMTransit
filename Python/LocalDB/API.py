@@ -4,7 +4,6 @@ from LORIS.validate import LORIS_validation
 import logging
 import sys
 import os
-from PythonUtils.env import load_validate_dotenv
 from settings import get
 from PythonUtils.math import int_incrementor
 
@@ -14,8 +13,9 @@ logger = logging.getLogger(__name__)
 
 
 def check_status():
+    from settings import get
     # Load local database from .env file
-    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
 
     if not os.path.isfile(database_path):
         return False
@@ -40,7 +40,7 @@ def get_list_MRN():
     :return:
     """
     # Load local database from .env file
-    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
 
 
     list_MRN = []
@@ -60,7 +60,7 @@ def check_MRN(MRN):
     """
 
     # Load local database from .env file
-    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
 
 
     # Store MRN in database.
@@ -74,7 +74,7 @@ def check_MRN(MRN):
 
 
 def create_MRN(MRN):
-    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
 
     # Create the MRN record
     LocalDB_query.create_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN)
@@ -87,7 +87,7 @@ def get_CNBP(MRN):
     :return: the CNBPID associated with that particular MRN number.
     """
     # Load local database from .env file
-    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
     MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
                                                                   CNBP_blueprint.table_name,
                                                                   CNBP_blueprint.keyfield,
@@ -107,7 +107,7 @@ def get_DCCID(MRN):
     :return: the CNBPID associated with that particular MRN number.
     """
     # Load local database from .env file
-    database_path = load_validate_dotenv("LocalDatabasePath",CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
     MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
                                                                   CNBP_blueprint.table_name,
                                                                   CNBP_blueprint.keyfield,
@@ -128,7 +128,7 @@ def get_timepoint(MRN):
     :return: the CNBPID associated with that particular MRN number.
     """
     # Load local database from .env file
-    database_path = load_validate_dotenv("LocalDatabasePath",CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
     MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
                                                                   CNBP_blueprint.table_name,
                                                                   CNBP_blueprint.keyfield,
@@ -149,7 +149,7 @@ def get_scan_date(MRN):
     :return: the CNBPID associated with that particular MRN number.
     """
     # Load local database from .env file
-    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
     MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
                                                                   CNBP_blueprint.table_name,
                                                                   CNBP_blueprint.keyfield,
@@ -169,7 +169,7 @@ def set_CNBP(MRN: int, CNBPID):
     :param MRN:
     :return:
     """
-    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
 
     # Update the MRN record with CNBPID
     LocalDB_query.create_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN)
@@ -182,7 +182,7 @@ def set_DCCID(MRN: int, DCCID):
     :param MRN:
     :return:
     """
-    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
 
     # Update the MRN record with DCCID
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "DCCID", DCCID, )
@@ -194,7 +194,7 @@ def set_completion(MRN: int, status: int = 0):
     :param MRN:
     :return:
     """
-    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
 
     # Update the MRN record with DCCID
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Completed", status)
@@ -206,7 +206,7 @@ def set_scan_date(MRN: int, scan_date: str):
     :param MRN:
     :return:
     """
-    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
 
     # Update the MRN record with Timepoint
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Date",
@@ -219,7 +219,7 @@ def set_timepoint(MRN: int, Timepoint: str):
     :param MRN:
     :return:
     """
-    database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    database_path = get("LocalDatabasePath")
 
     # Update the MRN record with Timepoint
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", Timepoint)
@@ -235,7 +235,7 @@ def propose_CNBPID(DICOM_protocol: str):
     :return:
     """
     # Get and retrieve  institution_ID
-    InstitionID = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
+    InstitionID = get("institutionID")
 
     import DICOM.API
     # Check ProjectID string and then return the ProjectID;
@@ -244,7 +244,7 @@ def propose_CNBPID(DICOM_protocol: str):
     # Use those two pieces of information to form a partial query pattern that can run on the SQLite
     partial_search_input = InstitionID + ProjectID
 
-    DB_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+    DB_path = get("LocalDatabasePath")
 
     # Partial match search records: (currently has SQL error).
     success, matched_records = LocalDB_query.check_partial_value(DB_path, CNBP_blueprint.table_name, "CNBPID", partial_search_input)
@@ -315,8 +315,8 @@ def get_setting(setting_name: str):
     from datetime import datetime
 
     # Load env on where the setting database is located.
-    path_config_database = load_validate_dotenv("config_database", configuration_blueprint.dotenv_variables) # Default location to dtconfigure.sqlite
-    name_config_table = load_validate_dotenv("config_table", configuration_blueprint.dotenv_variables)  # Default location to dtconfigure.sqlite
+    path_config_database = get("config_database") # Default location to dtconfigure.sqlite
+    name_config_table = get("config_table")  # Default location to dtconfigure.sqlite
 
     # Look for setting variable in the DEFAULT ORDER
     success, records_setting = LocalDB_query.get_all(path_config_database, name_config_table, setting_name)

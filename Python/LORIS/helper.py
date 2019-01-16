@@ -1,11 +1,8 @@
 import json
 import logging
 import sys
-
 import paramiko
-
-from LocalDB.schema import CNBP_blueprint
-from PythonUtils.env import load_validate_dotenv
+from settings import get
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -150,12 +147,12 @@ class LORIS_helper:
 
 
 if __name__ == '__main__':
-    ProxyIP = load_validate_dotenv("ProxyIP", CNBP_blueprint.dotenv_variables)
-    ProxyUsername = load_validate_dotenv("ProxyUsername", CNBP_blueprint.dotenv_variables)
-    ProxyPassword = load_validate_dotenv("ProxyPassword", CNBP_blueprint.dotenv_variables)
-    LORISHostIP = load_validate_dotenv("LORISHostIP", CNBP_blueprint.dotenv_variables)
-    LORISHostUsername = load_validate_dotenv("LORISHostUsername", CNBP_blueprint.dotenv_variables)
-    LORISHostPassword = load_validate_dotenv("LORISHostPassword", CNBP_blueprint.dotenv_variables)
+    ProxyIP = get("ProxyIP")
+    ProxyUsername = get("ProxyUsername")
+    ProxyPassword = get("ProxyPassword")
+    LORISHostIP = get("LORISHostIP")
+    LORISHostUsername = get("LORISHostUsername")
+    LORISHostPassword = get("LORISHostPassword")
 
     Client = LORIS_helper.getProxySSHClient(ProxyIP,  ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername, LORISHostPassword)
     LORIS_helper.uploadThroughClient(Client, "//data/incoming/VTXGL019999_598399_V1.zip", "VTXGL019999_598399_V1.zip")

@@ -2,7 +2,7 @@ from tempfile import TemporaryDirectory
 from shutil import copyfile
 from LORIS.validate import LORIS_validation
 from PythonUtils.file import dictionary_search
-from PythonUtils.env import load_validate_dotenv
+from settings import get
 from PythonUtils.folder import get_abspath
 from LocalDB.schema import CNBP_blueprint
 import os
@@ -26,7 +26,7 @@ def anonymize_to_zip(folder_path, zip_ID):
 
 def change_to_zip_dir():
     # Load the name of the storage folder from the configuration file.
-    folder_to_zip = load_validate_dotenv("zip_storage_location", CNBP_blueprint.dotenv_variables)
+    folder_to_zip = get("zip_storage_location")
 
     # Find the root fo the project where the zip storage is related to the location of the current DICOM directory.
     project_root = get_abspath(__file__, 2)
@@ -91,7 +91,7 @@ def study_validation(study):
     if LORIS_validation.validate_projectID(study) is False:
         return False
 
-    projectID_dictionary_json: str = load_validate_dotenv("projectID_dictionary", CNBP_blueprint.dotenv_variables)
+    projectID_dictionary_json: str = get("projectID_dictionary")
     projectID_list = json.loads(projectID_dictionary_json)
 
     # check if project ID is in the projectID list.

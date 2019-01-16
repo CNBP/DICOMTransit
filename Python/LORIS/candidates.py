@@ -2,7 +2,7 @@ import sys
 import re
 import json
 import logging
-from PythonUtils.env import load_validate_dotenv
+from settings import get
 from LORIS.query import LORIS_query
 from LORIS.helper import LORIS_helper
 
@@ -53,13 +53,13 @@ class LORIS_candidates:
         # will not apply to the SSH session!
 
 
-        ProxyIP = load_validate_dotenv("ProxyIP", CNBP_blueprint.dotenv_variables)
-        ProxyUsername = load_validate_dotenv("ProxyUsername", CNBP_blueprint.dotenv_variables)
-        ProxyPassword = load_validate_dotenv("ProxyPassword", CNBP_blueprint.dotenv_variables)
-        LORISHostPassword = load_validate_dotenv("LORISHostPassword", CNBP_blueprint.dotenv_variables)
-        LORISHostUsername = load_validate_dotenv("LORISHostUsername", CNBP_blueprint.dotenv_variables)
-        LORISHostIP = load_validate_dotenv("LORISHostIP", CNBP_blueprint.dotenv_variables)
-        DeletionScript = load_validate_dotenv("DeletionScript", CNBP_blueprint.dotenv_variables)
+        ProxyIP = get("ProxyIP")
+        ProxyUsername = get("ProxyUsername")
+        ProxyPassword = get("ProxyPassword")
+        LORISHostPassword = get("LORISHostPassword")
+        LORISHostUsername = get("LORISHostUsername")
+        LORISHostIP = get("LORISHostIP")
+        DeletionScript = get("DeletionScript")
 
         # NOTE! If you EVER get NULL coalesce not recognized error, make sure that the PHP version being called from
         # the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER
@@ -136,7 +136,7 @@ class LORIS_candidates:
         """
         logger = logging.getLogger('LORIS_checkPSCIDExist')
         logger.info("Checking if PSCID exist: "+proposed_PSCID)
-        institution_check = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
+        institution_check = get("institutionID")
 
         #Get list of projects
         response_success, loris_project = LORIS_query.getCNBP(token, r"projects/loris")

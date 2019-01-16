@@ -7,7 +7,7 @@ from LORIS.validate import LORIS_validation
 from LORIS.helper import LORIS_helper
 from LORIS.query import LORIS_query
 from LocalDB.schema import CNBP_blueprint
-from PythonUtils.env import load_validate_dotenv
+from settings import get
 from PythonUtils.math import int_incrementor
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -24,7 +24,7 @@ class LORIS_timepoint:
         """
 
         # Get config defined prefix.
-        timepoint_prefix = load_validate_dotenv("timepoint_prefix", CNBP_blueprint.dotenv_variables)
+        timepoint_prefix = get("timepoint_prefix")
 
         # Check it against first letter.
         if timepoint_prefix != input_string[0]:
@@ -106,7 +106,7 @@ class LORIS_timepoint:
             new_visit_number = int_incrementor(visit_number)
 
 
-            prefix = load_validate_dotenv("timepoint_prefix", CNBP_blueprint.dotenv_variables)
+            prefix = get("timepoint_prefix")
 
             timepoint_label = prefix + str(new_visit_number)
 

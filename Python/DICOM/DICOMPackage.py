@@ -1,6 +1,5 @@
 from DICOM.validate import DICOM_validate
 from PythonUtils.file import zip_with_name
-from PythonUtils.env import load_validate_dotenv
 from LORIS.validate import LORIS_validation
 from LORIS.timepoint import LORIS_timepoint
 from LocalDB.schema import CNBP_blueprint
@@ -238,7 +237,7 @@ class DICOMPackage:
         """
 
         # load system default ZIP storage path.
-        zip_storage_path = load_validate_dotenv("zip_storage_location", CNBP_blueprint.dotenv_variables)
+        zip_storage_path = get("zip_storage_location")
 
         # Change to the storage folder before carrying out the zip operation.
         os.chdir(zip_storage_path)

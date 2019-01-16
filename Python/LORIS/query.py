@@ -6,7 +6,7 @@ import requests
 
 from LORIS.helper import LORIS_helper
 from LocalDB.schema import CNBP_blueprint
-from PythonUtils.env import load_validate_dotenv
+from settings import get
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -19,14 +19,14 @@ class LORIS_query:
         :return: BOOL if or not it is successful. also, the JSON token that is necessary to conduct further transactions.
         """
         logger = logging.getLogger('LORIS_login')
-
-        username = load_validate_dotenv("LORISusername", CNBP_blueprint.dotenv_variables)
-        password = load_validate_dotenv("LORISpassword", CNBP_blueprint.dotenv_variables)
+        from settings import get
+        username = get("LORISusername")
+        password = get("LORISpassword")
 
         data = json.dumps({"username":username, "password":password})
 
         #Login URL
-        url = load_validate_dotenv("LORISurl", CNBP_blueprint.dotenv_variables)
+        url = get("LORISurl")
         updated_url = url + 'login'
 
 
@@ -50,7 +50,7 @@ class LORIS_query:
         """
         logger = logging.getLogger('LORIS_get')
         logger.info("Getting LORIS endpoint: " + endpoint + " at")
-        url = load_validate_dotenv("LORISurl", CNBP_blueprint.dotenv_variables)
+        url = get("LORISurl")
         updatedurl = url + endpoint
         logger.info(updatedurl)
         HEADERS = {'Authorization': 'token {}'.format(token)}
@@ -75,7 +75,7 @@ class LORIS_query:
         logger.info("Posting data to: "+endpoint)
         logger.info("Data: "+data)
         logger.info("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
-        url = load_validate_dotenv("LORISurl", CNBP_blueprint.dotenv_variables)
+        url = get("LORISurl")
         updatedurl = url + endpoint
 
         HEADERS = {'Authorization': 'token {}'.format(token)}
@@ -101,7 +101,7 @@ class LORIS_query:
         logger.info("Data: "+data)
         logger.info("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
 
-        url = load_validate_dotenv("LORISurl", CNBP_blueprint.dotenv_variables)
+        url = get("LORISurl")
         updatedurl = url + endpoint
 
         HEADERS = {'Authorization': 'token {}'.format(token)}

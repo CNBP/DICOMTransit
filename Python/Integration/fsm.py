@@ -1,8 +1,9 @@
 import os, sys, inspect, io
 import datetime
 import logging
-from transitions import *
-from transitions.extensions import GraphMachine as Machine
+from transitions import Machine
+from transitions import MachineError
+#from transitions.extensions import GraphMachine as Machine
 import DICOM.API
 import orthanc.API
 import LORIS.API
@@ -10,38 +11,40 @@ import LocalDB.API
 from DICOM.DICOMPackage import DICOMPackage
 
 logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger('transition').setLevel(logging.INFO)
+logger = logging.getLogger('transition')
+logger.setLevel(logging.INFO)
 
 """
-HasNewData = Method
+has_new_data = Method
 has_new_data = Variable. 
 STATUS_NETWORK = status binary variable. 
 
 """
 
 class DICOMTransitImport(object):
-
     # These are the plausible major steps within a DICOMTransitImport process.
     states = [
         "waiting",
-
-        "obtained_MRN",
-
+            
         # Orthanc related:
+        "determined_orthanc_new_data_status",
         "detected_new_data",
         "obtained_new_data",
 
         # File related:
         "unpacked_new_data",
         "obtained_MRN",
+        "determined_MRN_status",
 
         # Main analyses path:
         "processing_old_patient",
         "processing_new_patient",
 
         # Existing patient path.
-        "obtained_LocalDB_timepoint",
-        "updated_LocalDB_timepoint",
+        "ensured_only_new_subjects_remain",
+        "obtained_DCCID_CNBPID",
+        "updated_LORIS_timepoint",
+
         #"updated_remote_timepoint",
 
         # New patient path.
@@ -49,42 +52,20 @@ class DICOMTransitImport(object):
         "obtained_new_subject_birthday",
         #"obtained_new_subject_study",
         "created_remote_subject",
-        "created_local_subject",
-        "updated_LORIS_timepoint",
 
-        "retry0",
-        "retry1",
-        "retry2",
-        "retry3",
-        "retry4",
-        "retry5",
-        "retry6",
-        "retry7",
-        "retry8",
-        "retry9",
-
+        "harmonized_timepoints",
         "files_anonymized",
         "files_zipped",
         "zip_uploaded",
         "zip_inserted",
 
-
-    ]
-
-
-    """
-    # Errors:
-    "error_orthanc",
-    "error_LORIS",
-    "error_file_corruption",
-    "error_sqlite",
-    "error_network",
-    "human_intervention_required",
-    """
-
-    # trigger, source, destination
-    actions = [
-        ['CheckMRIScanner', 'waiting', 'detected_new_data'],
+        "retry",
+        "error_orthanc",
+        "error_LORIS",
+        "error_file_corruption",
+        "error_sqlite",
+        "error_network",
+        "human_intervention_required",
     ]
 
     # Status indicator whether they are reachable/online
@@ -96,10 +77,9 @@ class DICOMTransitImport(object):
 
     orthanc_has_new_data = False
     localDB_found_mrn = None
-    no_localDB_mrn = None
     scan_already_processed = True
-    are_anonymized = False
-    are_inserted = False
+    scan_anonymized = False
+    scan_inserted = False
 
     orthanc_index_current_subject = 0
     orthanc_list_all_subjects = []
@@ -107,113 +87,214 @@ class DICOMTransitImport(object):
     DICOM_zip = None
     DICOM_package = None
 
-    def __init__(self, name):
+    # This is the list of the files that are constantly being monitored and checked if reachable. It is dynamicly updated through out the analyses process. It can be a list of zip files, or a single zip file. It respresents the local file resources that CONSTANTLY needs to be monitored to ensure no fault occurs.
+    files = []
 
+    machine = None
 
+    retry = 0
+    max_retry = 5
+
+    def __init__(self):
+
+        self.states_last = []
 
         # Timestamp
         self.time = datetime.datetime.now()
 
-        # New Data Status:
-
+        self.retry = 0
 
         # We shall name this with
         self.name = self.time.isoformat().replace(":","")
 
         self.url, self.user, self.password = orthanc.API.get_prod_orthanc_credentials()
 
+    def setup_machine(self):
 
         # Initialize the state machine
-        self.machine = Machine(model=self,
-                               states=DICOMTransitImport.states,
-                               transitions=DICOMTransitImport.actions,
-                               #transitions=None,
-                               auto_transitions=False,
-                               show_auto_transitions=True,
-                               title="Import Process is Messy",
-                               show_conditions=True,
-                               initial="waiting")
+        machine = Machine(model=self,
+                          auto_transitions=False,
+                          states=self.states,
+                          # send_event=True,
+                          # title="Import Process is Messy",
+                          # show_auto_transitions=True,
+                          # show_conditions=True,
+                          initial="waiting")
 
-        #Transitions:
+        # Universal Transitions:
+        machine.after_state_change = self.record_last_state()
+
+        # Transitions:
 
         # Check orthanc for new data, if has new data, proceed to the next stage. Else, no stage transition happen.
-        self.machine.add_transition(trigger="CheckOrthancNewData", source="waiting", dest="detected_new_data",
-                                    conditions="HasNewData", before="CheckOrthanc")
 
-        #
-        self.machine.add_transition("DownloadNewData", "detected_new_data", "obtained_new_data",
-                                    before="CheckOrthanc", after="CheckFile")
+        machine.add_transition("TR_UpdateOrthancNewDataStatus", "waiting", "determined_orthanc_new_data_status",
+                               prepare="UpdateOrthancStatus",
+                               unless="is_Orthanc_Unavailable",
+                               after="CheckOrthancNewData")  # this will set the
 
-        self.machine.add_transition("UnpackNewData", "obtained_new_data", "unpacked_new_data",
-                                    before="CheckFile")  # need to check zip file.
 
-        self.machine.add_transition("CheckMRN", "unpacked_new_data", "obtained_MRN",
-                                    before=["CheckFile", "CheckLocalDB"], after="CheckLocalDBMRN") # # need to check the content of the zip file success
+        # Paired branching transitions
+        machine.add_transition("TR_HandlePotentialOrthancData", "determined_orthanc_new_data_status", "waiting",
+                               unless="has_new_data")
+        machine.add_transition("TR_HandlePotentialOrthancData", "determined_orthanc_new_data_status", "detected_new_data",
+                               prepare="UpdateOrthancStatus",
+                               unless="is_Orthanc_Unavailable",
+                               conditions="has_new_data")
 
+        machine.add_transition("TR_DownloadNewData", "detected_new_data", "obtained_new_data",
+                               prepare="UpdateOrthancStatus",
+                               unless="is_Orthanc_Unavailable",
+                               # note that we typically ENTER the state first BEFORE applying the action. Therefore, the AFTER action MUST SUCCEED.
+                               after="DownloadNewData",  # "UpdateFileStatus"
+                               )
+
+        machine.add_transition("TR_UnpackNewData", "obtained_new_data", "unpacked_new_data",
+                               prepare="UpdateFileStatus",
+                               unless="is_File_Unavailable",
+                               after="UnpackNewData"
+                               )  # need to check zip file.
+
+        machine.add_transition("TR_ObtainDICOMMRN", "unpacked_new_data", "obtained_MRN",
+                               prepare="UpdateFileStatus",
+                               unless="is_File_Unavailable",
+                               after="CheckMRN"
+                               )  # need to check the content of the zip file success
+
+        machine.add_transition("TR_UpdateNewMRNStatus", "obtained_MRN", "determined_MRN_status",
+                               prepare="UpdateLocalDBStatus",
+                               unless="is_LocalDB_Unavailable",
+                               after="CheckLocalDBMRN"
+                               )
+
+        # Paired branching transitions
         # Depending on the result of the MRN check, whether it exist previously or not, this is where the decision tree bifurcate
-        self.machine.add_transition("ProcessPatient", "obtained_MRN", "processing_old_patient",
-                                    conditions="Found_MRN", after="CheckAlreadyInsert")
-        self.machine.add_transition("ProcessPatient", "obtained_MRN", "processing_new_patient",
-                                    conditions="NoPreviousMRN")
+        machine.add_transition("TR_ProcessPatient", "determined_MRN_status", "processing_old_patient",
+                               conditions="found_MRN")
+        machine.add_transition("TR_ProcessPatient", "determined_MRN_status", "processing_new_patient",
+                               unless="found_MRN")
 
         # Old Subject Path.
 
         # Cycle used to delet all non-essential subjects already processed.
-        self.machine.add_transition("DeleteSubject", "processing_old_patient", "=",
-                                    before="CheckOrthanc", conditions="CheckExistingScan", after="CheckAlreadyInsert")
+        machine.add_transition("TR_DeleteSubject", "processing_old_patient", "=",
+                               prepare="UpdateProcessStatus",  # Check if the current subject is already inserted.
+                               conditions="are_scans_processed",
+                               # and only if it is inserted, fixme: check what this is about!
+                               after="DeleteSubject")  # then do we carry out the deletion process.
 
+        # Once all subjects are completed, move on to process the new subjects.
+        machine.add_transition("TR_DeleteSubject", "processing_old_patient", "ensured_only_new_subjects_remain",
+                               prepare="UpdateProcessStatus",  # Check if the current subject is already inserted.
+                               unless="are_scans_processed",
+                               # and only if it is inserted, fixme: check what this is about!
+                               )  # then do we carry out the deletion process.
 
-        self.machine.add_transition("RetrieveCNBPIDDCCID", "processing_old_patient", "obtained_DCCID_CNBPID",
-                                    before=["CheckNetwork", "CheckLORIS"])
+        machine.add_transition("TR_RetrieveCNBPIDDCCID", "ensured_only_new_subjects_remain", "obtained_DCCID_CNBPID",
+                               prepare=["UpdateNetworkStatus", "UpdateLORISStatus"],
+                               unless=["is_LORIS_Unavailable", "is_Network_Unavailable"],
+                               after="RetrieveCNBPIDDCCID")
 
-        self.machine.add_transition("IncrementRemoteTimepoint", "obtained_DCCID_CNBPID", "updated_LORIS_timepoint",
-                                    before=["CheckNetwork", "CheckLORIS"])
+        machine.add_transition("TR_IncrementRemoteTimepoint", "obtained_DCCID_CNBPID", "updated_LORIS_timepoint",
+                               prepare=["UpdateNetworkStatus", "UpdateLORISStatus"],
+                               unless=["is_LORIS_Unavailable", "is_Network_Unavailable"],
+                               after="IncrementRemoteTimepoint")
 
-        self.machine.add_transition("IncrementLocalTimepoint", "updated_LORIS_timepoint", "harmonized_timepoints",
-                                    before="CheckLocalDB")
-
-
+        machine.add_transition("TR_IncrementLocalTimepoint", "updated_LORIS_timepoint", "harmonized_timepoints",
+                               prepare=["UpdateLocalDBStatus"],
+                               unless=["is_LocalDB_Unavailable"],
+                               after="IncrementRemoteTimepoint")
 
         # New Subject Path
 
-        self.machine.add_transition("RetrieveGender", "processing_new_patient", "obtained_new_subject_gender",
-                                    before="CheckFile")
-        self.machine.add_transition("RetrieveBirthday", "obtained_new_subject_gender", "obtained_new_subject_birthday",
-                                    before="CheckFile")
-        #self.machine.add_transition("RetrieveStudy", "obtained_new_subject_birthday", "RetrieveStudy",
-        #                            before="CheckFile")
-        self.machine.add_transition("LORISCreateSubject", "obtained_new_subject_birthday", "created_remote_subject",
-                                    before=["CheckNetwork", "CheckLORIS"])
-        self.machine.add_transition("LocalDBCreateSubject", "created_remote_subject", "harmonized_timepoints",
-                                    before="CheckLocalDB")
+        machine.add_transition("TR_RetrieveGender", "processing_new_patient", "obtained_new_subject_gender",
+                               prepare=["UpdateFileStatus"],
+                               unless=["is_File_Unavailable"],
+                               after="RetrieveGender")
+
+        machine.add_transition("TR_RetrieveBirthday", "obtained_new_subject_gender", "obtained_new_subject_birthday",
+                               prepare=["UpdateFileStatus"],
+                               unless=["is_File_Unavailable"],
+                               after="RetrieveBirthday")
+
+        # self.machine.add_transition("TR_RetrieveStudy", "obtained_new_subject_birthday", "RetrieveStudy",
+        #                            before="UpdateFileStatus")
+        machine.add_transition("TR_LORISCreateSubject", "obtained_new_subject_birthday", "created_remote_subject",
+                               prepare=["UpdateNetworkStatus", "UpdateLORISStatus"],
+                               unless=["is_LORIS_Unavailable", "is_Network_Unavailable"],
+                               after="LORISCreateSubject")
+
+        machine.add_transition("TR_LocalDBCreateSubject", "created_remote_subject", "harmonized_timepoints",
+                               prepare=["UpdateLocalDBStatus"],
+                               unless=["is_LocalDB_Unavailable"],
+                               after="LocalDBCreateSubject")
 
         # From this point onward, all path are merged:
 
-        self.machine.add_transition("AnonymizeFiles", "harmonized_timepoints", "files_anonymized",
-                                    before="CheckFile", after="DoubleCheckAnonymization")
-        self.machine.add_transition("ZipFiles", "files_anonymized", "files_zipped",
-                                    conditions="AreAnonymized", before="CheckFiles", after="CheckFiles")
-        self.machine.add_transition("UploadZip", "files_zipped", "zip_uploaded",
-                                    before=["CheckNetwork", "CheckLORIS"], after="CheckUploadSuccess")
-        self.machine.add_transition("InsertSubjectData", "zip_uploaded", "zip_inserted",
-                                    before=["CheckNetwork", "CheckLORIS"], after="CheckInsertion")
-        self.machine.add_transition("RecordInsertion", "zip_inserted", "waiting",
-                                    conditions="AreInserted", before=["CheckNetwork", "CheckLORIS"])
+        machine.add_transition("TR_AnonymizeFiles", "harmonized_timepoints", "files_anonymized",
+                               prepare=["UpdateFileStatus"],
+                               unless=["is_File_Unavailable"],
+                               after=["AnonymizeFiles"])
+
+        machine.add_transition("TR_ZipFiles", "files_anonymized", "files_zipped",
+                               prepare=["DoubleCheckAnonymization", "UpdateFileStatus"],
+                               conditions="are_anonymized",
+                               unless=["is_File_Unavailable"],
+                               after="ZipFiles")
+
+        machine.add_transition("TR_UploadZip", "files_zipped", "zip_uploaded",
+                               prepare=["UpdateNetworkStatus", "UpdateLORISStatus"],
+                               unless=["is_LORIS_Unavailable", "is_Network_Unavailable"],
+                               after=["UploadZip", "CheckUploadSuccess"])
+
+        machine.add_transition("TR_InsertSubjectData", "zip_uploaded", "zip_inserted",
+                               prepare=["UpdateNetworkStatus", "UpdateLORISStatus"],
+                               unless=["is_LORIS_Unavailable", "is_Network_Unavailable"],
+                               after=["InsertSubjectData", "CheckInsertionSuccess"])
+
+        machine.add_transition("TR_RecordInsertion", "zip_inserted", "waiting",
+                               prepare=["UpdateLocalDBStatus"],
+                               unless=["is_LocalDB_Unavailable"],
+                               after="RecordInsertion")
 
         # Retrying block.
-        self.machine.add_transition("reattempt", ["error_orthanc", "error_LORIS", "error_file_corruption", "error_localDB", "error_network"], "=")
+        machine.add_transition("TR_reattempt",
+                               ["error_orthanc", "error_LORIS", "error_file_corruption", "error_localDB",
+                                "error_network"], "=")
 
         # Any time, in ANY state, if these check fails, we should go to error state. There might be additional flags in terms situation specific reactions.
-        self.machine.add_transition("CheckOrthanc",         "*", "error_orthanc",           conditions="is_Orthanc_Unavailable")
-        self.machine.add_transition("CheckLORIS",           "*", "error_LORIS",             conditions="is_LORIS_Unavailable")
-        self.machine.add_transition("CheckFile",  "*", "error_file_corruption",   conditions="is_File_Unavailable")
-        self.machine.add_transition("CheckLocalDB",         "*", "error_localDB",           conditions="is_LocalDB_Unavailable")
-        self.machine.add_transition("CheckNetwork",         "*", "error_network",           conditions="is_Network_Unavailable")
+        machine.add_transition("TR_DetectedOrthancError", "*", "error_orthanc",
+                               unless="ExceedMaxRetry")
 
+        machine.add_transition("TR_DetectedLORISError", "*", "error_LORIS",
+                               unless="ExceedMaxRetry")
+
+        machine.add_transition("TR_DetectedFileError", "*", "error_file_corruption",
+                               unless="ExceedMaxRetry")
+
+        machine.add_transition("TR_DetectedLocalDBError", "*", "error_localDB",
+                               unless="ExceedMaxRetry")
+
+        machine.add_transition("TR_DetectedNetworkError", "*", "error_network",
+                               unless="ExceedMaxRetry")
 
         # At the end, if all else fails, log, ask for help. Ready for next run.
-        self.machine.add_transition("AskMeatBagsForHelp", "*", "human_intervention_required")
+        # Meatbag state
+        machine.add_transition("TR_DetectedOrthancError", "*", "human_intervention_required",
+                               conditions="ExceedMaxRetry")
 
+        machine.add_transition("TR_DetectedLORISError", "*", "human_intervention_required",
+                               conditions="ExceedMaxRetry")
+
+        machine.add_transition("TR_DetectedFileError", "*", "human_intervention_required",
+                               conditions="ExceedMaxRetry")
+
+        machine.add_transition("TR_DetectedLocalDBError", "*", "human_intervention_required",
+                               conditions="ExceedMaxRetry")
+
+        machine.add_transition("TR_DetectedNetworkError", "*", "human_intervention_required",
+                               conditions="ExceedMaxRetry")
+        self.machine = machine
 
     # graph object is created by the machine
     def show_graph(self, **kwargs):
@@ -233,9 +314,10 @@ class DICOMTransitImport(object):
         Check if there are new data. Set the proper flag.
         :return:
         """
+        logger.info("Transition: Checking orthanc for new data!")
 
         # fixme: authentication issue.
-        self.orthanc_list_all_subjects = orthanc.API.get_list_of_subjects_noauth(self.url)
+        self.orthanc_list_all_subjects = orthanc.API.get_list_of_subjects(self.url, self.user, self.password)
         if self.orthanc_list_all_subjects is None or len(self.orthanc_list_all_subjects) == 0:
             self.orthanc_has_new_data = False
         else:
@@ -243,16 +325,26 @@ class DICOMTransitImport(object):
             # fixme: for now, only analyze ONE single subject from the Orthanc query.
             self.orthanc_index_current_subject = self.orthanc_index_current_subject + 1
 
+
     def DownloadNewData(self):
         """
-        Download the new data. Since this state is reached once we confirm there are new data.
+        Download the new data for a SINGLE subject. We will return to this state when more subjects exist. Since this state is reached once we confirm there are new data.
         :return:
         """
+        logger.info("Transition: Downloading new data now!")
         subject = self.orthanc_list_all_subjects[self.orthanc_index_current_subject]
         subject_url = self.url + "patients/" + subject + '/archive'  # it must contain patients/ and archive in the path name
 
-        # fixme: Authentication issue
         self.DICOM_zip = orthanc.API.get_subject_zip(subject_url, self.user, self.password)
+
+        # Update the self.files to be scrutinized
+        self.files.clear()
+        self.files.append(self.DICOM_zip)
+
+    def DeleteSubject(self):
+        self.orthanc_index_current_subject=self.orthanc_index_current_subject+1
+        logger.info("Mock deleting the subject currently") #fixme: use real api calls here to delete.
+
 
     def UnpackNewData(self):
         """
@@ -260,7 +352,13 @@ class DICOMTransitImport(object):
         :return:
         """
         # Properly set the DICOM_package.
-        self.DICOM_package = DICOMPackage(self.DICOM_zip)
+        temporary_folder = orthanc.API.unpack_subject_zip(self.DICOM_zip)
+        self.DICOM_package = DICOMPackage(temporary_folder)
+
+        # Update the self.files to be scrutinized
+        self.files.clear()
+        self.files = self.DICOM_package.get_dicom_files()
+
 
     def CheckMRN(self):
         """
@@ -273,19 +371,14 @@ class DICOMTransitImport(object):
         logger.info("Subject specific MRN pass check.")
 
 
-    def ProcessPatient(self):
-        logger.info("We are now entering the processing stage. ")
-        pass
-
     def CheckLocalDBMRN(self):
         """
         Check the MRN from the local database.
         :return:
         """
         self.localDB_found_mrn = LocalDB.API.check_MRN(self.DICOM_package.MRN)
-        self.no_localDB_mrn = not LocalDB.API.check_MRN(self.DICOM_package.MRN)
 
-    def CheckAlreadyInsert(self):
+    def UpdateProcessStatus(self):
 
         # Intervention block: Check scan dates to see if they have already been inserted.
         DICOM_date = self.DICOM_package.scan_date
@@ -302,13 +395,6 @@ class DICOMTransitImport(object):
         else:
             # Default path is already it has not been processed.
             self.scan_already_processed = False
-
-    def DeleteSubject(self):
-        # fixme: need to actually delete the subject
-        # orthanc.API.remove
-
-        logger.warning("MOCK deleting the subject currently!")
-
 
     # Old Subject Path:
     def RetrieveCNBPIDDCCID(self):
@@ -388,24 +474,24 @@ class DICOMTransitImport(object):
         # Set the completion status to ZERO
         LocalDB.API.set_completion(self.DICOM_package.MRN, 1)
 
-    def CheckExistingScan(self):
+    def CheckInsertionSuccess(self):
+        pass
+
+    def are_scans_processed(self):
         return self.scan_already_processed
 
     # Conditions Method
-    def HasNewData(self):
+    def has_new_data(self):
         return self.orthanc_has_new_data
 
-    def Found_MRN(self):
+    def found_MRN(self):
         return self.localDB_found_mrn
 
-    def NoPreviousMRN(self):
-        return self.no_localDB_mrn
+    def are_anonymized(self):
+        return self.scan_anonymized
 
-    def AreAnonymized(self):
-        return self.are_anonymized
-
-    def AreInserted(self):
-        return self.are_inserted
+    def are_inserted(self):
+        return self.scan_inserted
 
 
     # These methods are used to check system unavailiabilites.
@@ -426,9 +512,9 @@ class DICOMTransitImport(object):
 
 
     # Check methods which report the status of various settings.
-    def CheckLORIS(self):
+    def UpdateLORISStatus(self):
 
-        self.STATUS_NETWORK = self.CheckNetwork()
+        self.STATUS_NETWORK = self.UpdateNetworkStatus()
 
         # Return false if network is down.
         if not self.STATUS_NETWORK:
@@ -437,34 +523,66 @@ class DICOMTransitImport(object):
         # Ping LORIS production server to check if it is online.
         from LORIS.API import check_status
         self.STATUS_LORIS = check_status()
+        if self.STATUS_LORIS:
+            logger.info("LORIS production system status OKAY!")
+        else:
+            self.TR_DetectedLORISError()
 
-    def CheckNetwork(self):
+    def UpdateNetworkStatus(self):
         # Ping CNBP frontend server.
         # Ping LORIS server.
         # Ping Google.
         from LORIS.API import check_online_status
         self.STATUS_NETWORK = check_online_status()
+        if self.STATUS_NETWORK:
+            logger.info("General Network system status OKAY!")
+        else:
+            self.TR_DetectedNetworkError()
 
-    def CheckLocalDB(self):
+    def UpdateLocalDBStatus(self):
         # Read local db. See if it exist based on the setting.
         from LocalDB.API import check_status
         self.STATUS_LOCALDB = check_status()
+        if self.STATUS_LOCALDB:
+            logger.info("LocalDB system status OKAY!")
+        else:
+            self.TR_DetectedLocalDBError()
 
-    def CheckFile(self, file_path):
+    def UpdateOrthancStatus(self):
+        # Check ENV for the predefined Orthanc URL to ensure that it exists.
+        from orthanc.API import check_status
+        self.STATUS_ORTHANC = check_status()
+        if self.STATUS_ORTHANC:
+            logger.info("Orthanc system status OKAY!")
+        else:
+            self.TR_DetectedOrthancError()
+
+    def UpdateFileStatus(self):
         # Ensure the file provided exist.
         # NOTE: this does not check if the valid is the right is CORRECT!
-        if os.path.exists(file_path) and os.path.isfile(file_path):
+        for file in self.files:
+            if os.path.exists(file) and os.path.isfile(file):
+                continue
+            else:
+                self.TR_DetectedFileError()
+
+        logger.info("File(s) status APPEAR OKAY!")
+
+    # Meta methods todo
+
+    def record_last_state(self):
+        """
+        Keeping an archive of the states this instance has been to.
+        :return:
+        """
+        self.states_last.append(self.state)
+
+    def ExceedMaxRetry(self):
+        if self.retry >= self.max_retry:
             return True
         else:
             return False
 
-    def CheckOrthanc(self):
-        # Check ENV for the predefined Orthanc URL to ensure that it exists.
-        from orthanc.API import check_status
-        self.STATUS_ORTHANC = check_status()
-
-
-    # Meta methods todo
     def SaveStatusToDisk(self):
 
         raise NotImplementedError
@@ -480,29 +598,59 @@ if __name__ == "__main__":
     if cmd_folder not in sys.path:
         sys.path.insert(0, cmd_folder)
 
-    Import1 = DICOMTransitImport("2019")
-    Import1.show_graph()
-
-    Import1.CheckOrthanc()
-    Import1.DownloadNewData()
-    Import1.UnpackNewData()
-    Import1.CheckMRN()
-    Import1.CheckLocalDBMRN()
-
-    Import1.RetrieveCNBPIDDCCID()
-    Import1.obtained_DCCID_CNBPID()
+    current_import_process = DICOMTransitImport()
+    current_import_process.setup_machine()
 
 
-    Import1.RetrieveGender()
-    Import1.RetrieveBirthday()
-    Import1.LORISCreateSubject()
-    Import1.LocalDBCreateSubject()
 
-    Import1.AnonymizeFiles()
-    Import1.ZipFiles()
-    Import1.UploadZip()
-    Import1.InsertSubjectData()
-    Import1.RecordInsertion()
+    # System initialization check.
+    current_import_process.UpdateOrthancStatus()
+    current_import_process.UpdateNetworkStatus()
+    current_import_process.UpdateLocalDBStatus()
+    current_import_process.UpdateLORISStatus()
+
+    # From this point onward, going to assume, they remain the same for the duration of the transaction.
+    # Current system is NOT robust enough to deal with mid interruption. It will just trigger failed insertion to try again.
+
+    #Import1.show_graph()
+
+    # current_import.waiting is the default state.
+
+    current_import_process.TR_UpdateOrthancNewDataStatus()
+
+    if current_import_process.has_new_data():
+        current_import_process.TR_HandlePotentialOrthancData()
+        current_import_process.TR_DownloadNewData()
+        current_import_process.TR_UnpackNewData()
+        current_import_process.TR_ObtainDICOMMRN()
+        current_import_process.TR_UpdateNewMRNStatus()
+    else:
+        current_import_process.TR_HandlePotentialOrthancData()
+
+    current_import_process.TR_ProcessPatient()
+
+    if current_import_process.found_MRN():
+        # old patients path
+
+        while current_import_process.are_scans_processed():
+            current_import_process.TR_DeleteSubject()
+
+        current_import_process.TR_RetrieveCNBPIDDCCID()
+        current_import_process.TR_IncrementRemoteTimepoint()
+        current_import_process.TR_IncrementLocalTimepoint()
+
+    else:
+        # new patient path
+        current_import_process.TR_RetrieveGender()
+        current_import_process.TR_RetrieveBirthday()
+        current_import_process.TR_LORISCreateSubject()
+        current_import_process.TR_LocalDBCreateSubject()
+
+    current_import_process.TR_AnonymizeFiles()
+    current_import_process.TR_ZipFiles()
+    current_import_process.TR_UploadZip()
+    current_import_process.TR_InsertSubjectData()
+    current_import_process.TR_RecordInsertion()
 
 
 

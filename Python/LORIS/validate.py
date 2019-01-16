@@ -1,7 +1,7 @@
 import sys
 import json
 import logging
-from PythonUtils.env import load_validate_dotenv
+from settings import get
 from LocalDB.schema import CNBP_blueprint
 from PythonUtils.file import dictionary_search
 from LORIS.candidates import LORIS_candidates
@@ -115,7 +115,7 @@ class LORIS_validation:
         :return:
         """
         # Parse from the .env standardization
-        InsitituionID = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
+        InsitituionID = get("institutionID")
 
         # Check if institution ID matches
         if not (input_institutionID == InsitituionID):
@@ -134,7 +134,7 @@ class LORIS_validation:
         """
 
         # Load ProjectIDs from the environment.
-        projectID_dictionary_json: str = load_validate_dotenv("projectID_dictionary", CNBP_blueprint.dotenv_variables)
+        projectID_dictionary_json: str = get("projectID_dictionary")
         projectID_list = json.loads(projectID_dictionary_json)
 
         # check if project ID is in the projectID list via a dictionary search
