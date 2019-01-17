@@ -2,7 +2,7 @@ from DICOM.validate import DICOM_validate
 from PythonUtils.file import zip_with_name
 from LORIS.validate import LORIS_validation
 from LORIS.timepoint import LORIS_timepoint
-from LocalDB.schema import CNBP_blueprint
+from settings import get
 import logging
 import sys
 import os
@@ -194,7 +194,6 @@ class DICOMPackage:
 
             # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the MRN from first file.
             success, self.MRN = DICOM_elements.retrieve_MRN(self.dicom_files[0])
-            assert success
             return success
         else:
             return False

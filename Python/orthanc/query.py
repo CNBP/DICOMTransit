@@ -6,7 +6,7 @@ import zipfile
 import sys
 from PythonUtils.file import is_name_unique, unique_name
 from requests.auth import HTTPBasicAuth
-
+from settings import get
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -84,22 +84,23 @@ class orthanc_query:
         :param endpoint:
         :return: status of the get requests, and the actual local file name saved in the process.
         """
+
         logger = logging.getLogger('Orthanc_getzip')
         logger.info("Downloading Orthanc endpoint: " + endpoint)
 
-
+        zip_path = get("zip_storage_location")
         with requests.Session() as s:
             r = s.get(endpoint, stream=True, verify=False, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
 
-            local_filename = unique_name() + ".zip"
+            local_file_full_path = zip_path + unique_name() + ".zip"
             # NOTE the stream=True parameter
-            with open(local_filename, 'wb') as f:
+            with open(local_file_full_path, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=1024):
                     if chunk:  # filter out keep-alive new chunks
                         f.write(chunk)
                         # f.flush() commented by recommendation from J.F.Sebastian
         logger.info(str(r.status_code) + r.reason)
-        return r.status_code, local_filename
+        return r.status_code, local_file_full_path
 
     @staticmethod
     def flatUnZip(input_zip, out_dir):

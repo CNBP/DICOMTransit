@@ -67,13 +67,13 @@ def get_subject_zip(orthanc_URL_with_UUID, orthaner_user, orthanc_password):
     :param orthanc_URL_with_UUID:
     :return: the temporary folder object which contain the reference to the folder in the .name attribute
     """
-    status, zip_file = orthanc_query.getPatientZipOrthanc(orthanc_URL_with_UUID, orthaner_user, orthanc_password)
+    status, local_zip_file_path = orthanc_query.getPatientZipOrthanc(orthanc_URL_with_UUID, orthaner_user, orthanc_password)
     assert (LORIS_helper.is_response_success(status, 200))
-    assert (os.path.exists(zip_file))
+    assert (os.path.exists(local_zip_file_path))
 
     logger.info("Subject ZIP downloaded.")
 
-    return zip_file
+    return local_zip_file_path
 
 def unpack_subject_zip(zip_file):
 

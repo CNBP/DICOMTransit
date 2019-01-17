@@ -101,6 +101,7 @@ class LORIS_timepoint:
 
         if latest_timepoint is None:
             success = LORIS_timepoint.createTimepoint(token, DCCID, "V1")
+            timepoint_label = "V1"
         else:
             visit_number = LORIS_timepoint.visit_number_extraction(latest_timepoint)
             new_visit_number = int_incrementor(visit_number)

@@ -8,7 +8,9 @@ import DICOM.API
 import orthanc.API
 import LORIS.API
 import LocalDB.API
+import pickle
 from DICOM.DICOMPackage import DICOMPackage
+from PythonUtils.file import unique_name
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger('transition')
@@ -84,6 +86,7 @@ class DICOMTransitImport(object):
     orthanc_index_current_subject = 0
     orthanc_list_all_subjects = []
 
+    # The full path to the zip file downloaded
     DICOM_zip = None
     DICOM_package = None
 
@@ -119,12 +122,10 @@ class DICOMTransitImport(object):
                           # title="Import Process is Messy",
                           # show_auto_transitions=True,
                           # show_conditions=True,
+                          after_state_change="record_last_state",
                           initial="waiting")
 
         # Universal Transitions:
-        machine.after_state_change = self.record_last_state()
-
-        # Transitions:
 
         # Check orthanc for new data, if has new data, proceed to the next stage. Else, no stage transition happen.
 
@@ -191,13 +192,13 @@ class DICOMTransitImport(object):
                                )  # then do we carry out the deletion process.
 
         machine.add_transition("TR_RetrieveCNBPIDDCCID", "ensured_only_new_subjects_remain", "obtained_DCCID_CNBPID",
-                               prepare=["UpdateNetworkStatus", "UpdateLORISStatus"],
-                               unless=["is_LORIS_Unavailable", "is_Network_Unavailable"],
+                               prepare=["UpdateLORISStatus"],
+                               unless=["is_LORIS_Unavailable"],
                                after="RetrieveCNBPIDDCCID")
 
         machine.add_transition("TR_IncrementRemoteTimepoint", "obtained_DCCID_CNBPID", "updated_LORIS_timepoint",
-                               prepare=["UpdateNetworkStatus", "UpdateLORISStatus"],
-                               unless=["is_LORIS_Unavailable", "is_Network_Unavailable"],
+                               prepare=["UpdateLORISStatus"],
+                               unless=["is_LORIS_Unavailable"],
                                after="IncrementRemoteTimepoint")
 
         machine.add_transition("TR_IncrementLocalTimepoint", "updated_LORIS_timepoint", "harmonized_timepoints",
@@ -219,9 +220,11 @@ class DICOMTransitImport(object):
 
         # self.machine.add_transition("TR_RetrieveStudy", "obtained_new_subject_birthday", "RetrieveStudy",
         #                            before="UpdateFileStatus")
+        # fixme: this part dynamicly update the project of the DICOM_package.
+
         machine.add_transition("TR_LORISCreateSubject", "obtained_new_subject_birthday", "created_remote_subject",
-                               prepare=["UpdateNetworkStatus", "UpdateLORISStatus"],
-                               unless=["is_LORIS_Unavailable", "is_Network_Unavailable"],
+                               prepare=["UpdateLORISStatus"],
+                               unless=["is_LORIS_Unavailable"],
                                after="LORISCreateSubject")
 
         machine.add_transition("TR_LocalDBCreateSubject", "created_remote_subject", "harmonized_timepoints",
@@ -354,6 +357,7 @@ class DICOMTransitImport(object):
         # Properly set the DICOM_package.
         temporary_folder = orthanc.API.unpack_subject_zip(self.DICOM_zip)
         self.DICOM_package = DICOMPackage(temporary_folder)
+        self.DICOM_package.project = "loris" #fixme: this is a place holder. This neeeds to be dyanmiclly updated.
 
         # Update the self.files to be scrutinized
         self.files.clear()
@@ -362,13 +366,16 @@ class DICOMTransitImport(object):
 
     def CheckMRN(self):
         """
-        Check the MRN from the file.
+        Check the MRN from the file for validity. Assign a default compliant MRN when the data is non-compliant.
         :return:
         """
         # Update some of the key process related to the DICOM_packages that have just been created.
         success = self.DICOM_package.update_MRN()
-        assert success
-        logger.info("Subject specific MRN pass check.")
+        if not success:
+            self.DICOM_package.MRN = 999999
+            #fixme: add a notifier for this event!
+        else:
+            logger.info("Subject specific MRN pass check.")
 
 
     def CheckLocalDBMRN(self):
@@ -564,8 +571,9 @@ class DICOMTransitImport(object):
             if os.path.exists(file) and os.path.isfile(file):
                 continue
             else:
+                self.STATUS_FILE = False
                 self.TR_DetectedFileError()
-
+        self.STATUS_FILE = True
         logger.info("File(s) status APPEAR OKAY!")
 
     # Meta methods todo
@@ -616,45 +624,48 @@ if __name__ == "__main__":
 
     # current_import.waiting is the default state.
 
-    current_import_process.TR_UpdateOrthancNewDataStatus()
+    try:
+        current_import_process.TR_UpdateOrthancNewDataStatus()
 
-    if current_import_process.has_new_data():
-        current_import_process.TR_HandlePotentialOrthancData()
-        current_import_process.TR_DownloadNewData()
-        current_import_process.TR_UnpackNewData()
-        current_import_process.TR_ObtainDICOMMRN()
-        current_import_process.TR_UpdateNewMRNStatus()
-    else:
-        current_import_process.TR_HandlePotentialOrthancData()
+        if current_import_process.has_new_data():
+            current_import_process.TR_HandlePotentialOrthancData()
+            current_import_process.TR_DownloadNewData()
+            current_import_process.TR_UnpackNewData()
+            current_import_process.TR_ObtainDICOMMRN()
+            current_import_process.TR_UpdateNewMRNStatus()
+        else:
+            current_import_process.TR_HandlePotentialOrthancData()
 
-    current_import_process.TR_ProcessPatient()
+        current_import_process.TR_ProcessPatient()
 
-    if current_import_process.found_MRN():
-        # old patients path
+        if current_import_process.found_MRN():
+            # old patients path
 
-        while current_import_process.are_scans_processed():
-            current_import_process.TR_DeleteSubject()
+            while current_import_process.are_scans_processed():
+                current_import_process.TR_DeleteSubject()
 
-        current_import_process.TR_RetrieveCNBPIDDCCID()
-        current_import_process.TR_IncrementRemoteTimepoint()
-        current_import_process.TR_IncrementLocalTimepoint()
+            current_import_process.TR_RetrieveCNBPIDDCCID()
+            current_import_process.TR_IncrementRemoteTimepoint()
+            current_import_process.TR_IncrementLocalTimepoint()
 
-    else:
-        # new patient path
-        current_import_process.TR_RetrieveGender()
-        current_import_process.TR_RetrieveBirthday()
-        current_import_process.TR_LORISCreateSubject()
-        current_import_process.TR_LocalDBCreateSubject()
+        else:
+            # new patient path
+            current_import_process.TR_RetrieveGender()
+            current_import_process.TR_RetrieveBirthday()
+            current_import_process.TR_LORISCreateSubject()
+            current_import_process.TR_LocalDBCreateSubject()
 
-    current_import_process.TR_AnonymizeFiles()
-    current_import_process.TR_ZipFiles()
-    current_import_process.TR_UploadZip()
-    current_import_process.TR_InsertSubjectData()
-    current_import_process.TR_RecordInsertion()
-
-
-
-
-
-
-    pass
+        current_import_process.TR_AnonymizeFiles()
+        current_import_process.TR_ZipFiles()
+        current_import_process.TR_UploadZip()
+        current_import_process.TR_InsertSubjectData()
+        current_import_process.TR_RecordInsertion()
+    except MachineError:
+        logger.warning("A finite state machine state transition has FAILED. Check the log and error message")
+        from settings import get
+        zip_path = get("zip_storage_location")
+        name_log = zip_path + "StateMachineDump_"+unique_name()+".pickle"
+        with open(name_log, 'wb') as f:
+            # Pickle the 'data' dictionary using the highest protocol available.
+            pickle.dump(current_import_process.machine, f, pickle.HIGHEST_PROTOCOL)
+        #current_import_process.to_waiting()
