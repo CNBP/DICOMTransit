@@ -206,7 +206,7 @@ class DICOMTransitImport(object):
         machine.add_transition("TR_IncrementLocalTimepoint", "updated_LORIS_timepoint", "harmonized_timepoints",
                                prepare=["UpdateLocalDBStatus"],
                                unless=["is_LocalDB_Unavailable"],
-                               after="IncrementRemoteTimepoint")
+                               after="IncrementLocalTimepoint")
 
         # New Subject Path
 
