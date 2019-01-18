@@ -68,9 +68,15 @@ class CNBP_blueprint:
     schema_types.insert(0, keyfield_type)
 
     # the regular expressino of each component of the parts that makes up the proper CNBPID in total.
-    PSCID_schema_institution = "^[A-z][A-z][A-z]"
+    #PSCID_schema_institution = "^[A-z][A-z][A-z]"
+
+    # Must beginning with a number.
+    PSCID_schema_institution = "^[0-9]"
+
     #PSCID_schema_project = "[A-z][A-z][0-9][0-9]"
-    PSCID_schema_subject = "[0-9][0-9][0-9][0-9][0-9][0-9][0-9]"
+
+    # Must end with 7 numbers.
+    PSCID_schema_subject = "[0-9][0-9][0-9][0-9][0-9][0-9][0-9]$"
 
     PSCID_schema = PSCID_schema_institution + PSCID_schema_subject
 

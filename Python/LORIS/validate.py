@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class LORIS_validation:
 
     @staticmethod
-    def validate_MRN(input_string):
+    def validate_MRN(input_string: str) -> bool:
         """
         This validate and check if the MRN is of the proper valid format based on the hospital specification.
         :param input_string:
@@ -40,11 +40,11 @@ class LORIS_validation:
         :param project:
         :return:
         """
-        #todo need to implement project validation.
+        #fixme need to implement project validation.
         pass
 
     @staticmethod
-    def validate_birth_date_dicom(birth_date):
+    def validate_birth_date_dicom(birth_date: str) -> bool:
         """
         Check if the birth_date is normal
         :param birth_date:
@@ -66,7 +66,7 @@ class LORIS_validation:
             return False
 
     @staticmethod
-    def validate_birth_date_loris(birth_date):
+    def validate_birth_date_loris(birth_date: str) -> bool:
         """
         Check if the birth_date is normal
         :param birth_date:
@@ -89,7 +89,7 @@ class LORIS_validation:
 
 
     @staticmethod
-    def validate_sex(sex):
+    def validate_sex(sex: str) -> bool:
         """
         DICOM only permit THREE types: M, F, O capital.
         :param sex:
@@ -101,14 +101,14 @@ class LORIS_validation:
             return False
 
     @staticmethod
-    def validate_gender(gender):
+    def validate_gender(gender: str) -> bool:
         if gender == "Male" or gender == "Female":
             return True
         else:
             return False
 
     @staticmethod
-    def validate_instutitionID(input_institutionID: str):
+    def validate_instutitionID(input_institutionID: str) -> bool:
         """
         Check if the institution ID is compliant per the .env specification. String must STRICTLY match.
         :param input_institutionID:
@@ -125,7 +125,7 @@ class LORIS_validation:
 
 
     @staticmethod
-    def validate_projectID(input_projectID: str):
+    def validate_projectID(input_projectID: str) -> bool:
         """
         Provide any string, and it checkss again he dotenv for the proper project KEY which correspond to the ID.
         DICOM/API has the function to actually retrieve the relevant key, after calling this function.
@@ -147,7 +147,7 @@ class LORIS_validation:
 
 
     @staticmethod
-    def validate_subjectID(input_subjectID: str):
+    def validate_subjectID(input_subjectID: str) -> bool:
         if not input_subjectID.isdigit():
             return False
 
@@ -158,7 +158,7 @@ class LORIS_validation:
 
 
     @staticmethod
-    def validate_CNBPID(CNBPID: str):
+    def validate_CNBPID(CNBPID: str) -> bool:
         """
         Checks CNBPID inputed for 1) InstitionID format, 2) ProjectID format, 3) SubjectID format.
         :param CNBPID:
@@ -187,7 +187,7 @@ class LORIS_validation:
         return True
 
     @staticmethod
-    def validate_DCCID(DCCID):
+    def validate_DCCID(DCCID: int) -> bool:
         """
         Check if DCCID id conform.
         :param DCCID:

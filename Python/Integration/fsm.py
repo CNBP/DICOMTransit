@@ -94,7 +94,6 @@ class DICOMTransitImport(object):
     files = []
 
     machine = None
-
     retry = 0
     max_retry = 5
 
@@ -106,6 +105,7 @@ class DICOMTransitImport(object):
         self.time = datetime.datetime.now()
 
         self.retry = 0
+        self.scan_anonymized = False
 
         # We shall name this with
         self.name = self.time.isoformat().replace(":","")
@@ -143,6 +143,8 @@ class DICOMTransitImport(object):
                                unless="is_Orthanc_Unavailable",
                                conditions="has_new_data")
 
+
+
         machine.add_transition("TR_DownloadNewData", "detected_new_data", "obtained_new_data",
                                prepare="UpdateOrthancStatus",
                                unless="is_Orthanc_Unavailable",
@@ -177,8 +179,8 @@ class DICOMTransitImport(object):
 
         # Old Subject Path.
 
-        # Cycle used to delet all non-essential subjects already processed.
-        machine.add_transition("TR_DeleteSubject", "processing_old_patient", "=",
+        # Cycle back to the detected new data with INCREMENTED COUNTER.
+        machine.add_transition("TR_DeleteSubject", "processing_old_patient", "detected_new_data",
                                prepare="UpdateProcessStatus",  # Check if the current subject is already inserted.
                                conditions="are_scans_processed",
                                # and only if it is inserted, fixme: check what this is about!
@@ -246,13 +248,13 @@ class DICOMTransitImport(object):
                                after="ZipFiles")
 
         machine.add_transition("TR_UploadZip", "files_zipped", "zip_uploaded",
-                               prepare=["UpdateNetworkStatus", "UpdateLORISStatus"],
-                               unless=["is_LORIS_Unavailable", "is_Network_Unavailable"],
+                               prepare=["UpdateLORISStatus"],
+                               unless=["is_LORIS_Unavailable"],
                                after=["UploadZip", "CheckUploadSuccess"])
 
         machine.add_transition("TR_InsertSubjectData", "zip_uploaded", "zip_inserted",
-                               prepare=["UpdateNetworkStatus", "UpdateLORISStatus"],
-                               unless=["is_LORIS_Unavailable", "is_Network_Unavailable"],
+                               prepare=["UpdateLORISStatus"],
+                               unless=["is_LORIS_Unavailable"],
                                after=["InsertSubjectData", "CheckInsertionSuccess"])
 
         machine.add_transition("TR_RecordInsertion", "zip_inserted", "waiting",
@@ -323,11 +325,12 @@ class DICOMTransitImport(object):
         self.orthanc_list_all_subjects = orthanc.API.get_list_of_subjects(self.url, self.user, self.password)
         if self.orthanc_list_all_subjects is None or len(self.orthanc_list_all_subjects) == 0:
             self.orthanc_has_new_data = False
+            logger.info("Orthanc has no new data for us.")
         else:
             self.orthanc_has_new_data = True
             # fixme: for now, only analyze ONE single subject from the Orthanc query.
             self.orthanc_index_current_subject = self.orthanc_index_current_subject + 1
-
+            logger.info("Detected new data on the orthanc. Commence processing. ")
 
     def DownloadNewData(self):
         """
@@ -343,6 +346,7 @@ class DICOMTransitImport(object):
         # Update the self.files to be scrutinized
         self.files.clear()
         self.files.append(self.DICOM_zip)
+        logger.info("Successfully downloaded the data.")
 
     def DeleteSubject(self):
         self.orthanc_index_current_subject=self.orthanc_index_current_subject+1
@@ -362,6 +366,7 @@ class DICOMTransitImport(object):
         # Update the self.files to be scrutinized
         self.files.clear()
         self.files = self.DICOM_package.get_dicom_files()
+        logger.info("Successfully unpacked the data downloaded.")
 
 
     def CheckMRN(self):
@@ -384,6 +389,7 @@ class DICOMTransitImport(object):
         :return:
         """
         self.localDB_found_mrn = LocalDB.API.check_MRN(self.DICOM_package.MRN)
+        logger.info("Successful checking local database about the MRN")
 
     def UpdateProcessStatus(self):
 
@@ -395,13 +401,16 @@ class DICOMTransitImport(object):
         LocalDB_date = datetime.datetime.strptime(API_date_string, "%Y-%m-%d %H:%M:%S")
 
         if (DICOM_date == LocalDB_date):
-            print("Scan date already exist in the database. Data likely already exist. Consider manual intervention. ")
+            logger.info("Scan date already exist in the database. Data likely already exist. Consider manual intervention. ")
             self.scan_already_processed = True
             # Already processed.
             self.orthanc_index_current_subject = self.orthanc_index_current_subject + 1
+            # Goto download new data
+            self.TR_DownloadNewData()
         else:
             # Default path is already it has not been processed.
             self.scan_already_processed = False
+            logger.info("Dealing with new subject.")
 
     # Old Subject Path:
     def RetrieveCNBPIDDCCID(self):
@@ -419,12 +428,14 @@ class DICOMTransitImport(object):
         # Using LORIS API to create the new timepoint:
         latest_timepoint = LORIS.API.increment_timepoint(self.DICOM_package.DCCID)
         self.DICOM_package.timepoint = latest_timepoint
+        logger.info("Obtained the latest timepoint for the subject from LORIS.")
 
 
     def IncrementLocalTimepoint(self):
         # Update the record to use the latest timepoint and the scandate!
         LocalDB.API.set_timepoint(self.DICOM_package.MRN, self.DICOM_package.timepoint)
         LocalDB.API.set_scan_date(self.DICOM_package.MRN, self.DICOM_package.scan_date)
+        logger.info("Incremented the local VISIT timepoint for the subject successfully.")
 
     # New Subject Path:
     def RetrieveGender(self):
@@ -455,16 +466,35 @@ class DICOMTransitImport(object):
         self.DICOM_package.DCCID = DCCID
         self.DICOM_package.CNBPID = PSCID
         self.DICOM_package.timepoint = "V1"  # auto generated.
+        logger.info("Creating subject remotely on LORIS is successful.")
 
     def LocalDBCreateSubject(self):
-        LocalDB.API.set_CNBP(self.DICOM_package.MRN, self.DICOM_package.CNBPID)
-        LocalDB.API.set_DCCID(self.DICOM_package.MRN, self.DICOM_package.DCCID)
-        LocalDB.API.set_timepoint(self.DICOM_package.MRN, self.DICOM_package.timepoint)
-        LocalDB.API.set_scan_date(self.DICOM_package.MRN, self.DICOM_package.scan_date)
+        # fixme: temporarly disabled this for debugging.
+        #LocalDB.API.set_CNBP(self.DICOM_package.MRN, self.DICOM_package.CNBPID)
+        #LocalDB.API.set_DCCID(self.DICOM_package.MRN, self.DICOM_package.DCCID)
+        #LocalDB.API.set_timepoint(self.DICOM_package.MRN, self.DICOM_package.timepoint)
+        #LocalDB.API.set_scan_date(self.DICOM_package.MRN, self.DICOM_package.scan_date)
+        logger.info("Creating subject locally is successful.")
+        pass
 
     def AnonymizeFiles(self):
         # This will also update self.zipname and self.is_anonymized
         self.DICOM_package.anonymize()
+        self.scan_anonymized = self.DICOM_package.is_anonymized
+
+    def DoubleCheckAnonymization(self):
+        if not self.are_anonymized():
+            return
+
+        if self.DICOM_package.is_anonymized is False:
+            self.scan_anonymized = False
+            return
+
+        # Conduct a per file check to ensure that the files are porperly anonymized.
+        self.scan_anonymized = self.DICOM_package.validate_anonymization()
+        logger.info("Double checking anonymization is successful.")
+
+
 
     def ZipFiles(self):
         # This will update DICOM_package.zip location.
@@ -481,7 +511,12 @@ class DICOMTransitImport(object):
         # Set the completion status to ZERO
         LocalDB.API.set_completion(self.DICOM_package.MRN, 1)
 
+    def CheckUploadSuccess(self):
+        # fixme: a script to check upload success is required.
+        pass
+
     def CheckInsertionSuccess(self):
+        # fixme a script to check insertion status success is required.
         pass
 
     def are_scans_processed(self):
@@ -521,8 +556,7 @@ class DICOMTransitImport(object):
     # Check methods which report the status of various settings.
     def UpdateLORISStatus(self):
 
-        self.STATUS_NETWORK = self.UpdateNetworkStatus()
-
+        self.UpdateNetworkStatus()
         # Return false if network is down.
         if not self.STATUS_NETWORK:
             self.STATUS_LORIS = self.STATUS_NETWORK
@@ -660,12 +694,17 @@ if __name__ == "__main__":
         current_import_process.TR_UploadZip()
         current_import_process.TR_InsertSubjectData()
         current_import_process.TR_RecordInsertion()
-    except MachineError:
+    except MachineError as e:
+
         logger.warning("A finite state machine state transition has FAILED. Check the log and error message")
+        logger.warning("Error Message Encountered:")
+        logger.warning(e)
         from settings import get
         zip_path = get("zip_storage_location")
-        name_log = zip_path + "StateMachineDump_"+unique_name()+".pickle"
+        name_log = os.path.join(zip_path,"StateMachineDump_"+unique_name()+".pickle")
         with open(name_log, 'wb') as f:
             # Pickle the 'data' dictionary using the highest protocol available.
             pickle.dump(current_import_process.machine, f, pickle.HIGHEST_PROTOCOL)
+        logger.warning("A finite state machine pickle dump has been made at " + name_log)
+        logger.warning("Check that path for more detail. ")
         #current_import_process.to_waiting()

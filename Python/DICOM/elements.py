@@ -78,9 +78,43 @@ class DICOM_elements:
         elif LORIS_validation.validate_MRN(MRN):
             return True, MRN
         else:
-            logger.info("Was not able to validate the MRN number. Invalid format perhaps? Expected SEVEN digis, got "+MRN)
+            logger.warning("Was not able to validate the MRN number. Invalid format perhaps? Expected SEVEN digis, got "+MRN)
             return False, None
 
+
+    @staticmethod
+    def retrieve_patient_id(file_path):
+        """
+        Read the PatientName field. No checking. Used for validation post anonymization.
+        :param file_path:
+        :return: MRN number, as a STRING
+        """
+        logger = logging.getLogger(current_funct_name())
+        success, name = DICOM_elements.retrieve(file_path, "PatientID")
+
+        if not success:
+            logger.info("Was not able to access/read the file!")
+            return False, None
+
+        else:
+            return True, name
+
+    @staticmethod
+    def retrieve_name(file_path):
+        """
+        Read the PatientName field. No checking. Used for validation post anonymization.
+        :param file_path:
+        :return: MRN number, as a STRING
+        """
+        logger = logging.getLogger(current_funct_name())
+        success, name = DICOM_elements.retrieve(file_path, "PatientName")
+
+        if not success:
+            logger.info("Was not able to access/read the file!")
+            return False, None
+
+        else:
+            return True, name
 
     @staticmethod
     def retrieve_scan_date(file_path):

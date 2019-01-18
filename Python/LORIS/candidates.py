@@ -17,31 +17,32 @@ logger = logging.getLogger(__name__)
 class LORIS_candidates:
 
     @staticmethod
-    def parse_PSCID(PSCID: str):
+    def parse_PSCID(PSCID: str) -> (bool, str, str):
         """
-        Return three parts of the PSCID: project, subject
-        Example: VTX GL01 9999
+        Return two parts of the PSCID: institution, subject
+        Example: 1 0000033
 
         :param PSCID:
         :return:
         """
+
+        # fixme: old format VXG0000001 now, 10000022
+
 
         # Loading regular expression
         re_institution = CNBP_blueprint.PSCID_schema_institution
         #re_project = CNBP_blueprint.PSCID_schema_project
         re_subject = CNBP_blueprint.PSCID_schema_subject
 
-        # Use expression to extract from the inputted PSCID
-        input_institution = re.search(re_institution, PSCID).group(0)
-        #input_project = re.search(re_project, PSCID).group(0)
-        input_subject = re.search(re_subject, PSCID).group(0)
-
-        if input_subject is None or input_institution is None:
-            success = False
-        else:
+        if re.search(re_institution, PSCID) is not None and re.search(re_subject, PSCID) is not None:
+            # Use expression to extract from the inputted PSCID
+            input_institution = re.search(re_institution, PSCID).group(0)
+            # input_project = re.search(re_project, PSCID).group(0)
+            input_subject = re.search(re_subject, PSCID).group(0)
             success = True
-
-        return success, input_institution, input_subject
+            return success, input_institution, input_subject
+        else:
+            return False, None, None
 
 
     @staticmethod

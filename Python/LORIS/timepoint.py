@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class LORIS_timepoint:
 
     @staticmethod
-    def check_timepoint_compliance(input_string: str):
+    def check_timepoint_compliance(input_string: str) -> bool:
         """
         Validate if the given string is compliant with the timepoint format specified in the .env
         :param input_string:
@@ -58,7 +58,7 @@ class LORIS_timepoint:
             return number_extracted[0]
 
     @staticmethod
-    def findLatestTimePoint(token, DCCID):
+    def findLatestTimePoint(token: str, DCCID: int) -> str:
         """
         Find and return the latest timepoint. Note that since DCCID exist, the record MUST ALREADY exist within the local SQLite database!
         :param token: the token used to authenticate API actions.
@@ -80,7 +80,7 @@ class LORIS_timepoint:
         return None
 
     @staticmethod
-    def increaseTimepoint(token, DCCID):
+    def increaseTimepoint(token: str, DCCID: int) -> (bool, str):
         """
         Increment the existing timepoint by check if DCCID existed, then get the latest one, then increment its number by creating a new timepoint.
         :param token: auth token
@@ -116,7 +116,7 @@ class LORIS_timepoint:
         return success, timepoint_label
 
     @staticmethod
-    def createTimepoint(token, DCCID, time_point):
+    def createTimepoint(token, DCCID, time_point) -> bool:
         """
         Create a timepoint of the given DCCID subject based on the timepoint provided.
         :param token:
@@ -128,7 +128,9 @@ class LORIS_timepoint:
         MetaData = {"CandID": DCCID, "Visit": time_point, "Battery":"CNBP"} # default to CNBP for NOW
         Meta = {"Meta": MetaData}
         JSON = json.dumps(Meta)
-        success, _ = LORIS_query.putCNBP(token, endpoint, JSON)
+        status_code, _ = LORIS_query.putCNBP(token, endpoint, JSON)
+        success = LORIS_helper.is_response_success(status_code, 201) # 201 signify successufl subject timepoint creation!
+
         # response should be null!
         return success
 

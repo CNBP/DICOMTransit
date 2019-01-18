@@ -222,11 +222,28 @@ class DICOMPackage:
         assert LORIS_timepoint.check_timepoint_compliance(self.timepoint)
 
         # Set proper variable name and also the ZIP file name for subsequent processing.
-        self.is_anonymized = True
+
         self.zipname = self.CNBPID + "_" + str(self.DCCID) + "_" + self.timepoint
 
         from DICOM.anonymize import DICOM_anonymize
         DICOM_anonymize.folder(self.dicom_folder, self.zipname)
+        self.is_anonymized = True
+
+
+    def validate_anonymization(self):
+        """
+        Check if all the dicom files are actually properly encoded with the proper name.
+        :return:
+        """
+        # assuming have all the files.
+        assert self.dicom_files is not None
+        assert len(self.dicom_files) > 0
+        assert self.zipname is not None
+        # Loop through all files and check.
+        from DICOM.API import check_anonymization
+        success = check_anonymization(self.dicom_files, self.zipname)
+        self.is_anonymized = success
+        return success
 
 
     def zip(self):

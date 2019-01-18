@@ -5,6 +5,7 @@ from PythonUtils.file import dictionary_search
 from settings import get
 from PythonUtils.folder import get_abspath
 from LocalDB.schema import CNBP_blueprint
+from tqdm import tqdm
 import os
 
 
@@ -36,8 +37,10 @@ def change_to_zip_dir():
     #
     os.chdir(zip_path)
 
+
 def anonymize_files(files):
     """
+    #fixme: not working not sure why these exist...
     Anaonymize the files given using the name provided. WIP!!!
     :param files:
     :return:
@@ -54,6 +57,33 @@ def anonymize_files(files):
         # Anonymize that folder.
         DICOM_anonymize.folder(temp_folder, "NEW_CONTESTANT")
     pass
+
+
+def check_anonymization(files: list, anonymized_name) -> bool:
+    from DICOM.elements import DICOM_elements
+
+    # File must be the absolute path!
+
+    # todo: what if there are non-DICOM files in the collection?
+    # Check every single file in the DICOM collections.
+    for file in tqdm(files):
+        success1, patient_id = DICOM_elements.retrieve_patient_id(file)
+
+        success2, name = DICOM_elements.retrieve_name(file)
+
+        # bad retrieval.
+        if not success1 or not success2:
+            return False
+
+        # not properly anonymized patient ID
+        if not patient_id == anonymized_name:
+            return False
+
+        # not properly anonymized name.
+        if not name ==anonymized_name:
+            return False
+
+    return True
 
 def retrieve_study_protocol(files):
     """
