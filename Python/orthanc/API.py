@@ -90,3 +90,13 @@ def unpack_subject_zip(zip_file):
     os.remove(zip_file)
     logger.info("Removing zip archived.")
     return folder
+
+def delete_subject(subjectUUID: str):
+    """
+    API to delete subject from the production Orthanc instance.
+    :param subjectUUID:
+    :return: successful deletion status.
+    """
+    url, user, password = get_prod_orthanc_credentials()
+    reseponse_code, _ = orthanc_query.deleteOrthanc("patients/" + subjectUUID, user, password)
+    return LORIS_helper.is_response_success(reseponse_code, 200)

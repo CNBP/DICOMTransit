@@ -6,7 +6,7 @@ import sys
 import os
 from settings import get
 from PythonUtils.env import load_dotenv_var
-from PythonUtils.math import int_incrementor
+from PythonUtils.intmath import int_incrementor
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)

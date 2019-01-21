@@ -8,7 +8,7 @@ from LORIS.helper import LORIS_helper
 from LORIS.query import LORIS_query
 from LocalDB.schema import CNBP_blueprint
 from settings import get
-from PythonUtils.math import int_incrementor
+from PythonUtils.intmath import int_incrementor
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)

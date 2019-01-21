@@ -6,7 +6,7 @@ from LocalDB.schema import CNBP_blueprint
 from PythonUtils.file import dictionary_search
 from LORIS.candidates import LORIS_candidates
 from datetime import datetime
-import math
+import intmath
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -54,12 +54,12 @@ class LORIS_validation:
         birth_date = datetime.strptime(birth_date, "%Y%m%d")
         current_date = datetime.now()
 
-        if 0 < math.fabs((current_date-birth_date).days) < 54750:
+        if 0 < intmath.fabs((current_date - birth_date).days) < 54750:
             return True
-        elif math.fabs((current_date-birth_date).days) < 0:
+        elif intmath.fabs((current_date - birth_date).days) < 0:
             logger.info("Patient is less than 0 years old. YOU FAILED.")
             return False
-        elif math.fabs((current_date-birth_date).days) > 54750:
+        elif intmath.fabs((current_date - birth_date).days) > 54750:
             logger.info("Patient is more than 150 years old. YOU FAILED.")
             return False
         else:  # Generic catchall false condition
@@ -76,12 +76,12 @@ class LORIS_validation:
         birth_date = datetime.strptime(birth_date, "%Y-%m-%d")
         current_date = datetime.now()
 
-        if 0 < math.fabs((current_date - birth_date).days) < 54750:
+        if 0 < intmath.fabs((current_date - birth_date).days) < 54750:
             return True
-        elif math.fabs((current_date - birth_date).days) < 0:
+        elif intmath.fabs((current_date - birth_date).days) < 0:
             logger.info("Patient is less than 0 years old. YOU FAILED.")
             return False
-        elif math.fabs((current_date - birth_date).days) > 54750:
+        elif intmath.fabs((current_date - birth_date).days) > 54750:
             logger.info("Patient is more than 150 years old. YOU FAILED.")
             return False
         else:  # Generic catchall false condition
