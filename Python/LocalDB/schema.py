@@ -3,6 +3,7 @@ class CNBP_blueprint:
 
     """
     this blueprint represent the underlying field of the main database.
+    NOTE that EACH MRN must be unique. There will NOT be more than one MRN. We update the information to keep the latest subjects seen.
     """
 
     table_name = 'id_table'

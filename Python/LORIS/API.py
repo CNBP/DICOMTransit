@@ -4,14 +4,14 @@ from LORIS.helper import LORIS_helper
 from LORIS.query import LORIS_query
 from LORIS.timepoint import LORIS_timepoint
 from LORIS.trigger_dicom_insert import trigger_dicom_insert
-from LocalDB.schema import CNBP_blueprint
+from typing import List
 from settings import get
 """
 Everything here, should have its own login sessions as tokens are not shared at this high level function.  
 """
 
 
-def check_status():
+def check_status() -> bool:
     """
     Quick check if the LORIS is online via a login request.
     :return:
@@ -21,7 +21,7 @@ def check_status():
     return status_LORIS
 
 
-def check_online_status():
+def check_online_status() -> bool:
     """
     Quck to see if the online connection exist
     :return:
@@ -57,7 +57,7 @@ def check_online_status():
         return True
 
 
-def trigger_insertion(zip_name):
+def trigger_insertion(zip_name: str):
     """
     Todo: refactor this crap made by Yang.
     :param zip_name:
@@ -93,7 +93,7 @@ def increment_timepoint(DCCID):
     return timepoint
 
 
-def create_new(project, birthday, gender):
+def create_new(project, birthday, gender) -> (bool, int, int):
     """
     Check both the creation and deletion of the subject for LORIS.
     :return:
@@ -117,6 +117,67 @@ def create_new(project, birthday, gender):
     success, timepoint = LORIS_timepoint.increaseTimepoint(token, DCCID)
     assert success
     return success, DCCID, PSCID
+
+
+def get_all_timepoints(DCCID:int) -> List[str]:
+    """
+    Get a list of all possible timepoints associated with a UUID.
+    :param DCCID:
+    :return:
+    """
+
+    # Get token.
+    response_success, token = LORIS_query.login()
+    if not response_success:
+        raise ConnectionError
+
+    # Get Candidate JSON.
+    response_success, candidate_json = LORIS_query.getCNBP(token, "candidates/"+str(DCCID))
+    if not response_success:
+        raise ConnectionError
+
+    # Return a potentially empty visits.
+    if "Visits" in candidate_json:
+        timepoints = candidate_json["Visits"]
+    else:
+        timepoints = None
+
+    return timepoints
+
+def get_allUID(DCCID: int) -> List[str]:
+    """
+    Return the query results to  /candidates/$CandID/$Visit/dicoms
+    :param DCCID:
+    :param timepoint:
+    :return:
+    """
+    # Get token.
+    response_success, token = LORIS_query.login()
+    if not response_success:
+        raise ConnectionError
+
+    # Get Candidate JSON.
+    visits = get_all_timepoints(DCCID)
+
+    list_series_UID=[]
+
+    # Loop through all visits.
+    if len(visits) > 0:
+
+        # Get dicom series info and then make sure they have series UID and then return them.
+        for visit in visits:
+
+            response_success, dicom_info = LORIS_query.getCNBP(token, "candidates/" + str(DCCID)+"/"+visit+"/dicoms")
+
+            if "DicomTars" in dicom_info:
+                list_dicom_tars = dicom_info["DicomTars"]
+                for dicom_tar in list_dicom_tars:
+                    if "SeriesInfo" in dicom_tar:
+                        list_seires = dicom_tar["SeriesInfo"]
+                        for series in list_seires:
+                            list_series_UID.append(series["SeriesUID"])
+
+    return list_series_UID
 
 
 def upload(local_path):

@@ -170,6 +170,7 @@ class LORIS_candidates:
         return True, False
 
 
+
     @staticmethod
     def checkDCCIDExist(token, proposed_DCCID):
         """

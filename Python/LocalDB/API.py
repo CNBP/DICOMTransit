@@ -13,6 +13,8 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+
+
 def check_status():
     from settings import get
     # Load local database from .env file
@@ -96,9 +98,11 @@ def get_CNBP(MRN):
     if MRN_exist_in_database is False:
         return None
 
+    # Only ONE record per MRN.
     assert(len(KeyRecords) == 1)
     cnbp_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'CNBPID')
-    return KeyRecords[cnbp_header_index]
+
+    return KeyRecords[0][cnbp_header_index]
 
 
 def get_DCCID(MRN):
@@ -116,10 +120,11 @@ def get_DCCID(MRN):
     if MRN_exist_in_database is False:
         return None
 
+    # Only ONE record per MRN.
     assert(len(KeyRecords) == 1)
     dcc_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'DCCID')
 
-    return KeyRecords[dcc_header_index]
+    return KeyRecords[0][dcc_header_index]
 
 
 def get_timepoint(MRN):
@@ -137,10 +142,11 @@ def get_timepoint(MRN):
     if MRN_exist_in_database is False:
         return None
 
+    # Only ONE record per MRN, even if there are multiple timepoint. We keep the latest one.
     assert(len(KeyRecords) == 1)
     timepoint_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'Timepoint')
 
-    return KeyRecords[timepoint_header_index]
+    return KeyRecords[0][timepoint_header_index]
 
 
 def get_scan_date(MRN):
@@ -158,13 +164,14 @@ def get_scan_date(MRN):
     if MRN_exist_in_database is False:
         return None
 
+    # Only ONE record per MRN, even if there are multiple timepoint. We keep the latest one.
     assert(len(KeyRecords) == 1)
     date_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'Date')
     scan_date = KeyRecords[0][date_header_index]
     return scan_date
 
 
-def set_CNBP(MRN: int, CNBPID):
+def set_CNBP(MRN: int, CNBPID): #fixme: all the SET RECORDS NEED TO CONSIDER THE MULTIROW possiblities.
     """
     Update record with proper CNBPID which has particular MRN
     :param MRN:
