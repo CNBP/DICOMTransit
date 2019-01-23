@@ -87,7 +87,7 @@ ST_processing_new_patient = "ST_processing_new_patient"
 ST_found_insertion_status = "ST_found_insertion_status"
 ST_ensured_only_new_subjects_remain = "ST_ensured_only_new_subjects_remain"
 ST_obtained_DCCID_CNBPID = "ST_obtained_DCCID_CNBPID"
-ST_checked_remoteSeriesUID = "ST_checked_remoteSeriesUID"
+ST_crosschecked_seriesUID = "ST_crosschecked_seriesUID"
 ST_updated_remote_timepoint = "ST_updated_remote_timepoint"
 
 # New subject states
@@ -119,16 +119,20 @@ class DICOMTransitImport(object):
     # Class Variables: shared across instances!!!!!
     # These are the plausible major steps within a DICOMTransitImport process.
     states = [
+
         # New patient path.
         ST_waiting,
+
         # Orthanc related:
         ST_determined_orthanc_new_data_status,
+
         # File related:
         ST_detected_new_data,
         ST_obtained_new_data,
         ST_unpacked_new_data,
         ST_obtained_MRN,
         ST_determined_MRN_status,
+
         # Main analyses path:
         ST_processing_old_patient,
         ST_processing_new_patient,
@@ -199,7 +203,7 @@ class DICOMTransitImport(object):
         # The full path to the zip file downloaded
         self.DICOM_zip = None
         # The DICOMPackage object which is being created at per subject level.
-        self.DICOM_package = None
+        self.DICOM_package: DICOMPackage = None
         # This is the list of the files that are constantly being monitored and checked if reachable. It is dynamicly updated through out the analyses process. It can be a list of zip files, or a single zip file. It respresents the local file resources that CONSTANTLY needs to be monitored to ensure no fault occurs.
         self.files = []
 
@@ -244,7 +248,7 @@ class DICOMTransitImport(object):
         machine.add_transition(TR_UpdateOrthancNewDataStatus, ST_waiting, ST_determined_orthanc_new_data_status,
                                prepare=self.UpdateOrthancStatus.__name__,
                                unless=self.is_Orthanc_Unavailable.__name__,  # Check orthanc status.
-                               after=[self.GetOrthancList.__name__, CheckOrthancNewData.__name__])  # this will set the flag related to whether there is new orthanc data
+                               after=[self.GetOrthancList.__name__, self.ProcessOrthancList.__name__])  # this will set the flag related to whether there is new orthanc data
 
 
         # Paired branching transitions to see if to proceed with new data analyses or go back waiting.
@@ -304,25 +308,32 @@ class DICOMTransitImport(object):
         # Cycle back to the detected new data with adjusted subjects list. .
         machine.add_transition(TR_ProcessNextSubject, ST_found_insertion_status, ST_determined_orthanc_new_data_status,
                                prepare=self.UpdateOrthancStatus.__name__,
-                               conditions=[self.found_matching_scan_date.__name__],
+                               conditions=[self.found_matching_scan.__name__],
                                unless=self.is_Orthanc_Unavailable.__name__,
-                               after=[self.DeleteSubject.__name__, self.CheckOrthancNewData.__name__])  # then do we carry out the deletion process only when 1) scan processd. 2) orthanc reachable.
+                               after=[self.DeleteSubject.__name__, self.ProcessOrthancList.__name__])  # then do we carry out the deletion process only when 1) scan processd. 2) orthanc reachable.
 
         # Once all subjects are completed, move on to process the new subjects.
         machine.add_transition(TR_QueryLocalDBForDCCID, ST_found_insertion_status, ST_obtained_DCCID_CNBPID,
                                prepare=[self.UpdateLORISStatus.__name__],
-                               unless=[self.is_LORIS_Unavailable.__name__, self.found_matching_scan_date.__name__],
+                               unless=[self.is_LORIS_Unavailable.__name__, self.found_matching_scan.__name__],
                                after=self.QueryLocalDBForCNBPIDDCCID.__name__)
 
-        # Now we know that this subject was previously seen, and we need to increment the LORIS timepoint to current time point
-        machine.add_transition(TR_QueryRemoteUID, ST_obtained_DCCID_CNBPID, ST_checked_remoteSeriesUID,
+        # Now we know that this subject was previously seen, and we need to check if this timepoint has already processed before.
+        machine.add_transition(TR_QueryRemoteUID, ST_obtained_DCCID_CNBPID, ST_crosschecked_seriesUID,
                                prepare=[self.UpdateLORISStatus.__name__],
                                unless=[self.is_LORIS_Unavailable.__name__],
-                               after=self.CheckRemoteTimepoint.__name__)
+                               after=self.CheckRemoteUID.__name__)
 
-        machine.add_transition(TR_IncrementRemoteTimepoint, ST_obtained_DCCID_CNBPID, ST_updated_remote_timepoint,
+        # Paired branching conditions
+        machine.add_transition(TR_ProcessNextSubject, ST_crosschecked_seriesUID, ST_determined_orthanc_new_data_status,
+                               prepare=self.UpdateOrthancStatus.__name__,
+                               conditions=[self.found_matching_scan.__name__],
+                               unless=self.is_Orthanc_Unavailable.__name__,
+                               after=[self.DeleteSubject.__name__, self.ProcessOrthancList.__name__])  # then do we carry out the deletion process only when 1) scan processd. 2) orthanc reachable.
+
+        machine.add_transition(TR_IncrementRemoteTimepoint, ST_crosschecked_seriesUID, ST_updated_remote_timepoint,
                                prepare=[self.UpdateLORISStatus.__name__],
-                               unless=[self.is_LORIS_Unavailable.__name__],
+                               unless=[self.is_LORIS_Unavailable.__name__, self.found_matching_scan.__name__],
                                after=self.IncrementRemoteTimepoint.__name__)
 
         # We then need to record this timepoint in the local database. Once this is done, we reached HARMONIZED TIMEPOINT state
@@ -461,14 +472,14 @@ class DICOMTransitImport(object):
             png.write(output_object)
 
 
-
     def GetOrthancList(self):
         logger.info("Transition: Checking Orthanc for new data!")
 
         # Get updated orthanc UUID.
         self.orthanc_list_all_subjectUUIDs = orthanc.API.get_list_of_subjects(self.orthanc_url, self.orthanc_user, self.orthanc_password)
 
-    def CheckOrthancNewData(self):
+
+    def ProcessOrthancList(self):
         """
         Check if there are new data. Set the proper flag.
         :return:
@@ -521,7 +532,7 @@ class DICOMTransitImport(object):
 
     def UnpackNewData(self):
         """
-        Properly create the DICOM package.
+        Properly create the DICOM package and update its relevant basic informations like files reference and UIDs
         :return:
         """
         # Properly set the DICOM_package.
@@ -532,6 +543,9 @@ class DICOMTransitImport(object):
         # Update the self.files to be scrutinized
         self.files.clear()
         self.files = self.DICOM_package.get_dicom_files()
+
+        # Update unique UID information to help discriminate existing scans.
+        self.DICOM_package.update_sUID()
         logger.info("Successfully unpacked the data downloaded.")
 
 
@@ -585,7 +599,7 @@ class DICOMTransitImport(object):
             logger.info("Dealing with new potentially subject. Conducting stage 2 test with LORIS visit timepoint check.")
 
 
-    def CheckRemoteTimepoint(self):
+    def CheckRemoteUID(self):
         """
         Check remote scan dates to see if it has already been inserted before. This check helps prevent insertion of previously inserted (but then deleted subject!)
         :return:
@@ -594,38 +608,17 @@ class DICOMTransitImport(object):
         DICOM_date = self.DICOM_package.scan_date
 
         # LORIS API to get a list of VISIT timepoints.
+        list_remote_series_UID = LORIS.API.get_allUID()
 
-        # For each timepoints, check its list of DICOM tar archives for Series UID.
+        # Compare the two list and ensure that the UID fromt eh DICOM has not been seen before remotely.
+        for uid in self.DICOM_package.list_series_UID:
+            if uid in list_remote_series_UID:
+                self.scan_already_processed = True
+                logger.info("Current list of DICOM series UID has been upload before!")
+                return
+        self.scan_already_processed = False
+        logger.info("Confirmed that current list of DICOM series UID are new!")
 
-        # For each timepoints, check its list of DICOM tar archives for Series UID.
-
-
-        # LORIS API to get a list of DICOM tar archives.
-
-        # Loop
-        LORIS_dates = []
-        for scan_date in LORIS_dates:
-            scan_date = datetime.datetime.strptime(scan_date, "%Y-%m-%d %H:%M:%S")
-
-
-
-
-        # Use DICOM's MRN to get the LocalDB last known scan date, as we previously already know the MRN exist in the database
-        LocalDB_date_string = LocalDB.API.get_scan_date(self.DICOM_package.MRN)
-        self.last_localDB_scan_date = datetime.datetime.strptime(LocalDB_date_string, "%Y-%m-%d %H:%M:%S")
-        logger.info("Last known scan date for this subject was: " + LocalDB_date_string)
-
-        if (DICOM_date == self.last_localDB_scan_date):
-            logger.info(
-                "Scan date already exist in the database. Data likely already exist. Consider manual intervention. ")
-            self.scan_already_processed = True
-            # Already processed.
-            # self.orthanc_index_current_subject = self.orthanc_index_current_subject + 1
-        else:
-            # Default path is already it has not been processed.
-            self.scan_already_processed = False
-            logger.info(
-                "Dealing with new potentially subject. Conducting stage 2 test with LORIS visit timepoint check.")
 
     # Old Subject Path:
     def QueryLocalDBForCNBPIDDCCID(self):
@@ -663,15 +656,18 @@ class DICOMTransitImport(object):
         assert success
         logger.info("Subject specific gender pass check.")
 
+
     def RetrieveBirthday(self):
         success = self.DICOM_package.update_birthdate()
         assert success
         logger.info("Subject specific birthdate pass check.")
 
+
     def RetrieveStudy(self):
         # todo: For now, all project are under LORIS. The projectID etc systems are not being actively used.
         self.DICOM_package.project = "loris"
         # raise NotImplementedError
+
 
     def LORISCreateSubject(self):
         # create new PSCID and get DCCID
@@ -735,7 +731,7 @@ class DICOMTransitImport(object):
         # fixme a script to check insertion status success is required.
         pass
 
-    def found_matching_scan_date(self):
+    def found_matching_scan(self):
         return self.scan_already_processed
 
     # Conditions Method
@@ -783,7 +779,7 @@ class DICOMTransitImport(object):
         if self.STATUS_LORIS:
             logger.info("LORIS production system status OKAY!")
         else:
-            self.TR_DetectedLORISError()
+            self.trigger_wrap(TR_DetectedLORISError)
 
     def UpdateNetworkStatus(self):
         # Ping CNBP frontend server.
@@ -794,7 +790,7 @@ class DICOMTransitImport(object):
         if self.STATUS_NETWORK:
             logger.info("General Network system status OKAY!")
         else:
-            self.TR_DetectedNetworkError()
+            self.trigger_wrap(TR_DetectedNetworkError)
 
     def UpdateLocalDBStatus(self):
         # Read local db. See if it exist based on the setting.
@@ -803,7 +799,7 @@ class DICOMTransitImport(object):
         if self.STATUS_LOCALDB:
             logger.info("LocalDB system status OKAY!")
         else:
-            self.TR_DetectedLocalDBError()
+            self.trigger_wrap(TR_DetectedLocalDBError)
 
 
     def UpdateOrthancStatus(self):
@@ -813,7 +809,7 @@ class DICOMTransitImport(object):
         if self.STATUS_ORTHANC:
             logger.info("Orthanc system status OKAY!")
         else:
-            self.TR_DetectedOrthancError()
+            self.trigger_wrap(TR_DetectedOrthancError)
 
 
     def UpdateFileStatus(self):
@@ -824,7 +820,7 @@ class DICOMTransitImport(object):
                 continue
             else:
                 self.STATUS_FILE = False
-                self.TR_DetectedFileError()
+                self.trigger_wrap(TR_DetectedFileError)
         self.STATUS_FILE = True
         logger.info("File(s) status APPEAR OKAY!")
 
@@ -835,7 +831,7 @@ class DICOMTransitImport(object):
 
     def trigger_wrap(self, transition_name):
         # A wrapped call to the machine trigger function.
-        self.trigger(transition_name)
+        self.trigger_wrap(transition_name)
 
 
 
@@ -941,19 +937,32 @@ if __name__ == "__main__":
             current_import_process.trigger_wrap(TR_ProcessPatient)
 
             if current_import_process.found_MRN():
+                ###################
                 # old patients path
+                ###################
                 current_import_process.trigger_wrap(TR_FindInsertionStatus)
-                if current_import_process.found_matching_scan_date():
-                    current_import_process.trigger_wrap(TR_ProcessNextSubject)
+
+
+                if current_import_process.found_matching_scan():
+                    current_import_process.trigger_wrap(TR_ProcessNextSubject)  # either way, gonna trigger this transition.
                     # Need to loop back based on the beginning BUT not get new data.
                     check_new_data = False
                     continue
                 else:
                     current_import_process.trigger_wrap(TR_QueryLocalDBForDCCID)
+                    current_import_process.trigger_wrap(TR_QueryRemoteUID)
+
+                    if current_import_process.found_matching_scan():
+                        current_import_process.trigger_wrap(TR_ProcessNextSubject)  # either way, gonna trigger this transition.
+                        # Need to loop back based on the beginning BUT not get new data.
+                        check_new_data = False
+                        continue
                     current_import_process.trigger_wrap(TR_IncrementRemoteTimepoint)
                     current_import_process.trigger_wrap(TR_IncrementLocalTimepoint)
             else:
+                ###################
                 # new patient path
+                ###################
                 current_import_process.trigger_wrap(TR_RetrieveGender)
                 current_import_process.trigger_wrap(TR_RetrieveBirthday)
                 current_import_process.trigger_wrap(TR_RemoteCreateSubject)

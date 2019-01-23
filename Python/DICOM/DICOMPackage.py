@@ -34,7 +34,7 @@ class DICOMPackage:
         self.timepoint: str = None
 
         # series UID: used to tell if a scan has been uploaded before.
-        self.list_sUID  = None
+        self.list_series_UID = None
 
         self.studies: str = None # study description from raw DICOM
         self.project: str = None # the actual project ID used on LORIS.
@@ -221,8 +221,8 @@ class DICOMPackage:
         :return:
         """
         from DICOM.elements_batch import DICOM_elements_batch
-        self.list_sUID = DICOM_elements_batch.retrieve_sUID(self.dicom_files)
-        return self.list_sUID
+        self.list_series_UID = DICOM_elements_batch.retrieve_sUID(self.dicom_files)
+        return self.list_series_UID
 
 
     def anonymize(self):
