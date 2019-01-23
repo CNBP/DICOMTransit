@@ -6,7 +6,7 @@ import requests
 
 from LORIS.helper import LORIS_helper
 from LocalDB.schema import CNBP_blueprint
-from settings import get
+from settings import config_get
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -19,14 +19,14 @@ class LORIS_query:
         :return: BOOL if or not it is successful. also, the JSON token that is necessary to conduct further transactions.
         """
         logger = logging.getLogger('LORIS_login')
-        from settings import get
-        username = get("LORISusername")
-        password = get("LORISpassword")
+        from settings import config_get
+        username = config_get("LORISusername")
+        password = config_get("LORISpassword")
 
         data = json.dumps({"username":username, "password":password})
 
         #Login URL
-        url = get("LORISurl")
+        url = config_get("LORISurl")
         updated_url = url + 'login'
 
 
@@ -50,7 +50,7 @@ class LORIS_query:
         """
         logger = logging.getLogger('LORIS_get')
         logger.info("Getting LORIS endpoint: " + endpoint + " at")
-        url = get("LORISurl")
+        url = config_get("LORISurl")
         updatedurl = url + endpoint
         logger.info(updatedurl)
         HEADERS = {'Authorization': 'token {}'.format(token)}
@@ -75,7 +75,7 @@ class LORIS_query:
         logger.info("Posting data to: "+endpoint)
         logger.info("Data: "+data)
         logger.info("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
-        url = get("LORISurl")
+        url = config_get("LORISurl")
         updatedurl = url + endpoint
 
         HEADERS = {'Authorization': 'token {}'.format(token)}
@@ -101,7 +101,7 @@ class LORIS_query:
         logger.info("Data: "+data)
         logger.info("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
 
-        url = get("LORISurl")
+        url = config_get("LORISurl")
         updatedurl = url + endpoint
 
         HEADERS = {'Authorization': 'token {}'.format(token)}

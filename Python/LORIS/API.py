@@ -5,7 +5,7 @@ from LORIS.query import LORIS_query
 from LORIS.timepoint import LORIS_timepoint
 from LORIS.trigger_dicom_insert import trigger_dicom_insert
 from typing import List
-from settings import get
+from settings import config_get
 """
 Everything here, should have its own login sessions as tokens are not shared at this high level function.  
 """
@@ -186,12 +186,12 @@ def upload(local_path):
     :return:
     """
 
-    ProxyIP = get("ProxyIP")
-    ProxyUsername = get("ProxyUsername")
-    ProxyPassword = get("ProxyPassword")
-    LORISHostIP = get("LORISHostIP")
-    LORISHostUsername = get("LORISHostUsername")
-    LORISHostPassword = get("LORISHostPassword")
+    ProxyIP = config_get("ProxyIP")
+    ProxyUsername = config_get("ProxyUsername")
+    ProxyPassword = config_get("ProxyPassword")
+    LORISHostIP = config_get("LORISHostIP")
+    LORISHostUsername = config_get("LORISHostUsername")
+    LORISHostPassword = config_get("LORISHostPassword")
 
     Client = LORIS_helper.getProxySSHClient(ProxyIP, ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername,
                                             LORISHostPassword)

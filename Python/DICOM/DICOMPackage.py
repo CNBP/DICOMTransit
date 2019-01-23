@@ -2,7 +2,7 @@ from DICOM.validate import DICOM_validate
 from PythonUtils.file import zip_with_name
 from LORIS.validate import LORIS_validation
 from LORIS.timepoint import LORIS_timepoint
-from settings import get
+from settings import config_get
 from typing import List
 import logging
 import sys
@@ -269,7 +269,7 @@ class DICOMPackage:
         """
 
         # load system default ZIP storage path.
-        zip_storage_path = get("zip_storage_location")
+        zip_storage_path = config_get("zip_storage_location")
 
         # Change to the storage folder before carrying out the zip operation.
         os.chdir(zip_storage_path)

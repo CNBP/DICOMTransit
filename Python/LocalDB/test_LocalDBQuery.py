@@ -7,7 +7,7 @@ from LocalDB.query import LocalDB_query
 from LocalDB.create_CNBP import LocalDB_createCNBP
 
 from LocalDB.schema import CNBP_blueprint
-from settings import get
+from settings import config_get
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 import unittest
@@ -178,7 +178,7 @@ class UT_LocalDBCreate(unittest.TestCase):
         LocalDB_query.create_entry(PathString, tableName, MRNColumn, 7424141)
 
 
-        Prefix = get("institutionID")
+        Prefix = config_get("institutionID")
 
         LocalDB_query.update_entry(PathString, tableName, MRNColumn, 7424141, CNBPIDColumn, Prefix + "0010001")
         LocalDB_query.update_entry(PathString, tableName, MRNColumn, 2345234, CNBPIDColumn, Prefix + "0010002")

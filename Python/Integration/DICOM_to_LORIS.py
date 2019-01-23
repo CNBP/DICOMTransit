@@ -1,7 +1,7 @@
 from DICOM.elements import DICOM_elements
 from LocalDB.query import LocalDB_query
 from LocalDB.schema import CNBP_blueprint
-from settings import get
+from settings import config_get
 import logging
 from DICOM.validate import DICOM_validate
 import sys
@@ -21,7 +21,7 @@ class Integration:
         :return:
         """
 
-        database_path = get("LocalDatabase")
+        database_path = config_get("LocalDatabase")
 
         for folder in folder_paths:
             success, DICOM_files = DICOM_validate.path(folder)

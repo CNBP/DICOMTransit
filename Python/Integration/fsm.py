@@ -942,7 +942,7 @@ if __name__ == "__main__":
                 ###################
                 current_import_process.trigger_wrap(TR_FindInsertionStatus)
 
-
+                # First date match loop back.
                 if current_import_process.found_matching_scan():
                     current_import_process.trigger_wrap(TR_ProcessNextSubject)  # either way, gonna trigger this transition.
                     # Need to loop back based on the beginning BUT not get new data.
@@ -952,6 +952,7 @@ if __name__ == "__main__":
                     current_import_process.trigger_wrap(TR_QueryLocalDBForDCCID)
                     current_import_process.trigger_wrap(TR_QueryRemoteUID)
 
+                    # Second UID match loop back.
                     if current_import_process.found_matching_scan():
                         current_import_process.trigger_wrap(TR_ProcessNextSubject)  # either way, gonna trigger this transition.
                         # Need to loop back based on the beginning BUT not get new data.
@@ -985,8 +986,8 @@ if __name__ == "__main__":
             logger.warning("A finite state machine state transition has FAILED. Check the log and error message")
             logger.warning("Error Message Encountered:")
             logger.warning(e)
-            from settings import get
-            zip_path = get("zip_storage_location")
+            from settings import config_get
+            zip_path = config_get("zip_storage_location")
             name_log = os.path.join(zip_path,"StateMachineDump_"+unique_name()+".pickle")
             with open(name_log, 'wb') as f:
                 # Pickle the 'data' dictionary using the highest protocol available.

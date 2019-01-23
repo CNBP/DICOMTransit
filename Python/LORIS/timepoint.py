@@ -7,7 +7,7 @@ from LORIS.validate import LORIS_validation
 from LORIS.helper import LORIS_helper
 from LORIS.query import LORIS_query
 from LocalDB.schema import CNBP_blueprint
-from settings import get
+from settings import config_get
 from PythonUtils.intmath import int_incrementor
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -24,7 +24,7 @@ class LORIS_timepoint:
         """
 
         # Get config defined prefix.
-        timepoint_prefix = get("timepoint_prefix")
+        timepoint_prefix = config_get("timepoint_prefix")
 
         # Check it against first letter.
         if timepoint_prefix != input_string[0]:
@@ -107,7 +107,7 @@ class LORIS_timepoint:
             new_visit_number = int_incrementor(visit_number)
 
 
-            prefix = get("timepoint_prefix")
+            prefix = config_get("timepoint_prefix")
 
             timepoint_label = prefix + str(new_visit_number)
 

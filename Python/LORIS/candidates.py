@@ -2,7 +2,7 @@ import sys
 import re
 import json
 import logging
-from settings import get
+from settings import config_get
 from LORIS.query import LORIS_query
 from LORIS.helper import LORIS_helper
 
@@ -54,13 +54,13 @@ class LORIS_candidates:
         # will not apply to the SSH session!
 
 
-        ProxyIP = get("ProxyIP")
-        ProxyUsername = get("ProxyUsername")
-        ProxyPassword = get("ProxyPassword")
-        LORISHostPassword = get("LORISHostPassword")
-        LORISHostUsername = get("LORISHostUsername")
-        LORISHostIP = get("LORISHostIP")
-        DeletionScript = get("DeletionScript")
+        ProxyIP = config_get("ProxyIP")
+        ProxyUsername = config_get("ProxyUsername")
+        ProxyPassword = config_get("ProxyPassword")
+        LORISHostPassword = config_get("LORISHostPassword")
+        LORISHostUsername = config_get("LORISHostUsername")
+        LORISHostIP = config_get("LORISHostIP")
+        DeletionScript = config_get("DeletionScript")
 
         # NOTE! If you EVER get NULL coalesce not recognized error, make sure that the PHP version being called from
         # the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER
@@ -137,7 +137,7 @@ class LORIS_candidates:
         """
         logger = logging.getLogger('LORIS_checkPSCIDExist')
         logger.info("Checking if PSCID exist: "+proposed_PSCID)
-        institution_check = get("institutionID")
+        institution_check = config_get("institutionID")
 
         #Get list of projects
         response_success, loris_project = LORIS_query.getCNBP(token, r"projects/loris")

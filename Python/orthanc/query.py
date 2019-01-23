@@ -6,7 +6,7 @@ import zipfile
 import sys
 from PythonUtils.file import is_name_unique, unique_name
 from requests.auth import HTTPBasicAuth
-from settings import get
+from settings import config_get
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -88,7 +88,7 @@ class orthanc_query:
         logger = logging.getLogger('Orthanc_getzip')
         logger.info("Downloading Orthanc endpoint: " + endpoint)
 
-        zip_path = get("zip_storage_location")
+        zip_path = config_get("zip_storage_location")
         with requests.Session() as s:
             r = s.get(endpoint, stream=True, verify=False, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
 

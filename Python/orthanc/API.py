@@ -23,17 +23,17 @@ def check_status():
 
 
 def get_dev_orthanc_credentials():
-    from settings import get
-    url = get("DevOrthancIP")
-    user = get("DevOrthancUser")
-    password = get("DevOrthancPassword")
+    from settings import config_get
+    url = config_get("DevOrthancIP")
+    user = config_get("DevOrthancUser")
+    password = config_get("DevOrthancPassword")
     return url, user, password
 
 def get_prod_orthanc_credentials():
-    from settings import get
-    url = get("ProdOrthancIP")
-    user = get("ProdOrthancUser")
-    password = get("ProdOrthancPassword")
+    from settings import config_get
+    url = config_get("ProdOrthancIP")
+    user = config_get("ProdOrthancUser")
+    password = config_get("ProdOrthancPassword")
     return url, user, password
 
 

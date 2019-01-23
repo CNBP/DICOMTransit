@@ -20,7 +20,8 @@ class CNBP_blueprint:
               'Completed',
               'Hash1',
               'Hash2',
-              'Hash3']
+              'Hash3',
+              'SeriesUID']
 
     fields_types = ['TEXT',
                     'INTEGER',
@@ -29,6 +30,7 @@ class CNBP_blueprint:
                     'INTEGER',
                     'TEXT',
                     'INTEGER'
+                    'TEXT',
                     'TEXT',
                     'TEXT',
                     'TEXT']

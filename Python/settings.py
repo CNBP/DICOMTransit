@@ -6,7 +6,7 @@ This class has no set because that is done via the frontend configurator. Settin
 Alternatively, the database can be manually edited on the backend but they are NEVER modified by the DICOMTransit itself.
 """
 
-def get(variable_name):
+def config_get(variable_name):
     """
     Validate to see if the variable exist, before loading it into the environment from the database.
     :param variable_name:

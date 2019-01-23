@@ -4,7 +4,7 @@ from pathlib import Path
 
 from LORIS.helper import LORIS_helper
 from LocalDB.schema import CNBP_blueprint
-from settings import get
+from settings import config_get
 
 
 class UT_LORISHelper(unittest.TestCase):
@@ -29,12 +29,12 @@ class UT_LORISHelper(unittest.TestCase):
     def test_ProxyUpload():
 
 
-        ProxyIP = get("ProxyIP")
-        ProxyUsername = get("ProxyUsername")
-        ProxyPassword = get("ProxyPassword")
-        LORISHostPassword = get("LORISHostPassword")
-        LORISHostUsername = get("LORISHostUsername")
-        LORISHostIP = get("LORISHostIP")
+        ProxyIP = config_get("ProxyIP")
+        ProxyUsername = config_get("ProxyUsername")
+        ProxyPassword = config_get("ProxyPassword")
+        LORISHostPassword = config_get("LORISHostPassword")
+        LORISHostUsername = config_get("LORISHostUsername")
+        LORISHostIP = config_get("LORISHostIP")
         Client = LORIS_helper.getProxySSHClient(ProxyIP, ProxyUsername, ProxyPassword,
                                                 LORISHostIP, LORISHostUsername, LORISHostPassword)
 

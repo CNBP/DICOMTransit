@@ -2,7 +2,7 @@ import json
 import logging
 import sys
 import paramiko
-from settings import get
+from settings import config_get
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -147,12 +147,12 @@ class LORIS_helper:
 
 
 if __name__ == '__main__':
-    ProxyIP = get("ProxyIP")
-    ProxyUsername = get("ProxyUsername")
-    ProxyPassword = get("ProxyPassword")
-    LORISHostIP = get("LORISHostIP")
-    LORISHostUsername = get("LORISHostUsername")
-    LORISHostPassword = get("LORISHostPassword")
+    ProxyIP = config_get("ProxyIP")
+    ProxyUsername = config_get("ProxyUsername")
+    ProxyPassword = config_get("ProxyPassword")
+    LORISHostIP = config_get("LORISHostIP")
+    LORISHostUsername = config_get("LORISHostUsername")
+    LORISHostPassword = config_get("LORISHostPassword")
 
     Client = LORIS_helper.getProxySSHClient(ProxyIP,  ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername, LORISHostPassword)
     LORIS_helper.uploadThroughClient(Client, "//data/incoming/VTXGL019999_598399_V1.zip", "VTXGL019999_598399_V1.zip")
