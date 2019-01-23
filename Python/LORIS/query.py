@@ -110,9 +110,38 @@ class LORIS_query:
             s.headers.update(HEADERS)
             r = s.put(updatedurl, data=data)
             logger.info("Put Result:" + str(r.status_code) + r.reason)
-
             return r.status_code, r
 
+    @staticmethod
+    def putCNBPDICOM(token, endpoint, imaging_data, isPhantom: bool = False):
+        """
+        Put some data to a LORIS end point.
+        :param token:
+        :param endpoint:
+        :param imaging_data:
+        :param isPhantom: whether the upload is a phantom data or not.
+        :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
+        """
+        logger = logging.getLogger(__name__)
+        logger.info("Uploading Imaging data to: " + endpoint)
+
+
+        url = config_get("LORISurl")
+        updatedurl = url + endpoint
+
+        if isPhantom:
+            HEADERS = {'Authorization': f'token {token}',
+                       'X-Is-Phantom': '1'}
+        else:
+            HEADERS = {'Authorization': f'token {token}',
+                       'X-Is-Phantom': '0'}
+
+        with requests.Session() as s:
+            s.headers.update(HEADERS)
+            r = s.put(updatedurl, data=imaging_data)
+            logger.info("Put Result:" + str(r.status_code) + r.reason)
+
+            return r.status_code, r
 
 
 # Only executed when running directly.

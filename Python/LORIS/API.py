@@ -6,10 +6,11 @@ from LORIS.timepoint import LORIS_timepoint
 from LORIS.trigger_dicom_insert import trigger_dicom_insert
 from typing import List
 from settings import config_get
+import logging
 """
 Everything here, should have its own login sessions as tokens are not shared at this high level function.  
 """
-
+logger = logging.getLogger(__name__)
 
 def check_status() -> bool:
     """
@@ -179,9 +180,51 @@ def get_allUID(DCCID: int) -> List[str]:
     return list_series_UID
 
 
+def upload_visit_DICOM(local_path, DCCID: int, VisitLabel: str, isPhantom: bool):
+    """
+    A custom end point where we specify the information for the file to be uploaded.
+    Note that header is VERY unique.
+    :param local_path:
+    :param DCCID:
+    :param VisitLabel:
+    :param filename:
+    :return:
+    """
+    from LORIS.validate import LORIS_validation
+    from LORIS.timepoint import LORIS_timepoint
+
+    # Validations:
+    if not os.path.isfile(local_path):
+        logger.warning(f"{local_path} is not a valid path to a file to be uploaded. ")
+        return
+
+    if not LORIS_validation.validate_DCCID(DCCID):
+        logger.warning(f"Provided DCCID: {DCCID} is invalid.")
+        return
+
+    if not LORIS_timepoint.check_timepoint_compliance(VisitLabel):
+        logger.warning(f"Provided timepoint:{VisitLabel} is invalid.")
+        return
+
+    filename = os.path.basename(local_path)
+
+    # Get Endpoint: Generate the proper end point.
+    endpoint = f"/candidates/{DCCID}/{VisitLabel}/dicoms/{filename}"
+
+    # Get Data: Read file into filestream object data
+    data = open(local_path, 'rb')
+
+    # Get token.
+    response_success, token = LORIS_query.login()
+    if not response_success:
+        raise ConnectionError
+
+    LORIS_query.putCNBPDICOM(token, endpoint, data, isPhantom)
+
+
 def upload(local_path):
     """
-    Upload file to incoming folder.
+    OBSOLETE Upload file to incoming folder.
     :param local_path:
     :return:
     """
