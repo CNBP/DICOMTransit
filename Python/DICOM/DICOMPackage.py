@@ -3,6 +3,7 @@ from PythonUtils.file import zip_with_name
 from LORIS.validate import LORIS_validation
 from LORIS.timepoint import LORIS_timepoint
 from settings import get
+from typing import List
 import logging
 import sys
 import os
@@ -18,7 +19,7 @@ class DICOMPackage:
     def __init__(self, dicom_folder=None):
         logger.info("Creating subject specific DICOM package class")
         # Set the DICOM_folder attribute
-        self.__dicom_folder__ = dicom_folder # reference kept to prevent auto garbage collection
+        self.__dicom_folder__ = dicom_folder  # reference kept to prevent auto garbage collection
         self.dicom_folder: str = dicom_folder.name
 
         # Set default value.
@@ -31,6 +32,9 @@ class DICOMPackage:
         self.CNBPID: str = None # also known as PSCI id
         self.DCCID: int = None
         self.timepoint: str = None
+
+        # series UID: used to tell if a scan has been uploaded before.
+        self.list_sUID  = None
 
         self.studies: str = None # study description from raw DICOM
         self.project: str = None # the actual project ID used on LORIS.
@@ -204,9 +208,21 @@ class DICOMPackage:
         A more secure way of getting DICOM files instead of directly reading the attribute (as it can be None)
         :return:
         """
+
+        # Validate all files and load them if they have not been loaded before.
         if self.dicom_files is None:
             self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder)
         return self.dicom_files
+
+
+    def update_sUID(self) -> List[str]:
+        """
+        Check all dicom files to get a unique list of all possible UUIDs.
+        :return:
+        """
+        from DICOM.elements_batch import DICOM_elements_batch
+        self.list_sUID = DICOM_elements_batch.retrieve_sUID(self.dicom_files)
+        return self.list_sUID
 
 
     def anonymize(self):

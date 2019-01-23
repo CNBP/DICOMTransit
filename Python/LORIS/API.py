@@ -93,7 +93,7 @@ def increment_timepoint(DCCID):
     return timepoint
 
 
-def create_new(project, birthday, gender) -> (bool, int, int):
+def create_candidate(project, birthday, gender) -> (bool, int, int):
     """
     Check both the creation and deletion of the subject for LORIS.
     :return:
@@ -146,7 +146,7 @@ def get_all_timepoints(DCCID:int) -> List[str]:
 
 def get_allUID(DCCID: int) -> List[str]:
     """
-    Return the query results to  /candidates/$CandID/$Visit/dicoms
+    Return the query results from /candidates/$CandID/$Visit/dicoms
     :param DCCID:
     :param timepoint:
     :return:
@@ -176,7 +176,6 @@ def get_allUID(DCCID: int) -> List[str]:
                         list_seires = dicom_tar["SeriesInfo"]
                         for series in list_seires:
                             list_series_UID.append(series["SeriesUID"])
-
     return list_series_UID
 
 

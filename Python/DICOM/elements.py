@@ -117,6 +117,23 @@ class DICOM_elements:
             return True, name
 
     @staticmethod
+    def retrieve_seriesUID(file_path):
+        """
+        Read the PatientName field. No checking. Used for validation post anonymization.
+        :param file_path:
+        :return: MRN number, as a STRING
+        """
+        logger = logging.getLogger(current_funct_name())
+        success, SeriesUID = DICOM_elements.retrieve(file_path, "SeriesInstanceUID")
+
+        if not success:
+            logger.info("Was not able to access/read the file!")
+            return False, None
+
+        else:
+            return True, SeriesUID
+
+    @staticmethod
     def retrieve_scan_date(file_path):
         """
         Lower level function to Read the StudyDescription field which normally used to identify the specific PROJECT.

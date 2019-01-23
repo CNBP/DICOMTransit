@@ -675,9 +675,9 @@ class DICOMTransitImport(object):
 
     def LORISCreateSubject(self):
         # create new PSCID and get DCCID
-        success, DCCID, PSCID = LORIS.API.create_new(self.DICOM_package.project,
-                                                     self.DICOM_package.birthday,
-                                                     self.DICOM_package.gender)
+        success, DCCID, PSCID = LORIS.API.create_candidate(self.DICOM_package.project,
+                                                           self.DICOM_package.birthday,
+                                                           self.DICOM_package.gender)
         # Local Variable for anonymization.
         self.DICOM_package.DCCID = DCCID
         self.DICOM_package.CNBPID = PSCID

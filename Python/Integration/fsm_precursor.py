@@ -43,7 +43,7 @@ if __name__ == "__main__":
                 DICOM_package.project = "loris"
 
                 # create new PSCID and get DCCID
-                success, DCCID, PSCID = LORIS.API.create_new(DICOM_package.project, DICOM_package.birthday, DICOM_package.gender)
+                success, DCCID, PSCID = LORIS.API.create_candidate(DICOM_package.project, DICOM_package.birthday, DICOM_package.gender)
 
                 # Local Variable for anonymization.
                 DICOM_package.DCCID = DCCID
