@@ -130,7 +130,7 @@ def get_seriesUID(MRN: int) -> List[str]:
     if json_SeriesUID is None:
         logger.warning("No existing UID Data information found.")
         return None
-    list_SeriesUID = json.load(json_SeriesUID)
+    list_SeriesUID = json.loads(json_SeriesUID)
 
     return list_SeriesUID
 
