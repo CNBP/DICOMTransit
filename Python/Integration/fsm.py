@@ -46,7 +46,7 @@ TR_ProcessNextSubject = "TR_ProcessNextSubject"
 TR_QueryLocalDBForDCCID = "TR_QueryLocalDBForDCCID"
 TR_QueryRemoteUID = "TR_QueryRemoteUID"
 TR_IncrementRemoteTimepoint = "TR_IncrementRemoteTimepoint"
-TR_IncrementLocalTimepoint = "TR_IncrementLocalTimepoint"
+TR_UpdateLocalRecords = "TR_UpdateLocalRecords"
 
 # Process New Subjects transitions
 TR_RetrieveGender = "TR_RetrieveGender"
@@ -257,9 +257,7 @@ class DICOMTransitImport(object):
         machine.add_transition(TR_HandlePotentialOrthancData, ST_determined_orthanc_new_data_status, ST_waiting,
                                unless=self.has_new_data.__name__)
         machine.add_transition(TR_HandlePotentialOrthancData, ST_determined_orthanc_new_data_status, ST_detected_new_data,
-                               prepare=self.UpdateOrthancStatus.__name__,
                                conditions=self.has_new_data.__name__,
-                               unless=self.is_Orthanc_Unavailable.__name__
                                )
 
         # After checking orthanc status, download the new data.
@@ -303,7 +301,7 @@ class DICOMTransitImport(object):
         machine.add_transition(TR_FindInsertionStatus, ST_processing_old_patient, ST_found_insertion_status,
                                prepare=self.UpdateLocalDBStatus.__name__,
                                unless=self.is_LocalDB_Unavailable.__name__,
-                               after=self.CheckLocalDBMatchingScanDate.__name__)  # Check if the current subject is already inserted.
+                               after=self.CheckLocalUID.__name__)  # Check if the current subject is already inserted.
 
 
         # Paired branching transitions
@@ -316,8 +314,8 @@ class DICOMTransitImport(object):
 
         # Once all subjects are completed, move on to process the new subjects.
         machine.add_transition(TR_QueryLocalDBForDCCID, ST_found_insertion_status, ST_obtained_DCCID_CNBPID,
-                               prepare=[self.UpdateLORISStatus.__name__],
-                               unless=[self.is_LORIS_Unavailable.__name__, self.found_matching_scan.__name__],
+                               prepare=[self.UpdateLocalDBStatus.__name__],
+                               unless=[self.is_LocalDB_Unavailable.__name__, self.found_matching_scan.__name__],
                                after=self.QueryLocalDBForCNBPIDDCCID.__name__)
 
         # Now we know that this subject was previously seen, and we need to check if this timepoint has already processed before.
@@ -339,10 +337,10 @@ class DICOMTransitImport(object):
                                after=self.IncrementRemoteTimepoint.__name__)
 
         # We then need to record this timepoint in the local database. Once this is done, we reached HARMONIZED TIMEPOINT state
-        machine.add_transition(TR_IncrementLocalTimepoint, ST_updated_remote_timepoint, ST_harmonized_timepoints,
+        machine.add_transition(TR_UpdateLocalRecords, ST_updated_remote_timepoint, ST_harmonized_timepoints,
                                prepare=[self.UpdateLocalDBStatus.__name__],
                                unless=[self.is_LocalDB_Unavailable.__name__],
-                               after=self.IncrementLocalTimepoint.__name__)
+                               after=self.UpdateLocalRecord.__name__)
 
         # New Subject Path
 
@@ -601,6 +599,25 @@ class DICOMTransitImport(object):
             logger.info("Dealing with new potentially subject. Conducting stage 2 test with LORIS visit timepoint check.")
 
 
+    def CheckLocalUID(self):
+        """
+        Check remote scan dates to see if it has already been inserted before. This check helps prevent insertion of previously inserted (but then deleted subject!)
+        :return:
+        """
+
+        # LORIS API to get a list of VISIT timepoints.
+        list_local_series_UID = LocalDB.API.get_seriesUID(self.DICOM_package.MRN)
+
+        # Compare the two list and ensure that the UID fromt eh DICOM has not been seen before remotely.
+        for uid in self.DICOM_package.list_series_UID:
+            if uid in list_local_series_UID:
+                self.scan_already_processed = True
+                logger.info("Current list of DICOM series UID has been seen before!")
+                return
+        self.scan_already_processed = False
+        logger.info("Confirmed that current list of DICOM series UID are new with respect to local database!")
+
+
     def CheckRemoteUID(self):
         """
         Check remote scan dates to see if it has already been inserted before. This check helps prevent insertion of previously inserted (but then deleted subject!)
@@ -619,7 +636,7 @@ class DICOMTransitImport(object):
                 logger.info("Current list of DICOM series UID has been upload before!")
                 return
         self.scan_already_processed = False
-        logger.info("Confirmed that current list of DICOM series UID are new!")
+        logger.info("Confirmed that current list of DICOM series UID are new with respect to LORIS database!")
 
 
     # Old Subject Path:
@@ -631,7 +648,8 @@ class DICOMTransitImport(object):
         self.DICOM_package.DCCID = LocalDB.API.get_DCCID(self.DICOM_package.MRN)
 
         # Get the latest local known timepoint:
-        self.last_localDB_scan_date = LocalDB.API.get_timepoint(self.DICOM_package.MRN)
+        self.last_localDB_timepoint = LocalDB.API.get_timepoint(self.DICOM_package.MRN)
+        self.last_localDB_scan_date = LocalDB.API.get_scan_date(self.DICOM_package.MRN)
         logger.info(f"Last known localDB timepoint: {self.last_localDB_scan_date}")
 
     def IncrementRemoteTimepoint(self):
@@ -641,10 +659,12 @@ class DICOMTransitImport(object):
         logger.info("Obtained the latest timepoint for the subject from LORIS.")
 
 
-    def IncrementLocalTimepoint(self):
+    def UpdateLocalRecord(self):
         # Update the record to use the latest timepoint and the scandate!
         LocalDB.API.set_timepoint(self.DICOM_package.MRN, self.DICOM_package.timepoint)
         LocalDB.API.set_scan_date(self.DICOM_package.MRN, self.DICOM_package.scan_date)
+        # take old and combine with new so we have a full history of all ever UID associated with this subject.
+        LocalDB.API.append_seriesUID(self.DICOM_package.MRN, self.DICOM_package.list_series_UID)
         logger.info("Incremented the local VISIT timepoint for the subject successfully.")
 
 
@@ -683,11 +703,12 @@ class DICOMTransitImport(object):
         logger.info("Creating subject remotely on LORIS is successful.")
 
     def LocalDBCreateSubject(self):
-        # fixme: temporarly disabled this for debugging.
+        # CNBPID had to be created first.
         LocalDB.API.set_CNBP(self.DICOM_package.MRN, self.DICOM_package.CNBPID)
         LocalDB.API.set_DCCID(self.DICOM_package.MRN, self.DICOM_package.DCCID)
         LocalDB.API.set_timepoint(self.DICOM_package.MRN, self.DICOM_package.timepoint)
         LocalDB.API.set_scan_date(self.DICOM_package.MRN, self.DICOM_package.scan_date)
+        LocalDB.API.set_seriesUID(self.DICOM_package.MRN, self.DICOM_package.list_series_UID)
         logger.info("Creating subject locally is successful.")
         pass
 
@@ -961,7 +982,7 @@ if __name__ == "__main__":
                         check_new_data = False
                         continue
                     current_import_process.trigger_wrap(TR_IncrementRemoteTimepoint)
-                    current_import_process.trigger_wrap(TR_IncrementLocalTimepoint)
+                    current_import_process.trigger_wrap(TR_UpdateLocalRecords)
             else:
                 ###################
                 # new patient path

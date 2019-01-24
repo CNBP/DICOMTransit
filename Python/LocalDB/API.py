@@ -106,7 +106,7 @@ def get_CNBP(MRN):
     return KeyRecords[0][cnbp_header_index]
 
 
-def get_SeriesUID(MRN: int) -> List[str]:
+def get_seriesUID(MRN: int) -> List[str]:
     """
     Assuming the MRN exist, get the SeriesUID of all scans that ever past through here.
     :param MRN: the MRN to look for
@@ -211,13 +211,32 @@ def set_CNBP(MRN: int, CNBPID): #fixme: all the SET RECORDS NEED TO CONSIDER THE
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "CNBPID", CNBPID)
 
 
-def set_SeriesUID(MRN: int, SeriesUID: List[str]):
+def append_seriesUID(MRN: int, SeriesUID: List[str]):
+    """
+    Append record with SeriesUID list. which has particular MRN
+    :param MRN:
+    :return:
+    """
+    database_path = config_get("LocalDatabasePath")
+    existing_series_UID = get_seriesUID(MRN)
+    total_series_UID = existing_series_UID + SeriesUID
+
+    # JSON dumps.
+    json_seriesUID = json.dumps(total_series_UID )
+
+    # Update the MRN record with SeriesUID
+    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "SeriesUID",
+                               json_seriesUID)
+
+
+def set_seriesUID(MRN: int, SeriesUID: List[str]):
     """
     Update record with SeriesUID list. which has particular MRN
     :param MRN:
     :return:
     """
     database_path = config_get("LocalDatabasePath")
+
 
     # JSON dumps.
     json_seriesUID = json.dumps(SeriesUID)
