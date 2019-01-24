@@ -15,9 +15,6 @@ class LocalDB_createCNBP:
 
         #Create the PRIMARY KEY column.
 
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
 
         # Create the variable array that store the columns information to be used later in loop for column creation
         TableName = CNBP_blueprint.table_name

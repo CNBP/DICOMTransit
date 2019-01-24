@@ -29,11 +29,14 @@ class CNBP_blueprint:
                     'INTEGER',
                     'INTEGER',
                     'TEXT',
-                    'INTEGER'
+                    'INTEGER',
                     'TEXT',
                     'TEXT',
                     'TEXT',
                     'TEXT']
+
+    # this must pass at ALL TIME
+    assert(len(fields)==len(keyfield_type))
 
     # todo: cross checek these with schema.sql from dtconfigurator as well as .env
     dotenv_variables = [
