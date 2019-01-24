@@ -23,7 +23,7 @@ import argparse
 import getpass
 import logging
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger('upload_bom')
 
 if __name__ == '__main__':

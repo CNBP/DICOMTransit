@@ -3,8 +3,7 @@ import logging
 import os
 from tqdm import tqdm
 from PythonUtils.folder import recursive_list
-
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+from PythonUtils.file import current_funct_name
 
 class DICOM_validate:
 
@@ -15,7 +14,7 @@ class DICOM_validate:
         :param file_path:
         :return:
         """
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger(current_funct_name())
 
         global dicom
         dicom = None
@@ -41,7 +40,7 @@ class DICOM_validate:
         :param dir_path:
         :returns: 0) if the path is valid, 2) list of ONLY the valid DICOM files.
         """
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger(current_funct_name())
 
         # Reject bad input check
         if not os.path.exists(dir_path) or not os.path.isdir(dir_path):

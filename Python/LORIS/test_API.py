@@ -4,7 +4,7 @@ import sys
 import logging
 from LORIS.API import check_online_status, check_status, get_all_timepoints, get_allUID, upload_visit_DICOM, new_trigger_insertion
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 class UT_LORISAPI(unittest.TestCase):

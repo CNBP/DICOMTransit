@@ -112,3 +112,4 @@ development.py
 production.py
 *.driveupload
 dtconfigures.sqlite
+log/

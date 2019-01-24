@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 
 from pydicom.filereader import read_file_meta_info
-
+from PythonUtils.file import current_funct_name
 from DICOM.validate import DICOM_validate
 
 class DICOM_decompress:
@@ -19,7 +19,7 @@ class DICOM_decompress:
         :param out_put:
         :return:
         """
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger(current_funct_name())
 
         #if os.path.exists(out_put):
         #    logger.warn("Output_exist already. !!!OVERWRITING!!!")
@@ -115,7 +115,7 @@ class DICOM_decompress:
         :param file_list:
         :return:
         """
-        logger = logging.getLogger("Decompressing files")
+        logger = logging.getLogger(current_funct_name())
 
         for file in tqdm(file_list):
 

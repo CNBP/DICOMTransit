@@ -7,12 +7,7 @@ from LORIS.query import LORIS_query
 from LORIS.helper import LORIS_helper
 
 from LocalDB.schema import CNBP_blueprint
-
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-
-
+from PythonUtils.file import current_funct_name
 
 class LORIS_candidates:
 
@@ -94,7 +89,7 @@ class LORIS_candidates:
         :param project:
         :return: DCCID
         """
-        logger = logging.getLogger('LORIS_CreateCNBPCandidates')
+        logger = logging.getLogger(current_funct_name())
         logger.debug(f"Creating CNBP Candidates belong to project: {project}")
 
         Candidate = {}
@@ -135,7 +130,7 @@ class LORIS_candidates:
         :param proposed_PSCID:
         :return: bool for connection, bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('LORIS_checkPSCIDExist')
+        logger = logging.getLogger(current_funct_name())
         logger.debug("Checking if PSCID exist: "+proposed_PSCID)
         institution_check = config_get("institutionID")
 
@@ -181,7 +176,7 @@ class LORIS_candidates:
         """
         from LORIS.validate import LORIS_validation
 
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger(current_funct_name())
         logger.debug("Checking if DCCID exist: "+str(proposed_DCCID))
 
         assert (LORIS_validation.validate_DCCID(proposed_DCCID))

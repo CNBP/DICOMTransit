@@ -4,11 +4,10 @@ import os
 import shutil
 import zipfile
 import sys
-from PythonUtils.file import is_name_unique, unique_name
+from PythonUtils.file import is_name_unique, unique_name, current_funct_name
 from requests.auth import HTTPBasicAuth
 from settings import config_get
-
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+from tqdm import tqdm
 
 class orthanc_query:
 
@@ -25,7 +24,7 @@ class orthanc_query:
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('Orthanc_get')
+        logger = logging.getLogger(current_funct_name())
         logger.debug("Getting Orthanc endpoint: "+ endpoint)
 
         with requests.Session() as s:
@@ -41,7 +40,7 @@ class orthanc_query:
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('Orthanc_get')
+        logger = logging.getLogger(current_funct_name())
         logger.debug("Getting Orthanc endpoint: "+ endpoint)
 
         with requests.Session() as s:
@@ -58,7 +57,7 @@ class orthanc_query:
         :param data
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('Orthanc_post')
+        logger = logging.getLogger(current_funct_name())
         logger.debug("Post Orthanc endpoint: "+ endpoint)
         with requests.Session() as s:
             r = s.post(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password), files=data)
@@ -72,7 +71,7 @@ class orthanc_query:
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('Orthanc_delete')
+        logger = logging.getLogger(current_funct_name())
         logger.debug(f"Deleting Orthanc endpoint: {endpoint} at")
         with requests.Session() as s:
             r = s.delete(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
@@ -87,21 +86,27 @@ class orthanc_query:
         :return: status of the get requests, and the actual local file name saved in the process.
         """
 
-        logger = logging.getLogger('Orthanc_getzip')
+        logger = logging.getLogger(current_funct_name())
         logger.debug("Downloading Orthanc endpoint: {endpoint}")
 
-        zip_path = config_get("zip_storage_location")
+        zip_path = config_get("ZipPath")
         with requests.Session() as s:
             r = s.get(endpoint, stream=True, verify=False, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
 
-            local_file_full_path = f"{zip_path}{unique_name()}.zip"
+            # Compute total size to be downloaded
+            total_size = int(r.headers.get('content-length', 0))
+
+            # Generate the full output path
+            local_file_full_path = os.path.join(zip_path, f"{unique_name()}.zip")
+
             # NOTE the stream=True parameter
             with open(local_file_full_path, 'wb') as f:
-                for chunk in r.iter_content(chunk_size=1024):
+                for chunk in tqdm(r.iter_content(32*1024), total=total_size,unit='B', unit_scale=True):
                     if chunk:  # filter out keep-alive new chunks
                         f.write(chunk)
-                        # f.flush() commented by recommendation from J.F.Sebastian
+
         logger.debug(str(r.status_code) + r.reason)
+        logger.info(f"Download to {local_file_full_path} is fully complete!")
         return r.status_code, local_file_full_path
 
     @staticmethod

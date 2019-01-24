@@ -3,7 +3,7 @@ import sys
 from LORIS.query import LORIS_query
 from LORIS.candidates import LORIS_candidates
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 import unittest

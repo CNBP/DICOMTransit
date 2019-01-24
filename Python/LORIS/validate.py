@@ -3,13 +3,13 @@ import json
 import logging
 from settings import config_get
 from LocalDB.schema import CNBP_blueprint
-from PythonUtils.file import dictionary_search
+from PythonUtils.file import dictionary_search, current_funct_name
 from LORIS.candidates import LORIS_candidates
 from datetime import datetime
 import math
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logger = logging.getLogger(__name__)
+
+
 
 
 class LORIS_validation:
@@ -50,6 +50,8 @@ class LORIS_validation:
         :param birth_date:
         :return:
         """
+
+        logger = logging.getLogger(current_funct_name())
         # Sanity check for scan date within the past 100 years.
         birth_date = datetime.strptime(birth_date, "%Y%m%d")
         current_date = datetime.now()
@@ -72,6 +74,7 @@ class LORIS_validation:
         :param birth_date:
         :return:
         """
+        logger = logging.getLogger(current_funct_name())
         # Sanity check for scan date within the past 100 years.
         birth_date = datetime.strptime(birth_date, "%Y-%m-%d")
         current_date = datetime.now()
@@ -164,7 +167,7 @@ class LORIS_validation:
         :param CNBPID:
         :return:
         """
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger(current_funct_name())
 
         # Parse from input CNBPID
         success, input_institution, input_subject = LORIS_candidates.parse_PSCID(CNBPID)

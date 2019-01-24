@@ -40,23 +40,16 @@ class CNBP_blueprint:
 
     # todo: cross checek these with schema.sql from dtconfigurator as well as .env
     dotenv_variables = [
+        "created",
         "LORISurl",
         "LORISusername",
         "LORISpassword",
         "timepoint_prefix",
         "institutionID",
         "projectID_dictionary",
-        "LocalDatabase",
         "LocalDatabasePath",
-        "ProxyIP",
-        "ProxyUsername",
-        "ProxyPassword",
-        "LORISHostIP",
-        "LORISHostUsername",
-        "LORISHostPassword",
-        "InsertionAPI",
-        "DeletionScript",
-        "zip_storage_location",
+        "LogPath",
+        "ZipPath",
         "DevOrthancIP",
         "DevOrthancUser",
         "DevOrthancPassword",
@@ -87,77 +80,6 @@ class CNBP_blueprint:
     PSCID_schema = PSCID_schema_institution + PSCID_schema_subject
 
 
-class configuration_blueprint:
-    """
-    this blueprint represent the underlying field of settings
-    """
-
-    table_name = 'setting_table'
-
-    keyfield = 'id'
-    keyfield_type = 'INTEGER'
-
-    fields = [  'user_id',
-                'created',
-                'LORISurl',
-                'LORISusername',
-                'LORISpassword',
-                'timepoint_prefix',
-                'institutionID',
-                'projectID_dictionary',
-                'LocalDatabase',
-                'LocalDatabasePath',
-                'ProxyIP',
-                'ProxyUsername',
-                'ProxyPassword',
-                'LORISHostIP',
-                'LORISHostUsername',
-                'LORISHostPassword',
-                'InsertionAPI',
-                'DeletionScript',
-                'zip_storage_location',
-                'DevOrthancIP',
-                'DevOrthancUser',
-                'DevOrthancPassword',
-                'ProdOrthancIP',
-                'ProdOrthancUser',
-                'ProdOrthancPassword']
-
-    fields_types = ['INTEGER',
-                    'TIMESTAMP',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT',
-                    'TEXT']
-
-    dotenv_variables = ["config_database", "config_table"]
-
-    import copy
-
-    schema = copy.deepcopy(fields)
-    schema.insert(0, keyfield)
-
-    schema_types = copy.deepcopy(fields_types)
-    schema_types.insert(0, keyfield_type)
 
 def concatenatedSchema():
     """

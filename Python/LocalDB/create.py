@@ -9,7 +9,7 @@ from LocalDB.schema import CNBP_blueprint
 # Author: Yang Ding
 
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger('database')
 
 class LocalDB_create:

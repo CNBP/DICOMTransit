@@ -5,7 +5,7 @@ from LORIS.query import LORIS_query
 import unittest
 import sys
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 class UT_LORISCandidates(unittest.TestCase):

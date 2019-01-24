@@ -5,10 +5,10 @@ import sys
 import requests
 
 from LORIS.helper import LORIS_helper
-from LocalDB.schema import CNBP_blueprint
+from PythonUtils.file import  current_funct_name
 from settings import config_get
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 
 class LORIS_query:
 
@@ -18,7 +18,7 @@ class LORIS_query:
         Logs into LORIS using the stored credential. Must use PyCurl as Requests is not working.
         :return: BOOL if or not it is successful. also, the JSON token that is necessary to conduct further transactions.
         """
-        logger = logging.getLogger('LORIS_login')
+        logger = logging.getLogger(current_funct_name())
         from settings import config_get
         username = config_get("LORISusername")
         password = config_get("LORISpassword")
@@ -48,7 +48,7 @@ class LORIS_query:
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('LORIS_get')
+        logger = logging.getLogger(current_funct_name())
         logger.debug(f"Getting LORIS endpoint: {endpoint} at")
         url = config_get("LORISurl")
         updatedurl = url + endpoint
@@ -71,7 +71,7 @@ class LORIS_query:
         :param data:
         :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
         """
-        logger = logging.getLogger('LORIS_post')
+        logger = logging.getLogger(current_funct_name())
         logger.debug("Posting data to: "+endpoint)
         logger.debug("Data: "+data)
         logger.debug("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
@@ -96,7 +96,7 @@ class LORIS_query:
         :param data:
         :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
         """
-        logger = logging.getLogger('LORIS_put')
+        logger = logging.getLogger(current_funct_name())
         logger.debug("Putting data to: "+endpoint)
         logger.debug("Data: "+data)
         logger.debug("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
@@ -122,7 +122,7 @@ class LORIS_query:
         :param isPhantom: whether the upload is a phantom data or not.
         :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
         """
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger(current_funct_name())
         logger.debug(f"Uploading Imaging data to: {endpoint}")
 
 

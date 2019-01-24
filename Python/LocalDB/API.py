@@ -10,7 +10,7 @@ from PythonUtils.intmath import int_incrementor
 from typing import List
 import json
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 
@@ -385,7 +385,7 @@ def get_setting(setting_name: str):
     :return:
     """
     from LocalDB.query import LocalDB_query
-    from LocalDB.schema import configuration_blueprint
+
     from PythonUtils.env import validate_dotenv_var
     from datetime import datetime
 
@@ -399,7 +399,7 @@ def get_setting(setting_name: str):
     assert len(records_setting) > 0
 
     # Ensure that timestamp is still a relevant field in the table. Cross validate against blueprint.
-    assert validate_dotenv_var("created", configuration_blueprint.fields)
+    assert validate_dotenv_var("created", CNBP_blueprint.dotenv_variables)
 
     # Retrieve TIMESTAMP of all records. in the DEFAULT ORDER
     success, records_timestamp = LocalDB_query.get_all(path_config_database, name_config_table, "created")

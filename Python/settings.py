@@ -13,11 +13,11 @@ def config_get(variable_name):
     :param possible_variables:
     :return:
     """
-    from LocalDB.schema import configuration_blueprint
+    from LocalDB.schema import CNBP_blueprint
     from LocalDB.API import get_setting
 
     # Check if variable is an anticipated variable.
-    if validate_dotenv_var(variable_name, configuration_blueprint.fields):
+    if validate_dotenv_var(variable_name, CNBP_blueprint.dotenv_variables):
 
         # Use local databse API to load the variable.
         env_variable = get_setting(variable_name)

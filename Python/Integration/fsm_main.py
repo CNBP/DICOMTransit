@@ -40,7 +40,7 @@ SIG_UPLOAD_ANONYMIZED_DATA = 'upload-anonymized-data'
 SIG_HANDLE_DICOM_FILE = 'handle-dicom-file'
 SIG_TASK_COMPLETE = 'task-complete'
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger('Finite state machine')
 
 """ Function to handle events """

@@ -3,8 +3,8 @@ import logging
 import sqlite3
 from pathlib import Path
 from LocalDB.schema import CNBP_blueprint
+from PythonUtils.file import current_funct_name
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 class LocalDB_query:
 
@@ -22,7 +22,7 @@ class LocalDB_query:
         :param ColumnValue: the value of the column being checked
         :return: boolean on if this is ever found in the given database in the given table, in the given column.
         """
-        logger = logging.getLogger('LORISQuery_CheckSubjectExist')
+        logger = logging.getLogger(current_funct_name())
 
 
         SQLPath = Path(database_path)
@@ -68,7 +68,7 @@ class LocalDB_query:
         :param ColumnValue: the value of the column being checked
         :return: boolean on if this is ever found in the given database in the given table, in the given column.
         """
-        logger = logging.getLogger('LORISQuery_CheckSubjectExist')
+        logger = logging.getLogger(current_funct_name())
 
 
         SQLPath = Path(database_path)
@@ -115,7 +115,7 @@ class LocalDB_query:
         :param key_field_value: value of the key_field to be created.
         :return: if the entry has been successfully created.
         """
-        logger = logging.getLogger('LORISQuery_CreateSubject')
+        logger = logging.getLogger(current_funct_name())
 
         # if SQL already exist, quit script.
         SQLPath = Path(database_path)
@@ -157,7 +157,7 @@ class LocalDB_query:
         :return:
         """
 
-        logger = logging.getLogger('LORISQuery_CreateSubject')
+        logger = logging.getLogger(current_funct_name())
 
         # if SQL already exist, quit script.
         SQLPath = Path(database_path)
@@ -176,10 +176,10 @@ class LocalDB_query:
             logger.info('Update records in SQLite database.')
 
             # Update SQLite record row where key field values are found (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            c.execute(f'UPDATE {table_name} SET {field}="{field_value}" WHERE {key_field}="{key_field_value}"')
+            c.execute(f'UPDATE {table_name} SET {field}= ? WHERE {key_field}= ?', (field_value, key_field_value))
 
         except Exception as e:
-            raise IOError()
+            pass
 
         # Closing the connection to the database file
         ConnectedDatabase.commit()
@@ -194,7 +194,7 @@ class LocalDB_query:
         :return:
         """
 
-        logger = logging.getLogger('SQLite check_header check')
+        logger = logging.getLogger(current_funct_name())
 
         table_header = None
 
@@ -249,7 +249,7 @@ class LocalDB_query:
         :param field: the string of the field name that is to be searched.
         :return:
         """
-        logger = logging.getLogger('LORISQuery_validateLocalTableAndSchema')
+        logger = logging.getLogger(current_funct_name())
         field_table_index = -1
         field_schema_index = -2
 
@@ -281,7 +281,7 @@ class LocalDB_query:
 
     @staticmethod
     def get_all(database_path, table_name, field_names):
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger(current_funct_name())
 
         SQLPath = Path(database_path)
 

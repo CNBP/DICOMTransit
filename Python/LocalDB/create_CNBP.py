@@ -5,6 +5,7 @@
 from dotenv import load_dotenv
 from LocalDB.create import LocalDB_create
 from settings import config_get
+from LocalDB.schema import CNBP_blueprint
 
 class LocalDB_createCNBP:
 
@@ -30,6 +31,6 @@ class LocalDB_createCNBP:
 # Only executed when running directly.
 if __name__ == '__main__':
     # Mini script used to create the initial databse
-    from LocalDB.schema import CNBP_blueprint
+
     localDB_path = config_get("LocalDatabasePath")
     LocalDB_createCNBP.database(localDB_path)

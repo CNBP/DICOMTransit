@@ -9,9 +9,8 @@ from LORIS.query import LORIS_query
 from LocalDB.schema import CNBP_blueprint
 from settings import config_get
 from PythonUtils.intmath import int_incrementor
+from PythonUtils.file import current_funct_name
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 class LORIS_timepoint:
 

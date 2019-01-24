@@ -9,7 +9,7 @@ import glob
 import logging
 import sys
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 
 class DICOM_converter:
 

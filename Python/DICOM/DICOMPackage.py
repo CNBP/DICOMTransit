@@ -8,7 +8,6 @@ import logging
 import sys
 import os
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('DICOMPackage Class')
 
 class DICOMPackage:
@@ -269,7 +268,7 @@ class DICOMPackage:
         """
 
         # load system default ZIP storage path.
-        zip_storage_path = config_get("zip_storage_location")
+        zip_storage_path = config_get("ZipPath")
 
         # Change to the storage folder before carrying out the zip operation.
         os.chdir(zip_storage_path)

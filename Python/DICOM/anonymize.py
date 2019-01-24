@@ -3,6 +3,7 @@ from DICOM.elements import DICOM_elements
 import logging
 from tqdm import tqdm
 from PythonUtils.folder import recursive_list
+from PythonUtils.file import current_funct_name
 
 class DICOM_anonymize:
 
@@ -49,7 +50,7 @@ class DICOM_anonymize:
         :param file_list:
         :return:
         """
-        logger = logging.getLogger("Anonymizing files")
+        logger = logging.getLogger(current_funct_name())
 
         exception_count = 0
         exception_files = []

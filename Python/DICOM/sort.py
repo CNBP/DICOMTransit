@@ -5,8 +5,8 @@ import shutil
 from DICOM.elements import DICOM_elements
 from DICOM.validate import DICOM_validate
 from tqdm import tqdm
+from PythonUtils.file import current_funct_name
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 class DICOM_sort:
 
@@ -17,7 +17,7 @@ class DICOM_sort:
         :param input_folder: Input_folder can be a root folder or flat.
         :return:
         """
-        logger = logging.getLogger("DICOM sorting operation")
+        logger = logging.getLogger(current_funct_name())
 
         #Element to check: Series number.
 

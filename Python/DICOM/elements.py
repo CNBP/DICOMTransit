@@ -2,10 +2,6 @@ import logging
 from DICOM.validate import DICOM_validate
 from PythonUtils.file import current_funct_name
 from LORIS.validate import LORIS_validation
-import sys
-
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
 
 class DICOM_elements:
 
@@ -17,7 +13,7 @@ class DICOM_elements:
         :param data_element:
         :return: LIST of all data elements that match the pattern provided in the data_element and their value.  NO Regular EXPRESSION.
         """
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger(current_funct_name())
         success, DICOM = DICOM_validate.file(file_path)
 
         if not success:
@@ -47,7 +43,7 @@ class DICOM_elements:
         """
 
         """BE AWARE that if the key does not exist, it will not be created currently!"""
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger(current_funct_name())
 
         success, DICOM = DICOM_validate.file(file_path)
         if not success:

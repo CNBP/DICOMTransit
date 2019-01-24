@@ -7,7 +7,7 @@ from DICOM.validate import DICOM_validate
 import sys
 #from LORIS.candidates import  LORIS_candidates
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 class Integration:

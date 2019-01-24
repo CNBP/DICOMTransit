@@ -27,7 +27,7 @@ def anonymize_to_zip(folder_path, zip_ID):
 
 def change_to_zip_dir():
     # Load the name of the storage folder from the configuration file.
-    folder_to_zip = config_get("zip_storage_location")
+    folder_to_zip = config_get("ZipPath")
 
     # Find the root fo the project where the zip storage is related to the location of the current DICOM directory.
     project_root = get_abspath(__file__, 2)

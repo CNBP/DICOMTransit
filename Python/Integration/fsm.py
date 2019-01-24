@@ -10,10 +10,28 @@ import LocalDB.API
 import pickle
 from DICOM.DICOMPackage import DICOMPackage
 from PythonUtils.file import unique_name
+from settings import config_get
 
+# Set all debugging level:
 logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger('transition')
-logger.setLevel(logging.DEBUG)
+
+# Create logger.
+logger = logging.getLogger(__name__)
+
+# Set logger path.
+log_file_path = os.path.join(config_get("LogPath"), unique_name())
+
+# Set transition logger path:
+logging.getLogger('transition').setLevel(logging.DEBUG)
+
+# create the logging file handler
+filehandler = logging.FileHandler(log_file_path)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+filehandler.setFormatter(formatter)
+
+# add handler to logger object
+logger.addHandler(filehandler)
+
 
 """
 has_new_data = Method
@@ -142,6 +160,7 @@ class DICOMTransitImport(object):
         ST_updated_remote_timepoint,
         ST_obtained_new_subject_gender,
         ST_obtained_new_subject_birthday,
+        ST_crosschecked_seriesUID,
         ST_created_remote_subject,
         ST_harmonized_timepoints,
         ST_files_anonymized,
@@ -608,6 +627,11 @@ class DICOMTransitImport(object):
         # LORIS API to get a list of VISIT timepoints.
         list_local_series_UID = LocalDB.API.get_seriesUID(self.DICOM_package.MRN)
 
+        # In very rare cases where UID field is somehow empty, we presume ANYTHING we see, is new.
+        if list_local_series_UID is None:
+            self.scan_already_processed = False
+            return
+
         # Compare the two list and ensure that the UID fromt eh DICOM has not been seen before remotely.
         for uid in self.DICOM_package.list_series_UID:
             if uid in list_local_series_UID:
@@ -716,6 +740,7 @@ class DICOMTransitImport(object):
         # This will also update self.zipname and self.is_anonymized
         self.DICOM_package.anonymize()
         self.scan_anonymized = self.DICOM_package.is_anonymized
+        logger.info("Successfully anonymized files.")
 
     def DoubleCheckAnonymization(self):
         if not self.are_anonymized():
@@ -800,7 +825,7 @@ class DICOMTransitImport(object):
         from LORIS.API import check_status
         self.STATUS_LORIS = check_status()
         if self.STATUS_LORIS:
-            logger.info("LORIS production system status OKAY!")
+            logger.debug("LORIS production system status OKAY!")
         else:
             self.trigger_wrap(TR_DetectedLORISError)
 
@@ -811,7 +836,7 @@ class DICOMTransitImport(object):
         from LORIS.API import check_online_status
         self.STATUS_NETWORK = check_online_status()
         if self.STATUS_NETWORK:
-            logger.info("General Network system status OKAY!")
+            logger.debug("General Network system status OKAY!")
         else:
             self.trigger_wrap(TR_DetectedNetworkError)
 
@@ -820,7 +845,7 @@ class DICOMTransitImport(object):
         from LocalDB.API import check_status
         self.STATUS_LOCALDB = check_status()
         if self.STATUS_LOCALDB:
-            logger.info("LocalDB system status OKAY!")
+            logger.debug("LocalDB system status OKAY!")
         else:
             self.trigger_wrap(TR_DetectedLocalDBError)
 
@@ -830,7 +855,7 @@ class DICOMTransitImport(object):
         from orthanc.API import check_status
         self.STATUS_ORTHANC = check_status()
         if self.STATUS_ORTHANC:
-            logger.info("Orthanc system status OKAY!")
+            logger.debug("Orthanc system status OKAY!")
         else:
             self.trigger_wrap(TR_DetectedOrthancError)
 
@@ -845,7 +870,7 @@ class DICOMTransitImport(object):
                 self.STATUS_FILE = False
                 self.trigger_wrap(TR_DetectedFileError)
         self.STATUS_FILE = True
-        logger.info("File(s) status APPEAR OKAY!")
+        logger.debug("File(s) status APPEAR OKAY!")
 
 
     # Meta methods todo
@@ -912,7 +937,22 @@ if __name__ == "__main__":
     current_import_process = DICOMTransitImport()
     current_import_process.setup_machine()
 
+    """
+    The main entry point of the application
+    """
 
+
+    delete_LocalDB=False
+
+    if delete_LocalDB:
+        ####DELETE THIS PART, fixme
+        # Debug deletion of the temporary database
+        from settings import config_get
+        localDB_path = config_get("LocalDatabasePath")
+        os.remove(localDB_path)
+        from LocalDB.create_CNBP import LocalDB_createCNBP
+        LocalDB_createCNBP.database(localDB_path)
+        ####DELETE THIS PART
 
     # System initialization check.
     current_import_process.UpdateOrthancStatus()
@@ -937,9 +977,13 @@ if __name__ == "__main__":
     # This controls whether "orthanc_list_all_subjectUUIDs" list get updated from Orthanc or not.
     check_new_data = True
 
+
+
     while monitoring:
         try:
             # Initialial state MUST be waiting:
+
+
 
 
             if(check_new_data):
@@ -1010,7 +1054,7 @@ if __name__ == "__main__":
             logger.warning("Error Message Encountered:")
             logger.warning(e)
             from settings import config_get
-            zip_path = config_get("zip_storage_location")
+            zip_path = config_get("ZipPath")
             name_log = os.path.join(zip_path,"StateMachineDump_"+unique_name()+".pickle")
             with open(name_log, 'wb') as f:
                 # Pickle the 'data' dictionary using the highest protocol available.
