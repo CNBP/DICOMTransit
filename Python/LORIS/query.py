@@ -34,7 +34,7 @@ class LORIS_query:
         r = requests.post(updated_url, data=data)
 
 
-        logger.info(str(r.status_code) + r.reason)
+        logger.debug(str(r.status_code) + r.reason)
 
         response_json = r.json()
 
@@ -49,16 +49,16 @@ class LORIS_query:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
         logger = logging.getLogger('LORIS_get')
-        logger.info(f"Getting LORIS endpoint: {endpoint} at")
+        logger.debug(f"Getting LORIS endpoint: {endpoint} at")
         url = config_get("LORISurl")
         updatedurl = url + endpoint
-        logger.info(updatedurl)
+        logger.debug(updatedurl)
         HEADERS = {'Authorization': 'token {}'.format(token)}
 
         with requests.Session() as s:
             s.headers.update(HEADERS)
             r = s.get(updatedurl)
-            logger.info(f"Get Result: {str(r.status_code)} {r.reason}")
+            logger.debug(f"Get Result: {str(r.status_code)} {r.reason}")
 
             return r.status_code, r.json()
 
@@ -72,9 +72,9 @@ class LORIS_query:
         :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
         """
         logger = logging.getLogger('LORIS_post')
-        logger.info("Posting data to: "+endpoint)
-        logger.info("Data: "+data)
-        logger.info("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
+        logger.debug("Posting data to: "+endpoint)
+        logger.debug("Data: "+data)
+        logger.debug("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
         url = config_get("LORISurl")
         updatedurl = url + endpoint
 
@@ -83,7 +83,7 @@ class LORIS_query:
         with requests.Session() as s:
             s.headers.update(HEADERS)
             r = s.post(updatedurl, data=data)
-            logger.info(f"Post Result: {str(r.status_code)} {r.reason}")
+            logger.debug(f"Post Result: {str(r.status_code)} {r.reason}")
 
             return r.status_code, r
 
@@ -97,9 +97,9 @@ class LORIS_query:
         :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
         """
         logger = logging.getLogger('LORIS_put')
-        logger.info("Putting data to: "+endpoint)
-        logger.info("Data: "+data)
-        logger.info("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
+        logger.debug("Putting data to: "+endpoint)
+        logger.debug("Data: "+data)
+        logger.debug("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
 
         url = config_get("LORISurl")
         updatedurl = url + endpoint
@@ -109,7 +109,7 @@ class LORIS_query:
         with requests.Session() as s:
             s.headers.update(HEADERS)
             r = s.put(updatedurl, data=data)
-            logger.info(f"Put Result: {str(r.status_code)} {r.reason}")
+            logger.debug(f"Put Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r
 
     @staticmethod
@@ -123,7 +123,7 @@ class LORIS_query:
         :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
         """
         logger = logging.getLogger(__name__)
-        logger.info(f"Uploading Imaging data to: {endpoint}")
+        logger.debug(f"Uploading Imaging data to: {endpoint}")
 
 
         url = config_get("LORISurl")
@@ -139,7 +139,7 @@ class LORIS_query:
         with requests.Session() as s:
             s.headers.update(HEADERS)
             r = s.put(updatedurl, data=imaging_data)
-            logger.info(f"Put Result: {str(r.status_code)} {r.reason}")
+            logger.debug(f"Put Result: {str(r.status_code)} {r.reason}")
 
             return r.status_code, r
 

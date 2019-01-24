@@ -13,7 +13,7 @@ from PythonUtils.file import unique_name
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger('transition')
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 """
 has_new_data = Method
@@ -194,7 +194,7 @@ class DICOMTransitImport(object):
         # Machine Meta:
         ##################
         self.transitions_last: list = []
-        self.states_last = []
+        self.states_last: list = []
         # This is the state machine which will be updated as the analyses process.
         self.machine = None
 
@@ -240,8 +240,8 @@ class DICOMTransitImport(object):
                           # title="Import Process is Messy",
                           # show_auto_transitions=True,
                           # show_conditions=True,
-                          after_state_change="record_last_state",
-                          initial="waiting")
+                          finalize_event=self.record_last_state.__name__,
+                          initial=ST_waiting)
 
         # Universal Transitions:
 
@@ -854,7 +854,7 @@ class DICOMTransitImport(object):
 
     def trigger_wrap(self, transition_name):
         # A wrapped call to the machine trigger function.
-        self.trigger_wrap(transition_name)
+        self.trigger(transition_name)
 
 
 
@@ -870,7 +870,7 @@ class DICOMTransitImport(object):
             function = getattr(self, function_name)
             return function
         except AttributeError:
-            logger.info(function_name +" not found")
+            logger.error(function_name +" not found")
 
 
     def record_last_transition(self, transition_name: str):

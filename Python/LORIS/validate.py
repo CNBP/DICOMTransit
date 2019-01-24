@@ -57,10 +57,10 @@ class LORIS_validation:
         if 0 < intmath.fabs((current_date - birth_date).days) < 54750:
             return True
         elif intmath.fabs((current_date - birth_date).days) < 0:
-            logger.info("Patient is less than 0 years old. YOU FAILED.")
+            logger.debug("Patient is less than 0 years old. YOU FAILED.")
             return False
         elif intmath.fabs((current_date - birth_date).days) > 54750:
-            logger.info("Patient is more than 150 years old. YOU FAILED.")
+            logger.debug("Patient is more than 150 years old. YOU FAILED.")
             return False
         else:  # Generic catchall false condition
             return False
@@ -79,10 +79,10 @@ class LORIS_validation:
         if 0 < intmath.fabs((current_date - birth_date).days) < 54750:
             return True
         elif intmath.fabs((current_date - birth_date).days) < 0:
-            logger.info("Patient is less than 0 years old. YOU FAILED.")
+            logger.debug("Patient is less than 0 years old. YOU FAILED.")
             return False
         elif intmath.fabs((current_date - birth_date).days) > 54750:
-            logger.info("Patient is more than 150 years old. YOU FAILED.")
+            logger.debug("Patient is more than 150 years old. YOU FAILED.")
             return False
         else:  # Generic catchall false condition
             return False
@@ -176,12 +176,12 @@ class LORIS_validation:
 
         # Check institution ID to ensure that
         if not LORIS_validation.validate_instutitionID(input_institution):
-            logger.info("InstitutionID portion of the CNBPID is not compliant")
+            logger.debug("InstitutionID portion of the CNBPID is not compliant")
             return False
 
         # Check last four digits: make sure the last four characters are digits.
         if not LORIS_validation.validate_subjectID(str(input_subject)):
-            logger.info("SubjectID portion of the CNBPID is not compliant")
+            logger.debug("SubjectID portion of the CNBPID is not compliant")
             return False
 
         return True

@@ -83,7 +83,7 @@ class DICOMPackage:
         assert success
         logger.info("Subject specific gender pass check.")
 
-        logger.info("DICOMPackage successfully initialized based on "+self.dicom_folder)
+        logger.debug(f"DICOMPackage successfully initialized based on {self.dicom_folder}")
 
 
     def check_validity(self):

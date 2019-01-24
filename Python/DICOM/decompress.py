@@ -134,7 +134,7 @@ class DICOM_decompress:
                     DICOM_decompress.save_as(file, file)
 
             except ValueError:
-                logger.info("Unknwonw DICOM syntax. You sure it is DICOM?")
+                logger.warning("Unknwonw DICOM syntax. You sure it is DICOM?")
                 continue
 
     @staticmethod

@@ -71,7 +71,7 @@ class LORIS_candidates:
 
 
 
-        logger.info(command_string)
+        logger.debug(command_string)
 
         # Establish connection to client.
         Client = LORIS_helper.getProxySSHClient(ProxyIP, ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername,
@@ -95,13 +95,13 @@ class LORIS_candidates:
         :return: DCCID
         """
         logger = logging.getLogger('LORIS_CreateCNBPCandidates')
-        logger.info(f"Creating CNBP Candidates belong to project: {project}")
+        logger.debug(f"Creating CNBP Candidates belong to project: {project}")
 
         Candidate = {}
         from LORIS.validate import LORIS_validation
         if not LORIS_validation.validate_birth_date_loris(birth_date) or \
            not LORIS_validation.validate_gender(gender): #not LORIS_validation.validate_project(project) or #todo fix this project validation part during creation.
-            logger.info("Non-compliant PSCID component detected. Aborting PSCID creation ")
+            logger.error("Non-compliant PSCID component detected. Aborting PSCID creation ")
             return False, None
 
         Candidate['Project'] = project
@@ -136,7 +136,7 @@ class LORIS_candidates:
         :return: bool for connection, bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
         logger = logging.getLogger('LORIS_checkPSCIDExist')
-        logger.info("Checking if PSCID exist: "+proposed_PSCID)
+        logger.debug("Checking if PSCID exist: "+proposed_PSCID)
         institution_check = config_get("institutionID")
 
         #Get list of projects
@@ -146,7 +146,7 @@ class LORIS_candidates:
 
         #Get list of candidates (Candidates in v0.0.1)
         candidates = loris_project.get("Candidates")
-        logger.info(candidates)
+        logger.debug(candidates)
 
         for DCCID in candidates: #these candidates should really be only from the same ID regions.
             response_success, candidate_json = LORIS_query.getCNBP(token, r"candidates/"+DCCID)
@@ -191,7 +191,7 @@ class LORIS_candidates:
         response_success = LORIS_helper.is_response_success(response, 200)
 
         if not response_success:
-            logger.info(f"FAILED log response: {str(response)}")
+            logger.error(f"FAILED log response: {str(response)}")
             return response_success, None
 
 

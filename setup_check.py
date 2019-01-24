@@ -14,7 +14,7 @@ def nii2nifty_check():
 
     #sys.path.append("/opt/DCMTK")
     try:
-        logger.info("Nifty Check")
+        logger.debug("Nifty Check")
 
         # SUPER IMPORTANT! MAKE SURE dcm2niix by Chris Roden is in the system path!
         subprocess.check_output(['dcm2niix', '-h'])

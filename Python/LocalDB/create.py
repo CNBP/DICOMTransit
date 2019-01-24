@@ -31,7 +31,7 @@ class LocalDB_create:
 
         # check if path is a fiela nd exist.
         if SQLPath.is_file():
-            logger.info('SQLite database file already exist. Not gonna mess with it!')
+            logger.debug('SQLite database file already exist. Not gonna mess with it!')
             return False
         '''Delete current database! During testing only'''
         '''os.remove(sqliteFile)
@@ -48,14 +48,14 @@ class LocalDB_create:
 
             c = ConnectedDatabase.cursor()
 
-            logger.info('Creating PRIMARY KEY DBKEY column in database.')
+            logger.debug('Creating PRIMARY KEY DBKEY column in database.')
 
             # Creating a new SQLite table with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
             c.execute('CREATE TABLE {tn} ({nf} {ft} PRIMARY KEY)'.format(tn=TableName, nf=KeyFieldString, ft=KeyFieldType))
 
-            logger.info('PRIMARY KEY DBKEY column successfully created in database.')
+            logger.debug('PRIMARY KEY DBKEY column successfully created in database.')
 
-            logger.info('Creating secondary columns in database.')
+            logger.debug('Creating secondary columns in database.')
 
             # Adding accessory columns via a loop
             for column in ColumnsNameTypeList:
@@ -68,13 +68,13 @@ class LocalDB_create:
                 else:
                     c.execute("ALTER TABLE {tn} ADD COLUMN '{cn}' {ct}".format(tn=TableName, cn=column[0], ct=column[1]))
 
-            logger.info('Secondary columns created in database.')
+            logger.debug('Secondary columns created in database.')
 
             # Committing changes and closing the connection to the database file
             ConnectedDatabase.commit()
             ConnectedDatabase.close()
         except Exception as e:
             logger.info(e)
-            logger.info('SQLite database creation/update issue, suspect schema non-compliant SQLite database. Did you corrupt this SQLite database somehow?')
+            logger.warning('SQLite database creation/update issue, suspect schema non-compliant SQLite database. Did you corrupt this SQLite database somehow?')
             raise IOError
         return True

@@ -26,11 +26,11 @@ class orthanc_query:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
         logger = logging.getLogger('Orthanc_get')
-        logger.info("Getting Orthanc endpoint: "+ endpoint)
+        logger.debug("Getting Orthanc endpoint: "+ endpoint)
 
         with requests.Session() as s:
             r = s.get(endpoint)
-            logger.info(f"Get Result: {str(r.status_code)} {r.reason}")
+            logger.debug(f"Get Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r.json()
 
 
@@ -42,11 +42,11 @@ class orthanc_query:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
         logger = logging.getLogger('Orthanc_get')
-        logger.info("Getting Orthanc endpoint: "+ endpoint)
+        logger.debug("Getting Orthanc endpoint: "+ endpoint)
 
         with requests.Session() as s:
             r = s.get(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
-            logger.info(f"Get Result: {str(r.status_code)} {r.reason}")
+            logger.debug(f"Get Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r.json()
 
 
@@ -59,10 +59,10 @@ class orthanc_query:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
         logger = logging.getLogger('Orthanc_post')
-        logger.info("Post Orthanc endpoint: "+ endpoint)
+        logger.debug("Post Orthanc endpoint: "+ endpoint)
         with requests.Session() as s:
             r = s.post(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password), files=data)
-            logger.info(f"Post Result: {str(r.status_code)} {r.reason}")
+            logger.debug(f"Post Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r
 
     @staticmethod
@@ -73,10 +73,10 @@ class orthanc_query:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
         logger = logging.getLogger('Orthanc_delete')
-        logger.info(f"Deleting Orthanc endpoint: {endpoint} at")
+        logger.debug(f"Deleting Orthanc endpoint: {endpoint} at")
         with requests.Session() as s:
             r = s.delete(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
-            logger.info(f"Deletion Result: {str(r.status_code)} {r.reason}")
+            logger.debug(f"Deletion Result: {str(r.status_code)} {r.reason}")
         return r.status_code, r.json()
 
     @staticmethod
@@ -88,7 +88,7 @@ class orthanc_query:
         """
 
         logger = logging.getLogger('Orthanc_getzip')
-        logger.info("Downloading Orthanc endpoint: {endpoint}")
+        logger.debug("Downloading Orthanc endpoint: {endpoint}")
 
         zip_path = config_get("zip_storage_location")
         with requests.Session() as s:
@@ -101,7 +101,7 @@ class orthanc_query:
                     if chunk:  # filter out keep-alive new chunks
                         f.write(chunk)
                         # f.flush() commented by recommendation from J.F.Sebastian
-        logger.info(str(r.status_code) + r.reason)
+        logger.debug(str(r.status_code) + r.reason)
         return r.status_code, local_file_full_path
 
     @staticmethod

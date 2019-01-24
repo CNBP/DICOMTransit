@@ -23,7 +23,7 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         # check if path is a fiel and exist.
         if SQLPath.is_file():
-            logger.info('Test SQLite database file already exist. Gonna mess with it!')
+            logger.warning('Test SQLite database file already exist. Gonna mess with it!')
             ''''Delete current database! During testing only'''
             os.remove(PathString)
 
@@ -66,7 +66,7 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         # check if path is a fiela nd exist.
         if SQLPath.is_file():
-            logger.info('Test SQLite database file already exist. Gonna mess with it!')
+            logger.warning('Test SQLite database file already exist. Gonna mess with it!')
             ''''Delete current database! During testing only'''
             os.remove(PathString)
 

@@ -236,15 +236,15 @@ def upload_visit_DICOM(local_path, DCCID: int, VisitLabel: str, isPhantom: bool)
 
     # Validations:
     if not os.path.isfile(local_path):
-        logger.warning(f"{local_path} is not a valid path to a file to be uploaded. ")
+        logger.error(f"{local_path} is not a valid path to a file to be uploaded. ")
         return
 
     if not LORIS_validation.validate_DCCID(DCCID):
-        logger.warning(f"Provided DCCID: {DCCID} is invalid.")
+        logger.error(f"Provided DCCID: {DCCID} is invalid.")
         return
 
     if not LORIS_timepoint.check_timepoint_compliance(VisitLabel):
-        logger.warning(f"Provided timepoint:{VisitLabel} is invalid.")
+        logger.error(f"Provided timepoint:{VisitLabel} is invalid.")
         return
 
     filename = os.path.basename(local_path)
@@ -264,7 +264,7 @@ def upload_visit_DICOM(local_path, DCCID: int, VisitLabel: str, isPhantom: bool)
     permission_errored = LORIS_helper.is_response_success(status_code, 403)
 
     if permission_errored:
-        logger.info("The credential in the configuration for uploading to LORIS is incorrect, you do not have the credential to upload files!")
+        logger.critical("The credential in the configuration for uploading to LORIS is incorrect, you do not have the credential to upload files!")
         return None
 
     success = LORIS_helper.is_response_success(status_code, 200)
@@ -278,7 +278,7 @@ def upload_visit_DICOM(local_path, DCCID: int, VisitLabel: str, isPhantom: bool)
 
     if "mri_upload_id" in json_response:
         upload_id = json_response["mri_upload_id"]
-        logger.info(f"Successfully uploaded and server returned 200 with Upload ID of:{upload_id}")
+        logger.debug(f"Successfully uploaded and server returned 200 with Upload ID of:{upload_id}")
         return upload_id
 
     return None

@@ -71,7 +71,7 @@ def get_subject_zip(orthanc_URL_with_UUID, orthaner_user, orthanc_password):
     assert (LORIS_helper.is_response_success(status, 200))
     assert (os.path.exists(local_zip_file_path))
 
-    logger.info("Subject ZIP downloaded.")
+    logger.debug("Subject ZIP downloaded.")
 
     return local_zip_file_path
 
@@ -80,15 +80,15 @@ def unpack_subject_zip(zip_file):
     # Create the temporary directory
     folder = tempfile.TemporaryDirectory(prefix=unique_name())
 
-    logger.info("Subject ZIP temporary location created at:"+folder.name)
-    logger.info("Unzipping to that location")
+    logger.debug("Subject ZIP temporary location created at:"+folder.name)
+    logger.debug("Unzipping to that location")
     # Unzip into the temporary directory.
     orthanc_query.flatUnZip(zip_file, folder.name)
 
-    logger.info("Unzip completed. ")
+    logger.debug("Unzip completed. ")
     # Remove the zip file.
     os.remove(zip_file)
-    logger.info("Removing zip archived.")
+    logger.debug("Removing zip archived.")
     return folder
 
 def delete_subject(subjectUUID: str):

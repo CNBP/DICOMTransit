@@ -47,7 +47,7 @@ class UT_DICOMManipulation(unittest.TestCase):
                 logger.info("Successful.")
             else:
                 fail_counter += 1
-                logger.info(f"Failed. Reason:{reason}")
+                logger.critical(f"Failed. Reason:{reason}")
         assert success_counter == 7 # within the test data folder, there should be SEVEN files with JPEG in their name that CAN be successfully loaded.
         assert fail_counter == 4 # within the test data folder, there should be FOUR files with JPEG in their name that CANNOT be successfully loaded.
 

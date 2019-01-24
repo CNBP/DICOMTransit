@@ -29,10 +29,10 @@ class DICOM_elements:
             return True, element_values
         except KeyError:
             #todo: dicomdir situation most likely ends here.
-            logger.info("Key Not exist")
+            logger.error("Key Not exist")
             return False, "Key Not exist"
         except Exception:
-            logger.info("General catch all exception reached. Contact author with the file to debug")
+            logger.error("General catch all exception reached. Contact author with the file to debug")
             return False, "General catch all exception reached. Contact author with the file to debug"
 
     @staticmethod
@@ -56,7 +56,7 @@ class DICOM_elements:
         try:
             DICOM.data_element(data_element).value = element_value
         except KeyError:
-            logger.info(f"Key {data_element } does not exist, creating the key.")
+            logger.error(f"Key {data_element } does not exist, creating the key.")
             return False, "DICOM key field does not exist. Not sure how to database one yet. "
         DICOM.save_as(out_path)
         return True, "Data element update completed."
@@ -73,12 +73,12 @@ class DICOM_elements:
         success, MRN = DICOM_elements.retrieve(file_path, "PatientID")
 
         if not success:
-            logger.info("Was not able to access/read the file!")
+            logger.error("Was not able to access/read the file!")
             return False, None
         elif LORIS_validation.validate_MRN(MRN):
             return True, MRN
         else:
-            logger.warning("Was not able to validate the MRN number. Invalid format perhaps? Expected SEVEN digis, got "+MRN)
+            logger.error("Was not able to validate the MRN number. Invalid format perhaps? Expected SEVEN digis, got "+MRN)
             return False, None
 
 
@@ -93,7 +93,7 @@ class DICOM_elements:
         success, name = DICOM_elements.retrieve(file_path, "PatientID")
 
         if not success:
-            logger.info("Was not able to access/read the file!")
+            logger.error("Was not able to access/read the file!")
             return False, None
 
         else:
@@ -110,7 +110,7 @@ class DICOM_elements:
         success, name = DICOM_elements.retrieve(file_path, "PatientName")
 
         if not success:
-            logger.info("Was not able to access/read the file!")
+            logger.error("Was not able to access/read the file!")
             return False, None
 
         else:
@@ -127,7 +127,7 @@ class DICOM_elements:
         success, SeriesUID = DICOM_elements.retrieve(file_path, "SeriesInstanceUID")
 
         if not success:
-            logger.info("Was not able to access/read the file!")
+            logger.error("Was not able to access/read the file!")
             return False, None
 
         else:
@@ -150,13 +150,13 @@ class DICOM_elements:
         success, SeriesDate = DICOM_elements.retrieve(file_path, "SeriesDate")
 
         if not success:
-            logger.info("File failed.")
+            logger.error("File failed.")
             return False, None
         elif SeriesDate is None:  # null check.
-            logger.info("Date not specified, it is EMPTY! Handle with care with project inference")
+            logger.error("Date not specified, it is EMPTY! Handle with care with project inference")
             return False, None
         elif SeriesDate == "":
-            logger.info("Retrieval of study value failed. Invalid value.")
+            logger.error("Retrieval of study value failed. Invalid value.")
             return False, SeriesDate
         else:
             # Convert it to date.
@@ -174,10 +174,10 @@ class DICOM_elements:
         success, value = DICOM_elements.retrieve(file_path, "StudyDescription")
 
         if value=="":
-            logger.info("Optional study not specified, it is EMPTY! Handle with care with project inference")
+            logger.error("Optional study not specified, it is EMPTY! Handle with care with project inference")
             return True, value
         elif not success or value is None:
-            logger.info("Retrieval of study value failed. Invalid value.")
+            logger.error("Retrieval of study value failed. Invalid value.")
             return False, None
         else: #todo see if there are ways to validate this part vs study
             return True, value
@@ -194,7 +194,7 @@ class DICOM_elements:
         success, value = DICOM_elements.retrieve(file_path, "PatientBirthDate")
 
         if not success or value == "" or value is None:
-            logger.info("Retrieval of birthday value failed. Empty/invalid value.")
+            logger.error("Retrieval of birthday value failed. Empty/invalid value.")
             return False, None
         elif LORIS_validation.validate_birth_date_dicom(value):
 
@@ -205,7 +205,7 @@ class DICOM_elements:
 
             return True, birthdate_loris_format
         else:
-            logger.info("Birthdate failed validation. Bad date.")
+            logger.error("Birthdate failed validation. Bad date.")
             return False, None
 
 
@@ -222,12 +222,12 @@ class DICOM_elements:
         success, value = DICOM_elements.retrieve(file_path, "PatientSex")
 
         if not success or value == "" or value is None:
-            logger.info("Retrieval of sex value failed. Empty/invalid value.")
+            logger.error("Retrieval of sex value failed. Empty/invalid value.")
             return False, None
         elif LORIS_validation.validate_sex(value):
             return True, value
         else:
-            logger.info("Unexpected value. Should be M, F, O")
+            logger.error("Unexpected value. Should be M, F, O")
             return False, None
 
 

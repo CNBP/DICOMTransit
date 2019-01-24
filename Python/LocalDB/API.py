@@ -349,9 +349,9 @@ def check_all_existing_records(matched_records):
 
         # Skip non-compliance records
         if not LORIS_validation.validate_CNBPID(CNBPID):
-            logger.info(
+            logger.warning(
                 "A non-compliant record has been found in the existing SQLite database, you might want to look into that. ")
-            logger.info(
+            logger.warning(
                 "Will ignore this record and try not to infer subject ID from it as it is not reliable potentially due to following OLD SCHEMA.")
             continue
 

@@ -29,7 +29,7 @@ class LocalDB_query:
 
         # check if path is a file and exist.
         if not SQLPath.is_file():
-            logger.info('SQLite database file does not exist!')
+            logger.warning('SQLite database file does not exist!')
             return False, None
 
         # Try to connect the database to start the process:
@@ -38,7 +38,7 @@ class LocalDB_query:
             ConnectedDatabase = sqlite3.connect(database_path)
             c = ConnectedDatabase.cursor()
 
-            logger.info(f"Checking key value: {str(ColumnValue)} in {ColumnName} in SQLite database.")
+            logger.debug(f"Checking key value: {str(ColumnValue)} in {ColumnName} in SQLite database.")
 
             # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
             execution_string = f'SELECT * FROM {table_name} WHERE {ColumnName}="{ColumnValue}"'
@@ -84,7 +84,7 @@ class LocalDB_query:
             ConnectedDatabase = sqlite3.connect(database_path)
             c = ConnectedDatabase.cursor()
 
-            logger.info(f"Checking key value: {str(ColumnValue)} in {ColumnName } in SQLite database.")
+            logger.debug(f"Checking key value: {str(ColumnValue)} in {ColumnName } in SQLite database.")
 
             # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
             execution_string = f'SELECT * FROM {table_name} WHERE {ColumnName} LIKE "%{ColumnValue}%"'
@@ -122,7 +122,7 @@ class LocalDB_query:
 
         # check if path is a file and exist.
         if not SQLPath.is_file():
-            logger.info('SQLite database file does not exist!')
+            logger.error('SQLite database file does not exist!')
             return False
 
         # Try to connect the database to start the process:
@@ -164,7 +164,7 @@ class LocalDB_query:
 
         # check if path is a file and exist.
         if not SQLPath.is_file():
-            logger.info('SQLite database file does not exist!')
+            logger.error('SQLite database file does not exist!')
             return False
 
         # Try to connect the database to start the process:
@@ -266,7 +266,7 @@ class LocalDB_query:
             if field_table_index is None:
                 return False, f"SQLite table HEADER does not contain {field}"
             else:
-                logger.info(f"SQLite table HEADER for the field {field } is {str(field_table_index)}")
+                logger.debug(f"SQLite table HEADER for the field {field } is {str(field_table_index)}")
         except IOError:
             return False, "Database not reachable"
 
@@ -287,7 +287,7 @@ class LocalDB_query:
 
         # check if path is a file and exist.
         if not SQLPath.is_file():
-            logger.info('SQLite database file does not exist!')
+            logger.error('SQLite database file does not exist!')
             return False, None
 
         # Try to connect the database to start the process:
