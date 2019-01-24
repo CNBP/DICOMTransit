@@ -123,10 +123,13 @@ def get_seriesUID(MRN: int) -> List[str]:
 
     # Only ONE record per MRN.
     assert(len(KeyRecords) == 1)
-    cnbp_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'SeriesUID')
+    seriesUID_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'SeriesUID')
 
     # Load the json and return the variable structure
-    json_SeriesUID = KeyRecords[0][cnbp_header_index]
+    json_SeriesUID = KeyRecords[0][seriesUID_index]
+    if json_SeriesUID is None:
+        logger.warning("No existing UID Data information found.")
+        return None
     list_SeriesUID = json.load(json_SeriesUID)
 
     return list_SeriesUID
@@ -219,7 +222,10 @@ def append_seriesUID(MRN: int, SeriesUID: List[str]):
     """
     database_path = config_get("LocalDatabasePath")
     existing_series_UID = get_seriesUID(MRN)
-    total_series_UID = existing_series_UID + SeriesUID
+    if existing_series_UID is None:
+        total_series_UID = SeriesUID
+    else:
+        total_series_UID = existing_series_UID + SeriesUID
 
     # JSON dumps.
     json_seriesUID = json.dumps(total_series_UID )

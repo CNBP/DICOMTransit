@@ -36,7 +36,7 @@ class CNBP_blueprint:
                     'TEXT']
 
     # this must pass at ALL TIME
-    assert(len(fields)==len(keyfield_type))
+    assert(len(fields)==len(fields_types))
 
     # todo: cross checek these with schema.sql from dtconfigurator as well as .env
     dotenv_variables = [
