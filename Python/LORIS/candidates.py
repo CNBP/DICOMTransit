@@ -181,8 +181,8 @@ class LORIS_candidates:
         """
         from LORIS.validate import LORIS_validation
 
-        logger = logging.getLogger('LORIS_checkDCCIDExist')
-        logger.info("Checking if DCCID exist: "+str(proposed_DCCID))
+        logger = logging.getLogger(__name__)
+        logger.debug("Checking if DCCID exist: "+str(proposed_DCCID))
 
         assert (LORIS_validation.validate_DCCID(proposed_DCCID))
 

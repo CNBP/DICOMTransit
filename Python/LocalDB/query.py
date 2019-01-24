@@ -84,7 +84,7 @@ class LocalDB_query:
             ConnectedDatabase = sqlite3.connect(database_path)
             c = ConnectedDatabase.cursor()
 
-            logger.debug(f"Checking key value: {str(ColumnValue)} in {ColumnName } in SQLite database.")
+            logger.debug(f"Checking key value: {str(ColumnValue)} in {ColumnName} in SQLite database.")
 
             # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
             execution_string = f'SELECT * FROM {table_name} WHERE {ColumnName} LIKE "%{ColumnValue}%"'
@@ -134,7 +134,7 @@ class LocalDB_query:
             logger.info('Creating new record in SQLite database.')
 
             # Creating a new SQLite record row (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            c.execute('INSERT OR IGNORE INTO {tn} ({field}) VALUES ("{value}")'.format(tn=table_name, field=key_field, value=key_field_value))
+            c.execute(f'INSERT OR IGNORE INTO {table_name} ({key_field}) VALUES ("{key_field_value}")')
         except Exception as e:
             logger.info(e)
             raise IOError()
@@ -176,7 +176,7 @@ class LocalDB_query:
             logger.info('Update records in SQLite database.')
 
             # Update SQLite record row where key field values are found (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            c.execute('UPDATE {tn} SET {f}="{fv}" WHERE {kf}="{kfv}"'.format(tn=table_name, f=field, fv=field_value, kf=key_field, kfv=key_field_value))
+            c.execute(f'UPDATE {table_name} SET {field}="{field_value}" WHERE {key_field}="{key_field_value}"')
 
         except Exception as e:
             raise IOError()
@@ -299,8 +299,7 @@ class LocalDB_query:
             #logger.info("Checking key value: " + str(ColumnValue) + " in " + ColumnName + " in SQLite database.")
 
             # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            execution_string = 'SELECT {columnname} FROM {table_name} '.format(table_name=table_name,
-                                                                                   columnname=field_names)
+            execution_string = f'SELECT {field_names} FROM {table_name}'
             c.execute(execution_string)
 
             result_rows = c.fetchall()
