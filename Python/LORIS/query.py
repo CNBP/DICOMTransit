@@ -49,7 +49,7 @@ class LORIS_query:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
         logger = logging.getLogger('LORIS_get')
-        logger.info("Getting LORIS endpoint: " + endpoint + " at")
+        logger.info(f"Getting LORIS endpoint: {endpoint} at")
         url = config_get("LORISurl")
         updatedurl = url + endpoint
         logger.info(updatedurl)
@@ -58,7 +58,7 @@ class LORIS_query:
         with requests.Session() as s:
             s.headers.update(HEADERS)
             r = s.get(updatedurl)
-            logger.info("Get Result:" + str(r.status_code) + r.reason)
+            logger.info(f"Get Result: {str(r.status_code)} {r.reason}")
 
             return r.status_code, r.json()
 
@@ -83,7 +83,7 @@ class LORIS_query:
         with requests.Session() as s:
             s.headers.update(HEADERS)
             r = s.post(updatedurl, data=data)
-            logger.info("Post Result:" + str(r.status_code) + r.reason)
+            logger.info(f"Post Result: {str(r.status_code)} {r.reason}")
 
             return r.status_code, r
 
@@ -109,7 +109,7 @@ class LORIS_query:
         with requests.Session() as s:
             s.headers.update(HEADERS)
             r = s.put(updatedurl, data=data)
-            logger.info("Put Result:" + str(r.status_code) + r.reason)
+            logger.info(f"Put Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r
 
     @staticmethod
@@ -123,7 +123,7 @@ class LORIS_query:
         :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
         """
         logger = logging.getLogger(__name__)
-        logger.info("Uploading Imaging data to: " + endpoint)
+        logger.info(f"Uploading Imaging data to: {endpoint}")
 
 
         url = config_get("LORISurl")
@@ -139,7 +139,7 @@ class LORIS_query:
         with requests.Session() as s:
             s.headers.update(HEADERS)
             r = s.put(updatedurl, data=imaging_data)
-            logger.info("Put Result:" + str(r.status_code) + r.reason)
+            logger.info(f"Put Result: {str(r.status_code)} {r.reason}")
 
             return r.status_code, r
 

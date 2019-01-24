@@ -38,12 +38,10 @@ class LocalDB_query:
             ConnectedDatabase = sqlite3.connect(database_path)
             c = ConnectedDatabase.cursor()
 
-            logger.info("Checking key value: " + str(ColumnValue) + " in " + ColumnName + " in SQLite database.")
+            logger.info(f"Checking key value: {str(ColumnValue)} in {ColumnName} in SQLite database.")
 
             # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            execution_string = 'SELECT * FROM {table_name} WHERE {columnname}="{columnvalue}"'.format(table_name=table_name,
-                                                                                   columnname=ColumnName,
-                                                                                   columnvalue=ColumnValue)
+            execution_string = f'SELECT * FROM {table_name} WHERE {ColumnName}="{ColumnValue}"'
             c.execute(execution_string)
 
             result_rows = c.fetchall()
@@ -86,12 +84,10 @@ class LocalDB_query:
             ConnectedDatabase = sqlite3.connect(database_path)
             c = ConnectedDatabase.cursor()
 
-            logger.info("Checking key value: " + str(ColumnValue) + " in " + ColumnName + " in SQLite database.")
+            logger.info(f"Checking key value: {str(ColumnValue)} in {ColumnName } in SQLite database.")
 
             # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            execution_string = 'SELECT * FROM {table_name} WHERE {columnname} LIKE "%{columnvalue}%"'.format(table_name=table_name,
-                                                                                          columnname=ColumnName,
-                                                                                          columnvalue=ColumnValue)
+            execution_string = f'SELECT * FROM {table_name} WHERE {ColumnName} LIKE "%{ColumnValue}%"'
             c.execute(execution_string)
 
             result_rows = c.fetchall()
@@ -260,7 +256,7 @@ class LocalDB_query:
 
         # Schema check: note that schema contains keyfield
         if field not in CNBP_blueprint.schema:
-            return False, "Current planned schema does not contain " + field
+            return False, f"Current planned schema does not contain {field}"
         else:
             field_schema_index = CNBP_blueprint.schema.index(field)
 
@@ -268,9 +264,9 @@ class LocalDB_query:
         try:
             field_table_index = LocalDB_query.check_header_index(database_path, table_name, field)
             if field_table_index is None:
-                return False, "SQLite table HEADER does not contain " + field
+                return False, f"SQLite table HEADER does not contain {field}"
             else:
-                logger.info("SQLite table HEADER for the field " + field + " is " + str(field_table_index))
+                logger.info(f"SQLite table HEADER for the field {field } is {str(field_table_index)}")
         except IOError:
             return False, "Database not reachable"
 

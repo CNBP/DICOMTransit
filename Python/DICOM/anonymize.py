@@ -55,7 +55,7 @@ class DICOM_anonymize:
         exception_files = []
 
         for file in tqdm(file_list):
-            logger.info("Decompressing: " + file)
+            logger.info(f"Decompressing: {file}")
             is_DICOM_file, _ = DICOM_validate.file(file)
             if not is_DICOM_file:
                 continue
@@ -64,7 +64,7 @@ class DICOM_anonymize:
                 exception_count =+ 1
                 exception_files = exception_files.append(file)
 
-        logger.info("Total exception encountered uring anonymization: " + str(exception_count))
+        logger.info(f"Total exception encountered uring anonymization: {str(exception_count)}")
         return exception_files
 
 

@@ -119,7 +119,7 @@ class DICOM_converter:
         return list_full_path
 
     @staticmethod
-    def DICOMOBJ_converter(input_root_folder, default_folder="DICOM_UniversalConvert-" + unique_name()):
+    def DICOMOBJ_converter(input_root_folder, default_folder=f"DICOM_UniversalConvert-{unique_name()}"):
         """
         Create a new folder with
         :param input_root_folder:
@@ -141,7 +141,7 @@ class DICOM_converter:
 
             # Trigger the subject specific convertion.
             DICOM_converter.DICOM_universal_convert(path, path_result)
-            logger.info("Finished converting: " + path)
+            logger.info(f"Finished converting: {path}")
 
 
 if __name__ == "__main__":

@@ -181,7 +181,9 @@ class DICOMTransitImport(object):
         self.localDB_found_mrn = None
         self.scan_already_processed = True
         self.scan_anonymized = False
+        self.mri_uploadID = None
         self.scan_inserted = False
+        self.process_ID = None
         self.orthanc_has_new_data = False
 
         self.last_localDB_scan_date = None
@@ -468,7 +470,7 @@ class DICOMTransitImport(object):
         stream = io.BytesIO()
         self.get_graph(**kwargs).draw(stream, prog='dot', format='png')
         output_object = stream.getvalue()
-        with open(self.name + ".png", "wb") as png:
+        with open(f"{self.name}.png", "wb") as png:
             png.write(output_object)
 
 
@@ -503,7 +505,7 @@ class DICOMTransitImport(object):
 
         subject = self.orthanc_list_all_subjectUUIDs[self.orthanc_index_current_subject]
 
-        subject_url = self.orthanc_url + "patients/" + subject + '/archive'  # it must contain patients/ and archive in the path name
+        subject_url = f"{self.orthanc_url}patients/{subject}/archive"  # it must contain patients/ and archive in the path name
 
         self.DICOM_zip = orthanc.API.get_subject_zip(subject_url, self.orthanc_user, self.orthanc_password)
 
@@ -630,7 +632,7 @@ class DICOMTransitImport(object):
 
         # Get the latest local known timepoint:
         self.last_localDB_scan_date = LocalDB.API.get_timepoint(self.DICOM_package.MRN)
-        logger.info("Last known localDB timepoint: " + self.last_localDB_scan_date)
+        logger.info(f"Last known localDB timepoint: {self.last_localDB_scan_date}")
 
     def IncrementRemoteTimepoint(self):
         # Using LORIS API to create the new timepoint:
@@ -713,11 +715,11 @@ class DICOMTransitImport(object):
         self.DICOM_package.zip()
 
     def UploadZip(self):
-        LORIS.API.upload(self.DICOM_package.zip_location)
+        self.mri_uploadID = LORIS.API.upload_visit_DICOM(self.DICOM_package.zip_location, self.DICOM_package.DCCID, self.DICOM_package.timepoint, False)
 
     def InsertSubjectData(self):
         # Trigger insertion.
-        LORIS.API.trigger_insertion(self.DICOM_package.zipname)
+        self.process_ID = LORIS.API.new_trigger_insertion(self.DICOM_package.DCCID, self.DICOM_package.timepoint, self.DICOM_package.zipname, self.mri_uploadID)
 
     def RecordInsertion(self):
         # Set the completion status to ZERO
@@ -992,6 +994,6 @@ if __name__ == "__main__":
             with open(name_log, 'wb') as f:
                 # Pickle the 'data' dictionary using the highest protocol available.
                 pickle.dump(current_import_process.machine, f, pickle.HIGHEST_PROTOCOL)
-            logger.warning("A finite state machine pickle dump has been made at " + name_log)
+            logger.warning(f"A finite state machine pickle dump has been made at {name_log}")
             logger.warning("Check that path for more detail. ")
             #current_import_process.to_waiting()

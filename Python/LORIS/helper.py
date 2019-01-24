@@ -20,7 +20,7 @@ class LORIS_helper:
         return re.findall(r'\d+', string)
 
     @staticmethod
-    def is_response_success(status_code, expected_code):
+    def is_response_success(status_code: int, expected_code: int) -> bool:
         """
         A simple function to determine the success of the status code
         :param status_code:
@@ -61,7 +61,7 @@ class LORIS_helper:
         #ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
         ssh.connect(remote_ip, username=remote_login, password=remote_pw)
         sftp = ssh.open_sftp()
-        remote_full_path = remote_path + "/" + local_file_path
+        remote_full_path = f"{remote_path}/{local_file_path}"
         logger.info(remote_full_path)
         sftp.put(local_file_path, remote_full_path)
         sftp.close()
@@ -138,7 +138,7 @@ class LORIS_helper:
         :param client:
         :return:
         """
-        logger.info("Ran command: " + bash_command_string)
+        logger.info(f"Ran command: {bash_command_string}")
 
         # Bind in, out and err prompts after running certain commands.
         _, stdout, stderr = client.exec_command(bash_command_string)

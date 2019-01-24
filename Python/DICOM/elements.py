@@ -56,7 +56,7 @@ class DICOM_elements:
         try:
             DICOM.data_element(data_element).value = element_value
         except KeyError:
-            logger.info("Key " + data_element + " does not exist, creating the key.")
+            logger.info(f"Key {data_element } does not exist, creating the key.")
             return False, "DICOM key field does not exist. Not sure how to database one yet. "
         DICOM.save_as(out_path)
         return True, "Data element update completed."

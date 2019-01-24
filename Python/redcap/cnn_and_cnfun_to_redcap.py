@@ -679,21 +679,9 @@ def get_data_rows_for_patient_table(table_info):
             if primary_key_filter_name != '' and primary_key_filter_value != '' and primary_key_filter_value != 'None':
 
                 if primary_key_data_type == DataType.String.value:
-                    select_statement = ("SELECT * FROM [" +
-                                        table_info[4] +
-                                        "] WHERE [" +
-                                        primary_key_filter_name +
-                                        "] = " +
-                                        "'" +
-                                        primary_key_filter_value +
-                                        "'")
+                    select_statement = (f"SELECT * FROM [{table_info[4]}] WHERE [{primary_key_filter_name}] = '{primary_key_filter_value}'")
                 elif primary_key_data_type == DataType.Integer.value:
-                    select_statement = ("SELECT * FROM [" +
-                                        table_info[4] +
-                                        "] WHERE [" +
-                                        primary_key_filter_name +
-                                        "] = " +
-                                        primary_key_filter_value)
+                    select_statement = (f"SELECT * FROM [{table_info[4]}] WHERE [{primary_key_filter_name}] = {primary_key_filter_value}")
                 else:
                     select_statement = ''
 
@@ -707,7 +695,6 @@ def get_data_rows_for_patient_table(table_info):
                     data = odbc_cursor.fetchall()
 
                     odbc_cursor.close()
-                    conn.close
 
                     return data
 

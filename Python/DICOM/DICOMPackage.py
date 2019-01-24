@@ -239,7 +239,7 @@ class DICOMPackage:
 
         # Set proper variable name and also the ZIP file name for subsequent processing.
 
-        self.zipname = self.CNBPID + "_" + str(self.DCCID) + "_" + self.timepoint
+        self.zipname = f"{self.CNBPID}_{str(self.DCCID)}_{self.timepoint}"
 
         from DICOM.anonymize import DICOM_anonymize
         DICOM_anonymize.folder(self.dicom_folder, self.zipname)

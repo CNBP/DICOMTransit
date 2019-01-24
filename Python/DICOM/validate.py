@@ -25,7 +25,7 @@ class DICOM_validate:
         try:
             dicom = read_file(file_path)
         except InvalidDicomError:
-            logger.info(file_path + " is not a DICOM file. Skipping")
+            logger.info(f"{file_path} is not a DICOM file. Skipping")
             return False, None
 
         #if dicom.
@@ -67,7 +67,7 @@ class DICOM_validate:
             # Skip current file if they are not DICOM files.
             is_DICOM, _ = DICOM_validate.file(file)
             if not is_DICOM:
-                logger.info("Bad DICOM files detected: " + file)
+                logger.info(f"Bad DICOM files detected: {file}")
                 continue
 
             # todo: what if one of them is NONE?
@@ -82,7 +82,7 @@ class DICOM_validate:
                     logger.info("DICOM meta data retrieval failure EVEN for the first DICOM FILE?! Checking next one.")
                 else:
                     name = PatientName.original_string.decode("latin_1")
-                    logger.info("DICOM meta data retrieval success: " + PatientID + " " + name)
+                    logger.info(f"DICOM meta data retrieval success: {PatientID } {name}")
 
                 # Regardless of success of failure, must continue to process the next file.
                 continue

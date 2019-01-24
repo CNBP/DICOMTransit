@@ -16,42 +16,42 @@ class UT_ProdOrthanc(unittest.TestCase):
 
     url, user, password = orthanc.API.get_prod_orthanc_credentials()
 
-    @staticmethod
-    def uploadExamples():
+
+    def uploadExamples(self):
         file_list = get_testdata_files("[Ss][Mm][Aa][Ll][Ll]")
         for file in file_list:
             print(file)
             upload_files = {'upload_file': open(file, 'rb')}
-            orthanc_instance_url = url + "instances/"
+            orthanc_instance_url = self.url + "instances/"
 
-            status, r = orthanc_query.postOrthanc(orthanc_instance_url, user, self.password, upload_files)
+            status, r = orthanc_query.postOrthanc(orthanc_instance_url, self.user, self.password, upload_files)
             assert(LORIS_helper.is_response_success(status, 200))
             assert(r.json())
 
         # Note that this will database several subjects.
 
-    @staticmethod
-    def test_getSubjects():
+
+    def test_getSubjects(self):
         UT_ProdOrthanc.uploadExamples()
 
-        subject_list = orthanc.API.get_list_of_subjects(url, user, password)
+        subject_list = orthanc.API.get_list_of_subjects(self.url, self.user, self.password)
         assert len(subject_list) > 0
         return subject_list
 
 
-    @staticmethod
-    def test_deleteSubjects():
+
+    def test_deleteSubjects(self):
         list_subjects = UT_ProdOrthanc.test_getSubjects()
         for subject in list_subjects:
-            reseponse_code, _ = orthanc_query.deleteOrthanc("patients/"+subject, user, password)
+            reseponse_code, _ = orthanc_query.deleteOrthanc(f"patients/{subject}", self.user, self.password)
             assert (LORIS_helper.is_response_success(reseponse_code, 200))
 
-    @staticmethod
-    def test_getSubjectZip():
+
+    def test_getSubjectZip(self):
         url, user, password = orthanc.API.get_prod_orthanc_credentials()
         list_subjects = UT_ProdOrthanc.test_getSubjects()
         for subject in list_subjects:
-            endpoint = url + "patients/" + subject
+            endpoint = f"{url}patients/{subject}"
             orthanc.API.get_subject_zip(endpoint, user, password)
 
 if __name__ == "__main__":

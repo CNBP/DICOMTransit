@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 def check_status():
     url, user, password = get_prod_orthanc_credentials()
     try:
-        endpoint = url + "patients/"
+        endpoint = f"{url}patients/"
         reseponse_code, _ = orthanc_query.getOrthanc(endpoint, user, password)
         success = LORIS_helper.is_response_success(reseponse_code, 200)
     except:
@@ -42,7 +42,7 @@ def get_list_of_subjects_noauth(orthanc_URL):
     Get a list of subjects from a .env predefined orthanc server.
     :return: the lsit of all subjects in the orthanc server
     """
-    endpoint = orthanc_URL + "patients/"
+    endpoint = f"{orthanc_URL}patients/"
 
     reseponse_code, list_subjects = orthanc_query.getOrthanc_noauth(endpoint)
 
@@ -54,7 +54,7 @@ def get_list_of_subjects(orthanc_URL, orthanc_user, orthanc_password):
     Get a list of subjects from a .env predefined orthanc server.
     :return: the lsit of all subjects in the orthanc server
     """
-    endpoint = orthanc_URL + "patients/"
+    endpoint = f"{orthanc_URL}patients/"
 
     reseponse_code, list_subjects = orthanc_query.getOrthanc(endpoint, orthanc_user, orthanc_password)
 
@@ -98,5 +98,5 @@ def delete_subject(subjectUUID: str):
     :return: successful deletion status.
     """
     url, user, password = get_prod_orthanc_credentials()
-    reseponse_code, _ = orthanc_query.deleteOrthanc("patients/" + subjectUUID, user, password)
+    reseponse_code, _ = orthanc_query.deleteOrthanc(f"patients/{subjectUUID}", user, password)
     return LORIS_helper.is_response_success(reseponse_code, 200)

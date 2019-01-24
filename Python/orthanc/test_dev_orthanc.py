@@ -50,7 +50,7 @@ class UT_DevOrthanc(unittest.TestCase):
     def test_getSubjectZip():
         list_subjects = UT_DevOrthanc.test_getSubjects()
         for subject in list_subjects:
-            endpoint = UT_DevOrthanc.url + "patients/" + subject + "/archive"
+            endpoint = f"{UT_DevOrthanc.url}patients/{subject}/archive"
             orthanc.API.get_subject_zip(endpoint, UT_DevOrthanc.user, UT_DevOrthanc.password)
 
 

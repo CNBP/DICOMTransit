@@ -31,18 +31,18 @@ class DICOM_decompress:
         # When dcmdjpeg has errors
         except subprocess.CalledProcessError as e:
             logger.info(e)
-            ErrorMessage = "File type not compatible for " + input_file
+            ErrorMessage = f"File type not compatible for {input_file}"
             logger.info(ErrorMessage)
             return False, ErrorMessage
         except Exception as e:
             logger.info(e)
-            ErrorMessage = "DCMDJPEG decompression call failed! Make sure DCMDJPEG is in your SYSTEMOS PATH and then check your input file:" + input_file
+            ErrorMessage = f"DCMDJPEG decompression call failed! Make sure DCMDJPEG is in your SYSTEMOS PATH and then check your input file: {input_file}"
             logger.info(ErrorMessage)
             return False, ErrorMessage
 
         # Ensure that data is actually written out.
         if not os.path.exists(out_put):
-            ErrorMessage = "Cannot write out final file for some reason " + input_file
+            ErrorMessage = f"Cannot write out final file for some reason {input_file}"
             logger.info(ErrorMessage)
             return False, ErrorMessage
 
@@ -50,12 +50,12 @@ class DICOM_decompress:
         try:
             pydicom.read_file(out_put)
         except Exception as e:
-            ErrorMessage = "Exception encountered while verifying the proper writing out of the DICOM data. Contact author to investigate, attach " + input_file
+            ErrorMessage = f"Exception encountered while verifying the proper writing out of the DICOM data. Contact author to investigate, attach {input_file}"
             logger.info(e)
             logger.info(ErrorMessage)
             return False, ErrorMessage
 
-        logger.info("Success written " + input_file + " to " + out_put)
+        logger.info(f"Success written {input_file } to {out_put}")
         return True, "All good"
 
     @staticmethod
@@ -119,7 +119,7 @@ class DICOM_decompress:
 
         for file in tqdm(file_list):
 
-            logger.info("Checking decompression status for: " + file)
+            logger.info(f"Checking decompression status for: {file}")
 
             # find if the file is DICOM, if not, skip this file.
             is_DICOM_file, _ = DICOM_validate.file(file)

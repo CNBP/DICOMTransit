@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
 
     f1={
-        'file' : "/data/incoming/" + zip_name + ".zip",
+        'file' : f"/data/incoming/{zip_name}.zip",
         'phantom' : "N",
         'candidate' : zip_name
     }

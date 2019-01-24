@@ -58,7 +58,7 @@ def check_online_status() -> bool:
         return True
 
 
-def trigger_insertion(zip_name: str):
+def old_trigger_insertion(zip_name: str):
     """
     Todo: refactor this crap made by Yang.
     :param zip_name:
@@ -68,8 +68,8 @@ def trigger_insertion(zip_name: str):
 
     # Form the JSON representing the scan.
     JSON_scan = {
-        'file' : "/data/incoming/" + zip_name + ".zip",
-        'phantom' : "N",
+        'file': f"/data/incoming/{zip_name}.zip",
+        'phantom': "N",
         'candidate': zip_name
     }
     # Concatenate the scan.
@@ -77,6 +77,45 @@ def trigger_insertion(zip_name: str):
 
     # Trigger its insertion by calling the API.
     trigger_dicom_insert(scans)
+
+def new_trigger_insertion(DCCID: int, VisitLabel: str, filename:str, mri_upload_id: int) -> int:
+    """
+    Trigger the insertion of the subject files and then return the process_id which can be checked later on.
+    :param DCCID:
+    :param VisitLabel:
+    :param filename:
+    :param mri_upload_id:
+    :return:
+    """
+    # POST / candidates /$CandID /$VisitLabel / dicoms /$Filename /
+    endpoint = f"candidates/{DCCID}/{VisitLabel}/dicoms/{filename}"
+
+    # Get token.
+    response_success, token = LORIS_query.login()
+    if not response_success:
+        raise ConnectionError
+
+    import json
+    request_dictionary = {
+        "process_type": "mri_upload",
+        "Filename": filename,
+        "mri_upload_id": mri_upload_id
+    }
+
+    # the request in json format ready for payload.
+    request_json = json.dumps(request_dictionary)
+
+    # Post the requests.
+    status_code, response = LORIS_query.postCNBP(token, endpoint, request_json)
+
+    process_id = None
+
+    if LORIS_helper.is_response_success(status_code, 202):
+        response_dict = response.json()
+        if "processes" in response_dict and "process_id" in response_dict["processes"][0]:
+            process_id = int(response_dict["processes"][0]["process_id"])
+
+    return process_id
 
 
 def increment_timepoint(DCCID):
@@ -145,6 +184,7 @@ def get_all_timepoints(DCCID:int) -> List[str]:
 
     return timepoints
 
+
 def get_allUID(DCCID: int) -> List[str]:
     """
     Return the query results from /candidates/$CandID/$Visit/dicoms
@@ -168,7 +208,7 @@ def get_allUID(DCCID: int) -> List[str]:
         # Get dicom series info and then make sure they have series UID and then return them.
         for visit in visits:
 
-            response_success, dicom_info = LORIS_query.getCNBP(token, "candidates/" + str(DCCID)+"/"+visit+"/dicoms")
+            response_success, dicom_info = LORIS_query.getCNBP(token, f"candidates/{str(DCCID)}/{visit}/dicoms")
 
             if "DicomTars" in dicom_info:
                 list_dicom_tars = dicom_info["DicomTars"]
@@ -192,6 +232,7 @@ def upload_visit_DICOM(local_path, DCCID: int, VisitLabel: str, isPhantom: bool)
     """
     from LORIS.validate import LORIS_validation
     from LORIS.timepoint import LORIS_timepoint
+    import json
 
     # Validations:
     if not os.path.isfile(local_path):
@@ -219,10 +260,31 @@ def upload_visit_DICOM(local_path, DCCID: int, VisitLabel: str, isPhantom: bool)
     if not response_success:
         raise ConnectionError
 
-    LORIS_query.putCNBPDICOM(token, endpoint, data, isPhantom)
+    status_code, response = LORIS_query.putCNBPDICOM(token, endpoint, data, isPhantom)
+    permission_errored = LORIS_helper.is_response_success(status_code, 403)
+
+    if permission_errored:
+        logger.info("The credential in the configuration for uploading to LORIS is incorrect, you do not have the credential to upload files!")
+        return None
+
+    success = LORIS_helper.is_response_success(status_code, 200)
+
+    data.close()
+
+    if not success:
+        return None
+
+    json_response = response.json()
+
+    if "mri_upload_id" in json_response:
+        upload_id = json_response["mri_upload_id"]
+        logger.info(f"Successfully uploaded and server returned 200 with Upload ID of:{upload_id}")
+        return upload_id
+
+    return None
 
 
-def upload(local_path):
+def old_upload(local_path):
     """
     OBSOLETE Upload file to incoming folder.
     :param local_path:

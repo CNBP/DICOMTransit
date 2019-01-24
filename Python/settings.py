@@ -26,5 +26,5 @@ def config_get(variable_name):
 
     else:
         raise ValueError(
-            "The variable name provided: " + variable_name + " is NOT a sanctioned variable as defined by the schema")
+            f"The variable name provided: {variable_name} is NOT a sanctioned variable as defined by the schema")
 

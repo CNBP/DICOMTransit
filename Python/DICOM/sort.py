@@ -52,7 +52,7 @@ class DICOM_sort:
             success2, SeriesDescription = DICOM_elements.retrieve(file, "SeriesDescription")
 
             if not success1 or not success2:
-                logger.info("Skipped file with no acquisition series information: " + file)
+                logger.info(f"Skipped file with no acquisition series information: {file}")
                 exception_encountered = exception_encountered + 1
                 continue
 
@@ -72,7 +72,7 @@ class DICOM_sort:
             _, filename = os.path.split(file)
 
             shutil.move(file, os.path.join(DestinationFolder, filename))
-        logger.info("Total error encountered: " + str(exception_encountered))
+        logger.info(f"Total error encountered: {str(exception_encountered)}")
 
 
 if __name__ == "__main__":

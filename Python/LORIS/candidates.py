@@ -67,7 +67,7 @@ class LORIS_candidates:
         # than the bashrc profile imported edition. Also keep in mind that EVEN if .bashrc import this, it MOST LIKELY
         # will not apply to the SSH session!
 
-        command_string = "/opt/rh//rh-php70/root/usr/bin/php " + DeletionScript + " delete_candidate " + str(DCCID) + " " + PSCID + " confirm"
+        command_string = f"/opt/rh//rh-php70/root/usr/bin/php {DeletionScript} delete_candidate {str(DCCID)} {PSCID} confirm"
 
 
 
@@ -95,7 +95,7 @@ class LORIS_candidates:
         :return: DCCID
         """
         logger = logging.getLogger('LORIS_CreateCNBPCandidates')
-        logger.info("Creating CNBP Candidates belong to project: " + project)
+        logger.info(f"Creating CNBP Candidates belong to project: {project}")
 
         Candidate = {}
         from LORIS.validate import LORIS_validation
@@ -191,7 +191,7 @@ class LORIS_candidates:
         response_success = LORIS_helper.is_response_success(response, 200)
 
         if not response_success:
-            logger.info("FAILED log response: " + str(response))
+            logger.info(f"FAILED log response: {str(response)}")
             return response_success, None
 
 

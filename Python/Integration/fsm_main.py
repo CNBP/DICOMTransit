@@ -341,7 +341,7 @@ def upload_anonymized_data(signal=None, sender=None, anon_dicom_file: DICOMPacka
     anon_dicom_file.zip()
 
     # Upload the zip file to the server for further processing.
-    LORIS.API.upload(anon_dicom_file.zip_location)
+    LORIS.API.old_upload(anon_dicom_file.zip_location)
 
     dispatcher.send(signal=SIG_TASK_COMPLETE,
                     sender=current_funct_name(),

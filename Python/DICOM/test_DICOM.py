@@ -33,9 +33,9 @@ class UT_DICOMManipulation(unittest.TestCase):
         fail_counter = 0
 
         for file in file_names:
-            logger.info("Processing: " + file)
+            logger.info(f"Processing: {file}")
 
-            decompressed_file = file+"DECOM"
+            decompressed_file = f"{file}DECOM"
 
             success, reason = DICOM_decompress.save_as(file, decompressed_file)
 
@@ -43,11 +43,11 @@ class UT_DICOMManipulation(unittest.TestCase):
 
             if success:
                 success_counter += 1
-                os.remove(decompressed_file) # restore the test environment to its former state.
+                os.remove(decompressed_file)  # restore the test environment to its former state.
                 logger.info("Successful.")
             else:
                 fail_counter += 1
-                logger.info("Failed. Reason:" + reason)
+                logger.info(f"Failed. Reason:{reason}")
         assert success_counter == 7 # within the test data folder, there should be SEVEN files with JPEG in their name that CAN be successfully loaded.
         assert fail_counter == 4 # within the test data folder, there should be FOUR files with JPEG in their name that CANNOT be successfully loaded.
 
