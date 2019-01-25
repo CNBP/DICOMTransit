@@ -15,7 +15,7 @@ class DICOMPackage:
     DICOM package class that represents a collection of DICOM
     files with shared ID, CNBP, timepoint, MRN etc information usually obtained from the same session
     """
-    def __init__(self, dicom_folder=None):
+    def __init__(self, dicom_folder=None, consistency_check=True):
         logger.info("Creating subject specific DICOM package class")
         # Set the DICOM_folder attribute
         self.__dicom_folder__ = dicom_folder  # reference kept to prevent auto garbage collection
@@ -25,8 +25,8 @@ class DICOMPackage:
         self.validity: bool = None
         self.dicom_files: list = None # should already be validated and vetted by the DICOM_validate.path routine
 
-        # Update validity and dicom_files
-        self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder) #actual path stored in name.
+        # Update validity and dicom_files. This flag is used successful
+        self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder, consistency_check) #actual path stored in name.
 
         self.CNBPID: str = None # also known as PSCI id
         self.DCCID: int = None
@@ -95,7 +95,8 @@ class DICOMPackage:
 
         # Update validity and dicom_files if they have not been done before.
         if self.validity is None:
-            self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder)
+            # Force an individual file level naming/user ID consistency check.
+            self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder, consistency_check=True)
 
         # Check validity before moving forward with the update process:
         if self.validity is True:
@@ -202,7 +203,7 @@ class DICOMPackage:
             return False
 
 
-    def get_dicom_files(self):
+    def get_dicom_files(self, consistency_check = True):
         """
         A more secure way of getting DICOM files instead of directly reading the attribute (as it can be None)
         :return:
@@ -210,7 +211,7 @@ class DICOMPackage:
 
         # Validate all files and load them if they have not been loaded before.
         if self.dicom_files is None:
-            self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder)
+            self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder, consistency_check)
         return self.dicom_files
 
 

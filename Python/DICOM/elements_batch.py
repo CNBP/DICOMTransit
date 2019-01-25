@@ -1,5 +1,9 @@
 from DICOM.elements import DICOM_elements
 from typing import List
+from tqdm import tqdm
+import logging
+
+logger=logging.getLogger()
 
 class DICOM_elements_batch:
 
@@ -10,11 +14,13 @@ class DICOM_elements_batch:
         :param dicom_files:
         :return:
         """
+        logger.debug("Commencing unique series UID retrieval across all the DICOM files provided. ")
         from DICOM.elements import DICOM_elements
-        list_sUID = []
-        for file in dicom_files:
+        list_unique_sUID = []
+        for file in tqdm(dicom_files):
             success, UID = DICOM_elements.retrieve_seriesUID(file)
-            if UID not in list_sUID:
-                list_sUID.append(UID)
+            if UID not in list_unique_sUID:
+                list_unique_sUID.append(UID)
+        logger.debug("Finished compiling all unique series UID across all the DICOM files provided.")
 
-        return list_sUID
+        return list_unique_sUID

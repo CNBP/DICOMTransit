@@ -5,6 +5,8 @@ from LORIS.helper import LORIS_helper
 from PythonUtils.file import unique_name, current_funct_name
 import logging
 
+logger = logging.getLogger()
+
 def check_status():
     url, user, password = get_prod_orthanc_credentials()
     try:
@@ -62,7 +64,7 @@ def get_subject_zip(orthanc_URL_with_UUID, orthaner_user, orthanc_password):
     :param orthanc_URL_with_UUID:
     :return: the temporary folder object which contain the reference to the folder in the .name attribute
     """
-    logger = logging.getLogger(current_funct_name())
+    
     status, local_zip_file_path = orthanc_query.getPatientZipOrthanc(orthanc_URL_with_UUID, orthaner_user, orthanc_password)
     assert (LORIS_helper.is_response_success(status, 200))
     assert (os.path.exists(local_zip_file_path))
@@ -72,7 +74,7 @@ def get_subject_zip(orthanc_URL_with_UUID, orthaner_user, orthanc_password):
     return local_zip_file_path
 
 def unpack_subject_zip(zip_file):
-    logger = logging.getLogger(current_funct_name())
+    
 
     # Create the temporary directory
     folder = tempfile.TemporaryDirectory(prefix=unique_name())

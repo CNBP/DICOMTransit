@@ -13,20 +13,20 @@ from PythonUtils.file import unique_name
 from settings import config_get
 
 # Set all debugging level:
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 # Create logger.
 logger = logging.getLogger(__name__)
 
 # Set logger path.
-log_file_path = os.path.join(config_get("LogPath"), unique_name())
+log_file_path = os.path.join(config_get("LogPath"), f"DICOMTransit_FSM_Log_{unique_name()}.txt")
 
 # Set transition logger path:
 logging.getLogger('transition').setLevel(logging.DEBUG)
 
 # create the logging file handler
 filehandler = logging.FileHandler(log_file_path)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('%(asctime)s  %(name)s    %(funcName)s():         Line %(lineno)i:    %(levelname)s   %(message)s')
 filehandler.setFormatter(formatter)
 
 # add handler to logger object
@@ -429,7 +429,16 @@ class DICOMTransitImport(object):
                                unless=[self.is_LocalDB_Unavailable.__name__],
                                after=self.RecordInsertion.__name__)
 
-        machine.add_transition(TR_ResumeMonitoring, ST_insertion_recorded, ST_waiting)
+
+        machine.add_transition(TR_ProcessNextSubject, ST_insertion_recorded, ST_determined_orthanc_new_data_status,
+                               prepare=self.UpdateOrthancStatus.__name__,
+                               conditions=[self.has_more_data.__name__],
+                               unless=self.is_Orthanc_Unavailable.__name__,
+                               after=[self.DeleteSubject.__name__, self.ProcessOrthancList.__name__])
+
+        machine.add_transition(TR_ResumeMonitoring, ST_insertion_recorded, ST_waiting,
+                               unless=[self.has_more_data.__name__],
+                               after=self.DeleteSubject.__name__)
 
         # Retrying block.
         machine.add_transition(TR_reattempt, [ST_error_orthanc, ST_error_LORIS, ST_error_file_corruption, ST_error_localDB, ST_error_network], "=")
@@ -510,7 +519,7 @@ class DICOMTransitImport(object):
         else:
             self.orthanc_has_new_data = True
             # fixme: for now, only analyze ONE single subject from the Orthanc query.
-            self.orthanc_index_current_subject = self.orthanc_index_current_subject + 1
+            #self.orthanc_index_current_subject = self.orthanc_index_current_subject + 1
             logger.info("Detected new data on the Orthanc. Commence processing. ")
 
     def DownloadNewData(self):
@@ -546,7 +555,7 @@ class DICOMTransitImport(object):
         del(self.orthanc_list_all_subjectUUIDs[self.orthanc_index_current_subject])
         # Now, the index will refer to the next subject. Also, we can recycle the state/list length check etc.
         #todo: check how the deletion work in a real scenerio.
-        logger.info("Mock deleting the subject currently")
+        logger.debug("Mock deleting the subject currently")
 
 
     def UnpackNewData(self):
@@ -556,12 +565,14 @@ class DICOMTransitImport(object):
         """
         # Properly set the DICOM_package.
         temporary_folder = orthanc.API.unpack_subject_zip(self.DICOM_zip)
-        self.DICOM_package = DICOMPackage(temporary_folder)
+
+        # Orthanc files are GUARNTEED to have consistency name and ID so no need to check that. A cursory DICOM check is good enough for performance reasons.
+        self.DICOM_package = DICOMPackage(temporary_folder, consistency_check=False)
         self.DICOM_package.project = "loris" #fixme: this is a place holder. This neeeds to be dyanmiclly updated.
 
         # Update the self.files to be scrutinized
         self.files.clear()
-        self.files = self.DICOM_package.get_dicom_files()
+        self.files = self.DICOM_package.get_dicom_files(consistency_check=False) # consistency do not need to be checked.
 
         # Update unique UID information to help discriminate existing scans.
         self.DICOM_package.update_sUID()
@@ -651,7 +662,7 @@ class DICOMTransitImport(object):
         DICOM_date = self.DICOM_package.scan_date
 
         # LORIS API to get a list of VISIT timepoints.
-        list_remote_series_UID = LORIS.API.get_allUID()
+        list_remote_series_UID = LORIS.API.get_allUID(self.DICOM_package.DCCID)
 
         # Compare the two list and ensure that the UID fromt eh DICOM has not been seen before remotely.
         for uid in self.DICOM_package.list_series_UID:
@@ -674,7 +685,7 @@ class DICOMTransitImport(object):
         # Get the latest local known timepoint:
         self.last_localDB_timepoint = LocalDB.API.get_timepoint(self.DICOM_package.MRN)
         self.last_localDB_scan_date = LocalDB.API.get_scan_date(self.DICOM_package.MRN)
-        logger.info(f"Last known localDB timepoint: {self.last_localDB_scan_date}")
+        logger.info(f"Last known localDB timepoint: {self.last_localDB_timepoint } on {self.last_localDB_scan_date}")
 
     def IncrementRemoteTimepoint(self):
         # Using LORIS API to create the new timepoint:
@@ -736,6 +747,7 @@ class DICOMTransitImport(object):
         logger.info("Creating subject locally is successful.")
         pass
 
+
     def AnonymizeFiles(self):
         # This will also update self.zipname and self.is_anonymized
         self.DICOM_package.anonymize()
@@ -785,6 +797,12 @@ class DICOMTransitImport(object):
     # Conditions Method
     def has_new_data (self):
         return self.orthanc_has_new_data
+
+    def has_more_data(self):
+        if len(self.orthanc_list_all_subjectUUIDs) > 1:
+            return True
+        else:
+            return False
 
     def found_MRN(self):
         return self.localDB_found_mrn
@@ -983,25 +1001,22 @@ if __name__ == "__main__":
         try:
             # Initialial state MUST be waiting:
 
-
-
-
             if(check_new_data):
                 current_import_process.trigger_wrap(TR_UpdateOrthancNewDataStatus)
 
+
+            current_import_process.trigger_wrap(TR_HandlePotentialOrthancData) # has its own branching termination state.
             # Need to loop back here.
             if current_import_process.has_new_data():
-                current_import_process.trigger_wrap(TR_HandlePotentialOrthancData)
                 current_import_process.trigger_wrap(TR_DownloadNewData)
                 current_import_process.trigger_wrap(TR_UnpackNewData)
                 current_import_process.trigger_wrap(TR_ObtainDICOMMRN)
                 current_import_process.trigger_wrap(TR_UpdateNewMRNStatus)
             else:
-                current_import_process.trigger_wrap(TR_HandlePotentialOrthancData)
                 # that previous statement will transition to waiting state.
                 continue
 
-            current_import_process.trigger_wrap(TR_ProcessPatient)
+            current_import_process.trigger_wrap(TR_ProcessPatient)  # has its own branching termination state.
 
             if current_import_process.found_MRN():
                 ###################
@@ -1044,9 +1059,19 @@ if __name__ == "__main__":
             current_import_process.trigger_wrap(TR_UploadZip)
             current_import_process.trigger_wrap(TR_InsertSubjectData)
             current_import_process.trigger_wrap(TR_RecordInsertion)
+
+            if current_import_process.has_more_data():
+                current_import_process.trigger_wrap(TR_ProcessNextSubject)
+                check_new_data = False
+
+                logger.info("One insertion cycle complete. Sleeping 30s before checking next cycle.")
+                continue
+
             current_import_process.trigger_wrap(TR_ResumeMonitoring)
-            logger.info("One insertion cycle complete. Sleeping 30s before checking next cycle.")
-            time.sleep(30)
+
+            logger.info("One pass through insertion of ALL orthanc data is now complete. Sleeping 30s before checking next cycle.")
+            check_new_data = True
+            time.sleep(60)
 
         except MachineError as e:
 

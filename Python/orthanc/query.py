@@ -87,7 +87,7 @@ class orthanc_query:
         """
 
         logger = logging.getLogger(current_funct_name())
-        logger.debug("Downloading Orthanc endpoint: {endpoint}")
+        logger.debug(f"Downloading Orthanc endpoint: {endpoint}")
 
         zip_path = config_get("ZipPath")
         with requests.Session() as s:
@@ -95,14 +95,18 @@ class orthanc_query:
 
             # Compute total size to be downloaded
             total_size = int(r.headers.get('content-length', 0))
-
+            total_size_mb =  round(total_size/1024/1024, 3)
             # Generate the full output path
             local_file_full_path = os.path.join(zip_path, f"{unique_name()}.zip")
 
+            progress_bar = tqdm(unit="Mb", total=total_size_mb)
+
             # NOTE the stream=True parameter
             with open(local_file_full_path, 'wb') as f:
-                for chunk in tqdm(r.iter_content(32*1024), total=total_size,unit='B', unit_scale=True):
+                for chunk in r.iter_content(chunk_size=1024):
                     if chunk:  # filter out keep-alive new chunks
+                        chunk_mb = round(len(chunk)/1024/1024, 3)
+                        progress_bar.update()
                         f.write(chunk)
 
         logger.debug(str(r.status_code) + r.reason)
