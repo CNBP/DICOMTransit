@@ -58,7 +58,7 @@ class DICOM_validate:
         validated_DICOM_files = []
 
         from DICOM.elements import DICOM_elements
-        logger.info("Checking individual dicom files for patient info consistencies")
+        logger.info("Checking individual dicom files for possible discrepencies.")
 
         # Check individual DICOM file for consistencies.
         for file in tqdm(files):

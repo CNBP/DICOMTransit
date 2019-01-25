@@ -27,6 +27,9 @@ class DICOMPackage:
         self.validity: bool = None
         self.dicom_files: list = None # should already be validated and vetted by the DICOM_validate.path routine
 
+        # series UID: used to tell if a scan has been uploaded before.
+        self.list_series_UID = None
+
         # Update validity and dicom_files. This flag is used successful
         self.validity, self.dicom_files, self.list_series_UID = DICOM_elements_batch.traversal(self.dicom_folder, consistency_check) #actual path stored in name.
 
@@ -34,8 +37,6 @@ class DICOMPackage:
         self.DCCID: int = None
         self.timepoint: str = None
 
-        # series UID: used to tell if a scan has been uploaded before.
-        self.list_series_UID = None
 
         self.studies: str = None # study description from raw DICOM
         self.project: str = None # the actual project ID used on LORIS.

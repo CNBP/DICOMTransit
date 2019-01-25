@@ -9,6 +9,8 @@ from pydicom.filereader import read_file_meta_info
 from PythonUtils.file import current_funct_name
 from DICOM.validate import DICOM_validate
 
+logger = logging.getLogger()
+
 class DICOM_decompress:
 
     @staticmethod
@@ -119,7 +121,7 @@ class DICOM_decompress:
 
         for file in tqdm(file_list):
 
-            logger.info(f"Checking decompression status for: {file}")
+            logger.debug(f"Checking decompression status for: {file}")
 
             # find if the file is DICOM, if not, skip this file.
             is_DICOM_file, _ = DICOM_validate.file(file)

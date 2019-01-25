@@ -54,7 +54,7 @@ class DICOM_elements_batch:
         validated_DICOM_files = []
 
         from DICOM.elements import DICOM_elements
-        logger.info("Checking individual dicom files for patient info consistencies")
+        logger.info("Traversing individual dicom file for validation information.")
 
         list_unique_sUID = []
         previous_sUID = None # a shorthand to bypass the list check.

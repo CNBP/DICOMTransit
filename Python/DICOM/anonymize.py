@@ -4,6 +4,7 @@ import logging
 from tqdm import tqdm
 from PythonUtils.folder import recursive_list
 from PythonUtils.file import current_funct_name
+from typing import List
 
 class DICOM_anonymize:
 
@@ -56,7 +57,7 @@ class DICOM_anonymize:
         exception_files = []
 
         for file in tqdm(file_list):
-            logger.debug(f"Decompressing: {file}")
+            #logger.debug(f"Anonymizing: {file}")
             is_DICOM_file, _ = DICOM_validate.file(file)
             if not is_DICOM_file:
                 continue
@@ -65,13 +66,14 @@ class DICOM_anonymize:
                 exception_count =+ 1
                 exception_files = exception_files.append(file)
 
-        logger.debug(f"Total exception encountered uring anonymization: {str(exception_count)}")
+        logger.debug(f"Total exception encountered during anonymization: {str(exception_count)}")
         return exception_files
 
 
     @staticmethod
-    def folder(input_folder, new_ID):
+    def folder(input_folder, new_ID) -> List[str]:
         files_list = recursive_list(input_folder)
-        DICOM_anonymize.filelist(files_list, new_ID)
+        list_bad_files = DICOM_anonymize.filelist(files_list, new_ID)
+        return list_bad_files
 
 #if __name__ is "__main__":
