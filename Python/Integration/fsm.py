@@ -567,15 +567,19 @@ class DICOMTransitImport(object):
         temporary_folder = orthanc.API.unpack_subject_zip(self.DICOM_zip)
 
         # Orthanc files are GUARNTEED to have consistency name and ID so no need to check that. A cursory DICOM check is good enough for performance reasons.
-        self.DICOM_package = DICOMPackage(temporary_folder, consistency_check=False)
+
+
+        self.DICOM_package = DICOMPackage(temporary_folder, consistency_check=False) # Series UID is extracted at this time.
+        # Update unique UID information to help discriminate existing scans.
+        # self.DICOM_package.update_sUID()
+
         self.DICOM_package.project = "loris" #fixme: this is a place holder. This neeeds to be dyanmiclly updated.
 
         # Update the self.files to be scrutinized
         self.files.clear()
         self.files = self.DICOM_package.get_dicom_files(consistency_check=False) # consistency do not need to be checked.
 
-        # Update unique UID information to help discriminate existing scans.
-        self.DICOM_package.update_sUID()
+
         logger.info("Successfully unpacked the data downloaded.")
 
 
@@ -777,7 +781,7 @@ class DICOMTransitImport(object):
 
     def InsertSubjectData(self):
         # Trigger insertion.
-        self.process_ID = LORIS.API.new_trigger_insertion(self.DICOM_package.DCCID, self.DICOM_package.timepoint, self.DICOM_package.zipname, self.mri_uploadID)
+        self.process_ID = LORIS.API.new_trigger_insertion(self.DICOM_package.DCCID, self.DICOM_package.timepoint, f"{self.DICOM_package.zipname}.zip", self.mri_uploadID)
 
     def RecordInsertion(self):
         # Set the completion status to ZERO
@@ -960,7 +964,7 @@ if __name__ == "__main__":
     """
 
 
-    delete_LocalDB=False
+    delete_LocalDB=True
 
     if delete_LocalDB:
         ####DELETE THIS PART, fixme
@@ -1064,7 +1068,7 @@ if __name__ == "__main__":
                 current_import_process.trigger_wrap(TR_ProcessNextSubject)
                 check_new_data = False
 
-                logger.info("One insertion cycle complete. Sleeping 30s before checking next cycle.")
+                logger.info("One insertion cycle complete. Check next subject.")
                 continue
 
             current_import_process.trigger_wrap(TR_ResumeMonitoring)

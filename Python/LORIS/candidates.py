@@ -21,7 +21,7 @@ class LORIS_candidates:
         :return:
         """
 
-        # fixme: old format VXG0000001 now, 10000022
+        # fixme: old format VXS0000001 now, 10000022
 
 
         # Loading regular expression

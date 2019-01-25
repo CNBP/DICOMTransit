@@ -70,7 +70,7 @@ class CNBP_blueprint:
     #PSCID_schema_institution = "^[A-z][A-z][A-z]"
 
     # Must beginning with a number.
-    PSCID_schema_institution = "^[0-9]"
+    PSCID_schema_institution = "^[A-z][A-z][A-z]"
 
     #PSCID_schema_project = "[A-z][A-z][0-9][0-9]"
 

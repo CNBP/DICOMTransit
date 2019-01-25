@@ -1,4 +1,5 @@
 from DICOM.validate import DICOM_validate
+from DICOM.elements_batch import DICOM_elements_batch
 from PythonUtils.file import zip_with_name
 from LORIS.validate import LORIS_validation
 from LORIS.timepoint import LORIS_timepoint
@@ -7,6 +8,7 @@ from typing import List
 import logging
 import sys
 import os
+from PythonUtils.folder import recursive_list
 
 logger = logging.getLogger('DICOMPackage Class')
 
@@ -26,7 +28,7 @@ class DICOMPackage:
         self.dicom_files: list = None # should already be validated and vetted by the DICOM_validate.path routine
 
         # Update validity and dicom_files. This flag is used successful
-        self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder, consistency_check) #actual path stored in name.
+        self.validity, self.dicom_files, self.list_series_UID = DICOM_elements_batch.traversal(self.dicom_folder, consistency_check) #actual path stored in name.
 
         self.CNBPID: str = None # also known as PSCI id
         self.DCCID: int = None
@@ -47,7 +49,7 @@ class DICOMPackage:
 
         self.is_anonymized: bool = False
         self.is_zipped: bool = False
-        self.zipname: str = None # this zip name has NO suffix
+        self.zipname: str = None # this zip name has NO EXTENSION! Many code assume its extension is ZIP.
         self.zip_location: str = None
 
         logger.info("Commencing subject specific checks. ")
