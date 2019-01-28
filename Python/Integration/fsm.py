@@ -13,7 +13,7 @@ from PythonUtils.file import unique_name
 from settings import config_get
 
 # Set all debugging level:
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 # Create logger.
 logger = logging.getLogger(__name__)

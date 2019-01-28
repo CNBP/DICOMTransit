@@ -3,6 +3,8 @@ from DICOM.validate import DICOM_validate
 from PythonUtils.file import current_funct_name
 from LORIS.validate import LORIS_validation
 
+logger = logging.getLogger()
+
 class DICOM_elements:
 
     @staticmethod
@@ -19,9 +21,21 @@ class DICOM_elements:
         if not success:
             return False, None
 
+        return DICOM_elements.loaded_retrieve(DICOM, data_element)
+
+
+    @staticmethod
+    def loaded_retrieve(DICOM_data, data_element):
+        """
+        A low level function used to retrieve elements from DICOM object that has already been loaded and return a LIST of matching element. ACCEPT PARTIAL MATCH
+        :param file_path:
+        :param data_element:
+        :return: LIST of all data elements that match the pattern provided in the data_element and their value.  NO Regular EXPRESSION.
+        """
+
         try:
             # Get a list of all data elements that can have element label.
-            element_values = DICOM.data_element(data_element).value
+            element_values = DICOM_data.data_element(data_element).value
             return True, element_values
         except KeyError:
             #todo: dicomdir situation most likely ends here.
@@ -32,7 +46,7 @@ class DICOM_elements:
             return False, "General catch all exception reached. Contact author with the file to debug"
 
     @staticmethod
-    def update(file_path, data_element, element_value, out_path):
+    def update(file_path, data_element, element_value, out_path) -> (bool, str):
         """
         Update a particular data_element to the desired value, then write back to the SOURCE FILE!
         :param file_path:
@@ -43,18 +57,34 @@ class DICOM_elements:
         """
 
         """BE AWARE that if the key does not exist, it will not be created currently!"""
-        logger = logging.getLogger(current_funct_name())
 
         success, DICOM = DICOM_validate.file(file_path)
         if not success:
             return False, "DICOM not valid."
 
+        return DICOM_elements.update_fast(DICOM, data_element, element_value, out_path)
+
+    @staticmethod
+    def update_fast(dicom_object, data_element, element_value, out_path) -> (bool, str):
+        """
+        Update a particular data_element to the desired value, then write back to the SOURCE FILE!
+        :param dicom_object:
+        :param data_element:
+        :param element_value:
+        :param  out_path
+        :return: bool on operation success, and string on reason.
+        """
+
+        """BE AWARE that if the key does not exist, it will not be created currently!"""
         try:
-            DICOM.data_element(data_element).value = element_value
+            dicom_object.data_element(data_element).value = element_value
+            dicom_object.save_as(out_path)
         except KeyError:
             logger.error(f"Key {data_element } does not exist, creating the key.")
             return False, "DICOM key field does not exist. Not sure how to database one yet. "
-        DICOM.save_as(out_path)
+        except:
+            return False, "Generic error encountered while anonymizing file!"
+
         return True, "Data element update completed."
 
 

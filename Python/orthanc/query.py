@@ -126,7 +126,7 @@ class orthanc_query:
         """
 
         with zipfile.ZipFile(input_zip) as zip_file:
-            for member in tqdm(zip_file.namelist()):
+            for member in tqdm(zip_file.namelist(), position=0):
                 filename = os.path.basename(member)
                 # skip directories
                 if not filename:
