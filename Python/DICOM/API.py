@@ -4,7 +4,6 @@ from LORIS.validate import LORIS_validation
 from PythonUtils.file import dictionary_search
 from settings import config_get
 from PythonUtils.folder import get_abspath
-from LocalDB.schema import CNBP_blueprint
 from tqdm import tqdm
 import os
 
@@ -12,7 +11,6 @@ import os
 def anonymize_to_zip(folder_path, zip_ID):
     """
     Takes everything within the folder, and zip create a zip file in the DEFAULT .env configured zip storage location.
-    #todo!!! Shoddily done for now. MUST REFACTOR!
     :param folder_path:
     :param zip_ID: should be CNBPID_DCCID_VISIT format without .zip extension
     :return:
@@ -60,16 +58,29 @@ def anonymize_files(files):
 
 
 def check_anonymization(files: list, anonymized_name) -> bool:
+    """
+    A function to double check a list of files against the KNOWN anonymized value. This ensures that the anonymization actually gets carried out.
+
+    NOTE!!!!
+    This is the part where we have to ensure all the values are properly anonymized.
+    todo: generalize this such that it will provide a list of fields and then anonymize them all from the database etc.
+    :param files: File must be the absolute path!
+    :param anonymized_name:
+    :return:
+    """
     from DICOM.elements import DICOM_elements
+    from DICOM.validate import DICOM_validate
 
-    # File must be the absolute path!
-
-    # todo: what if there are non-DICOM files in the collection?
     # Check every single file in the DICOM collections.
-    for file in tqdm(files):
-        success1, patient_id = DICOM_elements.retrieve_patient_id(file)
+    for file in tqdm(files, position=0):
 
-        success2, name = DICOM_elements.retrieve_name(file)
+        success, DICOM = DICOM_validate.file(file)
+
+        if not success:
+            return False
+
+        success1, patient_id = DICOM_elements.retrieve_fast(DICOM, "PatientID")
+        success2, name = DICOM_elements.retrieve_fast(DICOM, "PatientName")
 
         # bad retrieval.
         if not success1 or not success2:

@@ -101,7 +101,7 @@ class orthanc_query:
             # Generate the full output path
             local_file_full_path = os.path.join(zip_path, f"{unique_name()}.zip")
 
-            progress_bar = tqdm(unit="Mb", total=total_size_mb)
+            progress_bar = tqdm(unit="Mb", total=total_size_mb, position=0)
 
             # NOTE the stream=True parameter
             with open(local_file_full_path, 'wb') as f:

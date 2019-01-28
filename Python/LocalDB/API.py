@@ -10,13 +10,12 @@ from PythonUtils.intmath import int_incrementor
 from typing import List
 import json
 
-
 logger = logging.getLogger(__name__)
 
 
 
 
-def check_status():
+def check_status() -> bool:
     from settings import config_get
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
@@ -38,7 +37,7 @@ def check_status():
 
 
 
-def get_list_MRN():
+def get_list_MRN() -> List[int]:
     """
     Return a list_return of all MRN from the database.
     :return:
@@ -57,7 +56,7 @@ def get_list_MRN():
     return list_MRN #todo: verify this is in integer? or string as that has dire consequences.
 
 
-def check_MRN(MRN):
+def check_MRN(MRN: int) -> bool:
     """
     Return true if the MRN exist within the current database
     :return:
@@ -77,14 +76,14 @@ def check_MRN(MRN):
     return MRN_exist_in_database
 
 
-def create_MRN(MRN):
+def create_MRN(MRN: int):
     database_path = config_get("LocalDatabasePath")
 
     # Create the MRN record
     LocalDB_query.create_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN)
 
 
-def get_CNBP(MRN):
+def get_CNBP(MRN: int):
     """
     Assuming the MRN exist, get the CNBPID.
     :param MRN: the MRN to look for

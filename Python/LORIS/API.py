@@ -30,7 +30,6 @@ def check_online_status() -> bool:
     :return:
     """
 
-    import socket
     from LORIS.helper import LORIS_helper
 
     """
@@ -191,7 +190,6 @@ def get_allUID(DCCID: int) -> List[str]:
     """
     Return the query results from /candidates/$CandID/$Visit/dicoms
     :param DCCID:
-    :param timepoint:
     :return:
     """
     # Get token.
@@ -229,12 +227,11 @@ def upload_visit_DICOM(local_path, DCCID: int, VisitLabel: str, isPhantom: bool)
     :param local_path:
     :param DCCID:
     :param VisitLabel:
-    :param filename:
     :return:
     """
     from LORIS.validate import LORIS_validation
     from LORIS.timepoint import LORIS_timepoint
-    import json
+
 
     # Validations:
     if not os.path.isfile(local_path):

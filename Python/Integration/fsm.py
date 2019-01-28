@@ -754,6 +754,7 @@ class DICOMTransitImport(object):
 
     def AnonymizeFiles(self):
         # This will also update self.zipname and self.is_anonymized
+        logger.info(f"Anonymizing all {len(self.DICOM_package.dicom_files)} files:")
         self.DICOM_package.anonymize()
         self.scan_anonymized = self.DICOM_package.is_anonymized
         logger.info("Successfully anonymized files.")

@@ -61,7 +61,7 @@ class DICOM_validate:
         logger.info("Checking individual dicom files for possible discrepencies.")
 
         # Check individual DICOM file for consistencies.
-        for file in tqdm(files):
+        for file in tqdm(files, position=0):
 
             # Skip current file if they are not DICOM files.
             is_DICOM, _ = DICOM_validate.file(file)

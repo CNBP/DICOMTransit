@@ -119,7 +119,7 @@ class DICOM_decompress:
         """
         logger = logging.getLogger(current_funct_name())
 
-        for file in tqdm(file_list):
+        for file in tqdm(file_list, position=0):
 
             logger.debug(f"Checking decompression status for: {file}")
 

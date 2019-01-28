@@ -22,7 +22,7 @@ class DICOM_elements_batch:
         short_list = dicom_files[0::sample_rate]  # sample every 10 items.
 
         list_unique_sUID = []
-        for file in tqdm(short_list):
+        for file in tqdm(short_list, position=0):
             success, UID = DICOM_elements.retrieve_seriesUID(file)
             if UID not in list_unique_sUID:
                 list_unique_sUID.append(UID)
@@ -82,8 +82,8 @@ class DICOM_elements_batch:
                 # todo: what if the date and other things are inconsistent?
                 # Record first instance of patient ID and patient name.
                 if PatientID == '' and PatientName == '':
-                    Success, PatientID = DICOM_elements.loaded_retrieve(dicom_obj, "PatientID")
-                    Success, PatientName = DICOM_elements.loaded_retrieve(dicom_obj, "PatientName")
+                    Success, PatientID = DICOM_elements.retrieve_fast(dicom_obj, "PatientID")
+                    Success, PatientName = DICOM_elements.retrieve_fast(dicom_obj, "PatientName")
 
                     # raise issue if not successful
                     if not Success:
@@ -97,8 +97,8 @@ class DICOM_elements_batch:
                     continue
 
                 # Check consistencies across folders in terms of patient ID, NAME.
-                Success1, CurrentPatientID = DICOM_elements.loaded_retrieve(dicom_obj, "PatientID")
-                Success2, CurrentPatientName = DICOM_elements.loaded_retrieve(dicom_obj, "PatientName")
+                Success1, CurrentPatientID = DICOM_elements.retrieve_fast(dicom_obj, "PatientID")
+                Success2, CurrentPatientName = DICOM_elements.retrieve_fast(dicom_obj, "PatientName")
 
                 if not Success1 or not Success2:
                     logger.error(
@@ -109,7 +109,7 @@ class DICOM_elements_batch:
                     logger.info("PatientID or Name mismatch from the dicom archive. .")
                     return False, None
 
-            success, UID = DICOM_elements.loaded_retrieve(dicom_obj, "SeriesInstanceUID")
+            success, UID = DICOM_elements.retrieve_fast(dicom_obj, "SeriesInstanceUID")
 
             # A quick UID check before the HEAVY list operation.
             if not UID == previous_sUID and UID not in list_unique_sUID:

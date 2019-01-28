@@ -21,11 +21,11 @@ class DICOM_elements:
         if not success:
             return False, None
 
-        return DICOM_elements.loaded_retrieve(DICOM, data_element)
+        return DICOM_elements.retrieve_fast(DICOM, data_element)
 
 
     @staticmethod
-    def loaded_retrieve(DICOM_data, data_element):
+    def retrieve_fast(DICOM_data, data_element):
         """
         A low level function used to retrieve elements from DICOM object that has already been loaded and return a LIST of matching element. ACCEPT PARTIAL MATCH
         :param file_path:
@@ -55,17 +55,18 @@ class DICOM_elements:
         :param  out_path
         :return: bool on operation success, and string on reason.
         """
-
         """BE AWARE that if the key does not exist, it will not be created currently!"""
+
 
         success, DICOM = DICOM_validate.file(file_path)
         if not success:
             return False, "DICOM not valid."
 
-        return DICOM_elements.update_fast(DICOM, data_element, element_value, out_path)
+        return DICOM_elements.update_in_memory(DICOM, data_element, element_value, out_path)
+
 
     @staticmethod
-    def update_fast(dicom_object, data_element, element_value, out_path) -> (bool, str):
+    def update_in_memory(dicom_object, data_element, element_value, out_path):
         """
         Update a particular data_element to the desired value, then write back to the SOURCE FILE!
         :param dicom_object:
@@ -78,14 +79,13 @@ class DICOM_elements:
         """BE AWARE that if the key does not exist, it will not be created currently!"""
         try:
             dicom_object.data_element(data_element).value = element_value
-            dicom_object.save_as(out_path)
         except KeyError:
             logger.error(f"Key {data_element } does not exist, creating the key.")
             return False, "DICOM key field does not exist. Not sure how to database one yet. "
         except:
             return False, "Generic error encountered while anonymizing file!"
 
-        return True, "Data element update completed."
+        return True, dicom_object
 
 
     @staticmethod
@@ -142,6 +142,7 @@ class DICOM_elements:
         else:
             return True, name
 
+
     @staticmethod
     def retrieve_seriesUID(file_path):
         """
@@ -166,7 +167,7 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        # todo see if there are ways to validate this part vs study before returning. s
+        # todo see if there are ways to validate this part vs study before returning.
 
         # todo: to be debugged. Check detailed conditions.
         from datetime import datetime

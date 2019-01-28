@@ -45,7 +45,7 @@ class DICOM_sort:
         logger.info("Sorting files into folders:")
 
         # File here should be the FULL path.
-        for file in tqdm(file_list):
+        for file in tqdm(file_list, position=0):
 
             success1, SeriesNumber = DICOM_elements.retrieve(file, "SeriesNumber")
 

@@ -13,7 +13,7 @@ class LocalDB_query:
     """
 
     @staticmethod
-    def check_value(database_path, table_name, ColumnName, ColumnValue):
+    def check_value(database_path, table_name, ColumnName, ColumnValue) -> (bool, list):
         """
         Check if a subject exist in the given database and given table
         :param database_path: path to the SQLite database

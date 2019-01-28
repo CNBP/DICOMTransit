@@ -57,10 +57,12 @@ class DICOM_anonymize:
         save_as_success = DICOM_anonymize.save_as(file_path, NewID, file_path)
         return save_as_success
 
+
     @staticmethod
     def save_as(in_path: str, NewID: str, out_path: str) -> bool:
         """
         Anonymize the DICOM to remove any identifiable information from a file and to a output file provided.
+        This operate at the memory level so should be quite a bit faster.
         DICOM file check happens at the lowest DICOM_element level.
 
         # NOTE! Expand here if you need to anonymize additional fields.
@@ -76,13 +78,16 @@ class DICOM_anonymize:
 
 
         # Anonymize PatientID with the NewID provided.
-        success1, _ = DICOM_elements.update_fast(DICOM, "PatientID", NewID, out_path)
+        success1, DICOM_updated = DICOM_elements.update_in_memory(DICOM, "PatientID", NewID, out_path)
+        if not success1:
+            return False
 
         # Anonymize PatientName with the NewID provided.
-        success2, _ = DICOM_elements.update_fast(DICOM, "PatientName", NewID, out_path)
+        success2, DICOM_updated = DICOM_elements.update_in_memory(DICOM_updated, "PatientName", NewID, out_path)
 
         # Return after encuring both anonymization process are successful.
-        if success1 and success2:
+        if success2:
+            DICOM_updated.save_as(out_path)
             return True
         else:
             return False

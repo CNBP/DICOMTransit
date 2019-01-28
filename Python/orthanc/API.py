@@ -2,7 +2,7 @@ import os
 import tempfile
 from orthanc.query import orthanc_query
 from LORIS.helper import LORIS_helper
-from PythonUtils.file import unique_name, current_funct_name
+from PythonUtils.file import unique_name
 import logging
 
 logger = logging.getLogger()

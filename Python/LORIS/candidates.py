@@ -1,4 +1,3 @@
-import sys
 import re
 import json
 import logging
@@ -8,6 +7,8 @@ from LORIS.helper import LORIS_helper
 
 from LocalDB.schema import CNBP_blueprint
 from PythonUtils.file import current_funct_name
+
+logger = logging.getLogger()
 
 class LORIS_candidates:
 
@@ -63,7 +64,6 @@ class LORIS_candidates:
         # will not apply to the SSH session!
 
         command_string = f"/opt/rh//rh-php70/root/usr/bin/php {DeletionScript} delete_candidate {str(DCCID)} {PSCID} confirm"
-
 
 
         logger.debug(command_string)
@@ -197,6 +197,3 @@ class LORIS_candidates:
         else:
             return False, None
 
-if __name__ == "__main__":
-    #LORIS_candidates.deleteCandidateCNBP(958607, "CNBP8881234")
-    print(LORIS_validation.validate_projectID("GL01"))
