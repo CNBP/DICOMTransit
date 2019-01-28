@@ -69,6 +69,7 @@ def check_anonymization(files: list, anonymized_name) -> bool:
     :return:
     """
     from DICOM.elements import DICOM_elements
+    from DICOM.elements_batch import DICOM_elements_batch
     from DICOM.validate import DICOM_validate
 
     # Check every single file in the DICOM collections.
@@ -78,6 +79,11 @@ def check_anonymization(files: list, anonymized_name) -> bool:
 
         if not success:
             return False
+
+        properties = ["PatientID", "PatientName"]
+
+        properties_output = DICOM_elements_batch.retrieval(DICOM, properties)
+
 
         success1, patient_id = DICOM_elements.retrieve_fast(DICOM, "PatientID")
         success2, name = DICOM_elements.retrieve_fast(DICOM, "PatientName")

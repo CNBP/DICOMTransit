@@ -965,7 +965,7 @@ if __name__ == "__main__":
     """
 
 
-    delete_LocalDB=True
+    delete_LocalDB=False
 
     if delete_LocalDB:
         ####DELETE THIS PART, fixme

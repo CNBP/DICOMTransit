@@ -1,9 +1,11 @@
 from DICOM.elements import DICOM_elements
-from typing import List, Callable
+from typing import List, Optional
 from tqdm import tqdm
 import logging
 import os
 from PythonUtils.folder import recursive_list
+from pydicom.dataset import FileDataset
+
 logger=logging.getLogger()
 
 class DICOM_elements_batch:
@@ -119,3 +121,24 @@ class DICOM_elements_batch:
             previous_sUID = UID
 
         return True, validated_DICOM_files, list_unique_sUID
+
+
+    @staticmethod
+    def retrieval(dicom_object: FileDataset, DICOM_properties = List[str]) -> (bool, Optional[List[str]]):
+        """
+        Retrieve a series of properties from an in memory DICOM object.
+        :param dicom_object:
+        :param DICOM_properties:
+        :return:
+        """
+        list_properties = []
+        for DICOM_property in DICOM_properties:
+            success, retrieved_property = DICOM_elements.retrieve_fast(dicom_object, DICOM_property)
+            if success:
+                list_properties.append(retrieved_property)
+            else:
+                return False, None
+        return True, list_properties
+
+
+

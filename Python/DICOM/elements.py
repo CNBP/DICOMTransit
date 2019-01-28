@@ -2,13 +2,15 @@ import logging
 from DICOM.validate import DICOM_validate
 from PythonUtils.file import current_funct_name
 from LORIS.validate import LORIS_validation
+from typing import Optional
+from pydicom.dataset import FileDataset
 
 logger = logging.getLogger()
 
 class DICOM_elements:
 
     @staticmethod
-    def retrieve(file_path, data_element):
+    def retrieve(file_path: str, data_element: str) -> (bool, Optional[str]):
         """
         A low level function used to retrieve elements from DICOM and return a LIST of matching element. ACCEPT PARTIAL MATCH
         :param file_path:
@@ -25,7 +27,7 @@ class DICOM_elements:
 
 
     @staticmethod
-    def retrieve_fast(DICOM_data, data_element):
+    def retrieve_fast(DICOM_data: FileDataset, data_element: str) -> (bool, str):
         """
         A low level function used to retrieve elements from DICOM object that has already been loaded and return a LIST of matching element. ACCEPT PARTIAL MATCH
         :param file_path:
@@ -46,7 +48,7 @@ class DICOM_elements:
             return False, "General catch all exception reached. Contact author with the file to debug"
 
     @staticmethod
-    def update(file_path, data_element, element_value, out_path) -> (bool, str):
+    def update(file_path: str, data_element: str, element_value, out_path) -> (bool, str):
         """
         Update a particular data_element to the desired value, then write back to the SOURCE FILE!
         :param file_path:
@@ -57,16 +59,20 @@ class DICOM_elements:
         """
         """BE AWARE that if the key does not exist, it will not be created currently!"""
 
-
         success, DICOM = DICOM_validate.file(file_path)
         if not success:
             return False, "DICOM not valid."
 
-        return DICOM_elements.update_in_memory(DICOM, data_element, element_value, out_path)
+        success, DICOM_updated = DICOM_elements.update_in_memory(DICOM, data_element, element_value)
+        if success:
+            DICOM_updated.save_as(out_path)
+            return True, "No error"
+        return False, "Catch all error path"
+
 
 
     @staticmethod
-    def update_in_memory(dicom_object, data_element, element_value, out_path):
+    def update_in_memory(dicom_object: FileDataset, data_element: str, element_value: str):
         """
         Update a particular data_element to the desired value, then write back to the SOURCE FILE!
         :param dicom_object:
@@ -79,6 +85,7 @@ class DICOM_elements:
         """BE AWARE that if the key does not exist, it will not be created currently!"""
         try:
             dicom_object.data_element(data_element).value = element_value
+
         except KeyError:
             logger.error(f"Key {data_element } does not exist, creating the key.")
             return False, "DICOM key field does not exist. Not sure how to database one yet. "
@@ -89,7 +96,7 @@ class DICOM_elements:
 
 
     @staticmethod
-    def retrieve_MRN(file_path):
+    def retrieve_MRN(file_path: str):
         """
         Read the PatientID field which normally used as MRN number.
         :param file_path:
@@ -109,7 +116,7 @@ class DICOM_elements:
 
 
     @staticmethod
-    def retrieve_patient_id(file_path):
+    def retrieve_patient_id(file_path: str):
         """
         Read the PatientName field. No checking. Used for validation post anonymization.
         :param file_path:

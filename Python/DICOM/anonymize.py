@@ -78,12 +78,12 @@ class DICOM_anonymize:
 
 
         # Anonymize PatientID with the NewID provided.
-        success1, DICOM_updated = DICOM_elements.update_in_memory(DICOM, "PatientID", NewID, out_path)
+        success1, DICOM_updated = DICOM_elements.update_in_memory(DICOM, "PatientID", NewID)
         if not success1:
             return False
 
         # Anonymize PatientName with the NewID provided.
-        success2, DICOM_updated = DICOM_elements.update_in_memory(DICOM_updated, "PatientName", NewID, out_path)
+        success2, DICOM_updated = DICOM_elements.update_in_memory(DICOM_updated, "PatientName", NewID)
 
         # Return after encuring both anonymization process are successful.
         if success2:
