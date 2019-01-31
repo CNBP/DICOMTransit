@@ -88,7 +88,7 @@ class DICOM_decompress:
         # Validity check:
         success, _ = DICOM_validate.file(file_path)
         if not success:
-            raise IOError
+            raise IOError("File is not DICOM")
 
         # Now read the meta information.
         dicom_file = read_file_meta_info(file_path)
@@ -101,7 +101,7 @@ class DICOM_decompress:
         # Validity check:
         success, DICOM = DICOM_validate.file(file_path)
         if not success:
-            raise IOError
+            raise IOError("File is not DICOM")
         import pydicom.uid
 
         # Now read the meta information.

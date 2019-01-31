@@ -126,11 +126,14 @@ def increment_timepoint(DCCID):
     :return:
     """
     from LORIS.query import LORIS_query
-    token = LORIS_query.login()
+    success, token = LORIS_query.login()
+    if not success:
+        raise ConnectionError("LORIS Login failed!")
 
     from LORIS.timepoint import LORIS_timepoint
     success, timepoint = LORIS_timepoint.increaseTimepoint(token, DCCID)
-    assert success
+    if not success:
+        raise ConnectionError("LORIS not responsive while trying to increase timepoints!")
     return timepoint
 
 
@@ -143,20 +146,24 @@ def create_candidate(project, birthday, gender) -> (bool, int, int):
     response_success, token = LORIS_query.login()
 
     if not response_success:
-        raise ConnectionError
+        raise ConnectionError("LORIS Login failed!")
 
     success, DCCID = LORIS_candidates.createCandidate(token, project, birthday, gender)
-    assert success
+    if not success:
+        raise ConnectionError("LORIS not responsive while trying to create candidate")
+
 
     #responded, success = LORIS_candidates.checkDCCIDExist(token, DCCID)
     #assert responded
     #assert success
 
     success, PSCID = LORIS_candidates.checkDCCIDExist(token, DCCID)
-    assert success
+    if not success:
+        raise ConnectionError("LORIS not responsive while checking DCCID existencen.")
 
     success, timepoint = LORIS_timepoint.increaseTimepoint(token, DCCID)
-    assert success
+    if not success:
+        raise ConnectionError("LORIS not responsive while increasing timepoint.")
     return success, DCCID, PSCID
 
 

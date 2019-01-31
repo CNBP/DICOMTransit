@@ -67,23 +67,35 @@ class DICOMPackage:
         #assert success
 
 
-        # fixme: these should really be removed as they are now part of FSM.
+
 
         success = self.update_scan_date()
-        assert success
-        logger.info("Subject specific scan date pass check.")
+        if success:
+            logger.info("Subject specific scan date pass check.")
+        else:
+            logger.error("Subject scan data did not include scan date, high likelyhood of corrupt data or non-patient data. Assuming a default scan date of 1900-01-01")
+            raise ValueError("DICOM") #FIXME: enable these after full debug test.
 
         success = self.update_birthdate()
-        assert success
-        logger.info("Subject specific birthdate pass check.")
+        if success:
+            logger.info("Subject specific birthdate pass check.")
+        else:
+            logger.error("Subjects have NO BIRTHDATE! LORIS interaction will not function.")
+            raise ValueError("DICOM")
 
         success = self.update_sex()
-        assert success
-        logger.info("Subject specific sex pass check.")
+        if success:
+            logger.info("Subject specific sex pass check.")
+        else:
+            logger.error("Subjects have NO BIRTHDATE! LORIS interaction will not function.")
+            ValueError("DICOM")
 
         success = self.update_gender()
-        assert success
-        logger.info("Subject specific gender pass check.")
+        if success:
+            logger.info("Subject specific gender pass check.")
+        else:
+            logger.error("Subject gender failed check.")
+            ValueError("DICOM")
 
         logger.debug(f"DICOMPackage successfully initialized based on {self.dicom_folder}")
 
@@ -141,7 +153,8 @@ class DICOMPackage:
             from DICOM.elements import DICOM_elements
             # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the birthday from first file.
             success, self.birthday = DICOM_elements.retrieve_birthday(self.dicom_files[0])
-            assert success
+            if not success:
+                raise ValueError(f"Could not retrieve birthday from DICOM file {self.dicom_files[0]}")
             return success
         else:
             return False
@@ -156,7 +169,8 @@ class DICOMPackage:
             from DICOM.elements import DICOM_elements
             # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the sex from first file.
             success, self.sex = DICOM_elements.retrieve_sex(self.dicom_files[0])
-            assert success
+            if not success:
+                raise ValueError(f"Could not retrieve sex from DICOM file {self.dicom_files[0]}")
             return success
         else:
             return False
@@ -185,8 +199,12 @@ class DICOMPackage:
         if self.check_validity():
             from DICOM.elements import DICOM_elements
             success, self.scan_date = DICOM_elements.retrieve_scan_date(self.dicom_files[0])
-            assert success
-            return success
+            if success:
+                return success
+            else:
+                from datetime import datetime
+                self.scan_date = datetime.strptime("19000101", "%Y%m%d")
+                return False
         else:
             return False
 
@@ -233,12 +251,13 @@ class DICOMPackage:
         Thie function will check all the appropriate information are correct before attempting to anonymize the whole bunch of files.
         :return:
         """
-        assert(self.CNBPID is not None)
-        assert(self.DCCID is not None)
-        assert(self.timepoint is not None)
-        assert LORIS_validation.validate_CNBPID(self.CNBPID)
-        assert LORIS_validation.validate_DCCID(self.DCCID)
-        assert LORIS_timepoint.check_timepoint_compliance(self.timepoint)
+        if self.CNBPID is None or self.DCCID is None or self.timepoint is None:
+            logger.error("CNBPID, DCCID, Timepoint value is NONE!")
+            raise ValueError
+
+        if not LORIS_validation.validate_CNBPID(self.CNBPID) or not LORIS_validation.validate_DCCID(self.DCCID) or not LORIS_timepoint.check_timepoint_compliance(self.timepoint):
+            logger.error("CNBPID, DCCID, Timepoint value failed!")
+            raise ValueError
 
         # Set proper variable name and also the ZIP file name for subsequent processing.
 
@@ -255,9 +274,13 @@ class DICOMPackage:
         :return:
         """
         # assuming have all the files.
-        assert self.dicom_files is not None
-        assert len(self.dicom_files) > 0
-        assert self.zipname is not None
+        if self.dicom_files is None:
+            raise ValueError("DICOM_files not initialized!")
+        if not len(self.dicom_files) > 0:
+            raise ValueError("Empty list of DICOM files. ")
+        if self.zipname is None:
+            raise ValueError("You have not generated the PSCID_DCCID_Visit name properly!")
+
         # Loop through all files and check.
         from DICOM.API import check_anonymization
         success = check_anonymization(self.dicom_files, self.zipname)

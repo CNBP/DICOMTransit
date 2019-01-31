@@ -75,6 +75,6 @@ class LocalDB_create:
             ConnectedDatabase.close()
         except Exception as e:
             logger.info(e)
-            logger.warning('SQLite database creation/update issue, suspect schema non-compliant SQLite database. Did you corrupt this SQLite database somehow?')
+            logger.error('SQLite database creation/update issue, suspect schema non-compliant SQLite database. Did you corrupt this SQLite database somehow?')
             raise IOError
         return True

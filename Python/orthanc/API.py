@@ -43,7 +43,8 @@ def get_list_of_subjects_noauth(orthanc_URL):
 
     reseponse_code, list_subjects = orthanc_query.getOrthanc_noauth(endpoint)
 
-    assert (LORIS_helper.is_response_success(reseponse_code, 200))
+    if not (LORIS_helper.is_response_success(reseponse_code, 200)):
+        raise ConnectionError("LORIS server did not return list of subjects. ")
     return list_subjects
 
 def get_list_of_subjects(orthanc_URL, orthanc_user, orthanc_password):
@@ -55,7 +56,8 @@ def get_list_of_subjects(orthanc_URL, orthanc_user, orthanc_password):
 
     reseponse_code, list_subjects = orthanc_query.getOrthanc(endpoint, orthanc_user, orthanc_password)
 
-    assert (LORIS_helper.is_response_success(reseponse_code, 200))
+    if not LORIS_helper.is_response_success(reseponse_code, 200):
+        raise ConnectionError("LORIS server did not return list of subjects. ")
     return list_subjects
 
 def get_subject_zip(orthanc_URL_with_UUID, orthaner_user, orthanc_password):
@@ -66,8 +68,11 @@ def get_subject_zip(orthanc_URL_with_UUID, orthaner_user, orthanc_password):
     """
     
     status, local_zip_file_path = orthanc_query.getPatientZipOrthanc(orthanc_URL_with_UUID, orthaner_user, orthanc_password)
-    assert (LORIS_helper.is_response_success(status, 200))
-    assert (os.path.exists(local_zip_file_path))
+    if not (LORIS_helper.is_response_success(status, 200)):
+        raise ConnectionError("Orthanc is not reachable!")
+
+    if not os.path.exists(local_zip_file_path):
+        raise FileNotFoundError("Local zip file to be uploaded has not been found!")
 
     logger.info("Subject ZIP downloaded.")
 

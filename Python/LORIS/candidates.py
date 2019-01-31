@@ -179,7 +179,8 @@ class LORIS_candidates:
         logger = logging.getLogger(current_funct_name())
         logger.debug("Checking if DCCID exist: "+str(proposed_DCCID))
 
-        assert (LORIS_validation.validate_DCCID(proposed_DCCID))
+        if not LORIS_validation.validate_DCCID(proposed_DCCID):
+            raise ValueError("DCCID is not valid!")
 
         #todo: This area has projects/loris dependency. Refactor to enable multiple projects handling.
         response, JSON = LORIS_query.getCNBP(token, r"candidates/"+str(proposed_DCCID))

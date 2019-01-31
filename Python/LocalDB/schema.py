@@ -17,11 +17,11 @@ class CNBP_blueprint:
               'DCCID',
               'Timepoint',
               'Date',
-              'Completed',
               'Hash1',
               'Hash2',
               'Hash3',
-              'SeriesUID']
+              'SeriesUID',
+              'OrthancUUID']
 
     fields_types = ['TEXT',
                     'INTEGER',
@@ -29,7 +29,7 @@ class CNBP_blueprint:
                     'INTEGER',
                     'INTEGER',
                     'TEXT',
-                    'INTEGER',
+                    'TEXT',
                     'TEXT',
                     'TEXT',
                     'TEXT',

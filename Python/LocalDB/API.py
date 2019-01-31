@@ -7,7 +7,7 @@ import os
 from settings import config_get
 from PythonUtils.env import load_dotenv_var
 from PythonUtils.intmath import int_incrementor
-from typing import List
+from typing import List, Optional
 import json
 
 logger = logging.getLogger(__name__)
@@ -54,6 +54,24 @@ def get_list_MRN() -> List[int]:
         list_MRN.append(row[0]) # MRN is the first variable requested.
 
     return list_MRN #todo: verify this is in integer? or string as that has dire consequences.
+
+
+def get_list_OrthancUUID() -> List[str]:
+    """
+    Return a list_return of all MRN from the database.
+    :return:
+    """
+    # Load local database from .env file
+    database_path = config_get("LocalDatabasePath")
+
+    list_OrthancUUID = []
+
+    success, result_rows = LocalDB_query.get_all(database_path, CNBP_blueprint.table_name, "OrthancUUID")
+
+    for row in result_rows:
+        list_OrthancUUID.append(row[0]) # Values are always the first variable requested.
+
+    return list_OrthancUUID #todo: verify this is in integer? or string as that has dire consequences.
 
 
 def check_MRN(MRN: int) -> bool:
@@ -104,6 +122,33 @@ def get_CNBP(MRN: int):
 
     return KeyRecords[0][cnbp_header_index]
 
+def get_orthancUUID(MRN: int) -> Optional[List[str]]:
+    """
+    Assuming the MRN exist, get the SeriesUID of all scans that ever past through here.
+    :param MRN: the MRN to look for
+    :return: the CNBPID associated with that particular MRN number.
+    """
+    # Load local database from .env file
+    database_path = config_get("LocalDatabasePath")
+    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
+                                                                  CNBP_blueprint.table_name,
+                                                                  CNBP_blueprint.keyfield,
+                                                                  MRN)
+    if MRN_exist_in_database is False:
+        return None
+
+    # Only ONE record per MRN.
+    assert(len(KeyRecords) == 1)
+    OrthancUUID_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'OrthancUUID')
+
+    # Load the json and return the variable structure
+    json_SeriesUID = KeyRecords[0][OrthancUUID_index]
+    if json_SeriesUID is None:
+        logger.warning("No existing orthancUUID Data information found.")
+        return None
+    list_SeriesUID = json.loads(json_SeriesUID)
+
+    return list_SeriesUID
 
 def get_seriesUID(MRN: int) -> List[str]:
     """
@@ -262,16 +307,25 @@ def set_DCCID(MRN: int, DCCID):
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "DCCID", DCCID, )
 
 
-def set_completion(MRN: int, status: int = 0):
+def append_OrthancUUID(MRN: int, OrthancUUID: str):
     """
     Update record with proper completion status which has particular MRN
     :param MRN:
     :return:
     """
-    database_path = config_get("LocalDatabasePath")
 
-    # Update the MRN record with DCCID
-    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Completed", status)
+    database_path = config_get("LocalDatabasePath")
+    existing_series_UID = get_orthancUUID(MRN)
+    if existing_series_UID is None:
+        total_series_UID = OrthancUUID
+    else:
+        total_series_UID = existing_series_UID + OrthancUUID
+
+    # JSON dumps.
+    json_seriesUID = json.dumps(total_series_UID )
+
+    # Update the MRN record with UUID
+    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "OrthancUUID", json_seriesUID)
 
 
 def set_scan_date(MRN: int, scan_date: str):

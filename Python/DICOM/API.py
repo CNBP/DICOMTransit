@@ -6,6 +6,9 @@ from settings import config_get
 from PythonUtils.folder import get_abspath
 from tqdm import tqdm
 import os
+import logging
+
+logger = logging.getLogger()
 
 
 def anonymize_to_zip(folder_path, zip_ID):
@@ -117,8 +120,11 @@ def retrieve_study_protocol(files):
     for file in files:
 
         # Ensure it exists before attempting to retrieve it.
-        assert (os.path.exists(file))
-        success, study_protocol = DICOM_elements.retrieve(file, "ProtocolName")
+        if os.path.exists(file):
+            success, study_protocol = DICOM_elements.retrieve(file, "ProtocolName")
+        else:
+            logger.error(f"Study protocol could not be retrieved from: {file}. Skipping this file!")
+            continue
 
         # Only add if it is not already in the list (avoid dupliate, ensure unique entries
         if LORIS_validation.validate_projectID(study_protocol) and study_protocol not in protocols:
