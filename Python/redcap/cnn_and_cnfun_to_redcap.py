@@ -8,8 +8,6 @@
 #
 # History:
 #   -> Summer 2018 - Initial Creation
-#   -> Fall 2018 - Code completion and cleanup
-#   -> Winter 2019 - Code completion and cleanup
 #   -> TBD - Final version
 #
 # Note:
