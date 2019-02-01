@@ -17,6 +17,7 @@ CREATE TABLE configuration (
   LORISpassword TEXT NOT NULL,
   timepoint_prefix TEXT NOT NULL,
   institutionID TEXT NOT NULL,
+  institutionName TEXT NOT NULL,
   projectID_dictionary TEXT NOT NULL,
   LocalDatabasePath TEXT NOT NULL,
   LogPath TEXT NOT NULL,

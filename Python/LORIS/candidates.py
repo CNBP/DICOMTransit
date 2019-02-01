@@ -100,11 +100,13 @@ class LORIS_candidates:
             return False, None
 
         Candidate['Project'] = project
+        Candidate['EDC'] = birth_date
         #Candidate['PSCID'] = proposed_PSCID Now auto sequence.
         Candidate['DoB'] = birth_date
         Candidate['Gender'] = gender
+        Candidate['Site'] = config_get("institutionName")
 
-        data = {"Candidate":Candidate}
+        data = {"Candidate" : Candidate}
 
         data_json = json.dumps(data)
 
