@@ -12,6 +12,11 @@ from DICOM.DICOMPackage import DICOMPackage
 from PythonUtils.file import unique_name
 from settings import config_get
 
+
+# Sentry Log Monitoring Service SDK:
+import sentry_sdk
+sentry_sdk.init("https://d788d9bf391a4768a22ea6ebabfb4256@sentry.io/1385114")
+
 # Set all debugging level:
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 

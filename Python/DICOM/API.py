@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger()
 
 
-def anonymize_to_zip(folder_path, zip_ID):
+def anonymize_to_zip(folder_path: str, zip_ID: str):
     """
     Takes everything within the folder, and zip create a zip file in the DEFAULT .env configured zip storage location.
     :param folder_path:
