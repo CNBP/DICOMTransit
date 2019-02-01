@@ -150,7 +150,7 @@ def get_orthancUUID(MRN: int) -> Optional[List[str]]:
 
     return list_SeriesUID
 
-def get_seriesUID(MRN: int) -> List[str]:
+def get_seriesUID(MRN: int) -> Optional[List[str]]:
     """
     Assuming the MRN exist, get the SeriesUID of all scans that ever past through here.
     :param MRN: the MRN to look for
@@ -179,7 +179,7 @@ def get_seriesUID(MRN: int) -> List[str]:
     return list_SeriesUID
 
 
-def get_DCCID(MRN):
+def get_DCCID(MRN: int) -> Optional[str]:
     """
     Assuming the MRN exist, get the MRNID.
     :param MRN: the MRN to look for
@@ -201,7 +201,7 @@ def get_DCCID(MRN):
     return KeyRecords[0][dcc_header_index]
 
 
-def get_timepoint(MRN):
+def get_timepoint(MRN: int) -> Optional[str]:
     """
     Assuming the MRN exist, get the MRNID.
     :param MRN: the MRN to look for
@@ -223,7 +223,7 @@ def get_timepoint(MRN):
     return KeyRecords[0][timepoint_header_index]
 
 
-def get_scan_date(MRN):
+def get_scan_date(MRN: int) -> Optional[str]:
     """
     Assuming the MRN exist, get the MRNID.
     :param MRN: the MRN to look for
@@ -245,7 +245,7 @@ def get_scan_date(MRN):
     return scan_date
 
 
-def set_CNBP(MRN: int, CNBPID): #fixme: all the SET RECORDS NEED TO CONSIDER THE MULTIROW possiblities.
+def set_CNBP(MRN: int, CNBPID: str): #fixme: all the SET RECORDS NEED TO CONSIDER THE MULTIROW possiblities.
     """
     Update record with proper CNBPID which has particular MRN
     :param MRN:
@@ -295,7 +295,7 @@ def set_seriesUID(MRN: int, SeriesUID: List[str]):
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "SeriesUID", json_seriesUID)
 
 
-def set_DCCID(MRN: int, DCCID):
+def set_DCCID(MRN: int, DCCID: int):
     """
     Update record with proper DCCID which has particular MRN
     :param MRN:

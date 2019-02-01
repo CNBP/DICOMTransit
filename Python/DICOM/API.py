@@ -5,6 +5,7 @@ from PythonUtils.file import dictionary_search
 from settings import config_get
 from PythonUtils.folder import get_abspath
 from tqdm import tqdm
+from typing import List
 import os
 import logging
 
@@ -39,7 +40,7 @@ def change_to_zip_dir():
     os.chdir(zip_path)
 
 
-def anonymize_files(files):
+def anonymize_files(files: List[str]):
     """
     #fixme: not working not sure why these exist...
     Anaonymize the files given using the name provided. WIP!!!
@@ -105,7 +106,7 @@ def check_anonymization(files: list, anonymized_name) -> bool:
 
     return True
 
-def retrieve_study_protocol(files):
+def retrieve_study_protocol(files: List[str]) -> List[str]:
     """
     From the list of files, find the names of all the possible studies descriptions.
     #(0008,1030)	Study Description	e.g. FUNCTIONAL^Dr.Bohbot
@@ -126,13 +127,13 @@ def retrieve_study_protocol(files):
             logger.error(f"Study protocol could not be retrieved from: {file}. Skipping this file!")
             continue
 
-        # Only add if it is not already in the list (avoid dupliate, ensure unique entries
+        # Only add if it is not already in the list (avoid duplicate, ensure unique entries
         if LORIS_validation.validate_projectID(study_protocol) and study_protocol not in protocols:
             protocols.append(study_protocol)
 
     return protocols
 
-def study_validation(study):
+def study_validation(study: str) -> str:
     """
     Given a string read from the DICOM studies field, check it against the project ID dictionary to see if any of the project belongs.
     :param study:
@@ -154,7 +155,7 @@ def study_validation(study):
     return key
 
 
-def infer_project_using_protocol(files):
+def infer_project_using_protocol(files: List[str]) -> str:
     """
     Check if the DICOM files provided contain the appropriate project specific acquisition information tags that would be necessary to be considered to be one of the project.
     :param files:

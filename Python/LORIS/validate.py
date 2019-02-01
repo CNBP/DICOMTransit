@@ -51,7 +51,7 @@ class LORIS_validation:
         :return:
         """
 
-        logger = logging.getLogger(current_funct_name())
+
         # Sanity check for scan date within the past 100 years.
         birth_date = datetime.strptime(birth_date, "%Y%m%d")
         current_date = datetime.now()
@@ -74,7 +74,7 @@ class LORIS_validation:
         :param birth_date:
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
         # Sanity check for scan date within the past 100 years.
         birth_date = datetime.strptime(birth_date, "%Y-%m-%d")
         current_date = datetime.now()
@@ -167,7 +167,7 @@ class LORIS_validation:
         :param CNBPID:
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
 
         # Parse from input CNBPID
         success, input_institution, input_subject = LORIS_candidates.parse_PSCID(CNBPID)

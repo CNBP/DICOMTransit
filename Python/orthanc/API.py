@@ -4,10 +4,15 @@ from orthanc.query import orthanc_query
 from LORIS.helper import LORIS_helper
 from PythonUtils.file import unique_name
 import logging
+from typing import List
 
 logger = logging.getLogger()
 
-def check_status():
+def check_status() -> bool:
+    """
+    Check the orthanc status to ensure that it is online.
+    :return:
+    """
     url, user, password = get_prod_orthanc_credentials()
     try:
         endpoint = f"{url}patients/"
@@ -19,14 +24,23 @@ def check_status():
     return success
 
 
-def get_dev_orthanc_credentials():
+def get_dev_orthanc_credentials() -> (str, str, str):
+    """
+    Obtain the Development Orthanc instance credential
+    :return:
+    """
     from settings import config_get
     url = config_get("DevOrthancIP")
     user = config_get("DevOrthancUser")
     password = config_get("DevOrthancPassword")
     return url, user, password
 
-def get_prod_orthanc_credentials():
+
+def get_prod_orthanc_credentials() -> (str, str, str):
+    """
+    Obtain the Production Orthanc instance credential
+    :return:
+    """
     from settings import config_get
     url = config_get("ProdOrthancIP")
     user = config_get("ProdOrthancUser")
@@ -34,7 +48,7 @@ def get_prod_orthanc_credentials():
     return url, user, password
 
 
-def get_list_of_subjects_noauth(orthanc_URL):
+def get_list_of_subjects_noauth(orthanc_URL: str) -> List[str]:
     """
     Get a list of subjects from a .env predefined orthanc server.
     :return: the lsit of all subjects in the orthanc server
@@ -47,7 +61,7 @@ def get_list_of_subjects_noauth(orthanc_URL):
         raise ConnectionError("LORIS server did not return list of subjects. ")
     return list_subjects
 
-def get_list_of_subjects(orthanc_URL, orthanc_user, orthanc_password):
+def get_list_of_subjects(orthanc_URL: str, orthanc_user: str, orthanc_password: str)  -> List[str]:
     """
     Get a list of subjects from a .env predefined orthanc server.
     :return: the lsit of all subjects in the orthanc server
@@ -60,7 +74,7 @@ def get_list_of_subjects(orthanc_URL, orthanc_user, orthanc_password):
         raise ConnectionError("LORIS server did not return list of subjects. ")
     return list_subjects
 
-def get_subject_zip(orthanc_URL_with_UUID, orthaner_user, orthanc_password):
+def get_subject_zip(orthanc_URL_with_UUID: str, orthaner_user: str, orthanc_password: str) -> str:
     """
     Obtain the actual zip files of the subject based on the UUID given and unzip them to a temporary folder, and return it.
     :param orthanc_URL_with_UUID:
@@ -78,8 +92,13 @@ def get_subject_zip(orthanc_URL_with_UUID, orthaner_user, orthanc_password):
 
     return local_zip_file_path
 
-def unpack_subject_zip(zip_file):
-    
+
+def unpack_subject_zip(zip_file: str) -> tempfile.TemporaryDirectory:
+    """
+    Unpack the given Zip file to a temporary folder and return the reference to that temporary folder.
+    :param zip_file:
+    :return:
+    """
 
     # Create the temporary directory
     folder = tempfile.TemporaryDirectory(prefix=unique_name())
@@ -95,7 +114,8 @@ def unpack_subject_zip(zip_file):
     logger.debug("Removing zip archived.")
     return folder
 
-def delete_subject(subjectUUID: str):
+
+def delete_subject(subjectUUID: str) -> bool:
     """
     API to delete subject from the production Orthanc instance.
     :param subjectUUID:

@@ -21,7 +21,7 @@ class UT_DICOMManipulation(unittest.TestCase):
     @staticmethod
     def test_DICOM_decompress():
 
-        logger = logging.getLogger(current_funct_name())
+
 
         # Get all test files with "JPEG" in them.
         file_names = get_testdata_files("[Jj][Pp][Ee][Gg]")
@@ -97,7 +97,7 @@ class UT_DICOMManipulation(unittest.TestCase):
 
     @staticmethod
     def test_DICOM_computerScanAge():
-        logger = logging.getLogger(current_funct_name())
+
         path = get_testdata_files("emri_small_RLE")[0]
         success, Age = DICOM_elements.compute_age(path)
         assert success
@@ -105,7 +105,7 @@ class UT_DICOMManipulation(unittest.TestCase):
 
     @staticmethod
     def test_DICOM_check_dependency():
-        logger = logging.getLogger(current_funct_name())
+
         import subprocess
 
         try:

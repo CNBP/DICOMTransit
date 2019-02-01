@@ -14,7 +14,7 @@ class DICOM_validate:
         :param file_path:
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
 
         global dicom
         dicom = None
@@ -40,7 +40,7 @@ class DICOM_validate:
         :param dir_path:
         :returns: 0) if the path is valid, 2) list of ONLY the valid DICOM files.
         """
-        logger = logging.getLogger(current_funct_name())
+
 
         # Reject bad input check
         if not os.path.exists(dir_path) or not os.path.isdir(dir_path):

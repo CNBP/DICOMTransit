@@ -21,7 +21,7 @@ class DICOM_decompress:
         :param out_put:
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
 
         #if os.path.exists(out_put):
         #    logger.warn("Output_exist already. !!!OVERWRITING!!!")
@@ -117,7 +117,7 @@ class DICOM_decompress:
         :param file_list:
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
 
         for file in tqdm(file_list, position=0):
 

@@ -12,7 +12,7 @@ from PythonUtils.file import current_funct_name
 """
 Everything here, should have its own login sessions as tokens are not shared at this high level function.  
 """
-logger = logging.getLogger(current_funct_name())
+
 
 def check_status() -> bool:
     """
@@ -119,7 +119,7 @@ def new_trigger_insertion(DCCID: int, VisitLabel: str, filename:str, mri_upload_
     return process_id
 
 
-def increment_timepoint(DCCID):
+def increment_timepoint(DCCID: int):
     """
     Increament the existing timepoint for the subject, return the latest timepoint.
     :param DCCID:
@@ -167,7 +167,7 @@ def create_candidate(project, birthday, gender) -> (bool, int, int):
     return success, DCCID, PSCID
 
 
-def get_all_timepoints(DCCID:int) -> List[str]:
+def get_all_timepoints(DCCID: int) -> List[str]:
     """
     Get a list of all possible timepoints associated with a UUID.
     :param DCCID:
@@ -227,7 +227,7 @@ def get_allUID(DCCID: int) -> List[str]:
     return list_series_UID
 
 
-def upload_visit_DICOM(local_path, DCCID: int, VisitLabel: str, isPhantom: bool):
+def upload_visit_DICOM(local_path: str, DCCID: int, VisitLabel: str, isPhantom: bool):
     """
     A custom end point where we specify the information for the file to be uploaded.
     Note that header is VERY unique.

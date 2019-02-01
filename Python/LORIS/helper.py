@@ -53,7 +53,7 @@ class LORIS_helper:
         :param local_file_path:
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
 
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -74,7 +74,7 @@ class LORIS_helper:
         :param local_file_path:
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
         sftp = client.open_sftp()
         logger.debug(remote_path)
         sftp.put(local_file_path, remote_path)
@@ -137,7 +137,7 @@ class LORIS_helper:
         :param client:
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
         logger.debug(f"Ran command: {bash_command_string}")
 
         # Bind in, out and err prompts after running certain commands.

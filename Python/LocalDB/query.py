@@ -22,7 +22,7 @@ class LocalDB_query:
         :param ColumnValue: the value of the column being checked
         :return: boolean on if this is ever found in the given database in the given table, in the given column.
         """
-        logger = logging.getLogger(current_funct_name())
+
 
 
         SQLPath = Path(database_path)
@@ -68,7 +68,7 @@ class LocalDB_query:
         :param ColumnValue: the value of the column being checked
         :return: boolean on if this is ever found in the given database in the given table, in the given column.
         """
-        logger = logging.getLogger(current_funct_name())
+
 
 
         SQLPath = Path(database_path)
@@ -115,7 +115,7 @@ class LocalDB_query:
         :param key_field_value: value of the key_field to be created.
         :return: if the entry has been successfully created.
         """
-        logger = logging.getLogger(current_funct_name())
+
 
         # if SQL already exist, quit script.
         SQLPath = Path(database_path)
@@ -157,7 +157,7 @@ class LocalDB_query:
         :return:
         """
 
-        logger = logging.getLogger(current_funct_name())
+
 
         # if SQL already exist, quit script.
         SQLPath = Path(database_path)
@@ -194,7 +194,7 @@ class LocalDB_query:
         :return:
         """
 
-        logger = logging.getLogger(current_funct_name())
+
 
         table_header = None
 
@@ -249,7 +249,7 @@ class LocalDB_query:
         :param field: the string of the field name that is to be searched.
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
         field_table_index = -1
         field_schema_index = -2
 
@@ -281,7 +281,7 @@ class LocalDB_query:
 
     @staticmethod
     def get_all(database_path, table_name, field_names):
-        logger = logging.getLogger(current_funct_name())
+
 
         SQLPath = Path(database_path)
 

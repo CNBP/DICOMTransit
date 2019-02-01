@@ -16,7 +16,7 @@ class UT_LocalDBCreate(unittest.TestCase):
 
     @staticmethod
     def test_CreateSubject():
-        logger = logging.getLogger(current_funct_name())
+
         PathString = "TestCNBPQuery.sqlite"
 
         # if SQL already exist, quit script.
@@ -55,7 +55,7 @@ class UT_LocalDBCreate(unittest.TestCase):
 
     @staticmethod
     def test_CheckSubjectExist():
-        logger = logging.getLogger(current_funct_name())
+
         PathString = "TestCNBPQuery.sqlite"
 
         # if SQL already exist, quit script.
@@ -100,7 +100,7 @@ class UT_LocalDBCreate(unittest.TestCase):
 
     @staticmethod
     def test_CreateSubjectCheckExist():
-        logger = logging.getLogger(current_funct_name())
+
         PathString = "TestCNBPQuery.sqlite"
 
         # if SQL already exist, quit script.
@@ -150,7 +150,7 @@ class UT_LocalDBCreate(unittest.TestCase):
 
     @staticmethod
     def test_SubjectUpdate():
-        logger = logging.getLogger(current_funct_name())
+
         PathString = "TestCNBPQuery.sqlite"
 
         # if SQL already exist, quit script.

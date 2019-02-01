@@ -16,7 +16,7 @@ class UT_LocalDBCreate(unittest.TestCase):
 
     @staticmethod
     def test_LocalDBCreate():
-        logger = logging.getLogger(current_funct_name())
+
         PathString = "Test.sqlite"
         # if SQL already exist, quit script.
         SQLPath = Path(PathString)
@@ -59,7 +59,7 @@ class UT_LocalDBCreate(unittest.TestCase):
 
     @staticmethod
     def test_LocalDBCreate_CNBP():
-        logger = logging.getLogger(current_funct_name())
+
         PathString = "TestCNBP.sqlite"
         # if SQL already exist, quit script.
         SQLPath = Path(PathString)

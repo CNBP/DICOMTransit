@@ -14,7 +14,7 @@ class DICOM_convert:
         :param input_folder: Input_folder can be a root folder or flat.
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
         if not os.path.exists(input_folder) or not os.path.exists(output_folder):
             return False, "Argument input or output folder does not exist"
 

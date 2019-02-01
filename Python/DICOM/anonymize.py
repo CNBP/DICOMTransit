@@ -30,7 +30,7 @@ class DICOM_anonymize:
         :param file_list:
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
 
         exception_count = 0
         exception_files = []

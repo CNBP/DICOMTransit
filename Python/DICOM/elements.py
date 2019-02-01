@@ -17,7 +17,6 @@ class DICOM_elements:
         :param data_element:
         :return: LIST of all data elements that match the pattern provided in the data_element and their value.  NO Regular EXPRESSION.
         """
-        logger = logging.getLogger(current_funct_name())
         success, DICOM = DICOM_validate.file(file_path)
 
         if not success:
@@ -41,11 +40,13 @@ class DICOM_elements:
             return True, element_values
         except KeyError:
             #todo: dicomdir situation most likely ends here.
-            logger.error("Key Not exist")
-            return False, "Key Not exist"
+            fail_reason = f"In memory retrieve of DICOM element failed. The data element provided: {data_element}, does not appear to exist"
+            logger.error(fail_reason)
+            return False, fail_reason
         except Exception:
-            logger.error("General catch all exception reached. Contact author with the file to debug")
-            return False, "General catch all exception reached. Contact author with the file to debug"
+            fail_reason = "In memory retrieve of DICOM element failed. General catch all exception reached. Contact author with the file to debug."
+            logger.error(fail_reason)
+            return False, fail_reason
 
     @staticmethod
     def update(file_path: str, data_element: str, element_value, out_path) -> (bool, str):
@@ -102,7 +103,7 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        logger = logging.getLogger(current_funct_name())
+
         success, MRN = DICOM_elements.retrieve(file_path, "PatientID")
 
         if not success:
@@ -122,7 +123,7 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        logger = logging.getLogger(current_funct_name())
+
         success, name = DICOM_elements.retrieve(file_path, "PatientID")
 
         if not success:
@@ -139,7 +140,7 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        logger = logging.getLogger(current_funct_name())
+
         success, name = DICOM_elements.retrieve(file_path, "PatientName")
 
         if not success:
@@ -157,7 +158,7 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        logger = logging.getLogger(current_funct_name())
+
         success, SeriesUID = DICOM_elements.retrieve(file_path, "SeriesInstanceUID")
 
         if not success:
@@ -178,7 +179,7 @@ class DICOM_elements:
 
         # todo: to be debugged. Check detailed conditions.
         from datetime import datetime
-        logger = logging.getLogger(current_funct_name())
+
 
         # Retrieve the data element.
         success, SeriesDate = DICOM_elements.retrieve(file_path, "SeriesDate")
@@ -204,7 +205,7 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        logger = logging.getLogger(current_funct_name())
+
         success, value = DICOM_elements.retrieve(file_path, "StudyDescription")
 
         if value=="":
@@ -224,7 +225,7 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        logger = logging.getLogger(current_funct_name())
+
         success, value = DICOM_elements.retrieve(file_path, "PatientBirthDate")
 
         if not success or value == "" or value is None:
@@ -251,7 +252,7 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        logger = logging.getLogger(current_funct_name())
+
 
         success, value = DICOM_elements.retrieve(file_path, "PatientSex")
 

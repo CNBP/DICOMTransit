@@ -17,7 +17,7 @@ class DICOM_sort:
         :param input_folder: Input_folder can be a root folder or flat.
         :return:
         """
-        logger = logging.getLogger(current_funct_name())
+
 
         #Element to check: Series number.
 
