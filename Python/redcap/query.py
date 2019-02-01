@@ -1,7 +1,7 @@
 from json import dumps
 from operator import itemgetter
 from requests import post
-from redcap.enums import Projects
+from redcap.enums import Project
 from redcap.constants import *
 from redcap.transaction import RedcapTransaction
 
@@ -53,7 +53,7 @@ def load_metadata(transaction: RedcapTransaction):
     transaction.redcap_metadata = []
 
     # For each REDCap project
-    for project in Projects:
+    for project in Project:
 
         # Get all metadata rows.
         payload = {'token': get_project_token(project.name), 'format': 'json', 'content': 'metadata'}
@@ -83,7 +83,7 @@ def send_data(transaction: RedcapTransaction):
     transaction.redcap_queue = sorted(transaction.redcap_queue, key=itemgetter(1))
 
     # For each REDCap project
-    for project in Projects:
+    for project in Project:
 
         batch_of_records = []
 
@@ -149,15 +149,15 @@ def get_project_token(project):
     :param project: Projects Configuration Number
     :return: Projects Token
     """
-    if project == Projects.admission.name:
+    if project == Project.admission.name:
         return redcap_token_cnn_admission
-    elif project == Projects.baby.name:
+    elif project == Project.baby.name:
         return redcap_token_cnn_baby
-    elif project == Projects.mother.name:
+    elif project == Project.mother.name:
         return redcap_token_cnn_mother
-    elif project == Projects.master.name:
+    elif project == Project.master.name:
         return redcap_token_cnn_master
-    elif project == Projects.patient.name:
+    elif project == Project.patient.name:
         return redcap_token_cnfun_patient
     else:
         return ''
