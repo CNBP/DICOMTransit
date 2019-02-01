@@ -1,14 +1,14 @@
-import sys
+
 import json
 import logging
 from settings import config_get
-from LocalDB.schema import CNBP_blueprint
-from PythonUtils.file import dictionary_search, current_funct_name
+
+from PythonUtils.file import dictionary_search
 from LORIS.candidates import LORIS_candidates
 from datetime import datetime
 import math
 
-
+logger = logging.getLogger()
 
 
 

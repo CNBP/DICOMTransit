@@ -1,16 +1,14 @@
 import json
 import logging
-import sys
 
 from LORIS.candidates import LORIS_candidates
 from LORIS.validate import LORIS_validation
 from LORIS.helper import LORIS_helper
 from LORIS.query import LORIS_query
-from LocalDB.schema import CNBP_blueprint
 from settings import config_get
 from PythonUtils.intmath import int_incrementor
-from PythonUtils.file import current_funct_name
 
+logger = logging.getLogger()
 
 class LORIS_timepoint:
 

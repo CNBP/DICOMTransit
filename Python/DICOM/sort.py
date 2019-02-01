@@ -1,12 +1,11 @@
-import sys
 import logging
 import os
 import shutil
 from DICOM.elements import DICOM_elements
 from DICOM.validate import DICOM_validate
 from tqdm import tqdm
-from PythonUtils.file import current_funct_name
 
+logger = logging.getLogger()
 
 class DICOM_sort:
 

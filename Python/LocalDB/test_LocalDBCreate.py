@@ -8,7 +8,7 @@ from LocalDB.create import LocalDB_create
 from LocalDB.query import LocalDB_query
 from LocalDB.schema import CNBP_blueprint
 
-from PythonUtils.file import current_funct_name
+
 
 
 

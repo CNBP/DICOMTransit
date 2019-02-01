@@ -21,7 +21,7 @@ sentry_sdk.init("https://d788d9bf391a4768a22ea6ebabfb4256@sentry.io/1385114")
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 # Create logger.
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 # Set logger path.
 log_file_path = os.path.join(config_get("LogPath"), f"DICOMTransit_FSM_Log_{unique_name()}.txt")

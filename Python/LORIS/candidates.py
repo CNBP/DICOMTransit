@@ -6,7 +6,6 @@ from LORIS.query import LORIS_query
 from LORIS.helper import LORIS_helper
 
 from LocalDB.schema import CNBP_blueprint
-from PythonUtils.file import current_funct_name
 
 logger = logging.getLogger()
 

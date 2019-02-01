@@ -6,11 +6,10 @@ from LORIS.timepoint import LORIS_timepoint
 from settings import config_get
 from typing import List
 import logging
-import sys
 import os
-from PythonUtils.folder import recursive_list
 
-logger = logging.getLogger('DICOMPackage Class')
+
+logger = logging.getLogger()
 
 class DICOMPackage:
     """

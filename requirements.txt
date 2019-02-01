@@ -1,11 +1,9 @@
 python-dotenv
-python-coveralls
 pydicom
 python-dateutil
 pytest-cov
 tqdm
 paramiko
-pydispatcher
 gevent
 pyodbc
 requests

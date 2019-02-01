@@ -2,7 +2,6 @@ from LocalDB.query import LocalDB_query
 from LocalDB.schema import CNBP_blueprint
 from LORIS.validate import LORIS_validation
 import logging
-import sys
 import os
 from settings import config_get
 from PythonUtils.env import load_dotenv_var
@@ -10,7 +9,7 @@ from PythonUtils.intmath import int_incrementor
 from typing import List, Optional
 import json
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 

@@ -6,8 +6,9 @@ from tqdm import tqdm
 
 
 from pydicom.filereader import read_file_meta_info
-from PythonUtils.file import current_funct_name
+
 from DICOM.validate import DICOM_validate
+import logging
 
 logger = logging.getLogger()
 

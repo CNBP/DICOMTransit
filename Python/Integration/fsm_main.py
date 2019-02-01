@@ -9,7 +9,7 @@ import LORIS.API
 import LocalDB.API
 import orthanc.API
 from DICOM.DICOMPackage import DICOMPackage
-from PythonUtils.file import current_funct_name
+
 
 SIGNAL          = 'my-first-signal'
 SIG_Error       = 'Generic Error'

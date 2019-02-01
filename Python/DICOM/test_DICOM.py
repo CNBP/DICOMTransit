@@ -7,7 +7,7 @@ from DICOM.decompress import DICOM_decompress
 from DICOM.anonymize import DICOM_anonymize
 from DICOM.elements import DICOM_elements
 from pydicom.data import get_testdata_files
-from PythonUtils.file import current_funct_name
+
 
 
 

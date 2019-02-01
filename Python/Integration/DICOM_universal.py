@@ -9,7 +9,7 @@ import glob
 import logging
 import sys
 
-
+logger = logging.getLogger()
 
 class DICOM_converter:
 
@@ -42,7 +42,6 @@ class DICOM_converter:
         """
         os.chdir(output_folder)
         os.mkdir("raw")
-        logger = logging.getLogger(__name__)
         logger.info("Backup up untouched raw files:")
         path_raw = os.path.join(output_folder, "raw")
         file_list = recursive_list(input_folder)
@@ -60,7 +59,6 @@ class DICOM_converter:
         os.chdir(output_folder)
         os.chdir(output_folder)
         create("raw_sorted")
-        logger = logging.getLogger(__name__)
         logger.info("Generating sorted raw files:")
         path_raw_sorted = os.path.join(output_folder, "raw_sorted")
         DICOM_sort.into_folder(input_folder, path_raw_sorted)
@@ -77,7 +75,6 @@ class DICOM_converter:
         """
         os.chdir(output_folder)
         create("raw_sorted_decompressed")
-        logger = logging.getLogger(__name__)
         logger.info("Generating sorted and decompressed DICOM files:")
         path_raw_sorted_decompressed = os.path.join(output_folder, "raw_sorted_decompressed")
         DICOM_sort.into_folder(input_folder, path_raw_sorted_decompressed)
@@ -95,7 +92,6 @@ class DICOM_converter:
         """
         os.chdir(output_folder)
         create("nii")
-        logger = logging.getLogger(__name__)
         logger.info("Generating NII files:")
         path_nii = os.path.join(output_folder, "nii")
         DICOM_convert.to_nii(input_folder, path_nii)
@@ -125,7 +121,6 @@ class DICOM_converter:
         :param input_root_folder:
         :return:
         """
-        logger = logging.getLogger(__name__)
 
         path_list = DICOM_converter.DICOMOBJ_finder(input_root_folder)
         for path in path_list:

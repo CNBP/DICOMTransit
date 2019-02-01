@@ -7,7 +7,9 @@ from LORIS.trigger_dicom_insert import trigger_dicom_insert
 from typing import List
 from settings import config_get
 import logging
-from PythonUtils.file import current_funct_name
+
+
+logger = logging.getLogger()
 
 """
 Everything here, should have its own login sessions as tokens are not shared at this high level function.  

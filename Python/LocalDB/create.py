@@ -1,4 +1,3 @@
-import sys
 import sqlite3
 import logging
 from pathlib import Path
@@ -10,7 +9,7 @@ from LocalDB.schema import CNBP_blueprint
 
 
 
-logger = logging.getLogger('database')
+logger = logging.getLogger()
 
 class LocalDB_create:
 

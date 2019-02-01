@@ -2,15 +2,13 @@ import sqlite3
 from pathlib import Path
 import logging
 import os
-import sys
 from LocalDB.query import LocalDB_query
 from LocalDB.create_CNBP import LocalDB_createCNBP
-
 from LocalDB.schema import CNBP_blueprint
 from settings import config_get
-from PythonUtils.file import current_funct_name
-
 import unittest
+
+logger = logging.getLogger()
 
 class UT_LocalDBCreate(unittest.TestCase):
 

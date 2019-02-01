@@ -4,7 +4,7 @@ import os
 import shutil
 import zipfile
 
-from PythonUtils.file import is_name_unique, unique_name, current_funct_name
+from PythonUtils.file import is_name_unique, unique_name
 from requests.auth import HTTPBasicAuth
 from settings import config_get
 from tqdm import tqdm

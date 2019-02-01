@@ -1,10 +1,9 @@
-import sys
 import logging
 import sqlite3
 from pathlib import Path
 from LocalDB.schema import CNBP_blueprint
-from PythonUtils.file import current_funct_name
 
+logger = logging.getLogger()
 
 class LocalDB_query:
 

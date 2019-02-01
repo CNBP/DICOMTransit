@@ -2,13 +2,14 @@ import json
 import logging
 import paramiko
 from settings import config_get
-from PythonUtils.file import current_funct_name
 
+
+logger = logging.getLogger()
 
 class LORIS_helper:
 
     @staticmethod
-    def number_extraction(string):
+    def number_extraction(string: str):
         """
         Return
         :param string:

@@ -3,8 +3,10 @@ from DICOM.elements import DICOM_elements
 import logging
 from tqdm import tqdm
 from PythonUtils.folder import recursive_list
-from PythonUtils.file import current_funct_name
+
 from typing import List
+
+logger = logging.getLogger()
 
 class DICOM_anonymize:
 

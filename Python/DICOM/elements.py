@@ -1,6 +1,6 @@
 import logging
 from DICOM.validate import DICOM_validate
-from PythonUtils.file import current_funct_name
+
 from LORIS.validate import LORIS_validation
 from typing import Optional
 from pydicom.dataset import FileDataset

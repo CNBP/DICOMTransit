@@ -4,7 +4,7 @@ from LORIS.query import LORIS_query
 from LORIS.candidates import LORIS_candidates
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 import unittest
 class UT_LORISQuery(unittest.TestCase):

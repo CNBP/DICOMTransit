@@ -1,14 +1,11 @@
 import json
 import logging
-import sys
-
 import requests
 
 from LORIS.helper import LORIS_helper
-from PythonUtils.file import  current_funct_name
 from settings import config_get
 
-
+logger = logging.getLogger()
 
 class LORIS_query:
 

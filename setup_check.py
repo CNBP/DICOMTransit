@@ -2,8 +2,8 @@ import subprocess
 import logging
 import sys
 from dotenv import load_dotenv
-from PythonUtils.file import current_funct_name
 
+logger = logging.getLogger()
 
 
 def nii2nifty_check():
@@ -11,7 +11,7 @@ def nii2nifty_check():
     Sanity check function that ensure the dcm2niix executable is found in the system OS path!
     :return:
     """
-    logger = logging.getLogger(current_funct_name)
+
     sys.path.append("/opt/mricrogl/")
 
     #sys.path.append("/opt/DCMTK")
@@ -43,7 +43,7 @@ def env_check():
     return load_dotenv()
 
 def dcmdjpeg_check():
-    logger = logging.getLogger(current_funct_name)
+
     try:
         # SUPER IMPORTANT! MAKE SURE DCMDJPEG is in the system path!
         subprocess.check_output(['dcmdjpeg'])

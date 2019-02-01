@@ -7,6 +7,8 @@ from LocalDB.create import LocalDB_create
 from settings import config_get
 from LocalDB.schema import CNBP_blueprint
 
+
+
 class LocalDB_createCNBP:
 
     @staticmethod

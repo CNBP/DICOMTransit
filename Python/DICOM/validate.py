@@ -1,9 +1,9 @@
-import sys
 import logging
 import os
 from tqdm import tqdm
 from PythonUtils.folder import recursive_list
-from PythonUtils.file import current_funct_name
+
+logger = logging.getLogger()
 
 class DICOM_validate:
 

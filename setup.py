@@ -5,7 +5,7 @@
 from setuptools import setup,find_packages
 
 setup(name='DICOMTransit',
-	version='0.21',
+	version='0.80',
 	description='Intermediate server to transfer and process DICOM files',
 	url='https://github.com/CNBP/DICOMTransit',
 	author='Canadian Neonatal Brain Platform',
@@ -13,18 +13,21 @@ setup(name='DICOMTransit',
 	license='MIT',
 	packages=find_packages(),
 	install_requires=[
-		'python-dotenv'
-		'python-coveralls'
+		'python-dotenv'		
 		'coverage'
 		'pydicom'
 		'python-dateutil'
 		'pytest-cov'
 		'tqdm'
-		'paramiko'
-		'pydispatcher'
+		'paramiko'		
 		'gevent'
 		'pyodbc'
 		'requests'
-		'gevents'
+		'config'
+		'werkzeug'
+		'flask'
+		'transitions'
 	],
 	zip_safe=False)
+
+

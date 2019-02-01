@@ -3,7 +3,10 @@ import logging
 import os
 import subprocess
 import re
-from PythonUtils.file import current_funct_name
+import logging
+
+logger = logging.getLogger()
+
 
 class DICOM_convert:
 
