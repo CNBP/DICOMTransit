@@ -1,8 +1,16 @@
+# ----------------------------------------------------------------------------------------------------------------------
+#  Imports
+# ----------------------------------------------------------------------------------------------------------------------
+
 import pyodbc
 from redcap.enums import Database, Field, DataType
 from redcap.constants import cnn_connection_string, cnfun_connection_string
 from redcap.transaction import RedcapTransaction
 
+
+# ----------------------------------------------------------------------------------------------------------------------
+#  Local ODBC
+# ----------------------------------------------------------------------------------------------------------------------
 
 def get_database_column_names(table_info, transaction: RedcapTransaction):
     """
@@ -90,12 +98,6 @@ def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
 
     else:
         return None
-
-
-
-
-
-
 
 
 def get_data_rows_for_reference_table(table_info):

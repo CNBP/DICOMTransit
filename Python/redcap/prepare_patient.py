@@ -1,3 +1,7 @@
+# ----------------------------------------------------------------------------------------------------------------------
+#  Imports
+# ----------------------------------------------------------------------------------------------------------------------
+
 from redcap.enums import Field
 from redcap.constants import *
 from redcap.local_odbc import get_database_column_names, get_data_rows_for_patient_table, get_primary_key_name
@@ -5,6 +9,9 @@ from redcap.query import get_fields
 from redcap.transaction import RedcapTransaction
 
 
+# ----------------------------------------------------------------------------------------------------------------------
+#  Prepare Patient
+# ----------------------------------------------------------------------------------------------------------------------
 
 def prepare_patient_tables(transaction: RedcapTransaction):
     """

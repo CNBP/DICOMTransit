@@ -1,30 +1,8 @@
-########################################################################################################################
-#
-# Canadian Neonatal Brain Platform:
-#   CNN/CNFUN to REDCap Data Update Script
-#
-# Author:
-#   Applied Clinical Research Unit (URCA) - CHU Sainte-Justine Research Center
-#
-# History:
-#   -> Summer 2018 - Initial Creation
-#   -> TBD - Final version
-#
-# Note:
-#   Developed for Python 3.6.7
-#
-########################################################################################################################
-
-
 # ----------------------------------------------------------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------------------------------------------------------
 
 from tkinter import *
-
-# ----------------------------------------------------------------------------------------------------------------------
-#  Custom Modules
-# ----------------------------------------------------------------------------------------------------------------------
 from LocalDB.API import load_hospital_record_numbers
 from redcap.prepare_patient import prepare_patient_tables
 from redcap.prepare_reference import prepare_reference_tables
@@ -34,18 +12,12 @@ from redcap.query import load_metadata, send_data
 from redcap.constants import environment
 import logging
 
-# Note: You may tell the script to use the values of the development or production constants simply by commenting out
-#       one of the two lines below.
-# import production as environment
 
+# ----------------------------------------------------------------------------------------------------------------------
+#  CNN and CNFUN to REDCap
+# ----------------------------------------------------------------------------------------------------------------------
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
-
-# ----------------------------------------------------------------------------------------------------------------------
-#  Functions
-# ----------------------------------------------------------------------------------------------------------------------
-
 
 def update_redcap_data():
     """
@@ -122,9 +94,10 @@ def update_redcap_data():
 
 if __name__ == "__main__":
 
-    # ----------------------------------------------------------------------------------------------------------------------
-    #  UI Code
-    # ----------------------------------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------------------------------
+#  UI Code
+# ----------------------------------------------------------------------------------------------------------------------
 
     # Initialize the tcl/tk interpreter and create the root window.
     window = Tk()
