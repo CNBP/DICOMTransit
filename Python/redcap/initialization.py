@@ -14,18 +14,18 @@ def initialize_import_configuration(transaction: RedcapTransaction):
     """
     Initialize the data import configuration matrix.
     Columns:
-        0 IMPORT_SEQUENCE,
-        1 IS_IMPORT_ENABLED,
-        2 IS_REFERENCE_TABLE,
-        3 REDCAP_PROJECT,
-        4 DATABASE_TABLE_NAME,
-        5 DATABASE,
-        6 PRIMARY_KEY_NAME,
-        7 PRIMARY_KEY_VALUE,
-        8 AUTHORITY_ON_IDS,
-        9 IS_REPEATABLE_INSTRUMENT,
+        0  IMPORT_SEQUENCE,
+        1  IS_IMPORT_ENABLED,
+        2  IS_REFERENCE_TABLE,
+        3  REDCAP_PROJECT,
+        4  DATABASE_TABLE_NAME,
+        5  DATABASE,
+        6  PRIMARY_KEY_NAME,
+        7  PRIMARY_KEY_VALUE,
+        8  AUTHORITY_ON_IDS,
+        9  IS_REPEATABLE_INSTRUMENT,
         10 REDCAP_FORM_NAME
-    :return: None
+    :return: RedcapTransaction
     """
 
     transaction.data_import_configuration = [
