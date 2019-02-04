@@ -10,9 +10,6 @@ from redcap.enums import Field
 # ----------------------------------------------------------------------------------------------------------------------
 
 class RedcapTransaction:
-    """
-    This is an abstract class that contain all the information necessary to complete a transaction with RedCAP system to update it.
-    """
 
     data_import_configuration = []
     redcap_metadata = []
@@ -21,8 +18,7 @@ class RedcapTransaction:
     hospital_record_numbers = []
     redcap_queue = []
 
-
-    # Case specific temporary variable.
+    # Case specific temporary variables.
     HospitalRecordNumber = -1
     CaseId = -1
     BabyId = -1
@@ -35,7 +31,7 @@ class RedcapTransaction:
     def initialize_ids(self, index_hospital_record_number):
         """
         Sets the hospital record number and reset all ids related to this hospital record number.
-        :param index_hospital_record_number: Hospital Record Number
+        :param index_hospital_record_number: Index of Hospital Record Number
         :return: None
         """
         self.HospitalRecordNumber = self.hospital_record_numbers[index_hospital_record_number]
@@ -55,14 +51,6 @@ class RedcapTransaction:
         :return: None
         """
         self.redcap_queue.append([record_text, project])
-
-    def clear_redcap_queue(self):
-        """
-        Erase all records in the queue.
-        :return: None
-        """
-        self.redcap_queue = []
-
 
     def get_primary_key_value(self, primary_key):
         """
