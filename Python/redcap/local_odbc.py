@@ -16,11 +16,11 @@ def get_database_column_names(table_info, transaction: RedcapTransaction):
     """
     Returns a list of fields contained within a database table.
     :param table_info: Table Information
-    :param transaction: the transaction content to be updated.
+    :param transaction: RedcapTransaction
     :return: List of fields
     """
     if table_info is None:
-        return table_info
+        return None
 
     # If this is the first time the column names are requested for this table
     if table_info[4].lower() not in transaction.database_column_names:
@@ -33,6 +33,7 @@ def get_database_column_names(table_info, transaction: RedcapTransaction):
         database_columns = [tuple[0] for tuple in result.description]
 
         odbc_cursor.close()
+        conn.close
 
         # Store a copy of column names for this table in local memory.
         transaction.database_column_names[table_info[4].lower()] = database_columns
@@ -52,7 +53,8 @@ def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
     :return: List of all the rows obtained from the query.
     """
     if table_info is None:
-        return table_info
+        return None
+
     if table_info[4] == '':
         return None
 
