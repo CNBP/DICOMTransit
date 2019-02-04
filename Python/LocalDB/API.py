@@ -12,6 +12,7 @@ from redcap import development as environment
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 def get_list_MRN():
     """
     Return a list_return of all MRN from the database.
@@ -19,7 +20,6 @@ def get_list_MRN():
     """
     # Load local database from .env file
     database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
-
 
     list_MRN = []
 
@@ -49,6 +49,7 @@ def check_MRN(MRN):
     if MRN_exist_in_database:
         logger.info("MRN found to exist at local database")
     return MRN_exist_in_database
+
 
 def create_MRN(MRN):
     database_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
@@ -118,6 +119,7 @@ def get_timepoint(MRN):
 
     return KeyRecords[timepoint_header_index]
 
+
 def get_scan_date(MRN):
     """
     Assuming the MRN exist, get the MRNID.
@@ -137,6 +139,7 @@ def get_scan_date(MRN):
     date_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'Date')
     scan_date = KeyRecords[0][date_header_index]
     return scan_date
+
 
 def set_CNBP(MRN: int, CNBPID):
     """
@@ -186,6 +189,7 @@ def set_timepoint(MRN: int, Timepoint: str):
 
     # Update the MRN record with Timepoint
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", Timepoint)
+
 
 def propose_CNBPID(DICOM_protocol: str):
     """
@@ -265,14 +269,15 @@ def check_all_existing_records(matched_records):
     return incremented_subjectID
 
 
-def load_hospital_record_numbers(use_predefine: bool):
+def load_hospital_record_numbers(use_predefined: bool):
     """
-    A wrapper funciton of get_list_MRN which allow static loading of a predefined list of all hospital record numbers for which we want to transfer data to REDCap by utilizing API calls.
-    :return: None
+    A wrapper function of get_list_MRN which allow static loading of a predefined list of all hospital record numbers
+    for which we want to transfer data to REDCap by utilizing API calls.
+    :return: List of hospital record numbers (MRNs)
     """
     return_list = []
 
-    if not use_predefine:
+    if not use_predefined:
         # Get the numbers from a dynamic source:
         return_list = get_list_MRN()
     else:
@@ -311,9 +316,12 @@ def load_hospital_record_numbers(use_predefine: bool):
             3191237,
             3191976,
             3193639,
-            3202977
+            3202977,
+            2404933
         ]
     return return_list
 
+
 if __name__ == "__main__":
+
     propose_CNBPID("GregoryLodygensky012 Study")
