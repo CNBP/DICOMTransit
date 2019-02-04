@@ -19,11 +19,12 @@ import logging
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
+
 def get_fields(redcap_form_name, transaction: RedcapTransaction):
     """
     Returns a list of fields contained within a specific REDCap form (table)
     :param redcap_form_name: Name of form in REDCap
-    :param transaction: the transaction content to be updated.
+    :param transaction: RedcapTransaction
     :return: A dictionary (key: Name of field in the database, value: Name of field in REDCap)
     """
     redcap_fields = []
@@ -62,10 +63,10 @@ def load_metadata(transaction: RedcapTransaction):
     transaction.redcap_metadata = []
 
     # For each REDCap project
-    for project in Project:
+    for p in Project:
 
         # Get all metadata rows.
-        payload = {'token': get_project_token(project.name), 'format': 'json', 'content': 'metadata'}
+        payload = {'token': get_project_token(p.name), 'format': 'json', 'content': 'metadata'}
         response = post(redcap_api_url, data=payload)
         metadata = response.json()
 
@@ -80,19 +81,18 @@ def load_metadata(transaction: RedcapTransaction):
 def send_data(transaction: RedcapTransaction):
     """
     Sends all records in the queue to REDCap.
-    :return: successful or not and reason
+    :return: Successful or not and reason
     """
 
     # If there is at least one record in the queue waiting to be sent to REDCap
     if not len(transaction.redcap_queue) > 0:
-        return False, "RedCap queue is empty."
-
+        return False, "REDCap queue is empty."
 
     # Sort record queue by second column ascending (project).
     transaction.redcap_queue = sorted(transaction.redcap_queue, key=itemgetter(1))
 
     # For each REDCap project
-    for project in Project:
+    for p in Project:
 
         batch_of_records = []
 
@@ -100,7 +100,7 @@ def send_data(transaction: RedcapTransaction):
         for index_record in range(len(transaction.redcap_queue)):
 
             # If the current record belongs to the current project
-            if transaction.redcap_queue[index_record][1] == project.value: # todo: verifiy it should be using project.value instead of project.name or the like?
+            if transaction.redcap_queue[index_record][1] == p.value:
 
                 # We add this record to the batch of records to send.
                 batch_of_records.append(transaction.redcap_queue[index_record][0])
@@ -108,29 +108,31 @@ def send_data(transaction: RedcapTransaction):
                 # If the maximum number of records per batch has been reached
             if (len(batch_of_records)) % environment.NUMBER_OF_RECORDS_PER_BATCH == 0:
                 # Send the batch of records to REDCap.
-                import_records(batch_of_records, get_project_token(project.name))
+                import_records(batch_of_records, get_project_token(p.name))
 
         # Send the batch of records to REDCap.
-        import_records(batch_of_records, get_project_token(project.name))
+        import_records(batch_of_records, get_project_token(p.name))
 
-    return True, "All RedCap project has been sent. "
+    return True, "All REDCap data in queue has been sent. "
 
 
 def import_records(records, project_token):
     """
     Executes a REDCap Import Records API call.
     :param records: Batch of records ready to be sent to REDCap
-    :param project_token: Projects Token
-    :return: successful or not and reason
+    :param project_token: Project Token
+    :return: Successful or not and reason
     """
+
     logger = logging.getLogger(__name__)
+
     # If there is at least one record ready to be sent to REDCap
     if not len(records) > 0:
-        return False, "Record is empty"
+        return False, "Record queue is empty"
 
     # If a token was provided
     if project_token == '' or project_token is None:
-        return False, "Project_token %s is invalid!" % project_token
+        return False, "Project token %s is invalid!" % project_token
 
     # Prepare HTTP request.
     payload = {'token': project_token, 'format': 'json', 'content': 'record', 'type': 'flat',
@@ -151,12 +153,11 @@ def import_records(records, project_token):
     return True, "Success in sending. "
 
 
-
 def get_project_token(project):
     """
-    Get Projects Token
-    :param project: Projects Configuration Number
-    :return: Projects Token
+    Get Project Token
+    :param project: Project Name
+    :return: Project Token
     """
     if project == Project.admission.name:
         return redcap_token_cnn_admission
@@ -170,7 +171,3 @@ def get_project_token(project):
         return redcap_token_cnfun_patient
     else:
         return ''
-
-
-
-
