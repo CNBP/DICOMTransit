@@ -17,8 +17,9 @@ def prepare_patient_tables(transaction: RedcapTransaction):
     """
     Creates REDCap records for of all patient tables and adds them to the global queue (only for each hospital record
     number loaded).
-    :return: None
+    :return: RedcapTransaction
     """
+
     # For each hospital record number
     for index_hospital_record_number in range(len(transaction.hospital_record_numbers)):
 
@@ -33,17 +34,19 @@ def prepare_patient_tables(transaction: RedcapTransaction):
 def process_record(transaction: RedcapTransaction):
     """
     Process each patient record.
-    :return:
+    :return: None
     """
+
     table_configuration = transaction.data_import_configuration
 
     # For each table in the import configuration matrix
     for index_table in range(len(table_configuration)):
 
-        # If the current table is set to be imported, return
+        # If the current table IS NOT set to be imported, return
         if not table_configuration[index_table][IS_IMPORT_ENABLED]:
             return
 
+        # If the current table IS a reference table
         if table_configuration[index_table][IS_REFERENCE_TABLE]:
             return
 
@@ -55,10 +58,11 @@ def process_record(transaction: RedcapTransaction):
 def process_table(index_table, transaction: RedcapTransaction):
     """
     Process each patient table.
-    :param index_table:
-    :param transaction: the transaction content to be updated.
-    :return:
+    :param index_table: Index of current table
+    :param transaction: RedcapTransaction
+    :return: None
     """
+
     table_configuration = transaction.data_import_configuration
 
     # Get current table redcap fields.
@@ -83,14 +87,15 @@ def process_table(index_table, transaction: RedcapTransaction):
 def process_row(current_table_redcap_fields, database_column_list, index_row, index_table, rows, transaction):
     """
     Process each row of the current table for the current MRN.
-    :param current_table_redcap_fields:
-    :param database_column_list:
-    :param index_row:
-    :param index_table:
-    :param rows:
-    :param transaction: the transaction content to be updated.
-    :return:
+    :param current_table_redcap_fields: Current table REDCap fields
+    :param database_column_list: Database columns list
+    :param index_row: Index of current row
+    :param index_table: Index of current table
+    :param rows: All data contained in current table
+    :param transaction: RedcapTransaction
+    :return: None
     """
+
     table_configuration = transaction.data_import_configuration
 
     # If this is the first row of data and the current table has authority on any ids
@@ -125,19 +130,17 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
 
     # Set repeatable data (if applicable).
     if table_configuration[index_table][IS_REPEATABLE_INSTRUMENT]:
-        record_text[redcap_repeat_instrument_key_name] = \
-            table_configuration[index_table][
-                REDCAP_FORM_NAME].lower()
+        record_text[redcap_repeat_instrument_key_name] = table_configuration[index_table][REDCAP_FORM_NAME].lower()
         record_text[redcap_repeat_instance_key_name] = str(index_row + 1)
 
     # For each REDCap field in this table
-    for current_field in range(len(current_table_redcap_fields)):
+    for index_field in range(len(current_table_redcap_fields)):
 
         try:
 
             # 0 is for redcap field_label
             position_in_database_table = \
-                database_column_list.index(current_table_redcap_fields[current_field][0])
+                database_column_list.index(current_table_redcap_fields[index_field][0])
 
             if str(rows[index_row][position_in_database_table]) == 'False':
                 value = '0'
@@ -149,7 +152,7 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
                 value = str(rows[index_row][position_in_database_table])
 
             # 1 is for redcap field_name
-            record_text[current_table_redcap_fields[current_field][1]] = str(value)
+            record_text[current_table_redcap_fields[index_field][1]] = str(value)
 
         except ValueError:
 
@@ -166,12 +169,12 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
 
 def set_field_id(database_column_list, index_row, index_table, rows, transaction):
     """
-    :param database_column_list:
-    :param index_row:
-    :param index_table:
-    :param rows:
-    :param transaction: the transaction content to be updated.
-    :return:
+    :param database_column_list: Database columns list
+    :param index_row: Index of current row
+    :param index_table: Index of current table
+    :param rows: All data contained in current table
+    :param transaction: RedcapTransaction
+    :return: None
     """
 
     table_configuration = transaction.data_import_configuration
@@ -198,4 +201,3 @@ def set_field_id(database_column_list, index_row, index_table, rows, transaction
             transaction.PatientUI = str(rows[index_row][position])
         elif pk == Field.MasterId.value:
             transaction.MasterId = str(rows[index_row][position])
-
