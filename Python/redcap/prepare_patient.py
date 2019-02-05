@@ -25,6 +25,7 @@ def prepare_patient_tables(transaction: RedcapTransaction):
     """
     Creates REDCap records for of all patient tables and adds them to the global queue (only for each hospital record
     number loaded).
+    :param transaction: RedcapTransaction
     :return: RedcapTransaction
     """
 
@@ -42,6 +43,7 @@ def prepare_patient_tables(transaction: RedcapTransaction):
 def process_record(transaction: RedcapTransaction):
     """
     Process each patient record.
+    :param transaction: RedcapTransaction
     :return: None
     """
 
@@ -59,8 +61,6 @@ def process_record(transaction: RedcapTransaction):
             return
 
         process_table(index_table, transaction)
-
-    pass
 
 
 def process_table(index_table, transaction: RedcapTransaction):

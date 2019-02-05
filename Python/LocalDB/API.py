@@ -317,7 +317,9 @@ def load_hospital_record_numbers(use_predefined: bool):
             3191976,
             3193639,
             3202977,
-            2404933
+            2404933,
+            2423979,
+            3054365
         ]
     return return_list
 
