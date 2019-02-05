@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 def prepare_reference_tables(transaction: RedcapTransaction):
     """
     Creates REDCap records for of all reference tables and adds them to the global queue.
+    :param transaction: RedcapTransaction
     :return: RedcapTransaction
     """
     table_configuration = transaction.data_import_configuration
