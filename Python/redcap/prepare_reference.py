@@ -90,9 +90,9 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
         record_text[redcap_repeat_instance_key_name] = str(index_row + 1)
 
     # For each REDCap field in this table
-    for current_field in range(len(current_table_redcap_fields)):
+    for index_field in range(len(current_table_redcap_fields)):
 
-        process_field(current_field, current_table_redcap_fields, database_column_list, index_row, record_text, rows)
+        process_field(index_field, current_table_redcap_fields, database_column_list, index_row, record_text, rows)
 
     # Mark this table entry as 'complete'.
     redcap_complete_status_key_name = table_configuration[index_table][REDCAP_FORM_NAME].lower() + \
@@ -105,7 +105,7 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
 
 def process_field(index_field, current_table_redcap_fields, database_column_list, index_row, record_text, rows):
     """
-    Process the field of the row within the reference table.
+    Process the field of the row within the table.
     :param index_field: Index of current REDCap field
     :param current_table_redcap_fields: Current table REDCap fields
     :param database_column_list: Database columns list
@@ -114,6 +114,7 @@ def process_field(index_field, current_table_redcap_fields, database_column_list
     :param rows: All data contained in current table
     :return: None
     """
+
     try:
         # 0 is for redcap field_label
         position_in_database_table = \
