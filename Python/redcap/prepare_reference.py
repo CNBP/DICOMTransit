@@ -2,6 +2,7 @@
 #  Imports
 # ----------------------------------------------------------------------------------------------------------------------
 
+from redcap.common import process_field
 from redcap.constants import *
 from redcap.local_odbc import get_database_column_names, get_data_rows_for_reference_table, get_primary_key_name
 from redcap.query import get_fields
@@ -12,7 +13,7 @@ import logging
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-#  Prepare Reference
+#  Prepare Reference Data
 # ----------------------------------------------------------------------------------------------------------------------
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -101,38 +102,3 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
 
     # Add this item to the REDCap queue.
     transaction.add_redcap_queue(record_text, table_configuration[index_table][REDCAP_PROJECT])
-
-
-def process_field(index_field, current_table_redcap_fields, database_column_list, index_row, record_text, rows):
-    """
-    Process the field of the row within the table.
-    :param index_field: Index of current REDCap field
-    :param current_table_redcap_fields: Current table REDCap fields
-    :param database_column_list: Database columns list
-    :param index_row: Index of current row
-    :param record_text: Current record text
-    :param rows: All data contained in current table
-    :return: None
-    """
-
-    try:
-        # 0 is for redcap field_label
-        position_in_database_table = \
-            database_column_list.index(current_table_redcap_fields[index_field][0])
-
-        if str(rows[index_row][position_in_database_table]) == 'False':
-            value = '0'
-        elif str(rows[index_row][position_in_database_table]) == 'True':
-            value = '1'
-        elif str(rows[index_row][position_in_database_table]) == 'None':
-            value = ''
-        else:
-            value = str(rows[index_row][position_in_database_table])
-
-        # 1 is for redcap field_name
-        record_text[current_table_redcap_fields[index_field][1]] = str(value)
-
-    except ValueError:
-        logger.info('The current REDCap field (' + current_table_redcap_fields[index_field][1] +
-                    ') does not exist in the database column list.')
-        pass
