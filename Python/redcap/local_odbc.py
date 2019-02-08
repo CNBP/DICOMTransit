@@ -45,11 +45,50 @@ def get_database_column_names(table_info, transaction: RedcapTransaction):
     return database_columns
 
 
+def get_case_ids(transaction: RedcapTransaction):
+    """
+    Get Case Ids
+    :param transaction: RedcapTransaction
+    :return: List of all the case ids related to the current hospital record number.
+    """
+
+    case_ids = []
+
+    primary_key_filter_name = Field.HospitalRecordNumber.name
+    primary_key_filter_value = str(transaction.get_primary_key_value(Field.HospitalRecordNumber.value))
+
+    if primary_key_filter_name == '' or primary_key_filter_value == '' or primary_key_filter_value == 'None':
+        return None
+
+    select_statement = ("SELECT [CaseId] FROM [Admission] WHERE [" +
+                        primary_key_filter_name +
+                        "] = '" +
+                        primary_key_filter_value +
+                        "'")
+
+    conn = pyodbc.connect(get_connection_string(1))
+    odbc_cursor = conn.cursor()
+
+    odbc_cursor.execute(select_statement)
+
+    data = odbc_cursor.fetchall()
+
+    for index_case_id in range(len(data)):
+
+        # Add Case Id to list of Case Ids.
+        case_ids.append(data[index_case_id][0])
+
+    odbc_cursor.close()
+    conn.close
+
+    return case_ids
+
+
 def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
     """
     Gets all rows of data for a specific patient table.
     :param table_info: Table Information
-    :param transaction: the transaction content to be updated.
+    :param transaction: RedcapTransaction
     :return: List of all the rows obtained from the query.
     """
     if table_info is None:
@@ -70,8 +109,7 @@ def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
                             table_info[4] +
                             "] WHERE [" +
                             primary_key_filter_name +
-                            "] = " +
-                            "'" +
+                            "] = '" +
                             primary_key_filter_value +
                             "'")
     elif primary_key_data_type == DataType.Integer.value:

@@ -29,7 +29,7 @@ def initialize_import_configuration(transaction: RedcapTransaction):
     """
 
     transaction.data_import_configuration = [
-        [1, 1, 0, 1, 'admission', 1, 1, 1, [2, 3], 0, 'admission'],
+        [1, 1, 0, 1, 'admission', 1, 2, 2, [3], 0, 'admission'],
         [2, 1, 0, 1, 'admissionChart', 1, 2, 2, None, 1, 'admissionChart'],
         [3, 1, 0, 1, 'admissionstate', 1, 2, 2, None, 1, 'admissionstate'],
         [4, 1, 0, 1, 'Born', 1, 2, 2, None, 1, 'Born'],

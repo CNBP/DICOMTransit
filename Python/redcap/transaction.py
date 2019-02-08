@@ -18,7 +18,7 @@ class RedcapTransaction:
     hospital_record_numbers = []
     redcap_queue = []
 
-    # Case specific temporary variables.
+    # Temporary Ids.
     HospitalRecordNumber = -1
     CaseId = -1
     BabyId = -1
@@ -28,14 +28,27 @@ class RedcapTransaction:
     PatientId = -1
     MasterId = -1
 
-    def initialize_ids(self, index_hospital_record_number):
+    def set_hospital_record_number(self, index_hospital_record_number):
         """
-        Sets the hospital record number and reset all ids related to this hospital record number.
+        Sets the hospital record number and resets all other temporary ids.
         :param index_hospital_record_number: Index of Hospital Record Number
         :return: None
         """
         self.HospitalRecordNumber = self.hospital_record_numbers[index_hospital_record_number]
         self.CaseId = -1
+        self.BabyId = -1
+        self.MotherId = -1
+        self.PatientUI = -1
+        self.CNNPatientUI = -1
+        self.PatientId = -1
+        self.MasterId = -1
+
+    def set_case_id(self, case_id):
+        """
+        Sets the case id and resets all temporary ids related to a case.
+        :return: None
+        """
+        self.CaseId = case_id
         self.BabyId = -1
         self.MotherId = -1
         self.PatientUI = -1

@@ -283,6 +283,9 @@ def load_hospital_record_numbers(use_predefined: bool):
     else:
         # Get the numbers from a static source:
         return_list = [
+            2404933,
+            2423979,
+            3054365,
             3143750,
             3144235,
             3147383,
@@ -316,10 +319,7 @@ def load_hospital_record_numbers(use_predefined: bool):
             3191237,
             3191976,
             3193639,
-            3202977,
-            2404933,
-            2423979,
-            3054365
+            3202977
         ]
     return return_list
 

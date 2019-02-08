@@ -5,7 +5,8 @@
 from redcap.common import process_field
 from redcap.constants import *
 from redcap.enums import Field
-from redcap.local_odbc import get_database_column_names, get_data_rows_for_patient_table, get_primary_key_name
+from redcap.local_odbc import get_case_ids, get_database_column_names, get_data_rows_for_patient_table,\
+    get_primary_key_name
 from redcap.query import get_fields
 from redcap.transaction import RedcapTransaction
 
@@ -32,17 +33,30 @@ def prepare_patient_tables(transaction: RedcapTransaction):
     # For each hospital record number
     for index_hospital_record_number in range(len(transaction.hospital_record_numbers)):
 
-        # Initialize ids.
-        transaction.initialize_ids(index_hospital_record_number)
+        # Set hospital record number.
+        transaction.set_hospital_record_number(index_hospital_record_number)
 
-        process_record(transaction)
+        # Get all case ids related to this Hospital Record Number
+        cases = get_case_ids(transaction)
+
+        # If no data was retrieved from the database, skip.
+        if cases is None:
+            return
+
+        # For each case related to this Hospital Record Number
+        for index_case in range(len(cases)):
+
+            # Set case id.
+            transaction.set_case_id(cases[index_case])
+
+            process_case(transaction)
 
     return transaction
 
 
-def process_record(transaction: RedcapTransaction):
+def process_case(transaction: RedcapTransaction):
     """
-    Process each patient record.
+    Process a case.
     :param transaction: RedcapTransaction
     :return: None
     """
