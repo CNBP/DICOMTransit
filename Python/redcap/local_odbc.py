@@ -3,8 +3,8 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 import pyodbc
+from redcap.constants import *
 from redcap.enums import Database, Field, DataType
-from redcap.constants import cnn_connection_string, cnfun_connection_string
 from redcap.transaction import RedcapTransaction
 
 
@@ -23,24 +23,24 @@ def get_database_column_names(table_info, transaction: RedcapTransaction):
         return None
 
     # If this is the first time the column names are requested for this table
-    if table_info[4].lower() not in transaction.database_column_names:
+    if table_info[DATABASE_TABLE_NAME].lower() not in transaction.database_column_names:
         # Get column names from database.
 
-        conn = pyodbc.connect(get_connection_string(table_info[5]))
+        conn = pyodbc.connect(get_connection_string(table_info[DATABASE]))
         odbc_cursor = conn.cursor()
 
-        result = odbc_cursor.execute('SELECT * FROM [' + table_info[4].lower() + '] WHERE 1=0')
+        result = odbc_cursor.execute('SELECT * FROM [' + table_info[DATABASE_TABLE_NAME].lower() + '] WHERE 1=0')
         database_columns = [tuple[0] for tuple in result.description]
 
         odbc_cursor.close()
         conn.close
 
         # Store a copy of column names for this table in local memory.
-        transaction.database_column_names[table_info[4].lower()] = database_columns
+        transaction.database_column_names[table_info[DATABASE_TABLE_NAME].lower()] = database_columns
 
     else:
         # Get column names from cache.
-        database_columns = transaction.database_column_names[table_info[4].lower()]
+        database_columns = transaction.database_column_names[table_info[DATABASE_TABLE_NAME].lower()]
 
     return database_columns
 
@@ -94,19 +94,19 @@ def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
     if table_info is None:
         return None
 
-    if table_info[4] == '':
+    if table_info[DATABASE_TABLE_NAME] == '':
         return None
 
-    primary_key_filter_name = str(get_primary_key_name(table_info[6]))
-    primary_key_filter_value = str(transaction.get_primary_key_value(table_info[7]))
-    primary_key_data_type = get_primary_key_data_type(table_info[7])
+    primary_key_filter_name = str(get_primary_key_name(table_info[PRIMARY_KEY_NAME]))
+    primary_key_filter_value = str(transaction.get_primary_key_value(table_info[PRIMARY_KEY_VALUE]))
+    primary_key_data_type = get_primary_key_data_type(table_info[PRIMARY_KEY_VALUE])
 
     if primary_key_filter_name == '' or primary_key_filter_value == '' or primary_key_filter_value == 'None':
         return None
 
     if primary_key_data_type == DataType.String.value:
         select_statement = ("SELECT * FROM [" +
-                            table_info[4] +
+                            table_info[DATABASE_TABLE_NAME] +
                             "] WHERE [" +
                             primary_key_filter_name +
                             "] = '" +
@@ -114,7 +114,7 @@ def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
                             "'")
     elif primary_key_data_type == DataType.Integer.value:
         select_statement = ("SELECT * FROM [" +
-                            table_info[4] +
+                            table_info[DATABASE_TABLE_NAME] +
                             "] WHERE [" +
                             primary_key_filter_name +
                             "] = " +
@@ -124,7 +124,7 @@ def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
 
     if select_statement != '':
 
-        conn = pyodbc.connect(get_connection_string(table_info[5]))
+        conn = pyodbc.connect(get_connection_string(table_info[DATABASE]))
         odbc_cursor = conn.cursor()
 
         odbc_cursor.execute(select_statement)
@@ -147,11 +147,11 @@ def get_data_rows_for_reference_table(table_info):
     :return: List of all the rows obtained from the query.
     """
     if table_info is not None:
-        if table_info[4] != '':
+        if table_info[DATABASE_TABLE_NAME] != '':
 
-            select_statement = 'SELECT * FROM [' + table_info[4] + ']'
+            select_statement = 'SELECT * FROM [' + table_info[DATABASE_TABLE_NAME] + ']'
 
-            conn = pyodbc.connect(get_connection_string(table_info[5]))
+            conn = pyodbc.connect(get_connection_string(table_info[DATABASE]))
             odbc_cursor = conn.cursor()
 
             odbc_cursor.execute(select_statement)
