@@ -122,7 +122,7 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
 
     # If this is the first row of data and the current table has authority on any ids
     if index_row == 0 and table_configuration[index_table][AUTHORITY_ON_IDS] is not None:
-        set_field_id(database_column_list, index_row, index_table, rows, transaction)
+        set_case_related_ids(database_column_list, index_row, index_table, rows, transaction)
 
     # Create a blank dictionary.
     record_text = {}
@@ -169,8 +169,9 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
     transaction.add_redcap_queue(record_text, table_configuration[index_table][REDCAP_PROJECT])
 
 
-def set_field_id(database_column_list, index_row, index_table, rows, transaction):
+def set_case_related_ids(database_column_list, index_row, index_table, rows, transaction):
     """
+    This function will set all case related ids that the current table has authority on
     :param database_column_list: Database columns list
     :param index_row: Index of current row
     :param index_table: Index of current table
