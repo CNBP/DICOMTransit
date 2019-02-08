@@ -93,7 +93,7 @@ def process_table(index_table, transaction: RedcapTransaction):
     # Get database columns list.
     database_column_list = get_database_column_names(table_configuration[index_table], transaction)
 
-    # Get all data for this patient in this table
+    # Get all data for this case in this patient table
     rows = get_data_rows_for_patient_table(table_configuration[index_table], transaction)
 
     # If no data were retrieved from the database, skip.
