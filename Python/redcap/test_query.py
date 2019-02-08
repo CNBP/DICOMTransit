@@ -11,7 +11,6 @@ import unittest
 
 class UT_REDCapQuery(unittest.TestCase):
 
-
     @staticmethod
     def test_load_metadata():
         from redcap.transaction import RedcapTransaction
@@ -19,5 +18,7 @@ class UT_REDCapQuery(unittest.TestCase):
         transact = RedcapTransaction()
         load_metadata(transact)
 
-if __name__ =="__main__":
+
+if __name__ == "__main__":
+
     UT_REDCapQuery.test_load_metadata()
