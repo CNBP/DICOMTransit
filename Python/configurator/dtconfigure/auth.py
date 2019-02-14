@@ -5,7 +5,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from configurator.dtconfigure.db import get_db
+from dtconfigure.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -47,8 +47,9 @@ def login():
         username = request.form['username']
         password = request.form['password']
         db = get_db()
+        cursor = db.cursor()
         error = None
-        user = db.execute(
+        user = cursor.execute(
             'SELECT * FROM user WHERE username = ?', (username,)
         ).fetchone()
 

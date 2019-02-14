@@ -122,7 +122,7 @@ class LORIS_timepoint:
         :return:
         """
         endpoint = r"/candidates/"+str(DCCID)+r"/"+time_point
-        MetaData = {"CandID": DCCID, "Visit": time_point, "Site": config_get("institutionName"), "Battery":"CNBP"} # default to CNBP for NOW
+        MetaData = {"CandID": DCCID, "Visit": time_point, "Site": config_get("institutionName"), "Battery" : "CNBP"} # default to CNBP for NOW
         Meta = {"Meta": MetaData}
         JSON = json.dumps(Meta)
         status_code, _ = LORIS_query.putCNBP(token, endpoint, JSON)

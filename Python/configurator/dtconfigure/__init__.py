@@ -1,24 +1,11 @@
 import os
 
 from flask import Flask
-from PythonUtils.file import full_file_path
-from PythonUtils.folder import get_abspath
 
-
-path_current_script = full_file_path(__file__)
-path_project = get_abspath(path_current_script, 3)
-os.chdir(path_project)
 
 def create_app(test_config=None):
-    """
-    Create and configure the app
-    :param test_config:
-    :return:
-    """
-
-    path_localDB = os.path.join(path_project, "LocalDB")
-
-    app = Flask(__name__, instance_relative_config=True, instance_path=path_localDB)
+    # create and configure the app
+    app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'dtconfigure.sqlite'),

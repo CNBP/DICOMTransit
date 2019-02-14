@@ -1,10 +1,13 @@
- import pytest
+import pytest
 from dtconfigure.db import get_db
 import json
 import pdb
-
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger()
 
 def test_index(client, auth):
+
     response = client.get('/')
     assert b"/auth/login" in response.data
     #assert b"Register" in response.data
@@ -13,11 +16,17 @@ def test_index(client, auth):
     response = client.get('/')
     from datetime import datetime
     t = datetime.now()
-    s = "by test on "+str(t.year)+"-"+str(t.month)+"-"+str(t.day)
+
+    s = "by test on "+t.strftime("%Y")+"-"+t.strftime("%m")+"-"+t.strftime("%d")
+    logger.info(s)
+
     # Get utf-8 byte encoded version for use in assertion testing
     st = s.encode()
+    logger.info(f"Encoded: {st}")
 
     assert b'Log Out' in response.data
+
+    logger.info(f"Response {response.data}")
     assert st in response.data
     assert b'LORISurl' in response.data
     assert b'LORISpassword' in response.data
@@ -64,35 +73,73 @@ def test_create(client, auth, app):
     # Give d a string of json data. It must be a string  to satisfy
     # requirements of client.post() which uses 
     # http://werkzeug.pocoo.org/docs/0.14/test/#werkzeug.test.EnvironBuilder 
-    d='{"GL01":"GL01", "MD01":"MD01", "AB01":"AB01"}'
+    d='{"GL01" : "GL01", "MD01" : "MD01", "AB01" : "AB01"}'
     # create dict of data
-    json_data={"port":"80","LORISurl":"https://dev.cnbp.ca/api/v0.0.2/","LORISusername":"mysite","LORISpassword":"TheLORISpassword","timepoint_prefix":"V","institutionID":"VXS","projectID_dictionary":d,"LocalDatabase":"MRNLORISDatabase.sqlite","OrthancURL":"http://localhost:8042/","ProxyIP":"132.219.138.166","ProxyUsername":"myproxyadmin","ProxyPassword":"TheProxyPassword","LORISHostIP":"192.168.106.3","LORISHostUsername":"mylorisadmin","LORISHostPassword":"TheLORISHostPassword","DeletionScript":"/path/to/loris/candidate/deletion/script/delete_candidate.php"}
+    json_data={
+        "LORISurl" : "https://dev.cnbp.ca/api/v0.0.2/",
+        "LORISusername" : "mysite",
+        "LORISpassword" : "TheLORISpassword",
+        "timepoint_prefix" : "V",
+        "institutionID" : "VXS",
+        "institutionName": "RandomB",
+        "projectID_dictionary":d,
+        "LocalDatabase" : "MRNLORISDatabase.sqlite",
+        "LogPath" : "example path",
+        "ZipPath": "example path",
+        "ProdOrthancIP" : "http://localhost:8042/",
+        "ProdOrthancUser": "myproxyadmin",
+        "ProdOrthancPassword": "RandomTextUnitTest",
+        "DevOrthancIP" : "132.219.138.166",
+        "DevOrthancUser" : "myproxyadmin",
+        "DevOrthancPassword" : "TheProxyPassword",
+    }
 
     client.post('/create', data=json_data)
 
     with app.app_context():
         db = get_db()
         count = db.execute('SELECT COUNT(id) FROM configuration').fetchone()[0]
-        assert count == 2
+        assert count == 1
 
 
 def test_update(client, auth, app):
     auth.login()
+    #print(client.get('/1/update').status_code)
     assert client.get('/1/update').status_code == 200
 
     # Give d a string of json data. It must be a string  to satisfy
     # requirements of client.post() which uses 
     # http://werkzeug.pocoo.org/docs/0.14/test/#werkzeug.test.EnvironBuilder 
-    d='{"GL01":"GL01", "MD01":"MD01", "AB01":"AB01"}'
+    d='{"GL01" : "GL01", "MD01" : "MD01", "AB01" : "AB01"}'
     # create dict of data
-    json_data={"port":"80","LORISurl":"https://dev.cnbp.ca/api/v0.0.2/","LORISusername":"mysite","LORISpassword":"UpdatedTheLORISpassword","timepoint_prefix":"V","institutionID":"VXS","projectID_dictionary":d,"LocalDatabase":"MRNLORISDatabase.sqlite","OrthancURL":"http://localhost:8042/","ProxyIP":"132.219.138.166","ProxyUsername":"myproxyadmin","ProxyPassword":"UpdatedTheProxyPassword","LORISHostIP":"192.168.106.3","LORISHostUsername":"mylorisadmin","LORISHostPassword":"UpdateTheLORISHostPassword","DeletionScript":"/path/to/loris/candidate/deletion/script/delete_candidate.php"}
+    json_data={
+        "LORISurl" : "https://dev.cnbp.ca/api/v0.0.2/",
+        "LORISusername" : "mysite",
+        "LORISpassword" : "UpdatedTheLORISpassword",
+        "timepoint_prefix" : "V",
+        "institutionID" : "VXS",
+        "institutionName": "VXS",
+        "projectID_dictionary":d,
+        "LocalDatabasePath" : "MRNLORISDatabase.sqlite",
+        "LogPath" : "Log is a path",
+        "ZipPath": "Zip is also a path",
+        "ProdOrthancIP" : "132.219.138.166",
+        "ProdOrthancUsername" : "myproxyadmin",
+        "ProdOrthancPassword" : "UpdatedTheProxyPassword",
+        "DevOrthancIP" : "192.168.106.3",
+        "DevOrthancUser" : "mylorisadmin",
+        "DevOrthancPassword" : "UpdateTheLORISHostPassword",
+    }
 
     client.post('/1/update', data=json_data)
 
     with app.app_context():
-        db = get_db()
-        post = db.execute('SELECT * FROM configuration WHERE id = 1').fetchone()
-        assert post['LORISpassword'] == 'UpdatedTheLORISpassword'
+        SQLite_connect = get_db()
+        SQLite_cursor = SQLite_connect.cursor()
+        SQLite_cursor.execute('SELECT * FROM configuration WHERE id = 1')
+        row = SQLite_cursor.fetchone()
+        print(row)
+        assert row['LORISpassword'] == 'UpdatedTheLORISpassword'
 
 
 """

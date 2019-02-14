@@ -5,6 +5,21 @@ from werkzeug.exceptions import abort
 
 from dtconfigure.auth import login_required
 from dtconfigure.db import get_db
+import os, sys
+
+
+
+sys.path.append(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.dirname(
+                os.path.abspath(__file__)
+            )
+        )
+    )
+)
+
+
 from LocalDB.schema import CNBP_blueprint
 
 envvars = CNBP_blueprint.dotenv_variables

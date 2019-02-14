@@ -246,7 +246,7 @@ class DICOMTransitImport(object):
         # Timestamp
         self.time = datetime.datetime.now()
         # We shall name this with
-        self.name = self.time.isoformat().replace(":", "")
+        self.name = self.time.isoformat().replace(" : ", "")
 
 
         ##################

@@ -1,7 +1,14 @@
-import os
+import os, sys
 import tempfile
 
 import pytest
+sys.path.append(
+    os.path.dirname(
+        os.path.dirname(
+            os.path.abspath(__file__)
+        )
+    )
+)
 from dtconfigure import create_app
 from dtconfigure.db import get_db, init_db
 
