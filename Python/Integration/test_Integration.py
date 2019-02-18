@@ -26,10 +26,10 @@ class UT_IntegrationTest(unittest.TestCase):
         success, token = LORIS_query.login()
 
         # Create the entry with the right PSCID with proper DCCID on dev.cnbp.ca
-        LocalDB_query.create_entry(database_path, table_name, CNBP_blueprint.keyfield, 9999999999)
+        LocalDB_query.create_entry(database_path, table_name, CNBP_blueprint.keyfield, "VSX999999")
 
         # Update above entry with the right mock PSCID.
-        LocalDB_query.update_entry(database_path, table_name, CNBP_blueprint.keyfield, 9999999999, "DCCID", DCCID, )
+        LocalDB_query.update_entry(database_path, table_name, CNBP_blueprint.keyfield, "VSX999999", "DCCID", DCCID, )
 
         # Now, the big guy.
         success, reason = findTimePointUpdateDatabase(token, DCCID, database_path, table_name)

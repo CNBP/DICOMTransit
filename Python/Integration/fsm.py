@@ -31,7 +31,7 @@ logging.getLogger('transition').setLevel(logging.DEBUG)
 
 # create the logging file handler
 filehandler = logging.FileHandler(log_file_path)
-formatter = logging.Formatter('%(asctime)s  %(name)s    %(funcName)s():         Line %(lineno)i:    %(levelname)s   %(message)s')
+formatter = logging.Formatter('%(asctime)s\t\t%(name)s\t\t%(funcName)s():\t\tLine %(lineno)i:\t\t%(levelname)s\t\t%(message)s')
 filehandler.setFormatter(formatter)
 
 # add handler to logger object

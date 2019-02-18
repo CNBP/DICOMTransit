@@ -1,8 +1,9 @@
-import logging
-import os
+import os, sys
 import pydicom, subprocess
 from PythonUtils.folder import recursive_list
 from tqdm import tqdm
+
+from pathlib import Path
 
 
 from pydicom.filereader import read_file_meta_info
@@ -23,30 +24,36 @@ class DICOM_decompress:
         :return:
         """
 
+        project_root = Path(__file__).parents[2]
+        sys.path.append(project_root)
+        path_dcm = os.path.join(project_root, "BinDependency", "dcmtoolkit")
+        os.environ["PATH"] += os.pathsep + path_dcm
+
+
 
         #if os.path.exists(out_put):
         #    logger.warn("Output_exist already. !!!OVERWRITING!!!")
 
         try:
             # SUPER IMPORTANT! MAKE SURE DCMDJPEG is in the system path!
-            subprocess.check_output(['dcmdjpeg', input_file, out_put])
+            subprocess.check_output(['dcmdjpeg', input_file, out_put], cwd=Path(path_dcm))
 
         # When dcmdjpeg has errors
         except subprocess.CalledProcessError as e:
             logger.info(e)
             ErrorMessage = f"File type not compatible for {input_file}"
-            logger.info(ErrorMessage)
+            logger.critical(ErrorMessage)
             return False, ErrorMessage
         except Exception as e:
-            logger.info(e)
+            logger.critical(e)
             ErrorMessage = f"DCMDJPEG decompression call failed! Make sure DCMDJPEG is in your SYSTEMOS PATH and then check your input file: {input_file}"
-            logger.info(ErrorMessage)
+            logger.critical(ErrorMessage)
             return False, ErrorMessage
 
         # Ensure that data is actually written out.
         if not os.path.exists(out_put):
             ErrorMessage = f"Cannot write out final file for some reason {input_file}"
-            logger.info(ErrorMessage)
+            logger.critical(ErrorMessage)
             return False, ErrorMessage
 
         # Test read the data after writing.
@@ -54,8 +61,8 @@ class DICOM_decompress:
             pydicom.read_file(out_put)
         except Exception as e:
             ErrorMessage = f"Exception encountered while verifying the proper writing out of the DICOM data. Contact author to investigate, attach {input_file}"
-            logger.info(e)
-            logger.info(ErrorMessage)
+            logger.critical(e)
+            logger.critical(ErrorMessage)
             return False, ErrorMessage
 
         logger.info(f"Success written {input_file } to {out_put}")
