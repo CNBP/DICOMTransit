@@ -29,6 +29,12 @@ class DICOM_decompress:
         path_dcm = os.path.join(project_root, "BinDependency", "dcmtoolkit")
         os.environ["PATH"] += os.pathsep + path_dcm
 
+        path_dcmdjpeg = os.path.join(path_dcm, "dcmdjpeg")
+
+        logger.info(path_dcmdjpeg)
+
+        os.chmod(path_dcmdjpeg, 0o777)
+        os.environ["DCMDICTPATH"] = os.path.join(path_dcm, "dicom.dic")
 
 
         #if os.path.exists(out_put):
