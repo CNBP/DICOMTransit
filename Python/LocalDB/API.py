@@ -432,7 +432,7 @@ def check_all_existing_records(matched_records):
 
 def get_setting(setting_name: str):
     """
-    Used to access the dtconfigure.sqlite database to retrieve the settings necessary for most other operations.
+    Used to access the dtconfigure_old.sqlite database to retrieve the settings necessary for most other operations.
     :param setting_name: assumed the string already exist. Prior method need to check that.
     :return:
     """
@@ -442,8 +442,8 @@ def get_setting(setting_name: str):
     from datetime import datetime
 
     # Load env on where the setting database is located.
-    path_config_database = load_dotenv_var("config_database") # Default location to dtconfigure.sqlite
-    name_config_table = load_dotenv_var("config_table")  # Default location to dtconfigure.sqlite
+    path_config_database = load_dotenv_var("config_database") # Default location to dtconfigure_old.sqlite
+    name_config_table = load_dotenv_var("config_table")  # Default location to dtconfigure_old.sqlite
 
     # Look for setting variable in the DEFAULT ORDER
     success, records_setting = LocalDB_query.get_all(path_config_database, name_config_table, setting_name)

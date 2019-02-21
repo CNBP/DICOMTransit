@@ -103,8 +103,8 @@ def test_create(client, auth, app):
 
 
 def test_update(client, auth, app):
+
     auth.login()
-    #print(client.get('/1/update').status_code)
     assert client.get('/1/update').status_code == 200
 
     # Give d a string of json data. It must be a string  to satisfy
@@ -131,7 +131,11 @@ def test_update(client, auth, app):
         "DevOrthancPassword" : "UpdateTheLORISHostPassword",
     }
 
-    client.post('/1/update', data=json_data)
+    json_dump = json.dumps(json_data)
+
+    code = client.post('/1/update', data=json_dump).status_code
+    print(code)
+
 
     with app.app_context():
         SQLite_connect = get_db()

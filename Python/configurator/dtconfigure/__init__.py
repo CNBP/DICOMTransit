@@ -2,15 +2,24 @@ import os
 
 from flask import Flask
 
+from pathlib import Path
 
 def create_app(test_config=None):
+
+    path_current_file = os.path.abspath(__file__)
+    path_project = Path(path_current_file).parents[3]
+    path_LocalDB = path_project.joinpath("LocalDB")
+    string_LocalDB = path_LocalDB.joinpath('dtconfigure.sqlite').resolve().as_posix()
+
+    print(string_LocalDB)
+
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'dtconfigure.sqlite'),
+        DATABASE=string_LocalDB,
     )
-    print(os.path.join(app.instance_path, 'dtconfigure.sqlite'))
+
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
