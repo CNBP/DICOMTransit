@@ -13,6 +13,11 @@ from redcap import development as environment
 # ----------------------------------------------------------------------------------------------------------------------
 
 redcap_api_url = environment.REDCAP_API_URL
+redcap_record_id_field_name_cnn_admission = "caseid"
+redcap_record_id_field_name_cnn_baby = "babyid"
+redcap_record_id_field_name_cnn_mother = "motherid"
+redcap_record_id_field_name_cnn_master = "masterid"
+redcap_record_id_field_name_cnfun_patient = "patientid"
 redcap_token_cnn_admission = environment.REDCAP_TOKEN_CNN_ADMISSION
 redcap_token_cnn_baby = environment.REDCAP_TOKEN_CNN_BABY
 redcap_token_cnn_mother = environment.REDCAP_TOKEN_CNN_MOTHER

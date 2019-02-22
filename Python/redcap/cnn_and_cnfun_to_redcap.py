@@ -7,7 +7,7 @@ from redcap.prepare_patient import prepare_patient_tables
 from redcap.prepare_reference import prepare_reference_tables
 from redcap.initialization import initialize_import_configuration
 from redcap.transaction import RedcapTransaction
-from redcap.query import load_metadata, send_data
+from redcap.query import load_metadata, send_data, wipe_all_redcap_data
 from redcap.constants import environment
 
 import datetime
@@ -61,6 +61,11 @@ def update_redcap_data():
     # Prepare Patient Data.
     logger.info('Preparing Patient Data Transfer...')
     transaction_stage4_patients_added = prepare_patient_tables(transaction_stage3_references_added)
+    logger.info('Done.')
+
+    # Wipe all existing data from REDCap.
+    logger.info('Wiping ALL existing data from REDCap...')
+    wipe_all_redcap_data()
     logger.info('Done.')
 
     # Send data to REDCap.
