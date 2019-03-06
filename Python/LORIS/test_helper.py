@@ -24,6 +24,9 @@ class UT_LORISHelper(unittest.TestCase):
             assert str(tupleItem[0]) == LORIS_helper.number_extraction(tupleItem[1])[0]
 
 
+    # Obsolete.
+
+    """
     def test_ProxyUpload(self):
 
 
@@ -45,3 +48,4 @@ class UT_LORISHelper(unittest.TestCase):
         os.remove(testFile)
         sftp.close()
         Client.close()
+    """

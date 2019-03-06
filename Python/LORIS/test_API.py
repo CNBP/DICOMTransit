@@ -18,11 +18,11 @@ class UT_LORISAPI(unittest.TestCase):
 
 
     def test_GetTimePoint(self):
-        return get_all_timepoints(605638)
+        return get_all_timepoints(471400)
 
 
     def test_GetAllVisitDICOMs(self):
-        return get_allUID(605638)
+        return get_allUID(471400)
 
     def test_upload_visit_DICOM(self):
         upload_visit_DICOM(r"C:\Users\Yang Ding\Desktop\CNBP0020001_605638_V1.zip", 605638, "V1", False)

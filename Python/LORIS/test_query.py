@@ -29,14 +29,16 @@ class UT_LORISQuery(unittest.TestCase):
         response_success, token = LORIS_query.login()
         assert response_success
         #assert len(token) == 256  # token should always be 256 char long
-        response_success, exist = LORIS_candidates.checkPSCIDExist(token, "CNBP0010001")
+        response_success, exist = LORIS_candidates.checkPSCIDExist(token, "VXS9000000")
         assert response_success
         assert not exist
-
+        response_success, exist = LORIS_candidates.checkPSCIDExist(token, "VXS0000001")
+        assert response_success
+        assert exist
 
     def test_checkDCCIDExist(self):
         response_success, token = LORIS_query.login()
         assert response_success
         #assert len(token) == 256  # token should always be 256 char long
-        exist, _ = LORIS_candidates.checkDCCIDExist(token, 836559)
+        exist, _ = LORIS_candidates.checkDCCIDExist(token, 471400)
         assert exist
