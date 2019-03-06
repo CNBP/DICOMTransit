@@ -306,6 +306,49 @@ def set_DCCID(MRN: int, DCCID: int):
     # Update the MRN record with DCCID
     LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "DCCID", DCCID, )
 
+def get_CNNID(MRN: int) -> Optional[List[str]]:
+    """
+    Assuming the MRN exist, get the CNNIDs of all scans that ever past through here.
+    :param MRN: the MRN to look for
+    :return: the CNBPID associated with that particular MRN number.
+    """
+    # Load local database from .env file
+    database_path = config_get("LocalDatabasePath")
+    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
+                                                                  CNBP_blueprint.table_name,
+                                                                  CNBP_blueprint.keyfield,
+                                                                  MRN)
+    if MRN_exist_in_database is False:
+        return None
+
+    # Only ONE record per MRN.
+    assert(len(KeyRecords) == 1)
+    CNNID_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'CNNID')
+
+    # Load the json and return the variable structure
+    json_CNNIDs = KeyRecords[0][CNNID_index]
+    if json_CNNIDs is None:
+        logger.warning("No existing CNNID Data information found.")
+        return None
+    list_CNNIDs = json.loads(json_CNNIDs)
+
+    return list_CNNIDs
+
+
+def set_CNNIDs(MRN: int, CaseIDs: List[int]):
+    """
+    Update record with proper CNN which has particular MRN
+    :param MRN:
+    :return:
+    """
+    database_path = config_get("LocalDatabasePath")
+
+    # JSON dumps.
+    json_CaseIDs = json.dumps(CaseIDs)
+
+    # Update the MRN record with DCCID
+    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "CNNID", json_CaseIDs)
+
 
 def append_OrthancUUID(MRN: int, OrthancUUID: str):
     """

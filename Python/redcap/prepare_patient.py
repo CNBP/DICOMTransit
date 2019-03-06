@@ -9,6 +9,7 @@ from redcap.local_odbc import get_case_ids, get_database_column_names, get_data_
     get_primary_key_name
 from redcap.query import get_fields
 from redcap.transaction import RedcapTransaction
+from LocalDB.API import set_CNNIDs
 
 import sys
 import logging
@@ -42,6 +43,9 @@ def prepare_patient_tables(transaction: RedcapTransaction):
         # If no data was retrieved from the database, skip.
         if cases is None:
             return
+
+        # Record the caseID
+        set_CNNIDs(transaction.HospitalRecordNumber, cases)
 
         # For each case related to this Hospital Record Number
         for index_case in range(len(cases)):
