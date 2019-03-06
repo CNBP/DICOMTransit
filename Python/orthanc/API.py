@@ -5,7 +5,7 @@ from LORIS.helper import LORIS_helper
 from PythonUtils.file import unique_name
 import logging
 from typing import List
-
+import urllib.parse
 logger = logging.getLogger()
 
 def check_status() -> bool:
@@ -53,7 +53,7 @@ def get_list_of_subjects_noauth(orthanc_URL: str) -> List[str]:
     Get a list of subjects from a .env predefined orthanc server.
     :return: the lsit of all subjects in the orthanc server
     """
-    endpoint = f"{orthanc_URL}patients/"
+    endpoint = urllib.parse.urljoin(orthanc_URL, "patients/")
 
     reseponse_code, list_subjects = orthanc_query.getOrthanc_noauth(endpoint)
 
@@ -66,7 +66,7 @@ def get_list_of_subjects(orthanc_URL: str, orthanc_user: str, orthanc_password: 
     Get a list of subjects from a .env predefined orthanc server.
     :return: the lsit of all subjects in the orthanc server
     """
-    endpoint = f"{orthanc_URL}patients/"
+    endpoint = urllib.parse.urljoin(orthanc_URL, "patients/")
 
     reseponse_code, list_subjects = orthanc_query.getOrthanc(endpoint, orthanc_user, orthanc_password)
 
