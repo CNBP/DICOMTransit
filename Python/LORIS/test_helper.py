@@ -9,8 +9,7 @@ from settings import config_get
 
 class UT_LORISHelper(unittest.TestCase):
 
-    @staticmethod
-    def test_number_extraction():
+    def test_number_extraction(self):
         Prefix = "V"
         numbers = [1, 2, 3, 9, 10, 11, 12, 100, 101, 102]
 
@@ -25,8 +24,7 @@ class UT_LORISHelper(unittest.TestCase):
             assert str(tupleItem[0]) == LORIS_helper.number_extraction(tupleItem[1])[0]
 
 
-    @staticmethod
-    def test_ProxyUpload():
+    def test_ProxyUpload(self):
 
 
         ProxyIP = config_get("ProxyIP")
@@ -47,6 +45,3 @@ class UT_LORISHelper(unittest.TestCase):
         os.remove(testFile)
         sftp.close()
         Client.close()
-
-if __name__ == '__main__':
-    UT_LORISHelper.test_number_extraction()

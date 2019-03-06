@@ -6,8 +6,8 @@ from pathlib import Path
 
 def create_app(test_config=None):
 
-    path_current_file = os.path.abspath(__file__)
-    path_project = Path(path_current_file).parents[3]
+    path_current_file = Path(__file__)
+    path_project = path_current_file.parents[3]
     path_LocalDB = path_project.joinpath("LocalDB")
     string_LocalDB = path_LocalDB.joinpath('dtconfigure.sqlite').resolve().as_posix()
 

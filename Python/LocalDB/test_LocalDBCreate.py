@@ -8,14 +8,14 @@ from LocalDB.create import LocalDB_create
 from LocalDB.query import LocalDB_query
 from LocalDB.schema import CNBP_blueprint
 
-
+logger = logging.getLogger()
 
 
 
 class UT_LocalDBCreate(unittest.TestCase):
 
-    @staticmethod
-    def test_LocalDBCreate():
+
+    def test_LocalDBCreate(self):
 
         PathString = "Test.sqlite"
         # if SQL already exist, quit script.
@@ -57,8 +57,8 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         return True
 
-    @staticmethod
-    def test_LocalDBCreate_CNBP():
+
+    def test_LocalDBCreate_CNBP(self):
 
         PathString = "TestCNBP.sqlite"
         # if SQL already exist, quit script.
@@ -89,6 +89,3 @@ class UT_LocalDBCreate(unittest.TestCase):
             print(fetchallResult[index][2])
             assert fetchallResult[index][2] == CNBP_blueprint.schema_types[index]
         return True
-
-if __name__ == '__main__':
-    UT_LocalDBCreate.test_LocalDBCreate_CNBP()

@@ -12,8 +12,8 @@ logger = logging.getLogger()
 
 class UT_LocalDBCreate(unittest.TestCase):
 
-    @staticmethod
-    def test_CreateSubject():
+
+    def test_CreateSubject(self):
 
         PathString = "TestCNBPQuery.sqlite"
 
@@ -51,8 +51,8 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         return True
 
-    @staticmethod
-    def test_CheckSubjectExist():
+
+    def test_CheckSubjectExist(self):
 
         PathString = "TestCNBPQuery.sqlite"
 
@@ -96,8 +96,8 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         return True
 
-    @staticmethod
-    def test_CreateSubjectCheckExist():
+
+    def test_CreateSubjectCheckExist(self):
 
         PathString = "TestCNBPQuery.sqlite"
 
@@ -146,8 +146,8 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         return True
 
-    @staticmethod
-    def test_SubjectUpdate():
+
+    def test_SubjectUpdate(self):
 
         PathString = "TestCNBPQuery.sqlite"
 
@@ -204,6 +204,3 @@ class UT_LocalDBCreate(unittest.TestCase):
         os.remove(PathString)
 
         return True
-
-if __name__ == '__main__':
-    UT_LocalDBCreate.test_SubjectUpdate()

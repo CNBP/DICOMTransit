@@ -140,5 +140,5 @@ class DICOM_converter:
 
 
 if __name__ == "__main__":
-    input_root_folder = r"/toshiba2/Mathieu's MRI/CHD_dTGA/NN_dTGA_011_3190535/MRI/ClinicalPACS"
+    input_root_folder = r"C:\Users\Yang Ding\Desktop\VXS0000010_123237_V1"
     DICOM_converter.DICOMOBJ_converter(input_root_folder)

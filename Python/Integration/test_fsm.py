@@ -7,21 +7,24 @@ class UT_FSM(unittest.TestCase):
 
     def test_CheckLORIS(self):
         self.test_import.UpdateLORISStatus()
-        self.test_import.is_LORIS_Unavailable()
+        assert not self.test_import.is_LORIS_Unavailable()
 
     def test_CheckNetwork(self):
         self.test_import.UpdateNetworkStatus()
-        self.test_import.is_Network_Unavailable()
+        assert not self.test_import.is_Network_Unavailable()
+
 
     def test_CheckLocalDB(self):
         self.test_import.UpdateLocalDBStatus()
-        self.test_import.is_LocalDB_Unavailable()
+        assert not self.test_import.is_LocalDB_Unavailable()
 
     def test_CheckFile(self):
-        raise NotImplementedError
-
+        import os
+        self.test_import.files = [os.path.abspath(__file__)]
+        self.test_import.UpdateFileStatus()
+        assert self.test_import.STATUS_FILE is True
 
     def test_CheckOrthanc(self):
         self.test_import.UpdateOrthancStatus()
-        self.test_import.is_Orthanc_Unavailable()
+        assert not self.test_import.is_Orthanc_Unavailable()
 

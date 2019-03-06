@@ -3,8 +3,7 @@ import unittest
 
 class UT_LORISTimepoint(unittest.TestCase):
 
-    @staticmethod
-    def test_visit_number_extraction():
+    def test_visit_number_extraction(self):
         Prefix = "V"
         numbers = [1, 2, 3, 9]
 
