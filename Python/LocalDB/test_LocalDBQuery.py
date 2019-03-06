@@ -2,21 +2,19 @@ import sqlite3
 from pathlib import Path
 import logging
 import os
-import sys
 from LocalDB.query import LocalDB_query
 from LocalDB.create_CNBP import LocalDB_createCNBP
-import unittest
 from LocalDB.schema import CNBP_blueprint
-from PythonUtils.env import load_validate_dotenv
+from settings import config_get
+import unittest
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
+logger = logging.getLogger()
 
 class UT_LocalDBCreate(unittest.TestCase):
 
-    @staticmethod
-    def test_CreateSubject():
-        logger = logging.getLogger('UT_CreateSubject')
+
+    def test_CreateSubject(self):
+
         PathString = "TestCNBPQuery.sqlite"
 
         # if SQL already exist, quit script.
@@ -53,9 +51,9 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         return True
 
-    @staticmethod
-    def test_CheckSubjectExist():
-        logger = logging.getLogger('UT_CheckSubjectExist')
+
+    def test_CheckSubjectExist(self):
+
         PathString = "TestCNBPQuery.sqlite"
 
         # if SQL already exist, quit script.
@@ -98,9 +96,9 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         return True
 
-    @staticmethod
-    def test_CreateSubjectCheckExist():
-        logger = logging.getLogger('UT_CreateAndCheck')
+
+    def test_CreateSubjectCheckExist(self):
+
         PathString = "TestCNBPQuery.sqlite"
 
         # if SQL already exist, quit script.
@@ -148,9 +146,9 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         return True
 
-    @staticmethod
-    def test_SubjectUpdate():
-        logger = logging.getLogger('UT_CreateAndCheck')
+
+    def test_SubjectUpdate(self):
+
         PathString = "TestCNBPQuery.sqlite"
 
         # if SQL already exist, quit script.
@@ -177,17 +175,18 @@ class UT_LocalDBCreate(unittest.TestCase):
         LocalDB_query.create_entry(PathString, tableName, MRNColumn, 364573)
         LocalDB_query.create_entry(PathString, tableName, MRNColumn, 7424141)
 
-        Prefix = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
 
-        LocalDB_query.update_entry(PathString, tableName, MRNColumn, 7424141, CNBPIDColumn, Prefix + "0010001")
-        LocalDB_query.update_entry(PathString, tableName, MRNColumn, 2345234, CNBPIDColumn, Prefix + "0010002")
-        LocalDB_query.update_entry(PathString, tableName, MRNColumn, 2918210, CNBPIDColumn, Prefix + "0010003")
-        LocalDB_query.update_entry(PathString, tableName, MRNColumn, 273411, CNBPIDColumn, Prefix + "0010004")
+        Prefix = config_get("institutionID")
+
+        LocalDB_query.update_entry(PathString, tableName, MRNColumn, 7424141, CNBPIDColumn, f"{Prefix}0010001")
+        LocalDB_query.update_entry(PathString, tableName, MRNColumn, 2345234, CNBPIDColumn, f"{Prefix}0010002")
+        LocalDB_query.update_entry(PathString, tableName, MRNColumn, 2918210, CNBPIDColumn, f"{Prefix}0010003")
+        LocalDB_query.update_entry(PathString, tableName, MRNColumn, 273411, CNBPIDColumn, f"{Prefix}0010004")
 
         success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, 'CNBPID0010006')
         assert not success
 
-        success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, Prefix + "0010001")
+        success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, f"{Prefix}0010001")
         assert success
 
         success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, 55555)
@@ -196,7 +195,7 @@ class UT_LocalDBCreate(unittest.TestCase):
         success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, 742)
         assert not success
 
-        success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, Prefix + "0010003")
+        success, _ = LocalDB_query.check_value(PathString, tableName, CNBPIDColumn, f"{Prefix}0010003")
         assert success
 
         logger.info('Tested SQLIte database entry. ')
@@ -205,6 +204,3 @@ class UT_LocalDBCreate(unittest.TestCase):
         os.remove(PathString)
 
         return True
-
-if __name__ == '__main__':
-    UT_LocalDBCreate.test_SubjectUpdate()

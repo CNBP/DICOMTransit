@@ -1,19 +1,15 @@
 import json
 import logging
-import sys
-
 import paramiko
+from settings import config_get
 
-from LocalDB.schema import CNBP_blueprint
-from PythonUtils.env import load_validate_dotenv
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 class LORIS_helper:
 
     @staticmethod
-    def number_extraction(string):
+    def number_extraction(string: str):
         """
         Return
         :param string:
@@ -23,7 +19,7 @@ class LORIS_helper:
         return re.findall(r'\d+', string)
 
     @staticmethod
-    def is_response_success(status_code, expected_code):
+    def is_response_success(status_code: int, expected_code: int) -> bool:
         """
         A simple function to determine the success of the status code
         :param status_code:
@@ -59,13 +55,14 @@ class LORIS_helper:
         :return:
         """
 
+
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         #ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
         ssh.connect(remote_ip, username=remote_login, password=remote_pw)
         sftp = ssh.open_sftp()
-        remote_full_path = remote_path + "/" + local_file_path
-        logger.info(remote_full_path)
+        remote_full_path = f"{remote_path}/{local_file_path}"
+        logger.debug(remote_full_path)
         sftp.put(local_file_path, remote_full_path)
         sftp.close()
         ssh.close()
@@ -78,9 +75,9 @@ class LORIS_helper:
         :param local_file_path:
         :return:
         """
-        logger = logging.getLogger("Upload logger")
+
         sftp = client.open_sftp()
-        logger.info(remote_path)
+        logger.debug(remote_path)
         sftp.put(local_file_path, remote_path)
         sftp.close()
 
@@ -141,20 +138,22 @@ class LORIS_helper:
         :param client:
         :return:
         """
-        logger.info("Ran command: " + bash_command_string)
+
+        logger.debug(f"Ran command: {bash_command_string}")
 
         # Bind in, out and err prompts after running certain commands.
         _, stdout, stderr = client.exec_command(bash_command_string)
         print("stderr: ", stderr.readlines())
         print("stdout: ", stdout.readlines())
 
+
 if __name__ == '__main__':
-    ProxyIP = load_validate_dotenv("ProxyIP", CNBP_blueprint.dotenv_variables)
-    ProxyUsername = load_validate_dotenv("ProxyUsername", CNBP_blueprint.dotenv_variables)
-    ProxyPassword = load_validate_dotenv("ProxyPassword", CNBP_blueprint.dotenv_variables)
-    LORISHostIP = load_validate_dotenv("LORISHostIP", CNBP_blueprint.dotenv_variables)
-    LORISHostUsername = load_validate_dotenv("LORISHostUsername", CNBP_blueprint.dotenv_variables)
-    LORISHostPassword = load_validate_dotenv("LORISHostPassword", CNBP_blueprint.dotenv_variables)
+    ProxyIP = config_get("ProxyIP")
+    ProxyUsername = config_get("ProxyUsername")
+    ProxyPassword = config_get("ProxyPassword")
+    LORISHostIP = config_get("LORISHostIP")
+    LORISHostUsername = config_get("LORISHostUsername")
+    LORISHostPassword = config_get("LORISHostPassword")
 
     Client = LORIS_helper.getProxySSHClient(ProxyIP,  ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername, LORISHostPassword)
     LORIS_helper.uploadThroughClient(Client, "//data/incoming/VTXGL019999_598399_V1.zip", "VTXGL019999_598399_V1.zip")

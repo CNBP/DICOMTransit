@@ -1,14 +1,11 @@
 import json
 import logging
-import sys
-
 import requests
 
 from LORIS.helper import LORIS_helper
-from LocalDB.schema import CNBP_blueprint
-from PythonUtils.env import load_validate_dotenv
+from settings import config_get
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger()
 
 class LORIS_query:
 
@@ -18,15 +15,15 @@ class LORIS_query:
         Logs into LORIS using the stored credential. Must use PyCurl as Requests is not working.
         :return: BOOL if or not it is successful. also, the JSON token that is necessary to conduct further transactions.
         """
-        logger = logging.getLogger('LORIS_login')
 
-        username = load_validate_dotenv("LORISusername", CNBP_blueprint.dotenv_variables)
-        password = load_validate_dotenv("LORISpassword", CNBP_blueprint.dotenv_variables)
+        from settings import config_get
+        username = config_get("LORISusername")
+        password = config_get("LORISpassword")
 
         data = json.dumps({"username":username, "password":password})
 
         #Login URL
-        url = load_validate_dotenv("LORISurl", CNBP_blueprint.dotenv_variables)
+        url = config_get("LORISurl")
         updated_url = url + 'login'
 
 
@@ -34,7 +31,7 @@ class LORIS_query:
         r = requests.post(updated_url, data=data)
 
 
-        logger.info(str(r.status_code) + r.reason)
+        logger.debug(str(r.status_code) + r.reason)
 
         response_json = r.json()
 
@@ -48,17 +45,17 @@ class LORIS_query:
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('LORIS_get')
-        logger.info("Getting LORIS endpoint: " + endpoint + " at")
-        url = load_validate_dotenv("LORISurl", CNBP_blueprint.dotenv_variables)
+
+        logger.debug(f"Getting LORIS endpoint: {endpoint} at")
+        url = config_get("LORISurl")
         updatedurl = url + endpoint
-        logger.info(updatedurl)
+        logger.debug(updatedurl)
         HEADERS = {'Authorization': 'token {}'.format(token)}
 
         with requests.Session() as s:
             s.headers.update(HEADERS)
             r = s.get(updatedurl)
-            logger.info("Get Result:" + str(r.status_code) + r.reason)
+            logger.debug(f"Get Result: {str(r.status_code)} {r.reason}")
 
             return r.status_code, r.json()
 
@@ -71,11 +68,11 @@ class LORIS_query:
         :param data:
         :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
         """
-        logger = logging.getLogger('LORIS_post')
-        logger.info("Posting data to: "+endpoint)
-        logger.info("Data: "+data)
-        logger.info("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
-        url = load_validate_dotenv("LORISurl", CNBP_blueprint.dotenv_variables)
+
+        logger.debug("Posting data to: "+endpoint)
+        logger.debug("Data: "+data)
+        logger.debug("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
+        url = config_get("LORISurl")
         updatedurl = url + endpoint
 
         HEADERS = {'Authorization': 'token {}'.format(token)}
@@ -83,7 +80,7 @@ class LORIS_query:
         with requests.Session() as s:
             s.headers.update(HEADERS)
             r = s.post(updatedurl, data=data)
-            logger.info("Post Result:" + str(r.status_code) + r.reason)
+            logger.debug(f"Post Result: {str(r.status_code)} {r.reason}")
 
             return r.status_code, r
 
@@ -96,12 +93,12 @@ class LORIS_query:
         :param data:
         :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
         """
-        logger = logging.getLogger('LORIS_put')
-        logger.info("Putting data to: "+endpoint)
-        logger.info("Data: "+data)
-        logger.info("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
 
-        url = load_validate_dotenv("LORISurl", CNBP_blueprint.dotenv_variables)
+        logger.debug("Putting data to: "+endpoint)
+        logger.debug("Data: "+data)
+        logger.debug("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
+
+        url = config_get("LORISurl")
         updatedurl = url + endpoint
 
         HEADERS = {'Authorization': 'token {}'.format(token)}
@@ -109,10 +106,39 @@ class LORIS_query:
         with requests.Session() as s:
             s.headers.update(HEADERS)
             r = s.put(updatedurl, data=data)
-            logger.info("Put Result:" + str(r.status_code) + r.reason)
-
+            logger.debug(f"Put Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r
 
+    @staticmethod
+    def putCNBPDICOM(token, endpoint, imaging_data, isPhantom: bool = False):
+        """
+        Put some data to a LORIS end point.
+        :param token:
+        :param endpoint:
+        :param imaging_data:
+        :param isPhantom: whether the upload is a phantom data or not.
+        :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
+        """
+
+        logger.debug(f"Uploading Imaging data to: {endpoint}")
+
+
+        url = config_get("LORISurl")
+        updatedurl = url + endpoint
+
+        if isPhantom:
+            HEADERS = {'Authorization': f'token {token}',
+                       'X-Is-Phantom': '1'}
+        else:
+            HEADERS = {'Authorization': f'token {token}',
+                       'X-Is-Phantom': '0'}
+
+        with requests.Session() as s:
+            s.headers.update(HEADERS)
+            r = s.put(updatedurl, data=imaging_data)
+            logger.debug(f"Put Result: {str(r.status_code)} {r.reason}")
+
+            return r.status_code, r
 
 
 # Only executed when running directly.

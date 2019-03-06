@@ -4,6 +4,12 @@ from dtconfigure.db import get_db
 
 
 def test_register(client, app):
+    """
+    Testing registration of the client and the app
+    :param client:
+    :param app:
+    :return:
+    """
     assert client.get('/auth/register').status_code == 200
     response = client.post(
         '/auth/register', data={'username': 'a', 'password': 'a'}

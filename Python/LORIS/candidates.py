@@ -1,47 +1,43 @@
-import sys
 import re
 import json
 import logging
-from PythonUtils.env import load_validate_dotenv
+from settings import config_get
 from LORIS.query import LORIS_query
 from LORIS.helper import LORIS_helper
 
 from LocalDB.schema import CNBP_blueprint
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-
-
+logger = logging.getLogger()
 
 class LORIS_candidates:
 
     @staticmethod
-    def parse_PSCID(PSCID: str):
+    def parse_PSCID(PSCID: str) -> (bool, str, str):
         """
-        Return three parts of the PSCID: project, subject
-        Example: VTX GL01 9999
+        Return two parts of the PSCID: institution, subject
+        Example: 1 0000033
 
         :param PSCID:
         :return:
         """
+
+        # fixme: old format VXS0000001 now, 10000022
+
 
         # Loading regular expression
         re_institution = CNBP_blueprint.PSCID_schema_institution
         #re_project = CNBP_blueprint.PSCID_schema_project
         re_subject = CNBP_blueprint.PSCID_schema_subject
 
-        # Use expression to extract from the inputted PSCID
-        input_institution = re.search(re_institution, PSCID).group(0)
-        #input_project = re.search(re_project, PSCID).group(0)
-        input_subject = re.search(re_subject, PSCID).group(0)
-
-        if input_subject is None or input_institution is None:
-            success = False
-        else:
+        if re.search(re_institution, PSCID) is not None and re.search(re_subject, PSCID) is not None:
+            # Use expression to extract from the inputted PSCID
+            input_institution = re.search(re_institution, PSCID).group(0)
+            # input_project = re.search(re_project, PSCID).group(0)
+            input_subject = re.search(re_subject, PSCID).group(0)
             success = True
-
-        return success, input_institution, input_subject
+            return success, input_institution, input_subject
+        else:
+            return False, None, None
 
 
     @staticmethod
@@ -53,24 +49,23 @@ class LORIS_candidates:
         # will not apply to the SSH session!
 
 
-        ProxyIP = load_validate_dotenv("ProxyIP", CNBP_blueprint.dotenv_variables)
-        ProxyUsername = load_validate_dotenv("ProxyUsername", CNBP_blueprint.dotenv_variables)
-        ProxyPassword = load_validate_dotenv("ProxyPassword", CNBP_blueprint.dotenv_variables)
-        LORISHostPassword = load_validate_dotenv("LORISHostPassword", CNBP_blueprint.dotenv_variables)
-        LORISHostUsername = load_validate_dotenv("LORISHostUsername", CNBP_blueprint.dotenv_variables)
-        LORISHostIP = load_validate_dotenv("LORISHostIP", CNBP_blueprint.dotenv_variables)
-        DeletionScript = load_validate_dotenv("DeletionScript", CNBP_blueprint.dotenv_variables)
+        ProxyIP = config_get("ProxyIP")
+        ProxyUsername = config_get("ProxyUsername")
+        ProxyPassword = config_get("ProxyPassword")
+        LORISHostPassword = config_get("LORISHostPassword")
+        LORISHostUsername = config_get("LORISHostUsername")
+        LORISHostIP = config_get("LORISHostIP")
+        DeletionScript = config_get("DeletionScript")
 
         # NOTE! If you EVER get NULL coalesce not recognized error, make sure that the PHP version being called from
         # the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER
         # than the bashrc profile imported edition. Also keep in mind that EVEN if .bashrc import this, it MOST LIKELY
         # will not apply to the SSH session!
 
-        command_string = "/opt/rh//rh-php70/root/usr/bin/php " + DeletionScript + " delete_candidate " + str(DCCID) + " " + PSCID + " confirm"
+        command_string = f"/opt/rh//rh-php70/root/usr/bin/php {DeletionScript} delete_candidate {str(DCCID)} {PSCID} confirm"
 
 
-
-        logger.info(command_string)
+        logger.debug(command_string)
 
         # Establish connection to client.
         Client = LORIS_helper.getProxySSHClient(ProxyIP, ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername,
@@ -93,22 +88,24 @@ class LORIS_candidates:
         :param project:
         :return: DCCID
         """
-        logger = logging.getLogger('LORIS_CreateCNBPCandidates')
-        logger.info("Creating CNBP Candidates belong to project: " + project)
+
+        logger.debug(f"Creating CNBP Candidates belong to project: {project}")
 
         Candidate = {}
         from LORIS.validate import LORIS_validation
         if not LORIS_validation.validate_birth_date_loris(birth_date) or \
            not LORIS_validation.validate_gender(gender): #not LORIS_validation.validate_project(project) or #todo fix this project validation part during creation.
-            logger.info("Non-compliant PSCID component detected. Aborting PSCID creation ")
+            logger.error("Non-compliant PSCID component detected. Aborting PSCID creation ")
             return False, None
 
         Candidate['Project'] = project
+        Candidate['EDC'] = birth_date
         #Candidate['PSCID'] = proposed_PSCID Now auto sequence.
         Candidate['DoB'] = birth_date
         Candidate['Gender'] = gender
+        Candidate['Site'] = config_get("institutionName")
 
-        data = {"Candidate":Candidate}
+        data = {"Candidate" : Candidate}
 
         data_json = json.dumps(data)
 
@@ -134,9 +131,9 @@ class LORIS_candidates:
         :param proposed_PSCID:
         :return: bool for connection, bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('LORIS_checkPSCIDExist')
-        logger.info("Checking if PSCID exist: "+proposed_PSCID)
-        institution_check = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
+
+        logger.debug("Checking if PSCID exist: "+proposed_PSCID)
+        institution_check = config_get("institutionID")
 
         #Get list of projects
         response_success, loris_project = LORIS_query.getCNBP(token, r"projects/loris")
@@ -145,7 +142,7 @@ class LORIS_candidates:
 
         #Get list of candidates (Candidates in v0.0.1)
         candidates = loris_project.get("Candidates")
-        logger.info(candidates)
+        logger.debug(candidates)
 
         for DCCID in candidates: #these candidates should really be only from the same ID regions.
             response_success, candidate_json = LORIS_query.getCNBP(token, r"candidates/"+DCCID)
@@ -169,6 +166,7 @@ class LORIS_candidates:
         return True, False
 
 
+
     @staticmethod
     def checkDCCIDExist(token, proposed_DCCID):
         """
@@ -179,17 +177,18 @@ class LORIS_candidates:
         """
         from LORIS.validate import LORIS_validation
 
-        logger = logging.getLogger('LORIS_checkDCCIDExist')
-        logger.info("Checking if DCCID exist: "+str(proposed_DCCID))
 
-        assert (LORIS_validation.validate_DCCID(proposed_DCCID))
+        logger.debug("Checking if DCCID exist: "+str(proposed_DCCID))
+
+        if not LORIS_validation.validate_DCCID(proposed_DCCID):
+            raise ValueError("DCCID is not valid!")
 
         #todo: This area has projects/loris dependency. Refactor to enable multiple projects handling.
         response, JSON = LORIS_query.getCNBP(token, r"candidates/"+str(proposed_DCCID))
         response_success = LORIS_helper.is_response_success(response, 200)
 
         if not response_success:
-            logger.info("FAILED log response: " + str(response))
+            logger.error(f"FAILED log response: {str(response)}")
             return response_success, None
 
 
@@ -200,6 +199,3 @@ class LORIS_candidates:
         else:
             return False, None
 
-if __name__ == "__main__":
-    #LORIS_candidates.deleteCandidateCNBP(958607, "CNBP8881234")
-    print(LORIS_validation.validate_projectID("GL01"))

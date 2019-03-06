@@ -8,22 +8,22 @@ from LocalDB.create import LocalDB_create
 from LocalDB.query import LocalDB_query
 from LocalDB.schema import CNBP_blueprint
 
+logger = logging.getLogger()
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
 class UT_LocalDBCreate(unittest.TestCase):
 
-    @staticmethod
-    def test_LocalDBCreate():
-        logger = logging.getLogger('UT_LocalDBCreate')
+
+    def test_LocalDBCreate(self):
+
         PathString = "Test.sqlite"
         # if SQL already exist, quit script.
         SQLPath = Path(PathString)
 
         # check if path is a fiel and exist.
         if SQLPath.is_file():
-            logger.info('Test SQLite database file already exist. Gonna mess with it!')
+            logger.warning('Test SQLite database file already exist. Gonna mess with it!')
             ''''Delete current database! During testing only'''
             os.remove(PathString)
 
@@ -57,16 +57,16 @@ class UT_LocalDBCreate(unittest.TestCase):
 
         return True
 
-    @staticmethod
-    def test_LocalDBCreate_CNBP():
-        logger = logging.getLogger('UT_LocalDBCreate_CNBP')
+
+    def test_LocalDBCreate_CNBP(self):
+
         PathString = "TestCNBP.sqlite"
         # if SQL already exist, quit script.
         SQLPath = Path(PathString)
 
         # check if path is a fiela nd exist.
         if SQLPath.is_file():
-            logger.info('Test SQLite database file already exist. Gonna mess with it!')
+            logger.warning('Test SQLite database file already exist. Gonna mess with it!')
             ''''Delete current database! During testing only'''
             os.remove(PathString)
 
@@ -89,6 +89,3 @@ class UT_LocalDBCreate(unittest.TestCase):
             print(fetchallResult[index][2])
             assert fetchallResult[index][2] == CNBP_blueprint.schema_types[index]
         return True
-
-if __name__ == '__main__':
-    UT_LocalDBCreate.test_LocalDBCreate_CNBP()

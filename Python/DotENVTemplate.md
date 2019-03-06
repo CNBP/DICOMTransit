@@ -37,7 +37,7 @@ e.g. CNBP 001 0001
 This represent the unique strings from the MRI scanner protocol that is being GREP to apply the right project assignment. 
 
 ```
-projectID_dictionary = '{ "PJ01":"PJ01", "MD01":"MD01", "AB01":"AB01" }'
+projectID_dictionary = '{ "PJ01" : "PJ01", "MD01" : "MD01", "AB01" : "AB01" }'
 
 
 LocalDatabase = "MRNLORISDatabase.sqlite"

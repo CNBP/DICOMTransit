@@ -9,7 +9,7 @@ import LORIS.API
 import LocalDB.API
 import orthanc.API
 from DICOM.DICOMPackage import DICOMPackage
-from PythonUtils.file import current_funct_name
+
 
 SIGNAL          = 'my-first-signal'
 SIG_Error       = 'Generic Error'
@@ -40,7 +40,7 @@ SIG_UPLOAD_ANONYMIZED_DATA = 'upload-anonymized-data'
 SIG_HANDLE_DICOM_FILE = 'handle-dicom-file'
 SIG_TASK_COMPLETE = 'task-complete'
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 logger = logging.getLogger('Finite state machine')
 
 """ Function to handle events """
@@ -341,7 +341,7 @@ def upload_anonymized_data(signal=None, sender=None, anon_dicom_file: DICOMPacka
     anon_dicom_file.zip()
 
     # Upload the zip file to the server for further processing.
-    LORIS.API.upload(anon_dicom_file.zip_location)
+    LORIS.API.old_upload(anon_dicom_file.zip_location)
 
     dispatcher.send(signal=SIG_TASK_COMPLETE,
                     sender=current_funct_name(),

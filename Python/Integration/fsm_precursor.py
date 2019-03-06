@@ -22,9 +22,10 @@ if __name__ == "__main__":
     # Get ALL subjects, loop through them
     for subject in list_subjects[2:5]:
         try:
-            subject_url = url + "patients/" + subject + '/archive' # it must contain patients/ and archive in the path name
+            subject_url = f"{url}patients/{subject }/archive"  # it must contain patients/ and archive in the path name
 
-            dicom_folder = orthanc.API.get_subject_zip(subject_url, user, password)
+            zip_file = orthanc.API.get_subject_zip(subject_url, user, password)
+            dicom_folder = orthanc.API.unpack_subject_zip(zip_file)
 
             # Convert it to a DICOMPackage, it checks for a bunch of validity, update a bunch of its meta information regarding the entire archive
             DICOM_package = DICOMPackage(dicom_folder)
@@ -42,7 +43,7 @@ if __name__ == "__main__":
                 DICOM_package.project = "loris"
 
                 # create new PSCID and get DCCID
-                success, DCCID, PSCID = LORIS.API.create_new(DICOM_package.project, DICOM_package.birthday, DICOM_package.gender)
+                success, DCCID, PSCID = LORIS.API.create_candidate(DICOM_package.project, DICOM_package.birthday, DICOM_package.gender)
 
                 # Local Variable for anonymization.
                 DICOM_package.DCCID = DCCID
@@ -73,8 +74,8 @@ if __name__ == "__main__":
                 DICOM_package.DCCID = LocalDB.API.get_DCCID(DICOM_package.MRN)
 
                 # Get the latest local known timepoint:
-                last_database_timepoint = LocalDB.API.get_timepoint(DICOM_package.MRN)
-                print("Last known timepoint: "+last_database_timepoint)
+                #last_database_timepoint = LocalDB.API.get_timepoint(DICOM_package.MRN)
+                #print("Last known timepoint: "+last_database_timepoint)
 
                 # Using LORIS API to create the new timepoint:
                 latest_timepoint = LORIS.API.increment_timepoint(DCCID)
@@ -89,16 +90,16 @@ if __name__ == "__main__":
                 raise ValueError("Ambigious MRN existence status. Check code for error.")  # Any unanticipated errors.
 
             # Generate new string with everything.
-            DICOM_package.zipname = DICOM_package.CNBPID + "_" + str(DICOM_package.DCCID) + "_" + DICOM_package.timepoint
+            DICOM_package.zipname = f"{DICOM_package.CNBPID}_{str(DICOM_package.DCCID)}_{DICOM_package.timepoint}"
 
             # Anonymize to Zip
             DICOM.API.anonymize_to_zip(DICOM_package.dicom_folder, DICOM_package.zipname)
 
             # Upload
-            LORIS.API.upload(os.path.join(r"C:\GitHub\DICOMTransit\Python\data_archives", DICOM_package.zipname + ".zip"))
+            LORIS.API.old_upload(os.path.join(r"C:\GitHub\DICOMTransit\Python\data_archives", DICOM_package.zipname + ".zip"))
 
             # Trigger insertion.
-            LORIS.API.trigger_insertion(DICOM_package.zipname)
+            LORIS.API.new_trigger_insertion(DICOM_package.zipname)
         except:
             # Any exceptions, continue!
             continue

@@ -5,13 +5,13 @@ from LORIS.query import LORIS_query
 import unittest
 import sys
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger()
 
 class UT_LORISCandidates(unittest.TestCase):
 
-    @staticmethod
-    def test_create_delete_subject():
+
+    def test_create_delete_subject(self):
         """
         Check both the creation and deletion of the subject for LORIS.
         :return:
@@ -29,8 +29,8 @@ class UT_LORISCandidates(unittest.TestCase):
         assert success
         LORIS_candidates.deleteCandidateCNBP(DCCID, PSCID)
 
-    @staticmethod
-    def test_check_projectID():
+
+    def test_check_projectID(self):
         ProjectID = "GL01"
         assert LORIS_validation.validate_projectID(ProjectID)
 
@@ -43,19 +43,19 @@ class UT_LORISCandidates(unittest.TestCase):
         ProjectID = "AB01"
         assert LORIS_validation.validate_projectID(ProjectID)
 
-    @staticmethod
-    def test_CNBP_PSCID():
-        PSCID = "VXS" + "GL01"  + "0001"
-        PSCID1 = "VXa" + "GL01" + "0001"
-        PSCID2 = "VXS" + "GL02" + "0001"
-        PSCID3 = "VXS" + "GL01" + "0001"
-        PSCID4 = "VXS" + "GL01" + "0009"
 
-        assert(LORIS_validation.validate_CNBPID(PSCID))
+    def test_CNBP_PSCID(self):
+        PSCID = "VXS0000000"
+        PSCID1 = "VXa0129410"
+        PSCID2 = "VXS9204812"
+        PSCID3 = "VXSasdfiea"
+        PSCID4 = "VXS8d8d9s0"
+
+        assert LORIS_validation.validate_CNBPID(PSCID)
         assert not LORIS_validation.validate_CNBPID(PSCID1)
-        assert not LORIS_validation.validate_CNBPID(PSCID2)
-        assert LORIS_validation.validate_CNBPID(PSCID3)
-        assert LORIS_validation.validate_CNBPID(PSCID4)
+        assert LORIS_validation.validate_CNBPID(PSCID2)
+        assert not LORIS_validation.validate_CNBPID(PSCID3)
+        assert not LORIS_validation.validate_CNBPID(PSCID4)
 
 if __name__ == "__main__":
     UT_LORISCandidates.test_CNBP_PSCID()

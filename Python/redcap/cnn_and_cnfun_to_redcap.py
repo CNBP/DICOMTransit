@@ -78,8 +78,6 @@ def update_redcap_data():
 
     return
 
-
 if __name__ == "__main__":
-
     # Update REDCap Data.
     update_redcap_data()

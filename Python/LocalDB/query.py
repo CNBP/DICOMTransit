@@ -1,15 +1,18 @@
-import sys
 import logging
 import sqlite3
 from pathlib import Path
 from LocalDB.schema import CNBP_blueprint
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger()
 
 class LocalDB_query:
 
+    """
+    Lower level functions that interact with the local database.
+    """
+
     @staticmethod
-    def check_value(database_path, table_name, ColumnName, ColumnValue):
+    def check_value(database_path, table_name, ColumnName, ColumnValue) -> (bool, list):
         """
         Check if a subject exist in the given database and given table
         :param database_path: path to the SQLite database
@@ -18,14 +21,14 @@ class LocalDB_query:
         :param ColumnValue: the value of the column being checked
         :return: boolean on if this is ever found in the given database in the given table, in the given column.
         """
-        logger = logging.getLogger('LORISQuery_CheckSubjectExist')
+
 
 
         SQLPath = Path(database_path)
 
         # check if path is a file and exist.
         if not SQLPath.is_file():
-            logger.info('SQLite database file does not exist!')
+            logger.warning('SQLite database file does not exist!')
             return False, None
 
         # Try to connect the database to start the process:
@@ -34,12 +37,10 @@ class LocalDB_query:
             ConnectedDatabase = sqlite3.connect(database_path)
             c = ConnectedDatabase.cursor()
 
-            logger.info("Checking key value: " + str(ColumnValue) + " in " + ColumnName + " in SQLite database.")
+            logger.debug(f"Checking key value: {str(ColumnValue)} in {ColumnName} in SQLite database.")
 
             # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            execution_string = 'SELECT * FROM {table_name} WHERE {columnname}="{columnvalue}"'.format(table_name=table_name,
-                                                                                   columnname=ColumnName,
-                                                                                   columnvalue=ColumnValue)
+            execution_string = f'SELECT * FROM {table_name} WHERE {ColumnName}="{ColumnValue}"'
             c.execute(execution_string)
 
             result_rows = c.fetchall()
@@ -66,7 +67,7 @@ class LocalDB_query:
         :param ColumnValue: the value of the column being checked
         :return: boolean on if this is ever found in the given database in the given table, in the given column.
         """
-        logger = logging.getLogger('LORISQuery_CheckSubjectExist')
+
 
 
         SQLPath = Path(database_path)
@@ -82,12 +83,10 @@ class LocalDB_query:
             ConnectedDatabase = sqlite3.connect(database_path)
             c = ConnectedDatabase.cursor()
 
-            logger.info("Checking key value: " + str(ColumnValue) + " in " + ColumnName + " in SQLite database.")
+            logger.debug(f"Checking key value: {str(ColumnValue)} in {ColumnName} in SQLite database.")
 
             # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            execution_string = 'SELECT * FROM {table_name} WHERE {columnname} LIKE "%{columnvalue}%"'.format(table_name=table_name,
-                                                                                          columnname=ColumnName,
-                                                                                          columnvalue=ColumnValue)
+            execution_string = f'SELECT * FROM {table_name} WHERE {ColumnName} LIKE "%{ColumnValue}%"'
             c.execute(execution_string)
 
             result_rows = c.fetchall()
@@ -115,14 +114,14 @@ class LocalDB_query:
         :param key_field_value: value of the key_field to be created.
         :return: if the entry has been successfully created.
         """
-        logger = logging.getLogger('LORISQuery_CreateSubject')
+
 
         # if SQL already exist, quit script.
         SQLPath = Path(database_path)
 
         # check if path is a file and exist.
         if not SQLPath.is_file():
-            logger.info('SQLite database file does not exist!')
+            logger.error('SQLite database file does not exist!')
             return False
 
         # Try to connect the database to start the process:
@@ -134,7 +133,7 @@ class LocalDB_query:
             logger.info('Creating new record in SQLite database.')
 
             # Creating a new SQLite record row (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            c.execute('INSERT OR IGNORE INTO {tn} ({field}) VALUES ("{value}")'.format(tn=table_name, field=key_field, value=key_field_value))
+            c.execute(f'INSERT OR IGNORE INTO {table_name} ({key_field}) VALUES ("{key_field_value}")')
         except Exception as e:
             logger.info(e)
             raise IOError()
@@ -157,14 +156,14 @@ class LocalDB_query:
         :return:
         """
 
-        logger = logging.getLogger('LORISQuery_CreateSubject')
+
 
         # if SQL already exist, quit script.
         SQLPath = Path(database_path)
 
         # check if path is a file and exist.
         if not SQLPath.is_file():
-            logger.info('SQLite database file does not exist!')
+            logger.error('SQLite database file does not exist!')
             return False
 
         # Try to connect the database to start the process:
@@ -176,10 +175,10 @@ class LocalDB_query:
             logger.info('Update records in SQLite database.')
 
             # Update SQLite record row where key field values are found (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            c.execute('UPDATE {tn} SET {f}="{fv}" WHERE {kf}="{kfv}"'.format(tn=table_name, f=field, fv=field_value, kf=key_field, kfv=key_field_value))
+            c.execute(f'UPDATE {table_name} SET {field}= ? WHERE {key_field}= ?', (field_value, key_field_value))
 
         except Exception as e:
-            raise IOError()
+            pass
 
         # Closing the connection to the database file
         ConnectedDatabase.commit()
@@ -194,7 +193,7 @@ class LocalDB_query:
         :return:
         """
 
-        logger = logging.getLogger('SQLite check_header check')
+
 
         table_header = None
 
@@ -249,14 +248,14 @@ class LocalDB_query:
         :param field: the string of the field name that is to be searched.
         :return:
         """
-        logger = logging.getLogger('LORISQuery_validateLocalTableAndSchema')
+
         field_table_index = -1
         field_schema_index = -2
 
 
         # Schema check: note that schema contains keyfield
         if field not in CNBP_blueprint.schema:
-            return False, "Current planned schema does not contain " + field
+            return False, f"Current planned schema does not contain {field}"
         else:
             field_schema_index = CNBP_blueprint.schema.index(field)
 
@@ -264,9 +263,9 @@ class LocalDB_query:
         try:
             field_table_index = LocalDB_query.check_header_index(database_path, table_name, field)
             if field_table_index is None:
-                return False, "SQLite table HEADER does not contain " + field
+                return False, f"SQLite table HEADER does not contain {field}"
             else:
-                logger.info("SQLite table HEADER for the field " + field + " is " + str(field_table_index))
+                logger.debug(f"SQLite table HEADER for the field {field } is {str(field_table_index)}")
         except IOError:
             return False, "Database not reachable"
 
@@ -281,13 +280,13 @@ class LocalDB_query:
 
     @staticmethod
     def get_all(database_path, table_name, field_names):
-        logger = logging.getLogger(__name__)
+
 
         SQLPath = Path(database_path)
 
         # check if path is a file and exist.
         if not SQLPath.is_file():
-            logger.info('SQLite database file does not exist!')
+            logger.error('SQLite database file does not exist!')
             return False, None
 
         # Try to connect the database to start the process:
@@ -299,8 +298,7 @@ class LocalDB_query:
             #logger.info("Checking key value: " + str(ColumnValue) + " in " + ColumnName + " in SQLite database.")
 
             # Creating a new SQLite table_name with DBKey column (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
-            execution_string = 'SELECT {columnname} FROM {table_name} '.format(table_name=table_name,
-                                                                                   columnname=field_names)
+            execution_string = f'SELECT {field_names} FROM {table_name}'
             c.execute(execution_string)
 
             result_rows = c.fetchall()

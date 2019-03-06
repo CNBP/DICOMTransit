@@ -1,6 +1,11 @@
 
 class CNBP_blueprint:
 
+    """
+    this blueprint represent the underlying field of the main database.
+    NOTE that EACH MRN must be unique. There will NOT be more than one MRN. We update the information to keep the latest subjects seen.
+    """
+
     table_name = 'id_table'
 
     keyfield = 'MRN'
@@ -14,7 +19,9 @@ class CNBP_blueprint:
               'Date',
               'Hash1',
               'Hash2',
-              'Hash3']
+              'Hash3',
+              'SeriesUID',
+              'OrthancUUID']
 
     fields_types = ['TEXT',
                     'INTEGER',
@@ -24,27 +31,26 @@ class CNBP_blueprint:
                     'TEXT',
                     'TEXT',
                     'TEXT',
+                    'TEXT',
+                    'TEXT',
                     'TEXT']
 
-    # todo: cross checek these with schema.sql from dtconfigurator as well as .env
+    # this must pass at ALL TIME
+    assert(len(fields)==len(fields_types))
+
+    # todo: cross checek these with schema.sql from dtconfigurator as well!
     dotenv_variables = [
+        "created",
         "LORISurl",
         "LORISusername",
         "LORISpassword",
         "timepoint_prefix",
         "institutionID",
+        "institutionName",
         "projectID_dictionary",
-        "LocalDatabase",
         "LocalDatabasePath",
-        "ProxyIP",
-        "ProxyUsername",
-        "ProxyPassword",
-        "LORISHostIP",
-        "LORISHostUsername",
-        "LORISHostPassword",
-        "InsertionAPI",
-        "DeletionScript",
-        "zip_storage_location",
+        "LogPath",
+        "ZipPath",
         "DevOrthancIP",
         "DevOrthancUser",
         "DevOrthancPassword",
@@ -62,11 +68,18 @@ class CNBP_blueprint:
     schema_types.insert(0, keyfield_type)
 
     # the regular expressino of each component of the parts that makes up the proper CNBPID in total.
+    #PSCID_schema_institution = "^[A-z][A-z][A-z]"
+
+    # Must beginning with a number.
     PSCID_schema_institution = "^[A-z][A-z][A-z]"
+
     #PSCID_schema_project = "[A-z][A-z][0-9][0-9]"
-    PSCID_schema_subject = "[0-9][0-9][0-9][0-9][0-9][0-9][0-9]"
+
+    # Must end with 7 numbers.
+    PSCID_schema_subject = "[0-9][0-9][0-9][0-9][0-9][0-9][0-9]$"
 
     PSCID_schema = PSCID_schema_institution + PSCID_schema_subject
+
 
 
 def concatenatedSchema():

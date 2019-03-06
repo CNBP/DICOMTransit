@@ -1,21 +1,21 @@
-import sys
+
 import json
 import logging
-from PythonUtils.env import load_validate_dotenv
-from LocalDB.schema import CNBP_blueprint
+from settings import config_get
+
 from PythonUtils.file import dictionary_search
 from LORIS.candidates import LORIS_candidates
 from datetime import datetime
 import math
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
+
 
 
 class LORIS_validation:
 
     @staticmethod
-    def validate_MRN(input_string):
+    def validate_MRN(input_string: str) -> bool:
         """
         This validate and check if the MRN is of the proper valid format based on the hospital specification.
         :param input_string:
@@ -40,38 +40,41 @@ class LORIS_validation:
         :param project:
         :return:
         """
-        #todo need to implement project validation.
+        #fixme need to implement project validation.
         pass
 
     @staticmethod
-    def validate_birth_date_dicom(birth_date):
+    def validate_birth_date_dicom(birth_date: str) -> bool:
         """
         Check if the birth_date is normal
         :param birth_date:
         :return:
         """
+
+
         # Sanity check for scan date within the past 100 years.
         birth_date = datetime.strptime(birth_date, "%Y%m%d")
         current_date = datetime.now()
 
-        if 0 < math.fabs((current_date-birth_date).days) < 54750:
+        if 0 < math.fabs((current_date - birth_date).days) < 54750:
             return True
-        elif math.fabs((current_date-birth_date).days) < 0:
-            logger.info("Patient is less than 0 years old. YOU FAILED.")
+        elif math.fabs((current_date - birth_date).days) < 0:
+            logger.debug("Patient is less than 0 years old. YOU FAILED.")
             return False
-        elif math.fabs((current_date-birth_date).days) > 54750:
-            logger.info("Patient is more than 150 years old. YOU FAILED.")
+        elif math.fabs((current_date - birth_date).days) > 54750:
+            logger.debug("Patient is more than 150 years old. YOU FAILED.")
             return False
         else:  # Generic catchall false condition
             return False
 
     @staticmethod
-    def validate_birth_date_loris(birth_date):
+    def validate_birth_date_loris(birth_date: str) -> bool:
         """
         Check if the birth_date is normal
         :param birth_date:
         :return:
         """
+
         # Sanity check for scan date within the past 100 years.
         birth_date = datetime.strptime(birth_date, "%Y-%m-%d")
         current_date = datetime.now()
@@ -79,17 +82,17 @@ class LORIS_validation:
         if 0 < math.fabs((current_date - birth_date).days) < 54750:
             return True
         elif math.fabs((current_date - birth_date).days) < 0:
-            logger.info("Patient is less than 0 years old. YOU FAILED.")
+            logger.debug("Patient is less than 0 years old. YOU FAILED.")
             return False
         elif math.fabs((current_date - birth_date).days) > 54750:
-            logger.info("Patient is more than 150 years old. YOU FAILED.")
+            logger.debug("Patient is more than 150 years old. YOU FAILED.")
             return False
         else:  # Generic catchall false condition
             return False
 
 
     @staticmethod
-    def validate_sex(sex):
+    def validate_sex(sex: str) -> bool:
         """
         DICOM only permit THREE types: M, F, O capital.
         :param sex:
@@ -101,21 +104,21 @@ class LORIS_validation:
             return False
 
     @staticmethod
-    def validate_gender(gender):
+    def validate_gender(gender: str) -> bool:
         if gender == "Male" or gender == "Female":
             return True
         else:
             return False
 
     @staticmethod
-    def validate_instutitionID(input_institutionID: str):
+    def validate_instutitionID(input_institutionID: str) -> bool:
         """
         Check if the institution ID is compliant per the .env specification. String must STRICTLY match.
         :param input_institutionID:
         :return:
         """
         # Parse from the .env standardization
-        InsitituionID = load_validate_dotenv("institutionID", CNBP_blueprint.dotenv_variables)
+        InsitituionID = config_get("institutionID")
 
         # Check if institution ID matches
         if not (input_institutionID == InsitituionID):
@@ -125,7 +128,7 @@ class LORIS_validation:
 
 
     @staticmethod
-    def validate_projectID(input_projectID: str):
+    def validate_projectID(input_projectID: str) -> bool:
         """
         Provide any string, and it checkss again he dotenv for the proper project KEY which correspond to the ID.
         DICOM/API has the function to actually retrieve the relevant key, after calling this function.
@@ -134,7 +137,7 @@ class LORIS_validation:
         """
 
         # Load ProjectIDs from the environment.
-        projectID_dictionary_json: str = load_validate_dotenv("projectID_dictionary", CNBP_blueprint.dotenv_variables)
+        projectID_dictionary_json: str = config_get("projectID_dictionary")
         projectID_list = json.loads(projectID_dictionary_json)
 
         # check if project ID is in the projectID list via a dictionary search
@@ -147,7 +150,7 @@ class LORIS_validation:
 
 
     @staticmethod
-    def validate_subjectID(input_subjectID: str):
+    def validate_subjectID(input_subjectID: str) -> bool:
         if not input_subjectID.isdigit():
             return False
 
@@ -158,13 +161,13 @@ class LORIS_validation:
 
 
     @staticmethod
-    def validate_CNBPID(CNBPID: str):
+    def validate_CNBPID(CNBPID: str) -> bool:
         """
         Checks CNBPID inputed for 1) InstitionID format, 2) ProjectID format, 3) SubjectID format.
         :param CNBPID:
         :return:
         """
-        logger = logging.getLogger(__name__)
+
 
         # Parse from input CNBPID
         success, input_institution, input_subject = LORIS_candidates.parse_PSCID(CNBPID)
@@ -176,18 +179,18 @@ class LORIS_validation:
 
         # Check institution ID to ensure that
         if not LORIS_validation.validate_instutitionID(input_institution):
-            logger.info("InstitutionID portion of the CNBPID is not compliant")
+            logger.debug("InstitutionID portion of the CNBPID is not compliant")
             return False
 
         # Check last four digits: make sure the last four characters are digits.
         if not LORIS_validation.validate_subjectID(str(input_subject)):
-            logger.info("SubjectID portion of the CNBPID is not compliant")
+            logger.debug("SubjectID portion of the CNBPID is not compliant")
             return False
 
         return True
 
     @staticmethod
-    def validate_DCCID(DCCID):
+    def validate_DCCID(DCCID: int) -> bool:
         """
         Check if DCCID id conform.
         :param DCCID:

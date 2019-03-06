@@ -4,7 +4,10 @@
 
 from dotenv import load_dotenv
 from LocalDB.create import LocalDB_create
+from settings import config_get
 from LocalDB.schema import CNBP_blueprint
+
+
 
 class LocalDB_createCNBP:
 
@@ -15,9 +18,6 @@ class LocalDB_createCNBP:
 
         #Create the PRIMARY KEY column.
 
-        success = load_dotenv()
-        if not success:
-            raise ImportError("Credential .env NOT FOUND! Please ensure .env is set with all the necessary credentials!")
 
         # Create the variable array that store the columns information to be used later in loop for column creation
         TableName = CNBP_blueprint.table_name
@@ -33,7 +33,6 @@ class LocalDB_createCNBP:
 # Only executed when running directly.
 if __name__ == '__main__':
     # Mini script used to create the initial databse
-    from LocalDB.schema import CNBP_blueprint
-    from PythonUtils.env import load_validate_dotenv
-    localDB_path = load_validate_dotenv("LocalDatabasePath", CNBP_blueprint.dotenv_variables)
+
+    localDB_path = config_get("LocalDatabasePath")
     LocalDB_createCNBP.database(localDB_path)

@@ -3,20 +3,19 @@ import sys
 from LORIS.query import LORIS_query
 from LORIS.candidates import LORIS_candidates
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger()
 
 import unittest
 class UT_LORISQuery(unittest.TestCase):
 
-    @staticmethod
-    def test_LORIS_login():
+    def test_LORIS_login(self):
         response_success, _ = LORIS_query.login()
         assert response_success
 
         #assert len(token) == 256 #token should always be 256 char long
-    @staticmethod
-    def test_LORIS_get():
+
+    def test_LORIS_get(self):
         response_success, token = LORIS_query.login()
         assert response_success
         #assert len(token) == 256  # token should always be 256 char long
@@ -25,8 +24,8 @@ class UT_LORISQuery(unittest.TestCase):
         response_success, _ = LORIS_query.getCNBP(token, "candidates")
         assert response_success
 
-    @staticmethod
-    def test_checkPSCIDExist():
+
+    def test_checkPSCIDExist(self):
         response_success, token = LORIS_query.login()
         assert response_success
         #assert len(token) == 256  # token should always be 256 char long
@@ -34,14 +33,10 @@ class UT_LORISQuery(unittest.TestCase):
         assert response_success
         assert not exist
 
-    @staticmethod
-    def test_checkDCCIDExist():
+
+    def test_checkDCCIDExist(self):
         response_success, token = LORIS_query.login()
         assert response_success
         #assert len(token) == 256  # token should always be 256 char long
         exist, _ = LORIS_candidates.checkDCCIDExist(token, 836559)
         assert exist
-
-
-if __name__ == '__main__':
-    UT_LORISQuery.test_checkPSCIDExist()

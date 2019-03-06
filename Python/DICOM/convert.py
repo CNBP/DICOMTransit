@@ -3,8 +3,10 @@ import logging
 import os
 import subprocess
 import re
+import logging
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger()
+
 
 class DICOM_convert:
 
@@ -15,7 +17,7 @@ class DICOM_convert:
         :param input_folder: Input_folder can be a root folder or flat.
         :return:
         """
-        logger = logging.getLogger("DICOM to NII conversion")
+
         if not os.path.exists(input_folder) or not os.path.exists(output_folder):
             return False, "Argument input or output folder does not exist"
 

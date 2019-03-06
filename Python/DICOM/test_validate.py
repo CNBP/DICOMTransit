@@ -7,7 +7,7 @@ from DICOM.test_DICOM import get_test_DICOM_path
 from DICOM.validate import DICOM_validate
 from pydicom.data import get_testdata_files
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
 
 
 class UT_DICOMValidation(unittest.TestCase):

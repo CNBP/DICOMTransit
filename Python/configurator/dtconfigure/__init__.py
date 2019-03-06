@@ -1,29 +1,25 @@
 import os
 
 from flask import Flask
-from Python.PythonUtils.file import full_file_path
-from Python.PythonUtils.folder import get_abspath
 
-
-path_current_script = full_file_path(__file__)
-path_project = get_abspath(path_current_script, 3)
-os.chdir(path_project)
+from pathlib import Path
 
 def create_app(test_config=None):
-    """
-    Create and configure the app
-    :param test_config:
-    :return:
-    """
 
-    path_localDB = os.path.join(path_project, "LocalDB")
+    path_current_file = Path(__file__)
+    path_project = path_current_file.parents[3]
+    path_LocalDB = path_project.joinpath("LocalDB")
+    string_LocalDB = path_LocalDB.joinpath('dtconfigure.sqlite').resolve().as_posix()
 
-    app = Flask(__name__, instance_relative_config=True, instance_path=path_localDB)
+    print(string_LocalDB)
+
+    # create and configure the app
+    app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'dtconfigure.sqlite'),
+        DATABASE=string_LocalDB,
     )
-    print(os.path.join(app.instance_path, 'dtconfigure.sqlite'))
+
 
     if test_config is None:
         # load the instance config, if it exists, when not testing

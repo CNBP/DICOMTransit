@@ -3,6 +3,7 @@ from LocalDB.query import LocalDB_query
 from LORIS.timepoint import LORIS_timepoint
 from LocalDB.schema import CNBP_blueprint
 
+logger = logging.getLogger()
 
 def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
     """
@@ -14,7 +15,6 @@ def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
     :return:
     """
 
-    logger = logging.getLogger('Intermediate_findTimePointUpdateDatabase')
 
     MRN = -1
 
@@ -27,7 +27,7 @@ def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
     if time_point is None:
         return False, "No timepoint found"
     else:
-        logger.info("Timepoint retrieved okay:" + time_point)
+        logger.info(f"Timepoint retrieved okay: {time_point}")
 
     # Validate table and schema congruency
     success, reason = LocalDB_query.validateLocalTableAndSchema(database_path, table_name, "DCCID")

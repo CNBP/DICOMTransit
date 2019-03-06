@@ -4,13 +4,12 @@ from pathlib import Path
 
 from LORIS.helper import LORIS_helper
 from LocalDB.schema import CNBP_blueprint
-from PythonUtils.env import load_validate_dotenv
+from settings import config_get
 
 
 class UT_LORISHelper(unittest.TestCase):
 
-    @staticmethod
-    def test_number_extraction():
+    def test_number_extraction(self):
         Prefix = "V"
         numbers = [1, 2, 3, 9, 10, 11, 12, 100, 101, 102]
 
@@ -25,16 +24,15 @@ class UT_LORISHelper(unittest.TestCase):
             assert str(tupleItem[0]) == LORIS_helper.number_extraction(tupleItem[1])[0]
 
 
-    @staticmethod
-    def test_ProxyUpload():
+    def test_ProxyUpload(self):
 
 
-        ProxyIP = load_validate_dotenv("ProxyIP", CNBP_blueprint.dotenv_variables)
-        ProxyUsername = load_validate_dotenv("ProxyUsername", CNBP_blueprint.dotenv_variables)
-        ProxyPassword = load_validate_dotenv("ProxyPassword", CNBP_blueprint.dotenv_variables)
-        LORISHostPassword = load_validate_dotenv("LORISHostPassword", CNBP_blueprint.dotenv_variables)
-        LORISHostUsername = load_validate_dotenv("LORISHostUsername", CNBP_blueprint.dotenv_variables)
-        LORISHostIP = load_validate_dotenv("LORISHostIP", CNBP_blueprint.dotenv_variables)
+        ProxyIP = config_get("ProxyIP")
+        ProxyUsername = config_get("ProxyUsername")
+        ProxyPassword = config_get("ProxyPassword")
+        LORISHostPassword = config_get("LORISHostPassword")
+        LORISHostUsername = config_get("LORISHostUsername")
+        LORISHostIP = config_get("LORISHostIP")
         Client = LORIS_helper.getProxySSHClient(ProxyIP, ProxyUsername, ProxyPassword,
                                                 LORISHostIP, LORISHostUsername, LORISHostPassword)
 
@@ -47,6 +45,3 @@ class UT_LORISHelper(unittest.TestCase):
         os.remove(testFile)
         sftp.close()
         Client.close()
-
-if __name__ == '__main__':
-    UT_LORISHelper.test_number_extraction()

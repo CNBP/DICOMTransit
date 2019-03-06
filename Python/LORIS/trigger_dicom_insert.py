@@ -1,6 +1,6 @@
 import json
 import requests
-from PythonUtils.env import load_dotenv_var
+from settings import config_get
 
 
 def trigger_dicom_insert(scans):
@@ -27,7 +27,7 @@ def trigger_dicom_insert(scans):
 
     # Need to fix the load_dotenv call. Currently not getting trigger url
 
-    trigger_dicom_insertion_url = load_dotenv_var("InsertionAPI")
+    trigger_dicom_insertion_url = config_get("InsertionAPI")
 
     # Trigger insertion by doing HTTP POST of payload to endpoint
     s = requests.post(trigger_dicom_insertion_url, data=payload)
@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
 
     f1={
-        'file' : "/data/incoming/" + zip_name + ".zip",
+        'file' : f"/data/incoming/{zip_name}.zip",
         'phantom' : "N",
         'candidate' : zip_name
     }

@@ -1,4 +1,3 @@
-import sys
 import logging
 import os
 import shutil
@@ -6,7 +5,7 @@ from DICOM.elements import DICOM_elements
 from DICOM.validate import DICOM_validate
 from tqdm import tqdm
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger()
 
 class DICOM_sort:
 
@@ -17,7 +16,7 @@ class DICOM_sort:
         :param input_folder: Input_folder can be a root folder or flat.
         :return:
         """
-        logger = logging.getLogger("DICOM sorting operation")
+
 
         #Element to check: Series number.
 
@@ -45,14 +44,14 @@ class DICOM_sort:
         logger.info("Sorting files into folders:")
 
         # File here should be the FULL path.
-        for file in tqdm(file_list):
+        for file in tqdm(file_list, position=0):
 
             success1, SeriesNumber = DICOM_elements.retrieve(file, "SeriesNumber")
 
             success2, SeriesDescription = DICOM_elements.retrieve(file, "SeriesDescription")
 
             if not success1 or not success2:
-                logger.info("Skipped file with no acquisition series information: " + file)
+                logger.info(f"Skipped file with no acquisition series information: {file}")
                 exception_encountered = exception_encountered + 1
                 continue
 
@@ -72,7 +71,7 @@ class DICOM_sort:
             _, filename = os.path.split(file)
 
             shutil.move(file, os.path.join(DestinationFolder, filename))
-        logger.info("Total error encountered: " + str(exception_encountered))
+        logger.info(f"Total error encountered: {str(exception_encountered)}")
 
 
 if __name__ == "__main__":

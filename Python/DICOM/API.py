@@ -2,44 +2,47 @@ from tempfile import TemporaryDirectory
 from shutil import copyfile
 from LORIS.validate import LORIS_validation
 from PythonUtils.file import dictionary_search
-from PythonUtils.env import load_validate_dotenv
+from settings import config_get
 from PythonUtils.folder import get_abspath
-from LocalDB.schema import CNBP_blueprint
+from tqdm import tqdm
+from typing import List
 import os
+import logging
+
+logger = logging.getLogger()
 
 
-def anonymize_to_zip(folder_path, zip_ID):
+def anonymize_to_zip(folder_path: str, zip_ID: str):
     """
     Takes everything within the folder, and zip create a zip file in the DEFAULT .env configured zip storage location.
-    #todo!!! Shoddily done for now. MUST REFACTOR!
     :param folder_path:
     :param zip_ID: should be CNBPID_DCCID_VISIT format without .zip extension
     :return:
     """
     from DICOM.anonymize import DICOM_anonymize
+    DICOM_anonymize.folder(folder_path, zip_ID)
+
+    change_to_zip_dir()
+
+    from PythonUtils.file import zip_with_name
+    zip_with_name(folder_path, zip_ID)  # todo! it does not check if there are OTHER files in there!
+
+def change_to_zip_dir():
+    # Load the name of the storage folder from the configuration file.
+    folder_to_zip = config_get("ZipPath")
 
     # Find the root fo the project where the zip storage is related to the location of the current DICOM directory.
     project_root = get_abspath(__file__, 2)
 
-
-
-    # Load the name of the storage folder from the configuration file.
-    zip_folder = load_validate_dotenv("zip_storage_location", CNBP_blueprint.dotenv_variables)
-
-    # Anonymize the entire folder provided with the ZIP ID.
-    DICOM_anonymize.folder(folder_path, zip_ID)
-
-    from PythonUtils.file import zip_with_name
-
     # Create absolute path to the folder to be zipped
-    zip_path = os.path.join(project_root, zip_folder)
-
+    zip_path = os.path.join(project_root, folder_to_zip)
     #
     os.chdir(zip_path)
-    zip_with_name(folder_path, zip_ID) #todo! it does not check if there are OTHER files in there!
 
-def anonymize_files(files):
+
+def anonymize_files(files: List[str]):
     """
+    #fixme: not working not sure why these exist...
     Anaonymize the files given using the name provided. WIP!!!
     :param files:
     :return:
@@ -57,7 +60,53 @@ def anonymize_files(files):
         DICOM_anonymize.folder(temp_folder, "NEW_CONTESTANT")
     pass
 
-def retrieve_study_protocol(files):
+
+def check_anonymization(files: list, anonymized_name) -> bool:
+    """
+    A function to double check a list of files against the KNOWN anonymized value. This ensures that the anonymization actually gets carried out.
+
+    NOTE!!!!
+    This is the part where we have to ensure all the values are properly anonymized.
+    todo: generalize this such that it will provide a list of fields and then anonymize them all from the database etc.
+    :param files: File must be the absolute path!
+    :param anonymized_name:
+    :return:
+    """
+    from DICOM.elements import DICOM_elements
+    from DICOM.elements_batch import DICOM_elements_batch
+    from DICOM.validate import DICOM_validate
+
+    # Check every single file in the DICOM collections.
+    for file in tqdm(files, position=0):
+
+        success, DICOM = DICOM_validate.file(file)
+
+        if not success:
+            return False
+
+        properties = ["PatientID", "PatientName"]
+
+        properties_output = DICOM_elements_batch.retrieval(DICOM, properties)
+
+
+        success1, patient_id = DICOM_elements.retrieve_fast(DICOM, "PatientID")
+        success2, name = DICOM_elements.retrieve_fast(DICOM, "PatientName")
+
+        # bad retrieval.
+        if not success1 or not success2:
+            return False
+
+        # not properly anonymized patient ID
+        if not patient_id == anonymized_name:
+            return False
+
+        # not properly anonymized name.
+        if not name ==anonymized_name:
+            return False
+
+    return True
+
+def retrieve_study_protocol(files: List[str]) -> List[str]:
     """
     From the list of files, find the names of all the possible studies descriptions.
     #(0008,1030)	Study Description	e.g. FUNCTIONAL^Dr.Bohbot
@@ -72,16 +121,19 @@ def retrieve_study_protocol(files):
     for file in files:
 
         # Ensure it exists before attempting to retrieve it.
-        assert (os.path.exists(file))
-        success, study_protocol = DICOM_elements.retrieve(file, "ProtocolName")
+        if os.path.exists(file):
+            success, study_protocol = DICOM_elements.retrieve(file, "ProtocolName")
+        else:
+            logger.error(f"Study protocol could not be retrieved from: {file}. Skipping this file!")
+            continue
 
-        # Only add if it is not already in the list (avoid dupliate, ensure unique entries
+        # Only add if it is not already in the list (avoid duplicate, ensure unique entries
         if LORIS_validation.validate_projectID(study_protocol) and study_protocol not in protocols:
             protocols.append(study_protocol)
 
     return protocols
 
-def study_validation(study):
+def study_validation(study: str) -> str:
     """
     Given a string read from the DICOM studies field, check it against the project ID dictionary to see if any of the project belongs.
     :param study:
@@ -93,7 +145,7 @@ def study_validation(study):
     if LORIS_validation.validate_projectID(study) is False:
         return False
 
-    projectID_dictionary_json: str = load_validate_dotenv("projectID_dictionary", CNBP_blueprint.dotenv_variables)
+    projectID_dictionary_json: str = config_get("projectID_dictionary")
     projectID_list = json.loads(projectID_dictionary_json)
 
     # check if project ID is in the projectID list.
@@ -103,7 +155,7 @@ def study_validation(study):
     return key
 
 
-def infer_project_using_protocol(files):
+def infer_project_using_protocol(files: List[str]) -> str:
     """
     Check if the DICOM files provided contain the appropriate project specific acquisition information tags that would be necessary to be considered to be one of the project.
     :param files:

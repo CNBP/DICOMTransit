@@ -1,19 +1,18 @@
 import unittest
-from PythonUtils.env import load_validate_dotenv
+from settings import config_get
 from LocalDB.schema import CNBP_blueprint
 from dotenv import load_dotenv
 import os
 
 class UT_envCheck(unittest.TestCase):
 
-    @staticmethod
-    def test_env_basic():
+    def test_env_basic(self):
         load_dotenv()
         variable_a = os.getenv("Variable_A")
         print(variable_a)
 
-    @staticmethod
-    def test_env():
+
+    def test_env(self):
         """
         This unit test ensures that the variables in .env is the same as the ones specified in the blueprint of the schema
         :return:
@@ -23,8 +22,4 @@ class UT_envCheck(unittest.TestCase):
 
         # loop through each one and then attempt to load and validate them.
         for variable in list_variables:
-            assert load_validate_dotenv(variable, CNBP_blueprint.dotenv_variables) is not None
-
-
-if __name__ == "__main__":
-    UT_envCheck.test_env_basic()
+            assert config_get(variable) is not None

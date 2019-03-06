@@ -3,12 +3,13 @@ import logging
 import os
 import shutil
 import zipfile
-import sys
+
 from PythonUtils.file import is_name_unique, unique_name
 from requests.auth import HTTPBasicAuth
+from settings import config_get
+from tqdm import tqdm
 
-
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger()
 
 class orthanc_query:
 
@@ -25,13 +26,14 @@ class orthanc_query:
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('Orthanc_get')
-        logger.info("Getting Orthanc endpoint: "+ endpoint)
+        
+        logger.debug("Getting Orthanc endpoint: "+ endpoint)
 
         with requests.Session() as s:
             r = s.get(endpoint)
-            logger.info("Get Result:" + str(r.status_code) + r.reason)
+            logger.debug(f"Get Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r.json()
+
 
     @staticmethod
     def getOrthanc(endpoint, orthanc_user, orthanc_password):
@@ -40,13 +42,14 @@ class orthanc_query:
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('Orthanc_get')
-        logger.info("Getting Orthanc endpoint: "+ endpoint)
+        
+        logger.debug("Getting Orthanc endpoint: "+ endpoint)
 
         with requests.Session() as s:
             r = s.get(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
-            logger.info("Get Result:" + str(r.status_code) + r.reason)
+            logger.debug(f"Get Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r.json()
+
 
     @staticmethod
     def postOrthanc(endpoint, orthanc_user, orthanc_password, data):
@@ -56,11 +59,11 @@ class orthanc_query:
         :param data
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('Orthanc_post')
-        logger.info("Post Orthanc endpoint: "+ endpoint)
+        
+        logger.debug("Post Orthanc endpoint: "+ endpoint)
         with requests.Session() as s:
             r = s.post(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password), files=data)
-            logger.info("Post Result:" + str(r.status_code) + r.reason)
+            logger.debug(f"Post Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r
 
     @staticmethod
@@ -70,11 +73,11 @@ class orthanc_query:
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        logger = logging.getLogger('Orthanc_delete')
-        logger.info("Deleting Orthanc endpoint: "+ endpoint + "at")
+        
+        logger.debug(f"Deleting Orthanc endpoint: {endpoint} at")
         with requests.Session() as s:
             r = s.delete(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
-            logger.info("Deletion Result:" + str(r.status_code) + r.reason)
+            logger.debug(f"Deletion Result: {str(r.status_code)} {r.reason}")
         return r.status_code, r.json()
 
     @staticmethod
@@ -84,22 +87,33 @@ class orthanc_query:
         :param endpoint:
         :return: status of the get requests, and the actual local file name saved in the process.
         """
-        logger = logging.getLogger('Orthanc_getzip')
-        logger.info("Downloading Orthanc endpoint: " + endpoint)
 
+        
+        logger.debug(f"Downloading Orthanc endpoint: {endpoint}")
 
+        zip_path = config_get("ZipPath")
         with requests.Session() as s:
             r = s.get(endpoint, stream=True, verify=False, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
 
-            local_filename = unique_name() + ".zip"
+            # Compute total size to be downloaded
+            total_size = int(r.headers.get('content-length', 0))
+            total_size_mb = round(total_size/1024/1024, 3)
+            # Generate the full output path
+            local_file_full_path = os.path.join(zip_path, f"{unique_name()}.zip")
+
+            progress_bar = tqdm(unit="Mb", total=total_size_mb, position=0)
+
             # NOTE the stream=True parameter
-            with open(local_filename, 'wb') as f:
+            with open(local_file_full_path, 'wb') as f:
                 for chunk in r.iter_content(chunk_size=1024):
                     if chunk:  # filter out keep-alive new chunks
+                        chunk_mb = round(len(chunk)/1024/1024, 3)
+                        progress_bar.update(chunk_mb)
                         f.write(chunk)
-                        # f.flush() commented by recommendation from J.F.Sebastian
-        logger.info(str(r.status_code) + r.reason)
-        return r.status_code, local_filename
+
+        logger.debug(str(r.status_code) + r.reason)
+        logger.info(f"Download to {local_file_full_path} is fully complete!")
+        return r.status_code, local_file_full_path
 
     @staticmethod
     def flatUnZip(input_zip, out_dir):
@@ -112,7 +126,7 @@ class orthanc_query:
         """
 
         with zipfile.ZipFile(input_zip) as zip_file:
-            for member in zip_file.namelist():
+            for member in tqdm(zip_file.namelist(), position=0):
                 filename = os.path.basename(member)
                 # skip directories
                 if not filename:

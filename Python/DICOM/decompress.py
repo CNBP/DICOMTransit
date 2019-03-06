@@ -1,13 +1,17 @@
-import logging
-import os
+import os, sys
 import pydicom, subprocess
 from PythonUtils.folder import recursive_list
 from tqdm import tqdm
+
+from pathlib import Path
 
 
 from pydicom.filereader import read_file_meta_info
 
 from DICOM.validate import DICOM_validate
+import logging
+
+logger = logging.getLogger()
 
 class DICOM_decompress:
 
@@ -19,43 +23,55 @@ class DICOM_decompress:
         :param out_put:
         :return:
         """
-        logger = logging.getLogger(__name__)
+
+        project_root = Path(__file__).parents[2]
+        sys.path.append(project_root)
+        path_dcm = os.path.join(project_root, "BinDependency", "dcmtoolkit")
+        os.environ["PATH"] += os.pathsep + path_dcm
+
+        path_dcmdjpeg = os.path.join(path_dcm, "dcmdjpeg")
+
+        logger.info(path_dcmdjpeg)
+
+        os.chmod(path_dcmdjpeg, 0o777)
+        os.environ["DCMDICTPATH"] = os.path.join(path_dcm, "dicom.dic")
+
 
         #if os.path.exists(out_put):
         #    logger.warn("Output_exist already. !!!OVERWRITING!!!")
 
         try:
             # SUPER IMPORTANT! MAKE SURE DCMDJPEG is in the system path!
-            subprocess.check_output(['dcmdjpeg', input_file, out_put])
+            subprocess.check_output(['dcmdjpeg', input_file, out_put], cwd=Path(path_dcm))
 
         # When dcmdjpeg has errors
         except subprocess.CalledProcessError as e:
             logger.info(e)
-            ErrorMessage = "File type not compatible for " + input_file
-            logger.info(ErrorMessage)
+            ErrorMessage = f"File type not compatible for {input_file}"
+            logger.critical(ErrorMessage)
             return False, ErrorMessage
         except Exception as e:
-            logger.info(e)
-            ErrorMessage = "DCMDJPEG decompression call failed! Make sure DCMDJPEG is in your SYSTEMOS PATH and then check your input file:" + input_file
-            logger.info(ErrorMessage)
+            logger.critical(e)
+            ErrorMessage = f"DCMDJPEG decompression call failed! Make sure DCMDJPEG is in your SYSTEMOS PATH and then check your input file: {input_file}"
+            logger.critical(ErrorMessage)
             return False, ErrorMessage
 
         # Ensure that data is actually written out.
         if not os.path.exists(out_put):
-            ErrorMessage = "Cannot write out final file for some reason " + input_file
-            logger.info(ErrorMessage)
+            ErrorMessage = f"Cannot write out final file for some reason {input_file}"
+            logger.critical(ErrorMessage)
             return False, ErrorMessage
 
         # Test read the data after writing.
         try:
             pydicom.read_file(out_put)
         except Exception as e:
-            ErrorMessage = "Exception encountered while verifying the proper writing out of the DICOM data. Contact author to investigate, attach " + input_file
-            logger.info(e)
-            logger.info(ErrorMessage)
+            ErrorMessage = f"Exception encountered while verifying the proper writing out of the DICOM data. Contact author to investigate, attach {input_file}"
+            logger.critical(e)
+            logger.critical(ErrorMessage)
             return False, ErrorMessage
 
-        logger.info("Success written " + input_file + " to " + out_put)
+        logger.info(f"Success written {input_file } to {out_put}")
         return True, "All good"
 
     @staticmethod
@@ -86,7 +102,7 @@ class DICOM_decompress:
         # Validity check:
         success, _ = DICOM_validate.file(file_path)
         if not success:
-            raise IOError
+            raise IOError("File is not DICOM")
 
         # Now read the meta information.
         dicom_file = read_file_meta_info(file_path)
@@ -99,7 +115,7 @@ class DICOM_decompress:
         # Validity check:
         success, DICOM = DICOM_validate.file(file_path)
         if not success:
-            raise IOError
+            raise IOError("File is not DICOM")
         import pydicom.uid
 
         # Now read the meta information.
@@ -115,11 +131,11 @@ class DICOM_decompress:
         :param file_list:
         :return:
         """
-        logger = logging.getLogger("Decompressing files")
 
-        for file in tqdm(file_list):
 
-            logger.info("Checking decompression status for: " + file)
+        for file in tqdm(file_list, position=0):
+
+            logger.debug(f"Checking decompression status for: {file}")
 
             # find if the file is DICOM, if not, skip this file.
             is_DICOM_file, _ = DICOM_validate.file(file)
@@ -134,7 +150,7 @@ class DICOM_decompress:
                     DICOM_decompress.save_as(file, file)
 
             except ValueError:
-                logger.info("Unknwonw DICOM syntax. You sure it is DICOM?")
+                logger.warning("Unknwonw DICOM syntax. You sure it is DICOM?")
                 continue
 
     @staticmethod
