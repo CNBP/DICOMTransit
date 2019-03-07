@@ -44,7 +44,7 @@ def prepare_patient_tables(transaction: RedcapTransaction):
         if cases is None:
             return
 
-        # Record the caseID
+        # Record caseIDs
         set_CNNIDs(transaction.HospitalRecordNumber, cases)
 
         # For each case related to this Hospital Record Number
