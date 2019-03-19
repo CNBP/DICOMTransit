@@ -44,6 +44,6 @@ def process_field(index_field, current_table_redcap_fields, database_column_list
         record_text[current_table_redcap_fields[index_field][1]] = str(value)
 
     except ValueError:
-        logger.info('The current REDCap field (' + current_table_redcap_fields[index_field][1] +
-                    ') does not exist in the database column list.')
+        logger.warning('The current REDCap field (' + current_table_redcap_fields[index_field][1] +
+                       ') does not exist in the database column list.')
         pass
