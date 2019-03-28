@@ -1,3 +1,6 @@
+import base64
+import sys
+
 import requests
 import logging
 import os
@@ -6,6 +9,9 @@ import zipfile
 
 from PythonUtils.file import is_name_unique, unique_name
 from requests.auth import HTTPBasicAuth
+
+import httplib2
+
 from settings import config_get
 from tqdm import tqdm
 import urllib.parse
@@ -142,3 +148,48 @@ class orthanc_query:
                 target = open(unique_output_filename, "wb")
                 with source, target:
                     shutil.copyfileobj(source, target)
+
+    @staticmethod
+    def upload(path, url, username, password, data):
+        """
+        todo: should really bench mark this library vs the request library we typically use to upload for the rest of the project.
+        A method to upload files to orthanc.
+
+        # Orthanc - A Lightweight, RESTful DICOM Store
+        # Copyright (C) 2012-2016 Sebastien Jodogne, Medical Physics
+        # Department, University Hospital of Liege, Belgium
+        # Copyright (C) 2017-2019 Osimis S.A., Belgium
+
+        # This program is free software: you can redistribute it and/or
+        # modify it under the terms of the GNU General Public License as
+        # published by the Free Software Foundation, either version 3 of the
+        # License, or (at your option) any later version.
+
+        # This program is distributed in the hope that it will be useful, but
+        # WITHOUT ANY WARRANTY; without even the implied warranty of
+        # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+        # General Public License for more details.
+
+        # You should have received a copy of the GNU General Public License
+        # along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+        :param path:
+        :return:
+        """
+
+        # Try to upload
+        try:
+            sys.stdout.write("Importing %s" % path)
+            response_code, _ = orthanc_query.postOrthanc(url, username, password, data)
+
+            if response_code == 200:
+                logger.debug(" => success\n")
+                return 1
+            else:
+                logger.warning(" => failure (Is it a DICOM file? Is there a password?)\n")
+                return 0
+        except Exception as e:
+            logger.error(e)
+            logger.error(" => unable to connect (Is Orthanc running? Is there a password?)\n")
+            return 0
+

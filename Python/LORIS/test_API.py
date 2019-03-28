@@ -1,6 +1,4 @@
-
 import unittest
-import sys
 import logging
 from LORIS.API import check_online_status, check_status, get_all_timepoints, get_allUID, upload_visit_DICOM, new_trigger_insertion
 

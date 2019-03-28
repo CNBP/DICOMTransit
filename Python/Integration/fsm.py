@@ -1076,7 +1076,7 @@ if __name__ == "__main__":
     # Execute the following every 10 mintes:
     # fixme: disable transition error. Let silent fail.
 
-    monitoring=True
+    monitoring = True
 
     # This variable controls whether in this loop, we are processing new data or just processing existing data.
     # This controls whether "orthanc_list_all_subjectUUIDs" list get updated from Orthanc or not.

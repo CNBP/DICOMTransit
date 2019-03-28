@@ -49,9 +49,6 @@ class LORIS_candidates:
         # will not apply to the SSH session!
 
 
-        ProxyIP = config_get("ProxyIP")
-        ProxyUsername = config_get("ProxyUsername")
-        ProxyPassword = config_get("ProxyPassword")
         LORISHostPassword = config_get("LORISHostPassword")
         LORISHostUsername = config_get("LORISHostUsername")
         LORISHostIP = config_get("LORISHostIP")
