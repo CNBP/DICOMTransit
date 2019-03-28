@@ -27,9 +27,9 @@ class DICOM_converter:
         else:
             os.chdir(output_folder)
 
-        DICOM_converter.raw(input_folder, output_folder)
-        DICOM_converter.raw_sorted(input_folder, output_folder)
-        DICOM_converter.raw_sorted_decompressed(input_folder, output_folder)
+        #DICOM_converter.raw(input_folder, output_folder)
+        #DICOM_converter.raw_sorted(input_folder, output_folder)
+        #DICOM_converter.raw_sorted_decompressed(input_folder, output_folder)
         DICOM_converter.nii(input_folder, output_folder)
 
     @staticmethod
@@ -98,6 +98,22 @@ class DICOM_converter:
         DICOM_convert.fix_series(path_nii)
         logger.info("Nii files generated!")
 
+    @staticmethod
+    def nii_mricron(input_folder, output_folder):
+        """
+        Create a folder,
+        :param input_folder:
+        :param output_folder:
+        :return:
+        """
+        os.chdir(output_folder)
+        create("nii")
+        logger.info("Generating NII files:")
+        path_nii = os.path.join(output_folder, "nii")
+        DICOM_convert.to_nii_mricron(input_folder, path_nii)
+        DICOM_convert.fix_series(path_nii)
+        logger.info("Nii files generated!")
+
 
     @staticmethod
     def DICOMOBJ_finder(input_root_folder):
@@ -140,5 +156,6 @@ class DICOM_converter:
 
 
 if __name__ == "__main__":
-    input_root_folder = r"C:\Users\Yang Ding\Desktop\VXS0000010_123237_V1"
-    DICOM_converter.DICOMOBJ_converter(input_root_folder)
+    input_root_folder = r"/toshiba2/Feasability_MRI_all_Sab/3229501_ResearchPAC"
+
+    DICOM_converter.DICOM_universal_convert(input_root_folder, r"/toshiba2/Feasability_MRI_all_Sab/3229501/")
