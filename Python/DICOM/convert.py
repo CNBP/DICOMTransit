@@ -84,12 +84,25 @@ class DICOM_convert:
 
     @staticmethod
     def fix_series(input_folder):
+        """
+        Fix series numbers by setting them all to 0 led file format.
+        :param input_folder:
+        :return:
+        """
         os.chdir(input_folder)
         for file in os.listdir(input_folder):
             if re.match(r'^[0-9]_', file):
                 os.rename(file, '00'+ file)
             elif re.match(r'^[0-9][0-9]_', file):
                 os.rename(file, '0'+ file)
+
+    @staticmethod
+    def handl_cube_conversion():
+        """
+        Special call to MRICRON isntead of MRICRONGL to handle Cube sequence conversion.
+        :return:
+        """
+        raise NotImplementedError
 
     @staticmethod
     def to_minc(input_folder, output_folder):

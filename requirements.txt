@@ -11,4 +11,3 @@ config
 werkzeug
 flask
 transitions
-httplib2

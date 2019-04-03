@@ -11,8 +11,8 @@ import multiprocessing
 logger = logging.getLogger()
 
 # Getting credential from the environment.
-# url, username, password = orthanc.API.get_prod_orthanc_credentials()
-url, username, password = orthanc.API.get_dev_orthanc_credentials()
+url, username, password = orthanc.API.get_prod_orthanc_credentials()
+# url, username, password = orthanc.API.get_dev_orthanc_credentials()
 
 url_instances = urllib.parse.urljoin(url, "/instances")
 
@@ -67,12 +67,13 @@ def upload_retrospective_study(path_study_root_folder_path: Path):
         for root, dirs, files in os.walk(path_study_root_folder_path):
 
             list_files = []
-            total_file_count = len(list_files)
 
             # Generate hte list of files as input.
             for f in tqdm(files):
                 path_file = os.path.join(root, f)
                 list_files.append(path_file)
+
+            total_file_count = len(list_files)
 
             # Parallel process them
             num_cores = multiprocessing.cpu_count()
@@ -87,6 +88,10 @@ def upload_retrospective_study(path_study_root_folder_path: Path):
 
 
 if __name__=="__main__":
+    import time
+    start = time.time()
     logging.basicConfig(level=logging.INFO)
-    path_input = Path(r"C:\Users\Yang Ding\Desktop\VXS0000010_123237_V1\DICOMOBJ")
+    path_input = Path(r"/toshiba2/Feasability_MRI_all_Sab/3229501/raw")
     upload_retrospective_study(path_input)
+    end = time.time()
+    print(str((end - start)/60)+" minutes")

@@ -16,6 +16,19 @@ logger = logging.getLogger()
 class DICOM_decompress:
 
     @staticmethod
+    def save(input_path):
+        """
+        A wrapper to save as function that overwrite the original file.
+        Used to also overcome error 7 where bash console command is way too long.
+        :param input_file:
+        :return:
+        """
+        base, filename = os.path.split(input_path)
+        os.chdir(base)
+        DICOM_decompress.save_as(filename, filename)
+
+
+    @staticmethod
     def save_as(input_file, out_put):
         """
         A wrapper for DCMDJPEG for decompression
@@ -42,7 +55,8 @@ class DICOM_decompress:
 
         try:
             # SUPER IMPORTANT! MAKE SURE DCMDJPEG is in the system path!
-            subprocess.check_output(['dcmdjpeg', input_file, out_put], cwd=Path(path_dcm))
+            # subprocess.check_output(['dcmdjpeg', input_file, out_put], cwd=Path(path_dcm))
+            subprocess.check_output(['dcmdjpeg', input_file, out_put])  # using the system default dependencies will less likely result in SysError7 about path.
 
         # When dcmdjpeg has errors
         except subprocess.CalledProcessError as e:
@@ -147,7 +161,7 @@ class DICOM_decompress:
             try:
                 RequireDecompression = DICOM_decompress.check_decompression(TransferSyntax)
                 if RequireDecompression:
-                    DICOM_decompress.save_as(file, file)
+                    DICOM_decompress.save(file)
 
             except ValueError:
                 logger.warning("Unknwonw DICOM syntax. You sure it is DICOM?")

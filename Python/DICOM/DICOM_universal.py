@@ -1,3 +1,5 @@
+#!/usr/local/bin/python
+
 from DICOM.sort import DICOM_sort
 from DICOM.decompress import DICOM_decompress
 import os
@@ -10,6 +12,7 @@ import logging
 import sys
 
 logger = logging.getLogger()
+
 
 class DICOM_converter:
 
@@ -27,10 +30,11 @@ class DICOM_converter:
         else:
             os.chdir(output_folder)
 
-        #DICOM_converter.raw(input_folder, output_folder)
-        #DICOM_converter.raw_sorted(input_folder, output_folder)
-        #DICOM_converter.raw_sorted_decompressed(input_folder, output_folder)
+        DICOM_converter.raw(input_folder, output_folder)
+        DICOM_converter.raw_sorted(input_folder, output_folder)
+        DICOM_converter.raw_sorted_decompressed(input_folder, output_folder)
         DICOM_converter.nii(input_folder, output_folder)
+        DICOM_converter.nii_cube_mricron(input_folder, output_folder)
 
     @staticmethod
     def raw(input_folder, output_folder):
@@ -85,7 +89,7 @@ class DICOM_converter:
     @staticmethod
     def nii(input_folder, output_folder):
         """
-        Create a folder,
+        Take a folder, recursively traverse through all its subfolders, convert each subfolder into a NII file
         :param input_folder:
         :param output_folder:
         :return:
@@ -98,21 +102,20 @@ class DICOM_converter:
         DICOM_convert.fix_series(path_nii)
         logger.info("Nii files generated!")
 
+
     @staticmethod
-    def nii_mricron(input_folder, output_folder):
+    def nii_cube_mricron(input_folder, output_folder):
         """
-        Create a folder,
+        Special function used to handle CUBE sequences which require MRICRON conversion
         :param input_folder:
         :param output_folder:
         :return:
         """
+        list_cube = DICOM_converter.DICOM_CUBE_finder(input_folder)
         os.chdir(output_folder)
-        create("nii")
-        logger.info("Generating NII files:")
-        path_nii = os.path.join(output_folder, "nii")
-        DICOM_convert.to_nii_mricron(input_folder, path_nii)
-        DICOM_convert.fix_series(path_nii)
-        logger.info("Nii files generated!")
+        for folder_cube in list_cube:
+            DICOM_convert.to_nii_mricron(folder_cube, output_folder)
+        logger.info("CUBE Nii files generated!")
 
 
     @staticmethod
@@ -129,6 +132,23 @@ class DICOM_converter:
         for path in list_path:
             list_full_path.append(os.path.abspath(path))
         return list_full_path
+
+    @staticmethod
+    def DICOM_CUBE_finder(input_root_folder):
+        """
+        Find all folders with "CUBE" in their name.
+        :param input_root_folder:
+        :return:
+        """
+        os.chdir(input_root_folder)
+        list_folders = os.listdir()
+        list_CUBE_folders = []
+        for folder in list_folders:
+            if "CUBE" in folder:
+                list_CUBE_folders.append(folder)
+        return list_CUBE_folders
+
+
 
     @staticmethod
     def DICOMOBJ_converter(input_root_folder, default_folder=f"DICOM_UniversalConvert-{unique_name()}"):
@@ -156,6 +176,20 @@ class DICOM_converter:
 
 
 if __name__ == "__main__":
-    input_root_folder = r"/toshiba2/Feasability_MRI_all_Sab/3229501_ResearchPAC"
+    logging.basicConfig(level=logging.INFO)
 
-    DICOM_converter.DICOM_universal_convert(input_root_folder, r"/toshiba2/Feasability_MRI_all_Sab/3229501/")
+    if sys.argv is not None:
+        logger.info("This is the name of the script: ", sys.argv[0])
+        logger.info("Number of arguments: ", len(sys.argv))
+        logger.info("The arguments are: ", str(sys.argv))
+
+    if len(sys.argv) != 3:
+        input_root_folder = r"/toshiba2/Mathieus_MRI_Sab/CHD_dTGA_Raw/dTGA_020_3223793"
+        output_folder = r"/toshiba2/Mathieus_MRI_Sab/CHD_dTGA_Raw/dTGA_020_3223793_Converted"
+    else:
+        logger.info(f"First Argument, input root folder path:{sys.argv[1]}")
+        logger.info(f"Second Argument, output folder path: {sys.argv[2]}")
+        input_root_folder = sys.argv[1]
+        output_folder = sys.argv[2]
+
+    DICOM_converter.DICOM_universal_convert(input_root_folder, output_folder)

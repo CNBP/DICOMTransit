@@ -65,7 +65,7 @@ def pythonutil_check():
     return True
 
 if __name__=="__main__":
-    import update_path
+    import preflight_checklist
     assert nii2nifty_check()[0]
     assert dcmdjpeg_check()[0]
     assert env_check()
