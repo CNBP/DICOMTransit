@@ -14,7 +14,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def process_field(index_field, current_table_redcap_fields, database_column_list, index_row, record_text, rows):
+def process_field(index_field, current_table_redcap_fields, database_column_list, index_row, record_text, rows) -> None:
     """
     Process the field of the row within the table.
     :param index_field: Index of current REDCap field

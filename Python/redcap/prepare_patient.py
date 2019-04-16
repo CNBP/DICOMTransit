@@ -23,7 +23,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def prepare_patient_tables(transaction: RedcapTransaction):
+def prepare_patient_tables(transaction: RedcapTransaction) -> RedcapTransaction:
     """
     Creates REDCap records for of all patient tables and adds them to the global queue (only for each hospital record
     number loaded).
@@ -58,7 +58,7 @@ def prepare_patient_tables(transaction: RedcapTransaction):
     return transaction
 
 
-def process_case(transaction: RedcapTransaction):
+def process_case(transaction: RedcapTransaction) -> None:
     """
     Process a case.
     :param transaction: RedcapTransaction
@@ -81,7 +81,7 @@ def process_case(transaction: RedcapTransaction):
         process_table(index_table, transaction)
 
 
-def process_table(index_table, transaction: RedcapTransaction):
+def process_table(index_table, transaction: RedcapTransaction) -> None:
     """
     Process each patient table.
     :param index_table: Index of current table
@@ -110,7 +110,7 @@ def process_table(index_table, transaction: RedcapTransaction):
         process_row(current_table_redcap_fields, database_column_list, index_row, index_table, rows, transaction)
 
 
-def process_row(current_table_redcap_fields, database_column_list, index_row, index_table, rows, transaction):
+def process_row(current_table_redcap_fields, database_column_list, index_row, index_table, rows, transaction) -> None:
     """
     Process each row of the current table for the current MRN.
     :param current_table_redcap_fields: Current table REDCap fields
@@ -173,7 +173,7 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
     transaction.add_redcap_queue(record_text, table_configuration[index_table][REDCAP_PROJECT])
 
 
-def set_case_related_ids(database_column_list, index_row, index_table, rows, transaction):
+def set_case_related_ids(database_column_list, index_row, index_table, rows, transaction) -> None:
     """
     This function will set all case related ids that the current table has authority on
     :param database_column_list: Database columns list

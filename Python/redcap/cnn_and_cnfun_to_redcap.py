@@ -23,7 +23,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def update_redcap_data():
+def update_redcap_data() -> None:
     """
     This method is the main method of this script. It calls all methods necessary to transfer CNN and CNFUN data
     to REDCap.

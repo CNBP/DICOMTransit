@@ -28,7 +28,7 @@ class RedcapTransaction:
     PatientId = -1
     MasterId = -1
 
-    def set_hospital_record_number(self, index_hospital_record_number):
+    def set_hospital_record_number(self, index_hospital_record_number) -> None:
         """
         Sets the hospital record number and resets all other temporary ids.
         :param index_hospital_record_number: Index of Hospital Record Number
@@ -43,7 +43,7 @@ class RedcapTransaction:
         self.PatientId = -1
         self.MasterId = -1
 
-    def set_case_id(self, case_id):
+    def set_case_id(self, case_id) -> None:
         """
         Sets the case id and resets all temporary ids related to a case.
         :return: None
@@ -56,7 +56,7 @@ class RedcapTransaction:
         self.PatientId = -1
         self.MasterId = -1
 
-    def add_redcap_queue(self, record_text, project):
+    def add_redcap_queue(self, record_text, project) -> None:
         """
         Adds a record to the list of records to send to REDCap.
         :param record_text: Record data
@@ -65,7 +65,7 @@ class RedcapTransaction:
         """
         self.redcap_queue.append([record_text, project])
 
-    def get_primary_key_value(self, primary_key):
+    def get_primary_key_value(self, primary_key) -> int:
         """
         Get Primary Key Value
         :param primary_key: Primary Key Configuration Number

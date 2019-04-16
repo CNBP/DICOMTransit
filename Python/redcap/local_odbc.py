@@ -3,6 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 import pyodbc
+from typing import List
 from redcap.constants import *
 from redcap.enums import Database, Field, DataType
 from redcap.transaction import RedcapTransaction
@@ -12,12 +13,12 @@ from redcap.transaction import RedcapTransaction
 #  Local ODBC
 # ----------------------------------------------------------------------------------------------------------------------
 
-def get_database_column_names(table_info, transaction: RedcapTransaction):
+def get_database_column_names(table_info, transaction: RedcapTransaction) -> List[Field]:
     """
     Returns a list of fields contained within a database table.
     :param table_info: Table Information
     :param transaction: RedcapTransaction
-    :return: List of fields
+    :return: List of fields or None if table not found.
     """
     if table_info is None:
         return None
@@ -45,11 +46,11 @@ def get_database_column_names(table_info, transaction: RedcapTransaction):
     return database_columns
 
 
-def get_case_ids(transaction: RedcapTransaction):
+def get_case_ids(transaction: RedcapTransaction) -> List[int]:
     """
     Get Case Ids
     :param transaction: RedcapTransaction
-    :return: List of all the case ids related to the current hospital record number.
+    :return: List of all the case ids related to the current hospital record number or None if table not found.
     """
 
     case_ids = []
@@ -84,12 +85,12 @@ def get_case_ids(transaction: RedcapTransaction):
     return case_ids
 
 
-def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
+def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction) -> list:
     """
     Gets all rows of data for a specific patient table.
     :param table_info: Table Information
     :param transaction: RedcapTransaction
-    :return: List of all the rows obtained from the query.
+    :return: List of all the rows obtained from the query or None if table not found.
     """
     if table_info is None:
         return None
@@ -140,11 +141,11 @@ def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
         return None
 
 
-def get_data_rows_for_reference_table(table_info):
+def get_data_rows_for_reference_table(table_info) -> list:
     """
     Gets all rows of data for a specific reference table.
     :param table_info: Table Information
-    :return: List of all the rows obtained from the query.
+    :return: List of all the rows obtained from the query or None if table not found.
     """
     if table_info is not None:
         if table_info[DATABASE_TABLE_NAME] != '':
@@ -169,7 +170,7 @@ def get_data_rows_for_reference_table(table_info):
         return None
 
 
-def get_connection_string(database):
+def get_connection_string(database) -> str:
     """
     Get Connection String
     :param database: Database Configuration Number
@@ -183,11 +184,11 @@ def get_connection_string(database):
         return ''
 
 
-def get_primary_key_name(primary_key):
+def get_primary_key_name(primary_key) -> str:
     """
     Get Primary Key Name
     :param primary_key: Primary Key Configuration Number
-    :return: Primary Key Name
+    :return: String - Primary Key Name
     """
     if primary_key == Field.BabyId.value:
         return Field.BabyId.name
@@ -209,11 +210,11 @@ def get_primary_key_name(primary_key):
         return Field.Unknown.name
 
 
-def get_primary_key_data_type(primary_key):
+def get_primary_key_data_type(primary_key) -> str:
     """
     Get Primary Key Data Type
     :param primary_key: Primary Key Configuration Number
-    :return: Data Type Configuration Value
+    :return: String - Data Type Configuration Value
     """
     if primary_key == Field.BabyId.value:
         return DataType.Integer.value

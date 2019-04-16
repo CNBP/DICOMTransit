@@ -10,7 +10,7 @@ from redcap.transaction import RedcapTransaction
 #  Initialization
 # ----------------------------------------------------------------------------------------------------------------------
 
-def initialize_import_configuration(transaction: RedcapTransaction):
+def initialize_import_configuration(transaction: RedcapTransaction) -> RedcapTransaction:
     """
     Initialize the data import configuration matrix.
     Columns:

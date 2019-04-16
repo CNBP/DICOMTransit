@@ -3,6 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 from json import dumps
+from typing import List
 from operator import itemgetter
 from requests import post
 from redcap.enums import Project
@@ -20,7 +21,7 @@ import logging
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-def get_fields(redcap_form_name, transaction: RedcapTransaction):
+def get_fields(redcap_form_name, transaction: RedcapTransaction) -> dict:
     """
     Returns a list of fields contained within a specific REDCap form (table)
     :param redcap_form_name: Name of form in REDCap
@@ -55,7 +56,7 @@ def get_fields(redcap_form_name, transaction: RedcapTransaction):
     return redcap_fields
 
 
-def load_metadata(transaction: RedcapTransaction):
+def load_metadata(transaction: RedcapTransaction) -> None:
     """
     Get all information about REDCap form names and fields.
     :return: None
@@ -78,7 +79,7 @@ def load_metadata(transaction: RedcapTransaction):
     return transaction
 
 
-def wipe_all_redcap_data():
+def wipe_all_redcap_data() -> None:
     """
     Deletes all REDCap records.
     :return: None
@@ -90,7 +91,7 @@ def wipe_all_redcap_data():
         delete_records(get_record_ids(p.name),get_project_token(p.name))
 
 
-def send_data(transaction: RedcapTransaction):
+def send_data(transaction: RedcapTransaction) -> (bool, str):
     """
     Sends all records in the queue to REDCap.
     :return: Successful or not and reason
@@ -128,7 +129,7 @@ def send_data(transaction: RedcapTransaction):
     return True, "All REDCap data in queue has been sent. "
 
 
-def import_records(records, project_token):
+def import_records(records, project_token) -> (bool, str):
     """
     Executes a REDCap Import Records API call.
     :param records: Batch of records ready to be sent to REDCap
@@ -165,7 +166,7 @@ def import_records(records, project_token):
     return True, "Success in sending."
 
 
-def get_record_ids(project):
+def get_record_ids(project) -> List[int]:
     """
     Executes a REDCap Export Records API call.
     :param project: Project Name
@@ -200,7 +201,7 @@ def get_record_ids(project):
     return record_ids
 
 
-def delete_records(record_ids, project_token):
+def delete_records(record_ids, project_token) -> (bool, int):
     """
     Executes a REDCap Delete Records API call.
     :param record_ids: List of record ids to delete from REDCap
@@ -233,7 +234,7 @@ def delete_records(record_ids, project_token):
     return True, "Success in deleting."
 
 
-def get_project_token(project):
+def get_project_token(project) -> str:
     """
     Get Project Token
     :param project: Project Name
@@ -253,7 +254,7 @@ def get_project_token(project):
         return ''
 
 
-def get_project_record_id_field_name(project):
+def get_project_record_id_field_name(project) -> str:
     """
     Get Project Record Id Field Name
     :param project: Project Name

@@ -20,7 +20,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def prepare_reference_tables(transaction: RedcapTransaction):
+def prepare_reference_tables(transaction: RedcapTransaction) -> RedcapTransaction:
     """
     Creates REDCap records for of all reference tables and adds them to the global queue.
     :param transaction: RedcapTransaction
@@ -37,7 +37,7 @@ def prepare_reference_tables(transaction: RedcapTransaction):
     return transaction
 
 
-def process_table(index_table, transaction: RedcapTransaction):
+def process_table(index_table, transaction: RedcapTransaction) -> None:
     """
     Process each reference table.
     :param index_table: Index of table to process
@@ -69,7 +69,7 @@ def process_table(index_table, transaction: RedcapTransaction):
         process_row(current_table_redcap_fields, database_column_list, index_row, index_table, rows, transaction)
 
 
-def process_row(current_table_redcap_fields, database_column_list, index_row, index_table, rows, transaction):
+def process_row(current_table_redcap_fields, database_column_list, index_row, index_table, rows, transaction) -> None:
     """
     Process each each reference row.
     :param current_table_redcap_fields: Current table REDCap fields
