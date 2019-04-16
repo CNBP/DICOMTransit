@@ -31,7 +31,8 @@ class DICOM_decompress:
     @staticmethod
     def save_as(input_file, out_put):
         """
-        A wrapper for DCMDJPEG for decompression
+        A wrapper for DCMDJPEG for decompression. This is the CORE method being called,
+        It is wrapped via save, filelist, folder etc other high level caller
         :param input_file:
         :param out_put:
         :return:
@@ -40,13 +41,14 @@ class DICOM_decompress:
         project_root = Path(__file__).parents[2]
         sys.path.append(project_root)
         path_dcm = os.path.join(project_root, "BinDependency", "dcmtoolkit")
-        os.environ["PATH"] += os.pathsep + path_dcm
 
-        path_dcmdjpeg = os.path.join(path_dcm, "dcmdjpeg")
+        # Only append path if it does not exist in there.
+        if path_dcm not in os.environ["PATH"]:
+            os.environ["PATH"] += os.pathsep + path_dcm
+            path_dcmdjpeg = os.path.join(path_dcm, "dcmdjpeg")
+            os.chmod(path_dcmdjpeg, 0o777)
+            logger.debug(path_dcmdjpeg)
 
-        logger.info(path_dcmdjpeg)
-
-        os.chmod(path_dcmdjpeg, 0o777)
         os.environ["DCMDICTPATH"] = os.path.join(path_dcm, "dicom.dic")
 
 
@@ -55,7 +57,7 @@ class DICOM_decompress:
 
         try:
             # SUPER IMPORTANT! MAKE SURE DCMDJPEG is in the system path!
-            # subprocess.check_output(['dcmdjpeg', input_file, out_put], cwd=Path(path_dcm))
+            #subprocess.check_output(['dcmdjpeg', input_file, out_put], cwd=Path(path_dcm))
             subprocess.check_output(['dcmdjpeg', input_file, out_put])  # using the system default dependencies will less likely result in SysError7 about path.
 
         # When dcmdjpeg has errors
@@ -85,7 +87,7 @@ class DICOM_decompress:
             logger.critical(ErrorMessage)
             return False, ErrorMessage
 
-        logger.info(f"Success written {input_file } to {out_put}")
+        logger.debug(f"Success written {input_file } to {out_put}")
         return True, "All good"
 
     @staticmethod

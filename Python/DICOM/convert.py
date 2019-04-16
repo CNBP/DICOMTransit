@@ -4,6 +4,7 @@ import os
 import subprocess
 import re
 import logging
+from pathlib import Path
 
 logger = logging.getLogger()
 
@@ -58,15 +59,28 @@ class DICOM_convert:
             return False, "Argument input or output folder does not exist"
 
         try:
+            project_root = Path(__file__).parents[2]
+            sys.path.append(project_root)
+            path_dcm = os.path.join(project_root, "BinDependency", "dcm2nii")
+            path_dcm2nii = os.path.join(path_dcm, "dcm2nii")
+
+            # Only append path if it does not exist in there.
+            if path_dcm not in os.environ["PATH"]:
+                os.environ["PATH"] += os.pathsep + path_dcm
+
+                os.chmod(path_dcm2nii, 0o777)
+
+            logger.info(path_dcm2nii)
+
 
             # SUPER IMPORTANT! MAKE SURE dcm2niix by Chris Roden is in the system path!
             subprocess.check_output(['dcm2nii',
-                                     '-b', 'y',
-                                     '-z', 'y',
-                                     '-v', 'y',
-                                     '-f', "%s_%p",
+                                     '-d', 'N',
+                                     '-p', 'N',
+                                     '-r', 'N',
+                                     '-g', 'N',
                                      '-o', output_folder,
-                                     input_folder])
+                                     input_folder], cwd=output_folder)
 
         # When dcmdjpeg has errors
         except subprocess.CalledProcessError as e:
