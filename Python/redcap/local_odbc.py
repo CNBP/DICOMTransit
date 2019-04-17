@@ -85,6 +85,57 @@ def get_case_ids(transaction: RedcapTransaction) -> List[int]:
     return case_ids
 
 
+def get_cnfun_patient_id(caseid: int) -> int:
+    """
+    Get cnfun id using the cnn case id
+    :param caseid: int (case id into cnn database)
+    :return: int cnfun patient id (Return -1 if no match found)
+    """
+
+    # Preparing CNN database - SQL request.
+    select_statement = ("SELECT baby.PatientUI FROM Admission admission, Baby baby WHERE admission.CaseId = '" + caseid + "' AND admission.BabyId=baby.BabyId")
+
+    # Connecting to CNN database.
+    conn = pyodbc.connect(get_connection_string(1))
+    odbc_cursor = conn.cursor()
+
+    # Executing SQL request.
+    odbc_cursor.execute(select_statement)
+    data = odbc_cursor.fetchone()
+
+    # Closing connection.
+    odbc_cursor.close()
+    conn.close
+
+    # If not found, we return -1.
+    if data == None:
+        return -1
+
+    # Preparing CNFUN database - SQL request.
+    patientui = data[0]
+    select_statement = ("SELECT PatientId FROM Patients WHERE CNNPatientUI = '" + patientui + "'")
+
+    # Connecting to CNFUN database.
+    conn = pyodbc.connect(get_connection_string(2))
+    odbc_cursor = conn.cursor()
+
+    # Executing SQL request.
+    odbc_cursor.execute(select_statement)
+    data = odbc_cursor.fetchone()
+
+    # Closing connection.
+    odbc_cursor.close()
+    conn.close
+
+    # If not found, we return -1.
+    if data == None:
+        return -1
+
+    # Return CNFUN - patient id.
+    patientid = data[0]
+    return patientid
+
+
 def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction) -> list:
     """
     Gets all rows of data for a specific patient table.
