@@ -12,8 +12,8 @@ from DICOM.validate import DICOM_validate
 logger = logging.getLogger()
 
 # Getting credential from the environment.
-#url, username, password = orthanc.API.get_prod_orthanc_credentials()
-url, username, password = orthanc.API.get_dev_orthanc_credentials()
+url, username, password = orthanc.API.get_prod_orthanc_credentials()
+#url, username, password = orthanc.API.get_dev_orthanc_credentials()
 
 url_instances = urllib.parse.urljoin(url, "/instances")
 
@@ -39,7 +39,7 @@ def read_upload_file(path_file):
 
         # Upload and keep track of success.
         success = orthanc_query.upload(path_file, url_instances, username, password, content)
-        print(f"Finished uploading:{path_file}")
+        logger.debug(f"Finished uploading:{path_file}")
         return success
     else:
         return False
@@ -97,7 +97,7 @@ if __name__=="__main__":
     import time
     start = time.time()
     logging.basicConfig(level=logging.INFO)
-    path_input = Path(r"/toshiba4/bayX_backup/Research PAC/Registry_Raw/")
+    path_input = Path(r"/toshiba4/bayX_backup/Research PAC/Batch1")
     upload_retrospective_study(path_input)
     end = time.time()
     print(str((end - start)/60)+" minutes")
