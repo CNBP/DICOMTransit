@@ -97,7 +97,7 @@ if __name__=="__main__":
     import time
     start = time.time()
     logging.basicConfig(level=logging.INFO)
-    path_input = Path(r"/toshiba4/bayX_backup/Research PAC/Batch1")
+    path_input = Path(r"/toshiba4/bayX_backup/Research PAC/Batch2")
     upload_retrospective_study(path_input)
     end = time.time()
     print(str((end - start)/60)+" minutes")

@@ -178,6 +178,27 @@ class DICOM_converter:
             # Trigger the subject specific convertion.
             DICOM_converter.DICOM_universal_convert(path, path_result)
             logger.info(f"Finished converting: {path}")
+
+
+    @staticmethod
+    def DICOM_universal_convert_default(input_root_folder, name_default_folder = f"DICOM_UniversalConvert-{unique_name()}"):
+        """
+        Create a new folder with
+        :param input_root_folder:
+        :return:
+        """
+
+        logger.info("Begin converting folder: "+input_root_folder)
+
+        # Generate the potential name for the new path.
+        path_result = f"{input_root_folder}-{name_default_folder}"
+
+        # intellgently create the folder if needed be.
+        create(path_result)
+
+        # Trigger the subject specific convertion.
+        DICOM_converter.DICOM_universal_convert(input_root_folder, path_result)
+        logger.info(f"Finished converting: {input_root_folder}")
     #
     # @staticmethod
     # def fix_dcm2nii_filename(input_nii_folder):
@@ -230,13 +251,12 @@ if __name__ == "__main__":
         logger.info(f"The arguments are: {str(sys.argv)}")
 
     if len(sys.argv) != 3:
-        input_root_folder = r"/toshiba2/Mathieus_MRI_Sab/HIE_Raw/HIE_005_3166489_Dicoms_ResearchPAC"
-        output_folder = r"/toshiba2/Mathieus_MRI_Sab/HIE_Raw/HIE_005_3166489_Dicoms_ResearchPAC_DICOMUniversal_2019-04-11"
+        input_root_folder = r"/toshiba2/Mathieus_MRI_Sab/HIE_Raw/HIE_018_3205585_ResearchPAC"
     else:
         logger.info(f"First Argument, input root folder path:{sys.argv[1]}")
         logger.info(f"Second Argument, output folder path: {sys.argv[2]}")
         input_root_folder = sys.argv[1]
         output_folder = sys.argv[2]
 
-    DICOM_converter.DICOM_universal_convert(input_root_folder, output_folder)
+    DICOM_converter.DICOM_universal_convert_default(input_root_folder)
     #DICOM_decompress.decompress_folder(r"/toshiba2/Mathieus_MRI_Sab/HIE_Raw/HIE_023_3226838_DICOMUniversal_2019-04-03/raw_sorted_decompressed")
