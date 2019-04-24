@@ -11,3 +11,4 @@ config
 werkzeug
 flask
 transitions
+mysql

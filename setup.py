@@ -27,6 +27,7 @@ setup(name='DICOMTransit',
 		'werkzeug'
 		'flask'
 		'transitions'
+		'mysql'
 	],
 	zip_safe=False)
 

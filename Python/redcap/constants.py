@@ -29,6 +29,7 @@ redcap_complete_status_suffix = "_complete"
 redcap_complete_status_value = 2
 cnn_connection_string = environment.CNN_CONNECTION_STRING
 cnfun_connection_string = environment.CNFUN_CONNECTION_STRING
+mysql_connection_string = environment.MYSQL_CONNECTION_STRING
 
 # Column indexes used in the import configuration table.
 # -> See initialization.py initialize_import_configuration function
