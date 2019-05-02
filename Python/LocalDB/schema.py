@@ -21,7 +21,7 @@ class CNBP_blueprint:
               'Hash2',
               'Hash3',
               'SeriesUID',
-              'OrthancUUID']
+              'StudyUID']
 
     fields_types = ['TEXT',
                     'INTEGER',

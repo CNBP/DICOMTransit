@@ -6,6 +6,7 @@ import logging
 import os
 import shutil
 import zipfile
+import collections
 
 from PythonUtils.file import is_name_unique, unique_name
 from requests.auth import HTTPBasicAuth
@@ -15,6 +16,8 @@ from settings import config_get
 from tqdm import tqdm
 
 logger = logging.getLogger()
+
+orthanc_credential = collections.namedtuple('orthanc_credential', 'url user password')
 
 class orthanc_query:
 
@@ -32,7 +35,7 @@ class orthanc_query:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
         
-        logger.debug("Getting Orthanc endpoint: "+ endpoint)
+        logger.debug(f"Getting Orthanc endpoint: {endpoint}")
 
         with requests.Session() as s:
             r = s.get(endpoint)
@@ -41,7 +44,7 @@ class orthanc_query:
 
 
     @staticmethod
-    def getOrthanc(endpoint, orthanc_user, orthanc_password):
+    def getOrthanc(endpoint, orthanc_credential):
         """
         Get from a Orthanc endpoint
         :param endpoint:
@@ -51,13 +54,13 @@ class orthanc_query:
         logger.debug("Getting Orthanc endpoint: "+ endpoint)
 
         with requests.Session() as s:
-            r = s.get(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
+            r = s.get(endpoint, auth=HTTPBasicAuth(orthanc_credential.user, orthanc_credential.password))
             logger.debug(f"Get Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r.json()
 
 
     @staticmethod
-    def postOrthanc(endpoint, orthanc_user, orthanc_password, data):
+    def postOrthanc(endpoint, credential: orthanc_credential, data):
         """
         Get from a Orthanc endpoint
         :param endpoint:
@@ -67,12 +70,12 @@ class orthanc_query:
         
         logger.debug("Post Orthanc endpoint: "+ endpoint)
         with requests.Session() as s:
-            r = s.post(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password), files=data)
+            r = s.post(endpoint, auth=HTTPBasicAuth(credential.user, credential.password), files=data)
             logger.debug(f"Post Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r
 
     @staticmethod
-    def deleteOrthanc(endpoint, orthanc_user, orthanc_password):
+    def deleteOrthanc(endpoint, credential: orthanc_credential):
         """
         Delete from a Orthanc endpoint
         :param endpoint:
@@ -81,12 +84,12 @@ class orthanc_query:
         
         logger.debug(f"Deleting Orthanc endpoint: {endpoint} at")
         with requests.Session() as s:
-            r = s.delete(endpoint, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
+            r = s.delete(endpoint, auth=HTTPBasicAuth(credential.user, credential.password))
             logger.debug(f"Deletion Result: {str(r.status_code)} {r.reason}")
         return r.status_code, r.json()
 
     @staticmethod
-    def getPatientZipOrthanc(endpoint, orthanc_user, orthanc_password):
+    def getPatientZipOrthanc(endpoint, credential: orthanc_credential):
         """
         Get Orthanc endpoint archive ZIP files.
         :param endpoint:
@@ -98,7 +101,7 @@ class orthanc_query:
 
         zip_path = config_get("ZipPath")
         with requests.Session() as s:
-            r = s.get(endpoint, stream=True, verify=False, auth=HTTPBasicAuth(orthanc_user, orthanc_password))
+            r = s.get(endpoint, stream=True, verify=False, auth=HTTPBasicAuth(credential.user, credential.password))
 
             # Compute total size to be downloaded
             total_size = int(r.headers.get('content-length', 0))
@@ -148,7 +151,7 @@ class orthanc_query:
                     shutil.copyfileobj(source, target)
 
     @staticmethod
-    def upload(path, url, username, password, data):
+    def upload(path, credential: orthanc_credential, data):
         """
         todo: should really bench mark this library vs the request library we typically use to upload for the rest of the project.
         A method to upload files to orthanc.
@@ -178,7 +181,7 @@ class orthanc_query:
         # Try to upload
         try:
             sys.stdout.write("Importing %s" % path)
-            response_code, _ = orthanc_query.postOrthanc(url, username, password, data)
+            response_code, _ = orthanc_query.postOrthanc(credential.url, credential, data)
 
             if response_code == 200:
                 logger.debug(" => success\n")

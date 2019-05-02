@@ -10,21 +10,21 @@ if __name__ == "__main__":
     """Quick and dirty script that calls various high level APIs to insert a subject from ORTHANC to LORIS"""
     # Eventually, a finite state machine will be built out of this
 
-    url, user, password = orthanc.API.get_prod_orthanc_credentials()
-    #url, user, password = orthanc.API.get_local_orthanc_credentials()
+    credential = orthanc.API.get_prod_orthanc_credentials()
+    #credential = orthanc.API.get_local_orthanc_credentials()
 
     # Get list of subjects.
     #list_subjects = orthanc.API.get_list_of_subjects(url, user, password)
-    list_subjects = orthanc.API.get_list_of_subjects_noauth(url)
+    list_subjects = orthanc.API.get_list_of_subjects_noauth(credential.url)
 
     assert len(list_subjects) > 0
 
     # Get ALL subjects, loop through them
     for subject in list_subjects[2:5]:
         try:
-            subject_url = f"{url}patients/{subject }/archive"  # it must contain patients/ and archive in the path name
+            subject_url = f"{credential.url}patients/{subject }/archive"  # it must contain patients/ and archive in the path name
 
-            zip_file = orthanc.API.get_subject_zip(subject_url, user, password)
+            zip_file = orthanc.API.get_subject_zip(subject_url, credential)
             dicom_folder = orthanc.API.unpack_subject_zip(zip_file)
 
             # Convert it to a DICOMPackage, it checks for a bunch of validity, update a bunch of its meta information regarding the entire archive

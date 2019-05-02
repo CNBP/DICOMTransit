@@ -9,51 +9,59 @@ from PythonUtils.env import is_travis
 import urllib.parse
 
 if is_travis():
-    pytest.skip("Skipping test requiring private database access", allow_module_level=True)
+    pytest.skip(
+        "Skipping test requiring private database access", allow_module_level=True
+    )
+
 
 class UT_DevOrthanc(unittest.TestCase):
 
-    url, user, password = orthanc.API.get_dev_orthanc_credentials()
+    credential = orthanc.API.get_dev_orthanc_credentials()
 
-    @staticmethod
-    def uploadExamples():
+    def uploadExamples(self):
         file_list = get_testdata_files("[Ss][Mm][Aa][Ll][Ll]")
         for file in file_list:
             print(file)
-            upload_files = {'upload_file': open(file, 'rb')}
-            orthanc_instance_url = urllib.parse.urljoin(UT_DevOrthanc.url, "instances")
+            upload_files = {"upload_file": open(file, "rb")}
+            orthanc_instance_url = urllib.parse.urljoin(
+                UT_DevOrthanc.credential.url, "instances"
+            )
 
-            status, r = orthanc_query.postOrthanc(orthanc_instance_url, UT_DevOrthanc.user, UT_DevOrthanc.password, upload_files)
-            assert (LORIS_helper.is_response_success(status, 200))
-            assert (r.json())
+            status, r = orthanc_query.postOrthanc(
+                orthanc_instance_url, UT_DevOrthanc.credential, upload_files
+            )
+            assert LORIS_helper.is_response_success(status, 200)
+            assert r.json()
 
         # Note that this will database several subjects.
 
     def test_getSubjects(self):
-        UT_DevOrthanc.uploadExamples()
+        self.uploadExamples()
 
-        subject_list = orthanc.API.get_list_of_subjects(self.url, self.user, self.password)
+        subject_list = orthanc.API.get_list_of_studies(self.credential)
         assert len(subject_list) > 0
         return subject_list
 
     def test_deleteSubjects(self):
         list_subjects = self.test_getSubjects()
 
-        patients_url = urllib.parse.urljoin(UT_DevOrthanc.url, "patients/")
+        patients_url = urllib.parse.urljoin(UT_DevOrthanc.credential.url, "patients/")
 
         for subject in list_subjects:
             patient_url = urllib.parse.urljoin(patients_url, f"{subject}")
-            reseponse_code, _ = orthanc_query.deleteOrthanc(patient_url, self.user, self.password)
-            assert (LORIS_helper.is_response_success(reseponse_code, 200))
+            reseponse_code, _ = orthanc_query.deleteOrthanc(
+                patient_url, self.credential
+            )
+            assert LORIS_helper.is_response_success(reseponse_code, 200)
 
     def test_getSubjectZip(self):
         url, user, password = orthanc.API.get_prod_orthanc_credentials()
         list_subjects = self.test_getSubjects()
-        patients_url = urllib.parse.urljoin(UT_DevOrthanc.url, "patients/")
+        patients_url = urllib.parse.urljoin(UT_DevOrthanc.credential.url, "patients/")
         for subject in list_subjects:
             patient_url = urllib.parse.urljoin(patients_url, f"{subject}/")
             patient_file_url = urllib.parse.urljoin(patient_url, "archive")
-            orthanc.API.get_subject_zip(patient_file_url, user, password)
+            orthanc.API.get_subject_zip(patient_file_url, self.credential)
 
 
 if __name__ == "__main__":

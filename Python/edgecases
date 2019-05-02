@@ -5,4 +5,11 @@ Visit timepoint beyond 9
 MRN non compliant.
 LORIS return 201 after candidate creation but does not actually return DCC ID or the candidate object.
 
+Orthanc UUID may be created first upload (e.g. only one seuqnece)
+Then the same
+
+
 what happen if people directly messed with localDB?
+
+If a PARTIAL upload  happens, and an orthanc ID is created. Future upgrade might be blocked.
+

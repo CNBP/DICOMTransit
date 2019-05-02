@@ -19,6 +19,7 @@ logger = logging.getLogger()
 
 def check_status() -> bool:
     from settings import config_get
+
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
 
@@ -26,7 +27,9 @@ def check_status() -> bool:
         return False
 
     # Get the name from the blueprint.
-    tableName = CNBP_blueprint.table_name  # All CNBP database should have this table name.
+    tableName = (
+        CNBP_blueprint.table_name
+    )  # All CNBP database should have this table name.
 
     # do a quick header check.
     fetchallResult = LocalDB_query.check_header(database_path, tableName)
@@ -37,7 +40,7 @@ def check_status() -> bool:
     else:
         return False
 
-      
+
 def get_list_MRN() -> List[int]:
     """
     Return a list_return of all MRN from the database.
@@ -48,30 +51,38 @@ def get_list_MRN() -> List[int]:
 
     list_MRN = []
 
-    success, result_rows = LocalDB_query.get_all(database_path, CNBP_blueprint.table_name, "MRN")
+    success, result_rows = LocalDB_query.get_all(
+        database_path, CNBP_blueprint.table_name, "MRN"
+    )
 
     for row in result_rows:
-        list_MRN.append(row[0]) # MRN is the first variable requested.
+        list_MRN.append(row[0])  # MRN is the first variable requested.
 
-    return list_MRN #todo: verify this is in integer? or string as that has dire consequences.
+    return (
+        list_MRN
+    )  # todo: verify this is in integer? or string as that has dire consequences.
 
 
-def get_list_OrthancUUID() -> List[str]:
+def get_list_StudyUID() -> List[List[str]]:
     """
-    Return a list_return of all MRN from the database.
+    Return a list_return of all StudyUID listS from the database.
     :return:
     """
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
 
-    list_OrthancUUID = []
+    list_StudyUID = []
 
-    success, result_rows = LocalDB_query.get_all(database_path, CNBP_blueprint.table_name, "OrthancUUID")
+    success, result_rows = LocalDB_query.get_all(
+        database_path, CNBP_blueprint.table_name, "StudyUID"
+    )
 
     for row in result_rows:
-        list_OrthancUUID.append(row[0]) # Values are always the first variable requested.
+        list_StudyUID.append(row[0])  # Values are always the first variable requested.
 
-    return list_OrthancUUID #todo: verify this is in integer? or string as that has dire consequences.
+    return (
+        list_StudyUID
+    )  # todo: verify this is in integer? or string as that has dire consequences.
 
 
 def check_MRN(MRN: int) -> bool:
@@ -83,12 +94,10 @@ def check_MRN(MRN: int) -> bool:
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
 
-
     # Store MRN in database.
-    MRN_exist_in_database, _ = LocalDB_query.check_value(database_path,
-                                                         CNBP_blueprint.table_name,
-                                                         CNBP_blueprint.keyfield,
-                                                         MRN)
+    MRN_exist_in_database, _ = LocalDB_query.check_value(
+        database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN
+    )
     if MRN_exist_in_database:
         logger.info("MRN found to exist at local database")
     return MRN_exist_in_database
@@ -96,9 +105,11 @@ def check_MRN(MRN: int) -> bool:
 
 def create_MRN(MRN: int):
     database_path = config_get("LocalDatabasePath")
-    
+
     # Create the MRN record
-    LocalDB_query.create_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN)
+    LocalDB_query.create_entry(
+        database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN
+    )
 
 
 def get_CNBP(MRN: int):
@@ -109,70 +120,75 @@ def get_CNBP(MRN: int):
     """
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
-    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
-                                                                  CNBP_blueprint.table_name,
-                                                                  CNBP_blueprint.keyfield,
-                                                                  MRN)
+    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(
+        database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN
+    )
     if MRN_exist_in_database is False:
         return None
 
     # Only ONE record per MRN.
-    assert(len(KeyRecords) == 1)
-    cnbp_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'CNBPID')
+    assert len(KeyRecords) == 1
+    cnbp_header_index = LocalDB_query.check_header_index(
+        database_path, CNBP_blueprint.table_name, "CNBPID"
+    )
 
     return KeyRecords[0][cnbp_header_index]
 
-def get_orthancUUID(MRN: int) -> Optional[List[str]]:
+
+def get_StudyUIDs(MRN: int) -> Optional[List[str]]:
     """
-    Assuming the MRN exist, get the SeriesUID of all scans that ever past through here.
+    Assuming the MRN exist, get the Studies of all scans that ever past through here.
     :param MRN: the MRN to look for
     :return: the CNBPID associated with that particular MRN number.
     """
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
-    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
-                                                                  CNBP_blueprint.table_name,
-                                                                  CNBP_blueprint.keyfield,
-                                                                  MRN)
+    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(
+        database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN
+    )
     if MRN_exist_in_database is False:
         return None
 
     # Only ONE record per MRN.
-    assert(len(KeyRecords) == 1)
-    OrthancUUID_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'OrthancUUID')
+    assert len(KeyRecords) == 1
+    StudyUID_index = LocalDB_query.check_header_index(
+        database_path, CNBP_blueprint.table_name, "StudyUID"
+    )
 
     # Load the json and return the variable structure
-    json_SeriesUID = KeyRecords[0][OrthancUUID_index]
-    if json_SeriesUID is None:
-        logger.warning("No existing orthancUUID Data information found.")
+    json_StudyUID = KeyRecords[0][StudyUID_index]
+    if json_StudyUID is None:
+        logger.warning("No existing StudyUID Data information found.")
         return None
-    list_SeriesUID = json.loads(json_SeriesUID)
+    list_StudiesUID = json.loads(json_StudyUID)
 
-    return list_SeriesUID
+    return list_StudiesUID
 
-def get_seriesUID(MRN: int) -> Optional[List[str]]:
+
+def get_SeriesUIDs(MRN: int) -> Optional[List[str]]:
     """
-    Assuming the MRN exist, get the SeriesUID of all scans that ever past through here.
-    :param MRN: the MRN to look for
-    :return: the CNBPID associated with that particular MRN number.
+    assuming the mrn exist, get the seriesuid of all scans that ever past through here.
+    :param mrn: the mrn to look for
+    :return: the cnbpid associated with that particular mrn number.
     """
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
-    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
-                                                                  CNBP_blueprint.table_name,
-                                                                  CNBP_blueprint.keyfield,
-                                                                  MRN)
+    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(
+        database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN
+    )
     if MRN_exist_in_database is False:
         return None
 
     # Only ONE record per MRN.
-    assert(len(KeyRecords) == 1)
-    seriesUID_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'SeriesUID')
+    assert len(KeyRecords) == 1
+    seriesUID_index = LocalDB_query.check_header_index(
+        database_path, CNBP_blueprint.table_name, "SeriesUID"
+    )
 
     # Load the json and return the variable structure
     json_SeriesUID = KeyRecords[0][seriesUID_index]
     if json_SeriesUID is None:
-        logger.warning("No existing UID Data information found.")
+        logger.warning("No existing Series UID Data information found.")
         return None
     list_SeriesUID = json.loads(json_SeriesUID)
 
@@ -187,16 +203,17 @@ def get_DCCID(MRN: int) -> Optional[str]:
     """
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
-    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
-                                                                  CNBP_blueprint.table_name,
-                                                                  CNBP_blueprint.keyfield,
-                                                                  MRN)
+    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(
+        database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN
+    )
     if MRN_exist_in_database is False:
         return None
 
     # Only ONE record per MRN.
-    assert(len(KeyRecords) == 1)
-    dcc_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'DCCID')
+    assert len(KeyRecords) == 1
+    dcc_header_index = LocalDB_query.check_header_index(
+        database_path, CNBP_blueprint.table_name, "DCCID"
+    )
 
     return KeyRecords[0][dcc_header_index]
 
@@ -209,16 +226,17 @@ def get_timepoint(MRN: int) -> Optional[str]:
     """
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
-    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
-                                                                  CNBP_blueprint.table_name,
-                                                                  CNBP_blueprint.keyfield,
-                                                                  MRN)
+    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(
+        database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN
+    )
     if MRN_exist_in_database is False:
         return None
 
     # Only ONE record per MRN, even if there are multiple timepoint. We keep the latest one.
-    assert(len(KeyRecords) == 1)
-    timepoint_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'Timepoint')
+    assert len(KeyRecords) == 1
+    timepoint_header_index = LocalDB_query.check_header_index(
+        database_path, CNBP_blueprint.table_name, "Timepoint"
+    )
 
     return KeyRecords[0][timepoint_header_index]
 
@@ -231,21 +249,24 @@ def get_scan_date(MRN: int) -> Optional[str]:
     """
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
-    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
-                                                                  CNBP_blueprint.table_name,
-                                                                  CNBP_blueprint.keyfield,
-                                                                  MRN)
+    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(
+        database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN
+    )
     if MRN_exist_in_database is False:
         return None
 
     # Only ONE record per MRN, even if there are multiple timepoint. We keep the latest one.
-    assert(len(KeyRecords) == 1)
-    date_header_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'Date')
+    assert len(KeyRecords) == 1
+    date_header_index = LocalDB_query.check_header_index(
+        database_path, CNBP_blueprint.table_name, "Date"
+    )
     scan_date = KeyRecords[0][date_header_index]
     return scan_date
 
 
-def set_CNBP(MRN: int, CNBPID: str): #fixme: all the SET RECORDS NEED TO CONSIDER THE MULTIROW possiblities.
+def set_CNBP(
+    MRN: int, CNBPID: str
+):  # fixme: all the SET RECORDS NEED TO CONSIDER THE MULTIROW possiblities.
     """
     Update record with proper CNBPID which has particular MRN
     :param MRN:
@@ -254,32 +275,47 @@ def set_CNBP(MRN: int, CNBPID: str): #fixme: all the SET RECORDS NEED TO CONSIDE
     database_path = config_get("LocalDatabasePath")
 
     # Update the MRN record with CNBPID
-    LocalDB_query.create_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN)
-    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "CNBPID", CNBPID)
+    LocalDB_query.create_entry(
+        database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN
+    )
+    LocalDB_query.update_entry(
+        database_path,
+        CNBP_blueprint.table_name,
+        CNBP_blueprint.keyfield,
+        MRN,
+        "CNBPID",
+        CNBPID,
+    )
 
 
-def append_seriesUID(MRN: int, SeriesUID: List[str]):
+def append_SeriesUID(MRN: int, SeriesUID: List[str]):
     """
     Append record with SeriesUID list. which has particular MRN
     :param MRN:
     :return:
     """
     database_path = config_get("LocalDatabasePath")
-    existing_series_UID = get_seriesUID(MRN)
+    existing_series_UID = get_SeriesUIDs(MRN)
     if existing_series_UID is None:
         total_series_UID = SeriesUID
     else:
         total_series_UID = existing_series_UID + SeriesUID
 
     # JSON dumps.
-    json_seriesUID = json.dumps(total_series_UID )
+    json_seriesUID = json.dumps(total_series_UID)
 
     # Update the MRN record with SeriesUID
-    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "SeriesUID",
-                               json_seriesUID)
+    LocalDB_query.update_entry(
+        database_path,
+        CNBP_blueprint.table_name,
+        CNBP_blueprint.keyfield,
+        MRN,
+        "SeriesUID",
+        json_seriesUID,
+    )
 
 
-def set_seriesUID(MRN: int, SeriesUID: List[str]):
+def set_SeriesUID(MRN: int, SeriesUID: List[str]):
     """
     Update record with SeriesUID list. which has particular MRN
     :param MRN:
@@ -287,12 +323,40 @@ def set_seriesUID(MRN: int, SeriesUID: List[str]):
     """
     database_path = config_get("LocalDatabasePath")
 
-
     # JSON dumps.
     json_seriesUID = json.dumps(SeriesUID)
 
     # Update the MRN record with SeriesUID
-    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "SeriesUID", json_seriesUID)
+    LocalDB_query.update_entry(
+        database_path,
+        CNBP_blueprint.table_name,
+        CNBP_blueprint.keyfield,
+        MRN,
+        "SeriesUID",
+        json_seriesUID,
+    )
+
+
+def set_StudyUID(MRN: int, StudyUID: List[str]):
+    """
+    Update record with SeriesUID list. which has particular MRN
+    :param MRN:
+    :return:
+    """
+    database_path = config_get("LocalDatabasePath")
+
+    # JSON dumps.
+    json_seriesUID = json.dumps(StudyUID)
+
+    # Update the MRN record with SeriesUID
+    LocalDB_query.update_entry(
+        database_path,
+        CNBP_blueprint.table_name,
+        CNBP_blueprint.keyfield,
+        MRN,
+        "StudyUID",
+        json_seriesUID,
+    )
 
 
 def set_DCCID(MRN: int, DCCID: int):
@@ -304,7 +368,15 @@ def set_DCCID(MRN: int, DCCID: int):
     database_path = config_get("LocalDatabasePath")
 
     # Update the MRN record with DCCID
-    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "DCCID", DCCID, )
+    LocalDB_query.update_entry(
+        database_path,
+        CNBP_blueprint.table_name,
+        CNBP_blueprint.keyfield,
+        MRN,
+        "DCCID",
+        DCCID,
+    )
+
 
 def get_CNNID(MRN: int) -> Optional[List[str]]:
     """
@@ -314,16 +386,17 @@ def get_CNNID(MRN: int) -> Optional[List[str]]:
     """
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
-    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(database_path,
-                                                                  CNBP_blueprint.table_name,
-                                                                  CNBP_blueprint.keyfield,
-                                                                  MRN)
+    MRN_exist_in_database, KeyRecords = LocalDB_query.check_value(
+        database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN
+    )
     if MRN_exist_in_database is False:
         return None
 
     # Only ONE record per MRN.
-    assert(len(KeyRecords) == 1)
-    CNNID_index = LocalDB_query.check_header_index(database_path, CNBP_blueprint.table_name, 'CNNID')
+    assert len(KeyRecords) == 1
+    CNNID_index = LocalDB_query.check_header_index(
+        database_path, CNBP_blueprint.table_name, "CNNID"
+    )
 
     # Load the json and return the variable structure
     json_CNNIDs = KeyRecords[0][CNNID_index]
@@ -347,28 +420,42 @@ def set_CNNIDs(MRN: int, CaseIDs: List[int]):
     json_CaseIDs = json.dumps(CaseIDs)
 
     # Update the MRN record with DCCID
-    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "CNNID", json_CaseIDs)
+    LocalDB_query.update_entry(
+        database_path,
+        CNBP_blueprint.table_name,
+        CNBP_blueprint.keyfield,
+        MRN,
+        "CNNID",
+        json_CaseIDs,
+    )
 
 
-def append_OrthancUUID(MRN: int, OrthancUUID: str):
+def append_StudyUID(MRN: int, StudyUID: str):
     """
-    Update record with proper completion status which has particular MRN
+    Update record with proper completion status which STUDY has particular MRN
     :param MRN:
     :return:
     """
 
     database_path = config_get("LocalDatabasePath")
-    existing_series_UID = get_orthancUUID(MRN)
-    if existing_series_UID is None:
-        total_series_UID = OrthancUUID
+    existing_StudyUID = get_StudyUIDs(MRN)
+    if existing_StudyUID is None:
+        total_StudyUID = StudyUID
     else:
-        total_series_UID = existing_series_UID + OrthancUUID
+        total_StudyUID = existing_StudyUID + StudyUID
 
     # JSON dumps.
-    json_seriesUID = json.dumps(total_series_UID )
+    json_seriesUID = json.dumps(total_StudyUID)
 
     # Update the MRN record with UUID
-    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "OrthancUUID", json_seriesUID)
+    LocalDB_query.update_entry(
+        database_path,
+        CNBP_blueprint.table_name,
+        CNBP_blueprint.keyfield,
+        MRN,
+        "StudyUID",
+        json_seriesUID,
+    )
 
 
 def set_scan_date(MRN: int, scan_date: str):
@@ -380,8 +467,14 @@ def set_scan_date(MRN: int, scan_date: str):
     database_path = config_get("LocalDatabasePath")
 
     # Update the MRN record with Timepoint
-    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Date",
-                               scan_date)
+    LocalDB_query.update_entry(
+        database_path,
+        CNBP_blueprint.table_name,
+        CNBP_blueprint.keyfield,
+        MRN,
+        "Date",
+        scan_date,
+    )
 
 
 def set_timepoint(MRN: int, Timepoint: str):
@@ -393,7 +486,14 @@ def set_timepoint(MRN: int, Timepoint: str):
     database_path = config_get("LocalDatabasePath")
 
     # Update the MRN record with Timepoint
-    LocalDB_query.update_entry(database_path, CNBP_blueprint.table_name, CNBP_blueprint.keyfield, MRN, "Timepoint", Timepoint)
+    LocalDB_query.update_entry(
+        database_path,
+        CNBP_blueprint.table_name,
+        CNBP_blueprint.keyfield,
+        MRN,
+        "Timepoint",
+        Timepoint,
+    )
 
 
 def propose_CNBPID(DICOM_protocol: str):
@@ -409,6 +509,7 @@ def propose_CNBPID(DICOM_protocol: str):
     InstitionID = config_get("institutionID")
 
     import DICOM.API
+
     # Check ProjectID string and then return the ProjectID;
     ProjectID = DICOM.API.study_validation(DICOM_protocol)
 
@@ -418,7 +519,9 @@ def propose_CNBPID(DICOM_protocol: str):
     DB_path = config_get("LocalDatabasePath")
 
     # Partial match search records: (currently has SQL error).
-    success, matched_records = LocalDB_query.check_partial_value(DB_path, CNBP_blueprint.table_name, "CNBPID", partial_search_input)
+    success, matched_records = LocalDB_query.check_partial_value(
+        DB_path, CNBP_blueprint.table_name, "CNBPID", partial_search_input
+    )
 
     # Default subject ID when no match is found.
     latest_subject_ID = "0000001"
@@ -452,9 +555,11 @@ def check_all_existing_records(matched_records):
         # Skip non-compliance records
         if not LORIS_validation.validate_CNBPID(CNBPID):
             logger.warning(
-                "A non-compliant record has been found in the existing SQLite database, you might want to look into that. ")
+                "A non-compliant record has been found in the existing SQLite database, you might want to look into that. "
+            )
             logger.warning(
-                "Will ignore this record and try not to infer subject ID from it as it is not reliable potentially due to following OLD SCHEMA.")
+                "Will ignore this record and try not to infer subject ID from it as it is not reliable potentially due to following OLD SCHEMA."
+            )
             continue
 
         # store as INT for the last 4 digits of the string.
@@ -464,7 +569,7 @@ def check_all_existing_records(matched_records):
         if current_subject_ID > max_subject_ID:
             max_subject_ID = current_subject_ID
 
-    assert(0 < max_subject_ID < 10000)
+    assert 0 < max_subject_ID < 10000
 
     subjectID: str = str(max_subject_ID)
 
@@ -472,7 +577,6 @@ def check_all_existing_records(matched_records):
 
     # return the zero leading int.
     return incremented_subjectID
-
 
 
 def load_hospital_record_numbers(use_predefined: bool):
@@ -525,9 +629,10 @@ def load_hospital_record_numbers(use_predefined: bool):
             3191237,
             3191976,
             3193639,
-            3202977
+            3202977,
         ]
     return return_list
+
 
 def get_setting(setting_name: str):
     """
@@ -541,11 +646,17 @@ def get_setting(setting_name: str):
     from datetime import datetime
 
     # Load env on where the setting database is located.
-    path_config_database = load_dotenv_var("config_database") # Default location to dtconfigure_old.sqlite
-    name_config_table = load_dotenv_var("config_table")  # Default location to dtconfigure_old.sqlite
+    path_config_database = load_dotenv_var(
+        "config_database"
+    )  # Default location to dtconfigure_old.sqlite
+    name_config_table = load_dotenv_var(
+        "config_table"
+    )  # Default location to dtconfigure_old.sqlite
 
     # Look for setting variable in the DEFAULT ORDER
-    success, records_setting = LocalDB_query.get_all(path_config_database, name_config_table, setting_name)
+    success, records_setting = LocalDB_query.get_all(
+        path_config_database, name_config_table, setting_name
+    )
     assert success
     assert len(records_setting) > 0
 
@@ -553,14 +664,16 @@ def get_setting(setting_name: str):
     assert validate_dotenv_var("created", CNBP_blueprint.dotenv_variables)
 
     # Retrieve TIMESTAMP of all records. in the DEFAULT ORDER
-    success, records_timestamp = LocalDB_query.get_all(path_config_database, name_config_table, "created")
+    success, records_timestamp = LocalDB_query.get_all(
+        path_config_database, name_config_table, "created"
+    )
     assert success
     assert len(records_timestamp) > 0
 
     # Find the index of the record that has the latest timepoint.
     list_datetime = []
     for record in records_timestamp:
-        record_time = datetime.strptime(record[0],"%Y-%m-%d %H:%M:%S")
+        record_time = datetime.strptime(record[0], "%Y-%m-%d %H:%M:%S")
         list_datetime.append(record_time)
     timestamp_latest = max(list_datetime)
     index_timestamp_latest = list_datetime.index(timestamp_latest)
@@ -569,6 +682,7 @@ def get_setting(setting_name: str):
     setting_value = records_setting[index_timestamp_latest][0]
 
     return setting_value
+
 
 if __name__ == "__main__":
 
