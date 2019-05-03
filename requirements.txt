@@ -11,4 +11,4 @@ config
 werkzeug
 flask
 transitions
-mysql
+mysql-connector-python
