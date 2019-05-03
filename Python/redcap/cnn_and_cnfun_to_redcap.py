@@ -8,7 +8,8 @@ from redcap.prepare_reference import prepare_reference_tables
 from redcap.initialization import initialize_import_configuration
 from redcap.transaction import RedcapTransaction
 from redcap.query import load_metadata, send_data, wipe_all_redcap_data
-from redcap.constants import environment
+from redcap.mysql_query import send_mysql_data, wipe_all_mysql_data
+from redcap.constants import environment, mysql_export_enabled
 
 import datetime
 import logging
@@ -72,6 +73,19 @@ def update_redcap_data() -> None:
     logger.info('Sending ALL data to REDCap...')
     send_data(transaction_stage4_patients_added)
     logger.info('Done.')
+
+    # If MySQL export is enabled, then we need to export the data to MySQL.
+    if mysql_export_enabled:
+
+        # Wiping old MySQL data.
+        logger.info('Wiping ALL existing data from MySQL...')
+        wipe_all_mysql_data()
+        logger.info('Done.')
+
+        # Send data to MySQL.
+        logger.info('Sending ALL data to MySQL...')
+        send_mysql_data(transaction_stage3_references_added)
+        logger.info('Done.')
 
     # Indicate that the script is completed.
     logger.info('Update REDCap Data Completed: ' + str(datetime.datetime.now()))

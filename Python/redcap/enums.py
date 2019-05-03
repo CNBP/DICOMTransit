@@ -38,3 +38,10 @@ class DataType(Enum):
     Unknown = -1
     Integer = 1
     String = 2
+
+
+class MySQLType(Enum):
+    unknown = "unknown"
+    yesno = "tinyint(1)"
+    text = "text"
+    textprimary = "text PRIMARY KEY"
