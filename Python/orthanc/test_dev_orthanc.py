@@ -1,7 +1,7 @@
 from pydicom.data import get_testdata_files
 from orthanc.query import orthanc_query
 from LORIS.helper import LORIS_helper
-from orthanc.API import get_dev_orthanc_credentials
+from orthanc.API import get_dev_orthanc_credentials, get_all_subject_StudyUIDs
 import unittest
 import pytest
 import orthanc.API
@@ -35,17 +35,17 @@ class UT_DevOrthanc(unittest.TestCase):
 
         # Note that this will database several subjects.
 
-    def test_getSubjects(self):
+    def test_getStudies(self):
         self.uploadExamples()
 
-        subject_list = orthanc.API.get_list_of_studies(self.credential)
+        subject_list = orthanc.API.get_all_subject_StudyUIDs(self.credential)
         assert len(subject_list) > 0
         return subject_list
 
-    def test_deleteSubjects(self):
-        list_subjects = self.test_getSubjects()
+    def test_deleteStudies(self):
+        list_subjects = self.test_getStudies()
 
-        patients_url = urllib.parse.urljoin(UT_DevOrthanc.credential.url, "patients/")
+        patients_url = urllib.parse.urljoin(UT_DevOrthanc.credential.url, "studies/")
 
         for subject in list_subjects:
             patient_url = urllib.parse.urljoin(patients_url, f"{subject}")
@@ -54,9 +54,12 @@ class UT_DevOrthanc(unittest.TestCase):
             )
             assert LORIS_helper.is_response_success(reseponse_code, 200)
 
+    def test_get_all_subject_StudyUID(self):
+        get_all_subject_StudyUIDs(UT_DevOrthanc.credential)
+
     def test_getSubjectZip(self):
         url, user, password = orthanc.API.get_prod_orthanc_credentials()
-        list_subjects = self.test_getSubjects()
+        list_subjects = self.test_getStudies()
         patients_url = urllib.parse.urljoin(UT_DevOrthanc.credential.url, "patients/")
         for subject in list_subjects:
             patient_url = urllib.parse.urljoin(patients_url, f"{subject}/")

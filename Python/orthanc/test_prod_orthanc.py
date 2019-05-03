@@ -16,24 +16,24 @@ class UT_ProdOrthanc(unittest.TestCase):
     # MUST ensure TravisCI LORIS also deploy with the proper setting with regard to the ORTHANC authentication.
     # This attempts to access the production Orthanc from the local environment and then check if upupload and download work.
 
-    url, user, password = orthanc.API.get_prod_orthanc_credentials()
+    credential = orthanc.API.get_prod_orthanc_credentials()
 
     def test_getSubjects(self):
-        subject_list = orthanc.API.get_list_of_studies(
-            self.url, self.user, self.password
-        )
-        assert len(subject_list) > 0
-        return subject_list
+        list_StudyUIDs = orthanc.API.get_all_subject_StudyUIDs(self.credential)
+        if len(list_StudyUIDs) == 0:
+            return []
+        assert len(list_StudyUIDs) > 0
+        return list_StudyUIDs
 
     def test_getSubjectZip(self):
-        list_subjects = self.test_getSubjects()
-        patients_url = urllib.parse.urljoin(UT_ProdOrthanc.url, "patients/")
-        for subject in list_subjects:
+        list_StudyUIDs = self.test_getSubjects()
+        if len(list_StudyUIDs) == 0:
+            return
+        patients_url = urllib.parse.urljoin(self.credential.url, "patients/")
+        for subject in list_StudyUIDs:
             patient_url = urllib.parse.urljoin(patients_url, f"{subject}/")
             patient_archive_url = urllib.parse.urljoin(patient_url, "archive")
-            orthanc.API.get_subject_zip(
-                patient_archive_url, UT_ProdOrthanc.user, UT_ProdOrthanc.password
-            )
+            orthanc.API.get_subject_zip(patient_archive_url, self.credential)
 
 
 if __name__ == "__main__":

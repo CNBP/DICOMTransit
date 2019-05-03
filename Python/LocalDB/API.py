@@ -437,15 +437,19 @@ def append_StudyUID(MRN: int, StudyUID: str):
     :return:
     """
 
+    # convert new study UID to list.
+    list_StudyUID_single_new = [StudyUID]
     database_path = config_get("LocalDatabasePath")
-    existing_StudyUID = get_StudyUIDs(MRN)
-    if existing_StudyUID is None:
-        total_StudyUID = StudyUID
+
+    # obtain
+    list_StudyUID_existing_ones = get_StudyUIDs(MRN)
+    if list_StudyUID_existing_ones is None:
+        list_StudyUID_total = list_StudyUID_single_new
     else:
-        total_StudyUID = existing_StudyUID + StudyUID
+        list_StudyUID_total = list_StudyUID_existing_ones + list_StudyUID_single_new
 
     # JSON dumps.
-    json_seriesUID = json.dumps(total_StudyUID)
+    json_seriesUID = json.dumps(list_StudyUID_total)
 
     # Update the MRN record with UUID
     LocalDB_query.update_entry(

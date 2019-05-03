@@ -6,6 +6,7 @@ from PythonUtils.file import unique_name
 import logging
 from typing import List
 import urllib.parse
+import json
 
 logger = logging.getLogger()
 
@@ -66,7 +67,7 @@ def get_list_of_subjects_noauth(orthanc_URL: str) -> List[str]:
     return list_subjects
 
 
-def get_list_of_studies(credential: orthanc_credential) -> List[str]:
+def get_all_subject_StudyUIDs(credential: orthanc_credential) -> List[List[str]]:
     """
     Get a list of STUDIES from a .env predefined orthanc server.
     :return: the list of all studies in the orthanc server
@@ -77,6 +78,7 @@ def get_list_of_studies(credential: orthanc_credential) -> List[str]:
 
     if not LORIS_helper.is_response_success(reseponse_code, 200):
         raise ConnectionError("LORIS server did not return list of subjects. ")
+
     return list_studies
 
 

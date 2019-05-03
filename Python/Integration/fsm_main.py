@@ -75,7 +75,7 @@ def check_orthanc_srvr(signal, sender):
 
     try:
         list_subjects = (
-            orthanc.API.get_list_of_studies()
+            orthanc.API.get_all_subject_StudyUIDs()
         )  # todo: this API call must support authentication. ERROR IMMENENT
         # Pass the signal to get DICOM fils based on the list of subjects given.
         dispatcher.send(

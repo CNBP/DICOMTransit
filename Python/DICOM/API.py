@@ -6,6 +6,7 @@ from settings import config_get
 from PythonUtils.folder import get_abspath
 from tqdm import tqdm
 from typing import List
+from pathlib import Path
 import os
 import logging
 
@@ -20,12 +21,17 @@ def anonymize_to_zip(folder_path: str, zip_ID: str):
     :return:
     """
     from DICOM.anonymize import DICOM_anonymize
+
     DICOM_anonymize.folder(folder_path, zip_ID)
 
     change_to_zip_dir()
 
     from PythonUtils.file import zip_with_name
-    zip_with_name(folder_path, zip_ID)  # todo! it does not check if there are OTHER files in there!
+
+    zip_with_name(
+        folder_path, zip_ID
+    )  # todo! it does not check if there are OTHER files in there!
+
 
 def change_to_zip_dir():
     # Load the name of the storage folder from the configuration file.
@@ -48,6 +54,7 @@ def anonymize_files(files: List[str]):
     :return:
     """
     from DICOM.anonymize import DICOM_anonymize
+
     # Copy files to Temporary Folder
     with TemporaryDirectory() as temp_folder:
 
@@ -88,7 +95,6 @@ def check_anonymization(files: list, anonymized_name) -> bool:
 
         properties_output = DICOM_elements_batch.retrieval(DICOM, properties)
 
-
         success1, patient_id = DICOM_elements.retrieve_fast(DICOM, "PatientID")
         success2, name = DICOM_elements.retrieve_fast(DICOM, "PatientName")
 
@@ -101,10 +107,11 @@ def check_anonymization(files: list, anonymized_name) -> bool:
             return False
 
         # not properly anonymized name.
-        if not name ==anonymized_name:
+        if not name == anonymized_name:
             return False
 
     return True
+
 
 def retrieve_study_protocol(files: List[str]) -> List[str]:
     """
@@ -124,14 +131,20 @@ def retrieve_study_protocol(files: List[str]) -> List[str]:
         if os.path.exists(file):
             success, study_protocol = DICOM_elements.retrieve(file, "ProtocolName")
         else:
-            logger.error(f"Study protocol could not be retrieved from: {file}. Skipping this file!")
+            logger.error(
+                f"Study protocol could not be retrieved from: {file}. Skipping this file!"
+            )
             continue
 
         # Only add if it is not already in the list (avoid duplicate, ensure unique entries
-        if LORIS_validation.validate_projectID(study_protocol) and study_protocol not in protocols:
+        if (
+            LORIS_validation.validate_projectID(study_protocol)
+            and study_protocol not in protocols
+        ):
             protocols.append(study_protocol)
 
     return protocols
+
 
 def study_validation(study: str) -> str:
     """
@@ -171,9 +184,12 @@ def infer_project_using_protocol(files: List[str]) -> str:
         return False, "Files provided have inconsistent studies protocols"
 
     # INFER project using them.
-    projectID = study_validation(studies[0]) # recall, studies can only have one member.
+    projectID = study_validation(
+        studies[0]
+    )  # recall, studies can only have one member.
 
     return projectID
+
 
 if __name__ == "__main__":
     anonymize_to_zip(r"C:\Users\dyt81\Downloads\TestAnonymize", "VTXGL019998_598399_V1")

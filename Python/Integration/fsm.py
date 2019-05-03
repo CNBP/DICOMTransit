@@ -723,7 +723,7 @@ class DICOMTransitImport(object):
         logger.info("Transition: Checking Orthanc for new data!")
 
         # Get updated orthanc UUID.
-        self.orthanc_list_all_StudiesUIDs = orthanc.API.get_list_of_studies(
+        self.orthanc_list_all_StudiesUIDs = orthanc.API.get_all_subject_StudyUIDs(
             self.credential
         )
         logger.info("Obtained list of all StudiesUID SHA from Orthanc")
@@ -1066,8 +1066,8 @@ class DICOMTransitImport(object):
 
     def RecordInsertion(self):
         # Set the completion status to ZERO
-        UUID = self.orthanc_list_all_StudiesUIDs[self.orthanc_index_current_study]
-        LocalDB.API.append_StudyUID(self.DICOM_package.MRN, UUID)
+        StudyUID = self.orthanc_list_all_StudiesUIDs[self.orthanc_index_current_study]
+        LocalDB.API.append_StudyUID(self.DICOM_package.MRN, StudyUID)
 
     def CheckUploadSuccess(self):
         # fixme: a script to check upload success is required.
