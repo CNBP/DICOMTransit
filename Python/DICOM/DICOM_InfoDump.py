@@ -5,6 +5,9 @@ from DICOM.elements import DICOM_elements
 
 output=[]
 
+"""
+A batch script to download study date and patient birth date information into files. 
+"""
 
 def BatchDateCalculation(path):
     file_list = recursive_list(path)

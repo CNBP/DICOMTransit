@@ -7,12 +7,13 @@ from orthanc.query import orthanc_query
 from pathlib import Path
 from joblib import Parallel, delayed
 import multiprocessing
+from DICOM.validate import DICOM_validate
 
 logger = logging.getLogger()
 
 # Getting credential from the environment.
 url, username, password = orthanc.API.get_prod_orthanc_credentials()
-# url, username, password = orthanc.API.get_dev_orthanc_credentials()
+#url, username, password = orthanc.API.get_dev_orthanc_credentials()
 
 url_instances = urllib.parse.urljoin(url, "/instances")
 
@@ -31,12 +32,17 @@ def read_file(path_file):
     return content
 
 def read_upload_file(path_file):
-    content = read_file(path_file)
 
-    # Upload and keep track of success.
-    success = orthanc_query.upload(path_file, url_instances, username, password, content)
-    print(f"Finished uploading:{path_file}")
-    return success
+    # check if the file is validated before continueing
+    if (DICOM_validate.file(path_file)):
+        content = read_file(path_file)
+
+        # Upload and keep track of success.
+        success = orthanc_query.upload(path_file, url_instances, username, password, content)
+        logger.debug(f"Finished uploading:{path_file}")
+        return success
+    else:
+        return False
 
 
 def upload_retrospective_study(path_study_root_folder_path: Path):
@@ -91,7 +97,7 @@ if __name__=="__main__":
     import time
     start = time.time()
     logging.basicConfig(level=logging.INFO)
-    path_input = Path(r"/toshiba2/Feasability_MRI_all_Sab/3229501/raw")
+    path_input = Path(r"/toshiba4/bayX_backup/Research PAC/Batch2")
     upload_retrospective_study(path_input)
     end = time.time()
     print(str((end - start)/60)+" minutes")

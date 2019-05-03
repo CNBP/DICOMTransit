@@ -3,6 +3,11 @@ import os
 from tqdm import tqdm
 from PythonUtils.folder import recursive_list
 
+from pydicom.filereader import InvalidDicomError
+from pydicom.filereader import read_file
+
+
+
 logger = logging.getLogger()
 
 class DICOM_validate:
@@ -19,8 +24,6 @@ class DICOM_validate:
         global dicom
         dicom = None
 
-        from pydicom.filereader import InvalidDicomError
-        from pydicom.filereader import read_file
         try:
             dicom = read_file(file_path)
         except InvalidDicomError:
@@ -40,7 +43,7 @@ class DICOM_validate:
         :param dir_path:
         :returns: 0) if the path is valid, 2) list of ONLY the valid DICOM files.
         """
-
+        from DICOM.elements import DICOM_elements
 
         # Reject bad input check
         if not os.path.exists(dir_path) or not os.path.isdir(dir_path):
@@ -57,7 +60,7 @@ class DICOM_validate:
         # List to store all validated DICOM files.
         validated_DICOM_files = []
 
-        from DICOM.elements import DICOM_elements
+
         logger.info("Checking individual dicom files for possible discrepencies.")
 
         # Check individual DICOM file for consistencies.

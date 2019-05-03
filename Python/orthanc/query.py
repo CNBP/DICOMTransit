@@ -180,14 +180,14 @@ class orthanc_query:
 
         # Try to upload
         try:
-            sys.stdout.write("Importing %s" % path)
             response_code, _ = orthanc_query.postOrthanc(credential.url, credential, data)
+            logger.debug("Importing %s" % path)
 
             if response_code == 200:
                 logger.debug(" => success\n")
                 return 1
             else:
-                logger.warning(" => failure (Is it a DICOM file? Is there a password?)\n")
+                logger.warning(" => failure (Is it a DICOM file?)\n")
                 return 0
         except Exception as e:
             logger.error(e)
