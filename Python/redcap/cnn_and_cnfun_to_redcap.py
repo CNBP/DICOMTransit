@@ -84,7 +84,7 @@ def update_redcap_data() -> None:
 
         # Send data to MySQL.
         logger.info('Sending ALL data to MySQL...')
-        send_mysql_data(transaction_stage3_references_added)
+        send_mysql_data(transaction_stage4_patients_added)
         logger.info('Done.')
 
     # Indicate that the script is completed.
