@@ -31,8 +31,11 @@ def send_mysql_data(transaction: RedcapTransaction) -> (bool, str):
     for tablename, tablefields in tablelist:
         create_mysql_table(tablename, tablefields)
 
+    # Filter valid dictionary entries that contains redcap_repeat_instrument. (Otherwise, we need to ignore the entry)
+    valid_redcap_queue = [x for x in transaction.redcap_queue if x[0].get("redcap_repeat_instrument") is not None]
+
     # Get entries to create.  (Group by table name - redcap_repeat_instrument is the tablename.)
-    entrieslist = groupby(transaction.redcap_queue, lambda f: f[0]["redcap_repeat_instrument"])
+    entrieslist = groupby(valid_redcap_queue, lambda f: f[0]["redcap_repeat_instrument"])
 
     # For each table - (insert entries/lines).
     for tablename, entries in entrieslist:
