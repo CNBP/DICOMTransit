@@ -37,8 +37,19 @@ if not os.path.exists("LocalDB/dtconfigure.sqlite"):
 
 # fixme: gotta be platform independent. Need CentOS validation and Ubuntu.
 DETACHED_PROCESS = 0x00000008
+
+
 try:
-    pid=subprocess.Popen(['flask', "run"], creationflags=DETACHED_PROCESS).pid #todo: wrap this into a starter function to run at will.
+    if sys.platform == "win32":
+        pid = subprocess.Popen(['flask', "run"], creationflags=DETACHED_PROCESS).pid #todo: wrap this into a starter function to run at will.
+    else:
+
+        # linus might need
+        #   sudo lsof -t -i tcp:5000 | xargs kill -9
+        # to kill
+
+        pid = subprocess.Popen(['flask', "run"]).pid
+
 except Exception as e:
     raise ValueError
 

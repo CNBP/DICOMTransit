@@ -3,8 +3,8 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from dtconfigure.auth import login_required
-from dtconfigure.db import get_db
+from auth import login_required
+from db import get_db
 import os, sys
 
 

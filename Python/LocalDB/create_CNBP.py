@@ -32,7 +32,9 @@ class LocalDB_createCNBP:
 
 # Only executed when running directly.
 if __name__ == '__main__':
-    # Mini script used to create the initial databse
+    # Mini script used to create the initial database
 
     localDB_path = config_get("LocalDatabasePath")
+    assert localDB_path is not None
+    assert localDB_path != ""
     LocalDB_createCNBP.database(localDB_path)
