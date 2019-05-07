@@ -59,7 +59,7 @@ def get_fields(redcap_form_name, transaction: RedcapTransaction) -> dict:
 def load_metadata(transaction: RedcapTransaction) -> RedcapTransaction:
     """
     Get all information about REDCap form names and fields.
-    :return: None
+    :return: RedcapTransaction
     """
     transaction.redcap_metadata = []
 
