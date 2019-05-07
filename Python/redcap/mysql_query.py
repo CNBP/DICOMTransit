@@ -45,6 +45,59 @@ def send_mysql_data(transaction: RedcapTransaction) -> (bool, str):
     return True, "All data in queue has been sent to MySQL."
 
 
+def prepare_mysql_metadata_stage5(transaction: RedcapTransaction) -> RedcapTransaction:
+    """
+    Prepare mysql metadata. (Stage 5)
+    *** Sometime some metadata are missing. Ex : Stage 4 is adding caseid, motherid etc and metadata is not updated.
+    This fonction will add the missing metadata to allow us to export all the data to mysql.
+    :param transaction: RedcapTransaction (Stage 4)
+    :return: Updated RedcapTransaction (stage 5)
+    """
+
+    # Filter valid dictionary entries that contains redcap_repeat_instrument. (Otherwise, we need to ignore the entry)
+    # redcap_repeat_instrument = tablename to use. (If we don't have the tablename then we can't insert the entry)
+    valid_redcap_queue = [x for x in transaction.redcap_queue if x[0].get("redcap_repeat_instrument") is not None]
+
+    # Get entries to create.  (Group by table name - redcap_repeat_instrument is the tablename.)
+    entrieslist_redcap_queue = groupby(valid_redcap_queue, lambda f: f[0]["redcap_repeat_instrument"])
+
+    # For each table - (insert entries/lines).
+    for tablename_redcap_queue, entries_redcap_queue in entrieslist_redcap_queue:
+
+        # Get the list of metadata for a specific tablename - x[3] is the tablename.
+        table_redcap_metadata = [x for x in transaction.redcap_metadata if x[3] == tablename_redcap_queue]
+
+        # For each entries / lines to add inside the database.
+        for fields in entries_redcap_queue:
+
+            # For each field we need to check if it's already inside the metadata.
+            for fieldname, fieldvalue in fields[0].items():
+
+                # Preparing vars.
+                found = False
+
+                # For each field inside the current metadata, check if the field already exist.
+                for field in table_redcap_metadata:
+
+                    # If this is the current field that we are looking for. (Flag found to true and exit loop)
+                    if field[0] == fieldname:
+                        found = True
+                        break
+
+                # If not found, then we need to add metadata.
+                if found == False:
+                    data = [fieldname, convert_redcap_to_mysql_fieldtype("text"), fieldname, tablename_redcap_queue]
+                    table_redcap_metadata.append(data)
+                    transaction.redcap_metadata.append(data)
+
+    # We need to order the redcap_metadata using tablename - f[3]
+    # Otherwise group will not work.
+    transaction.redcap_metadata = sorted(transaction.redcap_metadata, key=lambda f: f[3])
+
+    # Return the updated repcap transaction (stage 5)
+    return transaction
+
+
 def create_mysql_table(tablename: str, tablefields: iter) -> None:
     """
     Insert all entries to a table.
@@ -59,10 +112,6 @@ def create_mysql_table(tablename: str, tablefields: iter) -> None:
 
     # For each fields inside the table.
     for field in tablefields:
-
-        # Ignore masterid field.
-        if(field[0] == "masterid"):
-            continue
 
         # If it's not the first element then we need to add a separator.
         if not first:
@@ -104,13 +153,10 @@ def insert_mysql_entries(tablename: str, entries: iter) -> None:
         query = "INSERT INTO " + tablename + " ("
         queryvalues = ""
 
-        # Filter dictionary field ( We need to remove useless field )
-        valid_fields = {fieldname: fieldvalue for (fieldname, fieldvalue) in fields[0].items() if (fieldname != "masterid" and not fieldname.startswith("mst") and not fieldname.startswith("redcap_"))}
-
         # For each element inside the dictionary.
-        for fieldname, fieldvalue in valid_fields.items():
+        for fieldname, fieldvalue in fields[0].items():
 
-            # If not the first one, then we need to add separattor.
+            # If not the first one, then we need to add separator.
             if not first:
                 query += ", "
                 queryvalues += ", "
@@ -127,7 +173,7 @@ def insert_mysql_entries(tablename: str, entries: iter) -> None:
         mysql_cursor = conn.cursor(cursor_class=MySQLCursorPrepared)
 
         # Execute MySQL request.
-        mysql_cursor.execute(query, tuple(valid_fields[key] for key in valid_fields.keys()))
+        mysql_cursor.execute(query, tuple(fields[0][key] for key in fields[0].keys()))
 
     # Commit all changes.
     conn.commit()
