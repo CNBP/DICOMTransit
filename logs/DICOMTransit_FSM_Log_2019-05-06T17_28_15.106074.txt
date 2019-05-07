@@ -1,0 +1,296 @@
+2019-05-06 17:28:15,114		root		getOrthanc():		Line 54:		DEBUG		Getting Orthanc endpoint: http://10.128.70.190:80/patients/
+2019-05-06 17:28:15,116		urllib3.connectionpool		_new_conn():		Line 205:		DEBUG		Starting new HTTP connection (1): 10.128.70.190:80
+2019-05-06 17:28:15,119		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		http://10.128.70.190:80 "GET /patients/ HTTP/1.1" 200 69
+2019-05-06 17:28:15,119		root		getOrthanc():		Line 58:		DEBUG		Get Result: 200 OK
+2019-05-06 17:28:15,120		root		UpdateOrthancStatus():		Line 1169:		DEBUG		Orthanc system status OKAY!
+2019-05-06 17:28:17,075		root		UpdateNetworkStatus():		Line 1149:		DEBUG		General Network system status OKAY!
+2019-05-06 17:28:17,078		root		UpdateLocalDBStatus():		Line 1159:		DEBUG		LocalDB system status OKAY!
+2019-05-06 17:28:18,061		root		UpdateNetworkStatus():		Line 1149:		DEBUG		General Network system status OKAY!
+2019-05-06 17:28:18,071		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:18,437		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "POST /api/v0.0.3-dev/login HTTP/1.1" 200 260
+2019-05-06 17:28:18,440		root		login():		Line 34:		DEBUG		200OK
+2019-05-06 17:28:18,441		root		UpdateLORISStatus():		Line 1137:		DEBUG		LORIS production system status OKAY!
+2019-05-06 17:28:18,441		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_waiting to state ST_determined_orthanc_new_data_status...
+2019-05-06 17:28:18,447		root		getOrthanc():		Line 54:		DEBUG		Getting Orthanc endpoint: http://10.128.70.190:80/patients/
+2019-05-06 17:28:18,450		urllib3.connectionpool		_new_conn():		Line 205:		DEBUG		Starting new HTTP connection (1): 10.128.70.190:80
+2019-05-06 17:28:18,453		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		http://10.128.70.190:80 "GET /patients/ HTTP/1.1" 200 69
+2019-05-06 17:28:18,454		root		getOrthanc():		Line 58:		DEBUG		Get Result: 200 OK
+2019-05-06 17:28:18,454		root		UpdateOrthancStatus():		Line 1169:		DEBUG		Orthanc system status OKAY!
+2019-05-06 17:28:18,454		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateOrthancStatus' before conditions.
+2019-05-06 17:28:18,454		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_waiting. Processing callbacks...
+2019-05-06 17:28:18,454		transitions.core		exit():		Line 128:		INFO		Exited state ST_waiting
+2019-05-06 17:28:18,454		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_determined_orthanc_new_data_status. Processing callbacks...
+2019-05-06 17:28:18,454		transitions.core		enter():		Line 121:		INFO		Entered state ST_determined_orthanc_new_data_status
+2019-05-06 17:28:18,454		root		GetOrthancList():		Line 723:		INFO		Transition: Checking Orthanc for new data!
+2019-05-06 17:28:18,455		root		getOrthanc():		Line 54:		DEBUG		Getting Orthanc endpoint: http://10.128.70.190:80/studies/
+2019-05-06 17:28:18,456		urllib3.connectionpool		_new_conn():		Line 205:		DEBUG		Starting new HTTP connection (1): 10.128.70.190:80
+2019-05-06 17:28:18,458		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		http://10.128.70.190:80 "GET /studies/ HTTP/1.1" 200 70
+2019-05-06 17:28:18,458		root		getOrthanc():		Line 58:		DEBUG		Get Result: 200 OK
+2019-05-06 17:28:18,459		root		GetOrthancList():		Line 729:		INFO		Obtained list of all StudiesUID SHA from Orthanc
+2019-05-06 17:28:18,459		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'GetOrthancList' after transition.
+2019-05-06 17:28:18,459		root		ProcessOrthancList():		Line 747:		INFO		Detected new data on the Orthanc. Commence processing. 
+2019-05-06 17:28:18,459		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'ProcessOrthancList' after transition.
+2019-05-06 17:28:18,459		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:18,459		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_determined_orthanc_new_data_status to state ST_waiting...
+2019-05-06 17:28:18,459		transitions.core		execute():		Line 256:		DEBUG		Transition condition failed: has_new_data() does not return False. Transition halted.
+2019-05-06 17:28:18,459		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_determined_orthanc_new_data_status to state ST_detected_new_data...
+2019-05-06 17:28:18,459		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_determined_orthanc_new_data_status. Processing callbacks...
+2019-05-06 17:28:18,459		transitions.core		exit():		Line 128:		INFO		Exited state ST_determined_orthanc_new_data_status
+2019-05-06 17:28:18,459		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_detected_new_data. Processing callbacks...
+2019-05-06 17:28:18,459		transitions.core		enter():		Line 121:		INFO		Entered state ST_detected_new_data
+2019-05-06 17:28:18,460		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:18,460		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_detected_new_data to state ST_determined_orthanc_studyUUID_status...
+2019-05-06 17:28:18,461		root		UpdateLocalDBStatus():		Line 1159:		DEBUG		LocalDB system status OKAY!
+2019-05-06 17:28:18,461		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateLocalDBStatus' before conditions.
+2019-05-06 17:28:18,461		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_detected_new_data. Processing callbacks...
+2019-05-06 17:28:18,461		transitions.core		exit():		Line 128:		INFO		Exited state ST_detected_new_data
+2019-05-06 17:28:18,461		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_determined_orthanc_studyUUID_status. Processing callbacks...
+2019-05-06 17:28:18,461		transitions.core		enter():		Line 121:		INFO		Entered state ST_determined_orthanc_studyUUID_status
+2019-05-06 17:28:18,462		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'CheckLocalDBStudyUID' after transition.
+2019-05-06 17:28:18,462		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:18,463		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_determined_orthanc_studyUUID_status to state ST_obtained_new_data...
+2019-05-06 17:28:18,466		root		getOrthanc():		Line 54:		DEBUG		Getting Orthanc endpoint: http://10.128.70.190:80/patients/
+2019-05-06 17:28:18,467		urllib3.connectionpool		_new_conn():		Line 205:		DEBUG		Starting new HTTP connection (1): 10.128.70.190:80
+2019-05-06 17:28:18,469		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		http://10.128.70.190:80 "GET /patients/ HTTP/1.1" 200 69
+2019-05-06 17:28:18,470		root		getOrthanc():		Line 58:		DEBUG		Get Result: 200 OK
+2019-05-06 17:28:18,470		root		UpdateOrthancStatus():		Line 1169:		DEBUG		Orthanc system status OKAY!
+2019-05-06 17:28:18,470		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateOrthancStatus' before conditions.
+2019-05-06 17:28:18,470		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_determined_orthanc_studyUUID_status. Processing callbacks...
+2019-05-06 17:28:18,470		transitions.core		exit():		Line 128:		INFO		Exited state ST_determined_orthanc_studyUUID_status
+2019-05-06 17:28:18,470		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_obtained_new_data. Processing callbacks...
+2019-05-06 17:28:18,470		transitions.core		enter():		Line 121:		INFO		Entered state ST_obtained_new_data
+2019-05-06 17:28:18,470		root		DownloadNewData():		Line 785:		INFO		Transition: Downloading new data now!
+2019-05-06 17:28:18,470		root		getPatientZipOrthanc():		Line 100:		DEBUG		Downloading Orthanc endpoint: http://10.128.70.190:80//studies/7360279d-cdd92fc5-7069c627-b5073972-b8581d5e/archive
+2019-05-06 17:28:18,473		urllib3.connectionpool		_new_conn():		Line 205:		DEBUG		Starting new HTTP connection (1): 10.128.70.190:80
+2019-05-06 17:28:18,637		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		http://10.128.70.190:80 "GET //studies/7360279d-cdd92fc5-7069c627-b5073972-b8581d5e/archive HTTP/1.1" 200 955417
+2019-05-06 17:28:18,675		root		getPatientZipOrthanc():		Line 122:		DEBUG		200OK
+2019-05-06 17:28:18,675		root		getPatientZipOrthanc():		Line 123:		INFO		Download to /opt/DICOMTransit/data_archives/2019-05-06T17_28_18.638756.zip is fully complete!
+2019-05-06 17:28:18,676		root		get_subject_zip():		Line 101:		INFO		Subject ZIP downloaded.
+2019-05-06 17:28:18,676		root		DownloadNewData():		Line 798:		INFO		Successfully downloaded the data.
+2019-05-06 17:28:18,676		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'DownloadNewData' after transition.
+2019-05-06 17:28:18,676		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:18,676		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_obtained_new_data to state ST_unpacked_new_data...
+2019-05-06 17:28:18,676		root		UpdateFileStatus():		Line 1183:		DEBUG		File(s) status APPEAR OKAY!
+2019-05-06 17:28:18,676		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateFileStatus' before conditions.
+2019-05-06 17:28:18,676		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_obtained_new_data. Processing callbacks...
+2019-05-06 17:28:18,676		transitions.core		exit():		Line 128:		INFO		Exited state ST_obtained_new_data
+2019-05-06 17:28:18,677		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_unpacked_new_data. Processing callbacks...
+2019-05-06 17:28:18,677		transitions.core		enter():		Line 121:		INFO		Entered state ST_unpacked_new_data
+2019-05-06 17:28:18,677		root		unpack_subject_zip():		Line 116:		DEBUG		Subject ZIP temporary location created at:/tmp/2019-05-06T17_28_18.6772144va_oatj
+2019-05-06 17:28:18,677		root		unpack_subject_zip():		Line 117:		DEBUG		Unzipping to that location
+2019-05-06 17:28:18,693		root		unpack_subject_zip():		Line 121:		DEBUG		Unzip completed. 
+2019-05-06 17:28:18,693		root		unpack_subject_zip():		Line 124:		DEBUG		Removing zip archived.
+2019-05-06 17:28:18,693		root		__init__():		Line 20:		INFO		Creating subject specific DICOM package class
+2019-05-06 17:28:18,694		root		traversal():		Line 63:		INFO		Traversing individual dicom file for validation information.
+2019-05-06 17:28:18,730		root		__init__():		Line 55:		INFO		Commencing subject specific checks. 
+2019-05-06 17:28:18,734		root		__init__():		Line 73:		INFO		Subject specific scan date pass check.
+2019-05-06 17:28:18,737		root		__init__():		Line 80:		INFO		Subject specific birthdate pass check.
+2019-05-06 17:28:18,740		root		__init__():		Line 87:		INFO		Subject specific sex pass check.
+2019-05-06 17:28:18,740		root		__init__():		Line 94:		INFO		Subject specific gender pass check.
+2019-05-06 17:28:18,740		root		__init__():		Line 99:		DEBUG		DICOMPackage successfully initialized based on /tmp/2019-05-06T17_28_18.6772144va_oatj
+2019-05-06 17:28:18,740		root		UnpackNewData():		Line 846:		INFO		Successfully unpacked the data downloaded.
+2019-05-06 17:28:18,741		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'UnpackNewData' after transition.
+2019-05-06 17:28:18,741		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:18,741		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_unpacked_new_data to state ST_obtained_MRN...
+2019-05-06 17:28:18,741		root		UpdateFileStatus():		Line 1183:		DEBUG		File(s) status APPEAR OKAY!
+2019-05-06 17:28:18,741		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateFileStatus' before conditions.
+2019-05-06 17:28:18,741		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_unpacked_new_data. Processing callbacks...
+2019-05-06 17:28:18,741		transitions.core		exit():		Line 128:		INFO		Exited state ST_unpacked_new_data
+2019-05-06 17:28:18,741		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_obtained_MRN. Processing callbacks...
+2019-05-06 17:28:18,741		transitions.core		enter():		Line 121:		INFO		Entered state ST_obtained_MRN
+2019-05-06 17:28:18,744		root		CheckMRN():		Line 863:		INFO		Subject specific MRN pass check.
+2019-05-06 17:28:18,744		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'CheckMRN' after transition.
+2019-05-06 17:28:18,745		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:18,745		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_obtained_MRN to state ST_determined_MRN_status...
+2019-05-06 17:28:18,746		root		UpdateLocalDBStatus():		Line 1159:		DEBUG		LocalDB system status OKAY!
+2019-05-06 17:28:18,746		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateLocalDBStatus' before conditions.
+2019-05-06 17:28:18,746		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_obtained_MRN. Processing callbacks...
+2019-05-06 17:28:18,746		transitions.core		exit():		Line 128:		INFO		Exited state ST_obtained_MRN
+2019-05-06 17:28:18,746		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_determined_MRN_status. Processing callbacks...
+2019-05-06 17:28:18,746		transitions.core		enter():		Line 121:		INFO		Entered state ST_determined_MRN_status
+2019-05-06 17:28:18,748		root		check_value():		Line 40:		DEBUG		Checking key value: 3223793 in MRN in SQLite database.
+2019-05-06 17:28:18,748		root		CheckLocalDBMRN():		Line 871:		INFO		Successful checking local database about the MRN
+2019-05-06 17:28:18,748		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'CheckLocalDBMRN' after transition.
+2019-05-06 17:28:18,748		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:18,748		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_determined_MRN_status to state ST_processing_old_patient...
+2019-05-06 17:28:18,748		transitions.core		execute():		Line 256:		DEBUG		Transition condition failed: found_MRN() does not return True. Transition halted.
+2019-05-06 17:28:18,748		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_determined_MRN_status to state ST_processing_new_patient...
+2019-05-06 17:28:18,748		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_determined_MRN_status. Processing callbacks...
+2019-05-06 17:28:18,748		transitions.core		exit():		Line 128:		INFO		Exited state ST_determined_MRN_status
+2019-05-06 17:28:18,748		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_processing_new_patient. Processing callbacks...
+2019-05-06 17:28:18,748		transitions.core		enter():		Line 121:		INFO		Entered state ST_processing_new_patient
+2019-05-06 17:28:18,748		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:18,748		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_processing_new_patient to state ST_obtained_new_subject_gender...
+2019-05-06 17:28:18,749		root		UpdateFileStatus():		Line 1183:		DEBUG		File(s) status APPEAR OKAY!
+2019-05-06 17:28:18,749		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateFileStatus' before conditions.
+2019-05-06 17:28:18,749		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_processing_new_patient. Processing callbacks...
+2019-05-06 17:28:18,749		transitions.core		exit():		Line 128:		INFO		Exited state ST_processing_new_patient
+2019-05-06 17:28:18,749		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_obtained_new_subject_gender. Processing callbacks...
+2019-05-06 17:28:18,749		transitions.core		enter():		Line 121:		INFO		Entered state ST_obtained_new_subject_gender
+2019-05-06 17:28:18,752		root		RetrieveGender():		Line 986:		INFO		Subject specific sex pass check.
+2019-05-06 17:28:18,752		root		RetrieveGender():		Line 990:		INFO		Subject specific gender pass check.
+2019-05-06 17:28:18,752		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'RetrieveGender' after transition.
+2019-05-06 17:28:18,752		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:18,752		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_obtained_new_subject_gender to state ST_obtained_new_subject_birthday...
+2019-05-06 17:28:18,752		root		UpdateFileStatus():		Line 1183:		DEBUG		File(s) status APPEAR OKAY!
+2019-05-06 17:28:18,752		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateFileStatus' before conditions.
+2019-05-06 17:28:18,752		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_obtained_new_subject_gender. Processing callbacks...
+2019-05-06 17:28:18,752		transitions.core		exit():		Line 128:		INFO		Exited state ST_obtained_new_subject_gender
+2019-05-06 17:28:18,752		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_obtained_new_subject_birthday. Processing callbacks...
+2019-05-06 17:28:18,752		transitions.core		enter():		Line 121:		INFO		Entered state ST_obtained_new_subject_birthday
+2019-05-06 17:28:18,756		root		RetrieveBirthday():		Line 995:		INFO		Subject specific birthdate pass check.
+2019-05-06 17:28:18,756		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'RetrieveBirthday' after transition.
+2019-05-06 17:28:18,756		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:18,756		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_obtained_new_subject_birthday to state ST_created_remote_subject...
+2019-05-06 17:28:19,673		root		UpdateNetworkStatus():		Line 1149:		DEBUG		General Network system status OKAY!
+2019-05-06 17:28:19,682		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:19,886		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "POST /api/v0.0.3-dev/login HTTP/1.1" 200 260
+2019-05-06 17:28:19,889		root		login():		Line 34:		DEBUG		200OK
+2019-05-06 17:28:19,889		root		UpdateLORISStatus():		Line 1137:		DEBUG		LORIS production system status OKAY!
+2019-05-06 17:28:19,889		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateLORISStatus' before conditions.
+2019-05-06 17:28:19,889		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_obtained_new_subject_birthday. Processing callbacks...
+2019-05-06 17:28:19,889		transitions.core		exit():		Line 128:		INFO		Exited state ST_obtained_new_subject_birthday
+2019-05-06 17:28:19,890		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_created_remote_subject. Processing callbacks...
+2019-05-06 17:28:19,890		transitions.core		enter():		Line 121:		INFO		Entered state ST_created_remote_subject
+2019-05-06 17:28:19,895		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:20,097		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "POST /api/v0.0.3-dev/login HTTP/1.1" 200 260
+2019-05-06 17:28:20,098		root		login():		Line 34:		DEBUG		200OK
+2019-05-06 17:28:20,099		root		createCandidate():		Line 89:		DEBUG		Creating CNBP Candidates belong to project: loris
+2019-05-06 17:28:20,100		root		postCNBP():		Line 72:		DEBUG		Posting data to: candidates/
+2019-05-06 17:28:20,101		root		postCNBP():		Line 73:		DEBUG		Data: {"Candidate": {"Project": "loris", "EDC": "2018-12-18", "DoB": "2018-12-18", "Gender": "Male", "Site": "CHU_STJ"}}
+2019-05-06 17:28:20,101		root		postCNBP():		Line 74:		DEBUG		!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!
+2019-05-06 17:28:20,103		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:20,345		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "POST /api/v0.0.3-dev/candidates/ HTTP/1.1" 201 None
+2019-05-06 17:28:20,346		root		postCNBP():		Line 83:		DEBUG		Post Result: 201 Created
+2019-05-06 17:28:20,347		root		checkDCCIDExist():		Line 178:		DEBUG		Checking if DCCID exist: 229523
+2019-05-06 17:28:20,347		root		getCNBP():		Line 49:		DEBUG		Getting LORIS endpoint: candidates/229523 at
+2019-05-06 17:28:20,348		root		getCNBP():		Line 52:		DEBUG		https://db.cnbp.ca/api/v0.0.3-dev/candidates/229523
+2019-05-06 17:28:20,350		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:20,379		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "GET /api/v0.0.3-dev/candidates/229523 HTTP/1.1" 200 None
+2019-05-06 17:28:20,380		root		getCNBP():		Line 58:		DEBUG		Get Result: 200 OK
+2019-05-06 17:28:20,381		root		checkDCCIDExist():		Line 178:		DEBUG		Checking if DCCID exist: 229523
+2019-05-06 17:28:20,381		root		getCNBP():		Line 49:		DEBUG		Getting LORIS endpoint: candidates/229523 at
+2019-05-06 17:28:20,382		root		getCNBP():		Line 52:		DEBUG		https://db.cnbp.ca/api/v0.0.3-dev/candidates/229523
+2019-05-06 17:28:20,384		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:20,429		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "GET /api/v0.0.3-dev/candidates/229523 HTTP/1.1" 200 None
+2019-05-06 17:28:20,430		root		getCNBP():		Line 58:		DEBUG		Get Result: 200 OK
+2019-05-06 17:28:20,431		root		getCNBP():		Line 49:		DEBUG		Getting LORIS endpoint: candidates/229523 at
+2019-05-06 17:28:20,432		root		getCNBP():		Line 52:		DEBUG		https://db.cnbp.ca/api/v0.0.3-dev/candidates/229523
+2019-05-06 17:28:20,434		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:20,468		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "GET /api/v0.0.3-dev/candidates/229523 HTTP/1.1" 200 None
+2019-05-06 17:28:20,469		root		getCNBP():		Line 58:		DEBUG		Get Result: 200 OK
+2019-05-06 17:28:20,473		root		putCNBP():		Line 97:		DEBUG		Putting data to: /candidates/229523/V1
+2019-05-06 17:28:20,474		root		putCNBP():		Line 98:		DEBUG		Data: {"Meta": {"CandID": 229523, "Visit": "V1", "Site": "CHU_STJ", "Battery": "CNBP"}}
+2019-05-06 17:28:20,474		root		putCNBP():		Line 99:		DEBUG		!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!
+2019-05-06 17:28:20,478		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:20,666		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "PUT /api/v0.0.3-dev//candidates/229523/V1 HTTP/1.1" 201 None
+2019-05-06 17:28:20,667		root		putCNBP():		Line 109:		DEBUG		Put Result: 201 Created
+2019-05-06 17:28:20,669		root		LORISCreateSubject():		Line 1013:		INFO		Creating subject remotely on LORIS is successful.
+2019-05-06 17:28:20,669		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'LORISCreateSubject' after transition.
+2019-05-06 17:28:20,670		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:20,670		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_created_remote_subject to state ST_harmonized_timepoints...
+2019-05-06 17:28:20,673		root		UpdateLocalDBStatus():		Line 1159:		DEBUG		LocalDB system status OKAY!
+2019-05-06 17:28:20,673		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateLocalDBStatus' before conditions.
+2019-05-06 17:28:20,673		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_created_remote_subject. Processing callbacks...
+2019-05-06 17:28:20,673		transitions.core		exit():		Line 128:		INFO		Exited state ST_created_remote_subject
+2019-05-06 17:28:20,673		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_harmonized_timepoints. Processing callbacks...
+2019-05-06 17:28:20,674		transitions.core		enter():		Line 121:		INFO		Entered state ST_harmonized_timepoints
+2019-05-06 17:28:20,676		root		create_entry():		Line 133:		INFO		Creating new record in SQLite database.
+2019-05-06 17:28:20,691		root		update_entry():		Line 175:		INFO		Update records in SQLite database.
+2019-05-06 17:28:20,702		root		update_entry():		Line 175:		INFO		Update records in SQLite database.
+2019-05-06 17:28:20,714		root		update_entry():		Line 175:		INFO		Update records in SQLite database.
+2019-05-06 17:28:20,727		root		update_entry():		Line 175:		INFO		Update records in SQLite database.
+2019-05-06 17:28:20,740		root		update_entry():		Line 175:		INFO		Update records in SQLite database.
+2019-05-06 17:28:20,749		root		LocalDBCreateSubject():		Line 1024:		INFO		Creating subject locally is successful.
+2019-05-06 17:28:20,750		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'LocalDBCreateSubject' after transition.
+2019-05-06 17:28:20,750		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:20,750		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_harmonized_timepoints to state ST_files_anonymized...
+2019-05-06 17:28:20,750		root		UpdateFileStatus():		Line 1183:		DEBUG		File(s) status APPEAR OKAY!
+2019-05-06 17:28:20,751		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateFileStatus' before conditions.
+2019-05-06 17:28:20,751		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_harmonized_timepoints. Processing callbacks...
+2019-05-06 17:28:20,751		transitions.core		exit():		Line 128:		INFO		Exited state ST_harmonized_timepoints
+2019-05-06 17:28:20,751		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_files_anonymized. Processing callbacks...
+2019-05-06 17:28:20,751		transitions.core		enter():		Line 121:		INFO		Entered state ST_files_anonymized
+2019-05-06 17:28:20,751		root		AnonymizeFiles():		Line 1029:		INFO		Anonymizing all 12 files:
+2019-05-06 17:28:20,881		root		filelist():		Line 47:		DEBUG		Total exception encountered during anonymization: 0
+2019-05-06 17:28:20,881		root		AnonymizeFiles():		Line 1032:		INFO		Successfully anonymized files.
+2019-05-06 17:28:20,881		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'AnonymizeFiles' after transition.
+2019-05-06 17:28:20,881		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:20,881		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_files_anonymized to state ST_files_zipped...
+2019-05-06 17:28:20,921		root		DoubleCheckAnonymization():		Line 1044:		INFO		Double checking anonymization is successful.
+2019-05-06 17:28:20,921		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'DoubleCheckAnonymization' before conditions.
+2019-05-06 17:28:20,922		root		UpdateFileStatus():		Line 1183:		DEBUG		File(s) status APPEAR OKAY!
+2019-05-06 17:28:20,922		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateFileStatus' before conditions.
+2019-05-06 17:28:20,922		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_files_anonymized. Processing callbacks...
+2019-05-06 17:28:20,922		transitions.core		exit():		Line 128:		INFO		Exited state ST_files_anonymized
+2019-05-06 17:28:20,922		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_files_zipped. Processing callbacks...
+2019-05-06 17:28:20,922		transitions.core		enter():		Line 121:		INFO		Entered state ST_files_zipped
+2019-05-06 17:28:21,043		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'ZipFiles' after transition.
+2019-05-06 17:28:21,043		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:21,043		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_files_zipped to state ST_zip_uploaded...
+2019-05-06 17:28:21,991		root		UpdateNetworkStatus():		Line 1149:		DEBUG		General Network system status OKAY!
+2019-05-06 17:28:21,999		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:22,214		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "POST /api/v0.0.3-dev/login HTTP/1.1" 200 260
+2019-05-06 17:28:22,216		root		login():		Line 34:		DEBUG		200OK
+2019-05-06 17:28:22,216		root		UpdateLORISStatus():		Line 1137:		DEBUG		LORIS production system status OKAY!
+2019-05-06 17:28:22,216		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateLORISStatus' before conditions.
+2019-05-06 17:28:22,216		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_files_zipped. Processing callbacks...
+2019-05-06 17:28:22,216		transitions.core		exit():		Line 128:		INFO		Exited state ST_files_zipped
+2019-05-06 17:28:22,216		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_zip_uploaded. Processing callbacks...
+2019-05-06 17:28:22,216		transitions.core		enter():		Line 121:		INFO		Entered state ST_zip_uploaded
+2019-05-06 17:28:22,222		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:22,490		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "POST /api/v0.0.3-dev/login HTTP/1.1" 200 260
+2019-05-06 17:28:22,493		root		login():		Line 34:		DEBUG		200OK
+2019-05-06 17:28:22,493		root		putCNBPDICOM():		Line 123:		DEBUG		Uploading Imaging data to: /candidates/229523/V1/dicoms/VXS0000057_229523_V1.zip
+2019-05-06 17:28:22,497		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:22,723		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "PUT /api/v0.0.3-dev//candidates/229523/V1/dicoms/VXS0000057_229523_V1.zip HTTP/1.1" 500 None
+2019-05-06 17:28:22,724		root		putCNBPDICOM():		Line 139:		DEBUG		Put Result: 500 Internal Server Error
+2019-05-06 17:28:22,725		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'UploadZip' after transition.
+2019-05-06 17:28:22,725		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'CheckUploadSuccess' after transition.
+2019-05-06 17:28:22,725		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:22,725		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_zip_uploaded to state ST_zip_inserted...
+2019-05-06 17:28:23,609		root		UpdateNetworkStatus():		Line 1149:		DEBUG		General Network system status OKAY!
+2019-05-06 17:28:23,618		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:23,821		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "POST /api/v0.0.3-dev/login HTTP/1.1" 200 260
+2019-05-06 17:28:23,824		root		login():		Line 34:		DEBUG		200OK
+2019-05-06 17:28:23,825		root		UpdateLORISStatus():		Line 1137:		DEBUG		LORIS production system status OKAY!
+2019-05-06 17:28:23,825		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateLORISStatus' before conditions.
+2019-05-06 17:28:23,825		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_zip_uploaded. Processing callbacks...
+2019-05-06 17:28:23,825		transitions.core		exit():		Line 128:		INFO		Exited state ST_zip_uploaded
+2019-05-06 17:28:23,825		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_zip_inserted. Processing callbacks...
+2019-05-06 17:28:23,826		transitions.core		enter():		Line 121:		INFO		Entered state ST_zip_inserted
+2019-05-06 17:28:23,834		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:24,036		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "POST /api/v0.0.3-dev/login HTTP/1.1" 200 260
+2019-05-06 17:28:24,039		root		login():		Line 34:		DEBUG		200OK
+2019-05-06 17:28:24,039		root		postCNBP():		Line 72:		DEBUG		Posting data to: candidates/229523/V1/dicoms/VXS0000057_229523_V1.zip
+2019-05-06 17:28:24,039		root		postCNBP():		Line 73:		DEBUG		Data: {"process_type": "mri_upload", "Filename": "VXS0000057_229523_V1.zip", "mri_upload_id": null}
+2019-05-06 17:28:24,039		root		postCNBP():		Line 74:		DEBUG		!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!
+2019-05-06 17:28:24,042		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): db.cnbp.ca:443
+2019-05-06 17:28:24,070		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://db.cnbp.ca:443 "POST /api/v0.0.3-dev/candidates/229523/V1/dicoms/VXS0000057_229523_V1.zip HTTP/1.1" 400 None
+2019-05-06 17:28:24,071		root		postCNBP():		Line 83:		DEBUG		Post Result: 400 Bad Request
+2019-05-06 17:28:24,073		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'InsertSubjectData' after transition.
+2019-05-06 17:28:24,073		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'CheckInsertionSuccess' after transition.
+2019-05-06 17:28:24,073		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:24,074		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_zip_inserted to state ST_insertion_recorded...
+2019-05-06 17:28:24,076		root		UpdateLocalDBStatus():		Line 1159:		DEBUG		LocalDB system status OKAY!
+2019-05-06 17:28:24,076		transitions.core		execute():		Line 251:		DEBUG		Executed callback 'UpdateLocalDBStatus' before conditions.
+2019-05-06 17:28:24,076		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_zip_inserted. Processing callbacks...
+2019-05-06 17:28:24,076		transitions.core		exit():		Line 128:		INFO		Exited state ST_zip_inserted
+2019-05-06 17:28:24,076		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_insertion_recorded. Processing callbacks...
+2019-05-06 17:28:24,076		transitions.core		enter():		Line 121:		INFO		Entered state ST_insertion_recorded
+2019-05-06 17:28:24,079		root		check_value():		Line 40:		DEBUG		Checking key value: 3223793 in MRN in SQLite database.
+2019-05-06 17:28:24,080		root		get_StudyUIDs():		Line 161:		WARNING		No existing StudyUID Data information found.
+2019-05-06 17:28:24,080		root		update_entry():		Line 175:		INFO		Update records in SQLite database.
+2019-05-06 17:28:24,091		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'RecordInsertion' after transition.
+2019-05-06 17:28:24,091		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:24,091		transitions.core		execute():		Line 246:		DEBUG		Initiating transition from state ST_insertion_recorded to state ST_waiting...
+2019-05-06 17:28:24,092		transitions.core		exit():		Line 125:		DEBUG		Exiting state ST_insertion_recorded. Processing callbacks...
+2019-05-06 17:28:24,092		transitions.core		exit():		Line 128:		INFO		Exited state ST_insertion_recorded
+2019-05-06 17:28:24,092		transitions.core		enter():		Line 118:		DEBUG		Entering state ST_waiting. Processing callbacks...
+2019-05-06 17:28:24,092		transitions.core		enter():		Line 121:		INFO		Entered state ST_waiting
+2019-05-06 17:28:24,092		root		DeleteSubject():		Line 818:		DEBUG		Mock deleting the subject currently
+2019-05-06 17:28:24,092		transitions.core		execute():		Line 267:		DEBUG		Executed callback 'DeleteSubject' after transition.
+2019-05-06 17:28:24,092		transitions.core		_process():		Line 418:		DEBUG		Executed machine finalize callback 'record_last_state'.
+2019-05-06 17:28:24,092		root		<module>():		Line 1385:		INFO		One pass through insertion of ALL orthanc data is now complete. Sleeping 60m before checking next cycle. Current time: 2019-05-06T17_28_24.092539
+2019-05-06 17:42:55,714		urllib3.connectionpool		_new_conn():		Line 813:		DEBUG		Starting new HTTPS connection (1): sentry.io:443
+2019-05-06 17:42:55,950		urllib3.connectionpool		_make_request():		Line 393:		DEBUG		https://sentry.io:443 "POST /api/1385114/store/ HTTP/1.1" 200 41

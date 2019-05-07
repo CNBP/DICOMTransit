@@ -9,9 +9,14 @@ from db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-""" The Register View """
+
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+    """
+    The Register View
+    :return:
+    """
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -40,9 +45,14 @@ def register():
     return render_template('auth/register.html')
 
 
-""" The Login View """
+
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+    """
+    The Login View
+    :return:
+    """
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -68,9 +78,13 @@ def login():
     return render_template('auth/login.html')
 
 
-""" Check if a user id is stored in the session and get that user’s data """
+
 @bp.before_app_request
 def load_logged_in_user():
+    """
+    Check if a user id is stored in the session and get that user’s data
+    :return:
+    """
     user_id = session.get('user_id')
 
     if user_id is None:
@@ -81,16 +95,24 @@ def load_logged_in_user():
         ).fetchone()
 
 
-""" Handle Logout """
+
 @bp.route('/logout')
 def logout():
+    """
+    Handle Logout
+    :return:
+    """
     session.clear()
     return redirect(url_for('index'))
 
 
-""" Require authentication in other views """
+
 def login_required(view):
+    """
+    Require authentication in other views
+    """
     @functools.wraps(view)
+
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for('auth.login'))

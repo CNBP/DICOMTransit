@@ -258,7 +258,7 @@ class DICOMTransitImport(object):
         ##################
         # Orthanc
         ##################
-        self.credential = orthanc.API.get_dev_orthanc_credentials()
+        self.credential = orthanc.API.get_prod_orthanc_credentials()
         self.orthanc_has_new_data = False
         # the list of all subjet UUIDs returned by Orthanc.
         self.orthanc_list_all_StudiesUIDs: list = []
@@ -666,7 +666,7 @@ class DICOMTransitImport(object):
             after=self.RetryPreviousActions.__name__,
         )
 
-        # At the end, if all else fails, log, ask for help. Ready for next run.
+        # At the end, if all else fails, logs, ask for help. Ready for next run.
         # Meatbag state
         machine.add_transition(
             TR_DetectedOrthancError,

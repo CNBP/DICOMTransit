@@ -44,7 +44,7 @@ try:
         pid = subprocess.Popen(['flask', "run"], creationflags=DETACHED_PROCESS).pid #todo: wrap this into a starter function to run at will.
     else:
 
-        # linus might need
+        # linux might need
         #   sudo lsof -t -i tcp:5000 | xargs kill -9
         # to kill
 

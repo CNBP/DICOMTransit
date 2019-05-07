@@ -8,7 +8,7 @@ from db import get_db
 import os, sys
 
 
-
+"""
 sys.path.append(
     os.path.dirname(
         os.path.dirname(
@@ -18,7 +18,7 @@ sys.path.append(
         )
     )
 )
-
+"""
 
 from LocalDB.schema import CNBP_blueprint
 
@@ -26,10 +26,16 @@ envvars = CNBP_blueprint.dotenv_variables
 
 bp = Blueprint('configure', __name__)
 
-""" Show all the configurations, most recent order first """
+
 @bp.route('/')
 @login_required
 def index():
+    """
+    Show all the configurations, most recent order first
+    :return:
+    """
+
+
     db = get_db()
     configurations = db.execute(
         'SELECT p.*, u.username'
@@ -43,10 +49,14 @@ def index():
                            configurations=configurations,password_keys=password_keys)
 
 
-""" The Create View """
+
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
+    """
+    The Create View
+    """
+
     if request.method == 'POST':
         error = None
 
@@ -86,24 +96,27 @@ def create():
     return render_template('configure/create.html',configurations=configurations)
 
 
-""" The Update View """
+
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
+    """
+    The Update View
+    """
     configuration = get_configuration(id)
 
     if request.method == 'POST':
         error = None
 
         # Check form data and get result
-        d =  check_form_inputs(request.form)
+        input_data = check_form_inputs(request.form)
 
-        if d is None:
-            return "Could not update data"
+        if input_data is None:
+            return "Could not update data. Input data is NONE! Check how it was obtained etc. "
         else:
             # Create a list of Tuples because we want to use executemany
-            d.append(id)
-            data = [tuple(d)]
+            input_data.append(id)
+            data = [tuple(input_data)]
             # Get connection to the database and get a cursor
             db = get_db()
             c = db.cursor()
@@ -137,10 +150,16 @@ def update(id):
                            configurations=configurations,password_keys=password_keys)
 
 
-""" Delete View """
+
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
+    """
+    Delete View
+    :param id:
+    :return:
+    """
+
     get_configuration(id)
     db = get_db()
     db.execute('DELETE FROM configuration WHERE id = ?', (id,))
@@ -148,8 +167,14 @@ def delete(id):
     return redirect(url_for('configure.index'))
 
 
-""" Check the form inputs """
+
 def check_form_inputs(form):
+    """
+    Check the form inputs
+    :param form:
+    :return:
+    """
+
     # Create an empty list
     data = []
     error = ''
