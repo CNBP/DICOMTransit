@@ -24,7 +24,7 @@ if __name__ == "__main__":
         try:
             subject_url = f"{credential.url}patients/{subject }/archive"  # it must contain patients/ and archive in the path name
 
-            zip_file = orthanc.API.get_subject_zip(subject_url, credential)
+            zip_file = orthanc.API.get_StudyUID_zip(subject_url, credential)
             dicom_folder = orthanc.API.unpack_subject_zip(zip_file)
 
             # Convert it to a DICOMPackage, it checks for a bunch of validity, update a bunch of its meta information regarding the entire archive

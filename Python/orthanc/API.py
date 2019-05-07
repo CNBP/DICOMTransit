@@ -82,15 +82,15 @@ def get_all_subject_StudyUIDs(credential: orthanc_credential) -> List[List[str]]
     return list_studies
 
 
-def get_subject_zip(orthanc_URL_with_UUID: str, credential: orthanc_credential) -> str:
+def get_StudyUID_zip(orthanc_URL_with_StudyUID: str, credential: orthanc_credential) -> str:
     """
     Obtain the actual zip files of the subject based on the UUID given and unzip them to a temporary folder, and return it.
-    :param orthanc_URL_with_UUID:
+    :param orthanc_URL_with_StudyUID:
     :return: the temporary folder object which contain the reference to the folder in the .name attribute
     """
 
-    status, local_zip_file_path = orthanc_query.getPatientZipOrthanc(
-        orthanc_URL_with_UUID, credential
+    status, local_zip_file_path = orthanc_query.getZipFromOrthanc(
+        orthanc_URL_with_StudyUID, credential
     )
     if not (LORIS_helper.is_response_success(status, 200)):
         raise ConnectionError("Orthanc is not reachable!")
@@ -125,14 +125,14 @@ def unpack_subject_zip(zip_file: str) -> tempfile.TemporaryDirectory:
     return folder
 
 
-def delete_study(subjectUUID: str) -> bool:
+def delete_study(StudyUID: str) -> bool:
     """
     API to delete subject from the production Orthanc instance.
-    :param subjectUUID:
+    :param StudyUID:
     :return: successful deletion status.
     """
     credential = get_prod_orthanc_credentials()
     reseponse_code, _ = orthanc_query.deleteOrthanc(
-        f"studies/{subjectUUID}", credential
+        f"studies/{StudyUID}", credential
     )
     return LORIS_helper.is_response_success(reseponse_code, 200)

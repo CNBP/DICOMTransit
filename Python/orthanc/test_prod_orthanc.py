@@ -33,7 +33,7 @@ class UT_ProdOrthanc(unittest.TestCase):
         for subject in list_StudyUIDs:
             patient_url = urllib.parse.urljoin(patients_url, f"{subject}/")
             patient_archive_url = urllib.parse.urljoin(patient_url, "archive")
-            orthanc.API.get_subject_zip(patient_archive_url, self.credential)
+            orthanc.API.get_StudyUID_zip(patient_archive_url, self.credential)
 
 
 if __name__ == "__main__":

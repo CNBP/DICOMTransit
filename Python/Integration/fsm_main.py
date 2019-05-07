@@ -108,7 +108,7 @@ def get_DICOM_file(signal=None, sender=None, list_subjects=None):
 
         try:
             # Get the temporary folder object reference
-            dicom_folder = orthanc.API.get_subject_zip(subject)
+            dicom_folder = orthanc.API.get_StudyUID_zip(subject)
 
             # Package it using the DICOMPackage class
             DICOM_package = DICOMPackage(dicom_folder)

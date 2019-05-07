@@ -105,7 +105,7 @@ TR_DetectedNetworkError = "TR_DetectedNetworkError"
 # Exists purely to ensure IDE can help mis spellings vs strings, which IDE DO NOT CHECK
 ST_waiting = "ST_waiting"
 ST_determined_orthanc_new_data_status = "ST_determined_orthanc_new_data_status"
-ST_determined_orthanc_studyUUID_status = "ST_determined_orthanc_studyUUID_status"
+ST_determined_orthanc_StudyUID_status = "ST_determined_orthanc_StudyUID_status"
 ST_detected_new_data = "ST_detected_new_data"
 ST_confirmed_new_data = "ST_confirmed_new_data"
 ST_obtained_new_data = "ST_obtained_new_data"
@@ -155,7 +155,7 @@ class DICOMTransitImport(object):
         ST_waiting,
         # Orthanc related:
         ST_determined_orthanc_new_data_status,
-        ST_determined_orthanc_studyUUID_status,
+        ST_determined_orthanc_StudyUID_status,
         # File related:
         ST_detected_new_data,
         ST_obtained_new_data,
@@ -312,7 +312,7 @@ class DICOMTransitImport(object):
         machine.add_transition(
             TR_CheckLocalDBUUID,
             ST_detected_new_data,
-            ST_determined_orthanc_studyUUID_status,
+            ST_determined_orthanc_StudyUID_status,
             prepare=self.UpdateLocalDBStatus.__name__,
             unless=self.is_LocalDB_Unavailable.__name__,
             after=self.CheckLocalDBStudyUID.__name__,
@@ -321,22 +321,22 @@ class DICOMTransitImport(object):
         # Paired branching transitions to see if to proceed with new data analyses or go back waiting.
         machine.add_transition(
             TR_ProcessNextSubject,
-            ST_determined_orthanc_studyUUID_status,
+            ST_determined_orthanc_StudyUID_status,
             ST_determined_orthanc_new_data_status,
             prepare=self.UpdateOrthancStatus.__name__,
-            conditions=self.has_matched_orthancUUID.__name__,
+            conditions=self.has_matched_orthanc_StudyUID.__name__,
             unless=self.is_Orthanc_Unavailable.__name__,
             after=[self.DeleteSubject.__name__, self.ProcessOrthancList.__name__],
         )
 
         machine.add_transition(
             TR_DownloadNewData,
-            ST_determined_orthanc_studyUUID_status,
+            ST_determined_orthanc_StudyUID_status,
             ST_obtained_new_data,
             prepare=self.UpdateOrthancStatus.__name__,
             unless=[
                 self.is_Orthanc_Unavailable.__name__,
-                self.has_matched_orthancUUID.__name__,
+                self.has_matched_orthanc_StudyUID.__name__,
             ],
             after=self.DownloadNewData.__name__,
         )
@@ -790,7 +790,7 @@ class DICOMTransitImport(object):
             f"{self.credential.url}/studies/{subject}/archive"
         )  # it must contain patients/ and archive in the path name
 
-        self.DICOM_zip = orthanc.API.get_subject_zip(subject_url, self.credential)
+        self.DICOM_zip = orthanc.API.get_StudyUID_zip(subject_url, self.credential)
 
         # Update the self.files to be scrutinized
         self.files.clear()
@@ -1096,7 +1096,7 @@ class DICOMTransitImport(object):
     def has_matched_remoteUID(self):
         return self.matched_remoteUID
 
-    def has_matched_orthancUUID(self):
+    def has_matched_orthanc_StudyUID(self):
         return self.matched_orthanc_StudyUID
 
     def found_MRN(self):
@@ -1301,7 +1301,7 @@ if __name__ == "__main__":
 
                 current_import_process.trigger_wrap(TR_CheckLocalDBUUID)
 
-                if current_import_process.has_matched_orthancUUID():
+                if current_import_process.has_matched_orthanc_StudyUID():
                     current_import_process.trigger_wrap(
                         TR_ProcessNextSubject
                     )  # either way, gonna trigger this transition.
@@ -1390,11 +1390,11 @@ if __name__ == "__main__":
         except (NotImplementedError, ValueError):
             # except (ValueError, AssertionError, IOError, OSError, AssertionError, MachineError, ConnectionError):
 
-            currenct_subject_UUID = current_import_process.orthanc_list_all_StudiesUIDs[
+            current_study_UID = current_import_process.orthanc_list_all_StudiesUIDs[
                 current_import_process.orthanc_index_current_study
             ]
             logger.critical(
-                f"A critical error has been encountered which aborted the subject scan for {currenct_subject_UUID}"
+                f"A critical error has been encountered which aborted the subject scan for {current_study_UID}"
             )
 
             from settings import config_get

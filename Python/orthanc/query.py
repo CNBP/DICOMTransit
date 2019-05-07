@@ -89,7 +89,7 @@ class orthanc_query:
         return r.status_code, r.json()
 
     @staticmethod
-    def getPatientZipOrthanc(endpoint, credential: orthanc_credential):
+    def getZipFromOrthanc(endpoint, credential: orthanc_credential):
         """
         Get Orthanc endpoint archive ZIP files.
         :param endpoint:
