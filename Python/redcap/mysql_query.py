@@ -8,7 +8,7 @@
 
 import mysql.connector
 from mysql.connector.cursor import MySQLCursorPrepared
-from redcap.constants import mysql_export_host, mysql_export_database, mysql_export_user, mysql_export_password
+from redcap.constants import mysql_export_host, mysql_export_port, mysql_export_database, mysql_export_user, mysql_export_password
 from redcap.enums import MySQLType
 from redcap.transaction import RedcapTransaction
 from itertools import groupby
@@ -125,7 +125,7 @@ def create_mysql_table(tablename: str, tablefields: iter) -> None:
     query += ");"
 
     # Connecting to MySQL database.
-    conn = mysql.connector.connect(host=mysql_export_host, database=mysql_export_database, user=mysql_export_user, password=mysql_export_password)
+    conn = mysql.connector.connect(host=mysql_export_host, port=mysql_export_port, database=mysql_export_database, user=mysql_export_user, password=mysql_export_password)
     mysql_cursor = conn.cursor()
 
     # Execute MySQL request.
@@ -143,7 +143,7 @@ def insert_mysql_entries(tablename: str, entries: iter) -> None:
 
     # Connecting to MySQL database.
     # Take note here that we need to use Pure to allow us to use prepare statement.
-    conn = mysql.connector.connect(host=mysql_export_host, database=mysql_export_database, user=mysql_export_user, password=mysql_export_password, use_pure=True)
+    conn = mysql.connector.connect(host=mysql_export_host, port=mysql_export_port, database=mysql_export_database, user=mysql_export_user, password=mysql_export_password, use_pure=True)
 
     # For each entries / lines to add inside the database.
     for fields in entries:
@@ -223,7 +223,7 @@ def wipe_all_mysql_data() -> None:
     select_statement = ("DROP DATABASE IF EXISTS " + mysql_export_database + ";")
 
     # Connecting to MySQL database.
-    conn = mysql.connector.connect(host=mysql_export_host, user=mysql_export_user, password=mysql_export_password)
+    conn = mysql.connector.connect(host=mysql_export_host, port=mysql_export_port, user=mysql_export_user, password=mysql_export_password)
     mysql_cursor = conn.cursor()
 
     # Execute MySQL request.
