@@ -19,7 +19,7 @@ class LORIS_helper:
         return re.findall(r'\d+', string)
 
     @staticmethod
-    def is_response_success(status_code: int, expected_code: int) -> bool:
+    def is_response(status_code: int, expected_code: int) -> bool:
         """
         A simple function to determine the success of the status code
         :param status_code:

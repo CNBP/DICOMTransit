@@ -50,12 +50,12 @@ def check_online_status() -> bool:
     # WWW check vs Google
     import urllib.request
     status_google = urllib.request.urlopen("https://google.com").getcode()
-    if not LORIS_helper.is_response_success(status_google, 200):
+    if not LORIS_helper.is_response(status_google, 200):
         return False
 
     # WWW check vs CNBP.ca
     status_cnbp = urllib.request.urlopen("http://www.cnbp.ca").getcode()
-    if not LORIS_helper.is_response_success(status_cnbp, 200):
+    if not LORIS_helper.is_response(status_cnbp, 200):
         return False
     else:
         return True
@@ -113,7 +113,7 @@ def new_trigger_insertion(DCCID: int, VisitLabel: str, filename:str, mri_upload_
 
     process_id = None
 
-    if LORIS_helper.is_response_success(status_code, 202):
+    if LORIS_helper.is_response(status_code, 202):
         response_dict = response.json()
         if "processes" in response_dict and "process_id" in response_dict["processes"][0]:
             process_id = int(response_dict["processes"][0]["process_id"])
@@ -245,15 +245,15 @@ def upload_visit_DICOM(local_path: str, DCCID: int, VisitLabel: str, isPhantom: 
     # Validations:
     if not os.path.isfile(local_path):
         logger.error(f"{local_path} is not a valid path to a file to be uploaded. ")
-        return
+        return None
 
     if not LORIS_validation.validate_DCCID(DCCID):
         logger.error(f"Provided DCCID: {DCCID} is invalid.")
-        return
+        return None
 
     if not LORIS_timepoint.check_timepoint_compliance(VisitLabel):
         logger.error(f"Provided timepoint:{VisitLabel} is invalid.")
-        return
+        return None
 
     filename = os.path.basename(local_path)
 
@@ -266,30 +266,50 @@ def upload_visit_DICOM(local_path: str, DCCID: int, VisitLabel: str, isPhantom: 
     # Get token.
     response_success, token = LORIS_query.login()
     if not response_success:
+        logger.error(f"Failed to login to LORIS. Check internet connections.")
         raise ConnectionError
 
+    # Get the status code and process the atual
     status_code, response = LORIS_query.putCNBPDICOM(token, endpoint, data, isPhantom)
-    permission_errored = LORIS_helper.is_response_success(status_code, 403)
 
-    if permission_errored:
+    # Close Data connection.
+    data.close()
+
+    # log the response code.
+    logger.debug(response)
+
+
+    # Check if it is 403: permission error.
+    if LORIS_helper.is_response(status_code, 403):
         logger.critical("The credential in the configuration for uploading to LORIS is incorrect, you do not have the credential to upload files!")
         return None
 
-    success = LORIS_helper.is_response_success(status_code, 200)
+    # Check for when the response is properly 200.
+    elif LORIS_helper.is_response(status_code, 200):
 
-    data.close()
+        logger.info("Status Code: 200 received properly.")
+        logger.info("Attempting to decode the JSON response:")
 
-    if not success:
+        # Convert to JSON.
+        json_response = response.json()
+
+        # If there is mri upload ID, return it, other wise, do not return.
+        if "mri_upload_id" in json_response:
+            upload_id = json_response["mri_upload_id"]
+            logger.debug(f"Successfully uploaded and server returned 200 with Upload ID of:{upload_id}")
+            return upload_id
+
+        logger.error(f"Successfully uploaded and server returned 200, but returned JSON does not contain 'mri_upload_id'")
         return None
 
-    json_response = response.json()
+    # other. non 200 response.
+    elif not LORIS_helper.is_response(status_code, 200):
+        logger.critical(f"Upload process has returned a non-200 RESPONSE. Status code returned is {status_code}")
+        return None
 
-    if "mri_upload_id" in json_response:
-        upload_id = json_response["mri_upload_id"]
-        logger.debug(f"Successfully uploaded and server returned 200 with Upload ID of:{upload_id}")
-        return upload_id
-
-    return None
+    else:
+        logger.error("Unanticipated status code condition encountered.")
+        return None
 
 
 def old_upload(local_path):

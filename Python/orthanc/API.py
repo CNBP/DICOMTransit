@@ -20,7 +20,7 @@ def check_status() -> bool:
     try:
         endpoint = f"{credential.url}patients/"
         reseponse_code, _ = orthanc_query.getOrthanc(endpoint, credential)
-        success = LORIS_helper.is_response_success(reseponse_code, 200)
+        success = LORIS_helper.is_response(reseponse_code, 200)
     except:
         # in case any thing goes wrong
         return False
@@ -62,7 +62,7 @@ def get_list_of_subjects_noauth(orthanc_URL: str) -> List[str]:
 
     reseponse_code, list_subjects = orthanc_query.getOrthanc_noauth(endpoint)
 
-    if not (LORIS_helper.is_response_success(reseponse_code, 200)):
+    if not (LORIS_helper.is_response(reseponse_code, 200)):
         raise ConnectionError("LORIS server did not return list of subjects. ")
     return list_subjects
 
@@ -76,7 +76,7 @@ def get_all_subject_StudyUIDs(credential: orthanc_credential) -> List[List[str]]
 
     reseponse_code, list_studies = orthanc_query.getOrthanc(endpoint, credential)
 
-    if not LORIS_helper.is_response_success(reseponse_code, 200):
+    if not LORIS_helper.is_response(reseponse_code, 200):
         raise ConnectionError("LORIS server did not return list of subjects. ")
 
     return list_studies
@@ -92,7 +92,7 @@ def get_StudyUID_zip(orthanc_URL_with_StudyUID: str, credential: orthanc_credent
     status, local_zip_file_path = orthanc_query.getZipFromOrthanc(
         orthanc_URL_with_StudyUID, credential
     )
-    if not (LORIS_helper.is_response_success(status, 200)):
+    if not (LORIS_helper.is_response(status, 200)):
         raise ConnectionError("Orthanc is not reachable!")
 
     if not os.path.exists(local_zip_file_path):
@@ -135,4 +135,4 @@ def delete_study(StudyUID: str) -> bool:
     reseponse_code, _ = orthanc_query.deleteOrthanc(
         f"studies/{StudyUID}", credential
     )
-    return LORIS_helper.is_response_success(reseponse_code, 200)
+    return LORIS_helper.is_response(reseponse_code, 200)

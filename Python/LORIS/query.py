@@ -35,7 +35,7 @@ class LORIS_query:
 
         response_json = r.json()
 
-        return LORIS_helper.is_response_success(r.status_code, 200), response_json.get('token')
+        return LORIS_helper.is_response(r.status_code, 200), response_json.get('token')
 
     @staticmethod
     def getCNBP(token, endpoint):

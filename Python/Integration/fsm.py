@@ -1048,12 +1048,15 @@ class DICOMTransitImport(object):
         self.DICOM_package.zip()
 
     def UploadZip(self):
+
+        # Attempt to upload the VISIT DICOM and check the returned upload ID.
         self.mri_uploadID = LORIS.API.upload_visit_DICOM(
             self.DICOM_package.zip_location,
             self.DICOM_package.DCCID,
             self.DICOM_package.timepoint,
             False,
         )
+
 
     def InsertSubjectData(self):
         # Trigger insertion.
@@ -1070,8 +1073,10 @@ class DICOMTransitImport(object):
         LocalDB.API.append_StudyUID(self.DICOM_package.MRN, StudyUID)
 
     def CheckUploadSuccess(self):
-        # fixme: a script to check upload success is required.
-        pass
+        if self.mri_uploadID is None:
+            return False
+        else:
+            return True
 
     def CheckInsertionSuccess(self):
         # fixme a script to check insertion status success is required.

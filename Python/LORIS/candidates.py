@@ -107,7 +107,7 @@ class LORIS_candidates:
         data_json = json.dumps(data)
 
         response_code, response = LORIS_query.postCNBP(token, "candidates/", data_json)
-        if not LORIS_helper.is_response_success(response_code, 201):
+        if not LORIS_helper.is_response(response_code, 201):
             return False, None, None
         elif response is not None:  # only try to decode if response is not empty!
             response_json = response.json()
@@ -182,7 +182,7 @@ class LORIS_candidates:
 
         #todo: This area has projects/loris dependency. Refactor to enable multiple projects handling.
         response, JSON = LORIS_query.getCNBP(token, r"candidates/"+str(proposed_DCCID))
-        response_success = LORIS_helper.is_response_success(response, 200)
+        response_success = LORIS_helper.is_response(response, 200)
 
         if not response_success:
             logger.error(f"FAILED log response: {str(response)}")

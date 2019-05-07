@@ -126,7 +126,7 @@ class LORIS_timepoint:
         Meta = {"Meta": MetaData}
         JSON = json.dumps(Meta)
         status_code, _ = LORIS_query.putCNBP(token, endpoint, JSON)
-        success = LORIS_helper.is_response_success(status_code, 201) # 201 signify successufl subject timepoint creation!
+        success = LORIS_helper.is_response(status_code, 201) # 201 signify successufl subject timepoint creation!
 
         # response should be null!
         return success

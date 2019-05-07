@@ -30,7 +30,7 @@ class UT_DevOrthanc(unittest.TestCase):
             status, r = orthanc_query.postOrthanc(
                 orthanc_instance_url, UT_DevOrthanc.credential, upload_files
             )
-            assert LORIS_helper.is_response_success(status, 200)
+            assert LORIS_helper.is_response(status, 200)
             assert r.json()
 
         # Note that this will database several subjects.
@@ -52,7 +52,7 @@ class UT_DevOrthanc(unittest.TestCase):
             reseponse_code, _ = orthanc_query.deleteOrthanc(
                 patient_url, self.credential
             )
-            assert LORIS_helper.is_response_success(reseponse_code, 200)
+            assert LORIS_helper.is_response(reseponse_code, 200)
 
     def test_get_all_subject_StudyUID(self):
         get_all_subject_StudyUIDs(UT_DevOrthanc.credential)

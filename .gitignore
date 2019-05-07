@@ -113,3 +113,5 @@ production.py
 *.driveupload
 dtconfigures.sqlite
 log/
+
+logs/
