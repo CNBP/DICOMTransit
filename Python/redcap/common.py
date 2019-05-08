@@ -2,6 +2,8 @@
 #  Imports
 # ----------------------------------------------------------------------------------------------------------------------
 
+from redcap.constants import *
+
 import sys
 import logging
 
@@ -44,6 +46,8 @@ def process_field(index_field, current_table_redcap_fields, database_column_list
         record_text[current_table_redcap_fields[index_field][1]] = str(value)
 
     except ValueError:
-        logger.warning('The current REDCap field (' + current_table_redcap_fields[index_field][1] +
-                       ') does not exist in the database column list.')
+        if current_table_redcap_fields[index_field][1] not in redcap_fields_to_ignore_process_field_warnings:
+            logger.warning('The current REDCap field (' + current_table_redcap_fields[index_field][1] +
+                           ') does not exist in the database column list.')
+
         pass

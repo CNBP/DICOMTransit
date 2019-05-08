@@ -27,6 +27,7 @@ redcap_repeat_instrument_key_name = "redcap_repeat_instrument"
 redcap_repeat_instance_key_name = "redcap_repeat_instance"
 redcap_complete_status_suffix = "_complete"
 redcap_complete_status_value = 2
+redcap_fields_to_ignore_process_field_warnings = ["masterid","cnbpid"]
 cnn_connection_string = environment.CNN_CONNECTION_STRING
 cnfun_connection_string = environment.CNFUN_CONNECTION_STRING
 redcap_export_enabled = environment.REDCAP_EXPORT_ENABLED
