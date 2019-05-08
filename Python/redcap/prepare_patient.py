@@ -9,7 +9,7 @@ from redcap.local_odbc import get_case_ids, get_database_column_names, get_data_
     get_primary_key_name
 from redcap.query import get_fields
 from redcap.transaction import RedcapTransaction
-from LocalDB.API import set_CNNIDs
+from LocalDB.API import set_CNNIDs, get_CNBP
 
 import sys
 import logging
@@ -36,6 +36,9 @@ def prepare_patient_tables(transaction: RedcapTransaction) -> RedcapTransaction:
 
         # Set hospital record number.
         transaction.set_hospital_record_number(index_hospital_record_number)
+
+        # Set any additional id that has a 1 to 1 relationship with the hospital record number.
+        transaction.set_cnbp_id(get_CNBP(transaction.HospitalRecordNumber))
 
         # Get all case ids related to this Hospital Record Number
         cases = get_case_ids(transaction)
@@ -139,6 +142,8 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
         record_text[get_primary_key_name(pk_for_filter).lower()] = transaction.BabyId
     elif pk_for_value == Field.CaseId.value:
         record_text[get_primary_key_name(pk_for_filter).lower()] = transaction.CaseId
+        # Add any additional id that has a 1 to 1 relationship with the hospital record number.
+        record_text["cnbpid"] = transaction.CNBPId
     elif pk_for_value == Field.CNNPatientUI.value:
         record_text[Field.PatientId.name.lower()] = transaction.PatientId
     elif pk_for_value == Field.HospitalRecordNumber.value:

@@ -28,6 +28,9 @@ class RedcapTransaction:
     PatientId = -1
     MasterId = -1
 
+    # Additional Temporary Ids having a 1 to 1 relationship with the hospital record numbers.
+    CNBPId = -1
+
     def set_hospital_record_number(self, index_hospital_record_number) -> None:
         """
         Sets the hospital record number and resets all other temporary ids.
@@ -42,6 +45,16 @@ class RedcapTransaction:
         self.CNNPatientUI = -1
         self.PatientId = -1
         self.MasterId = -1
+
+    def set_cnbp_id(self, cnbp_id) -> None:
+        """
+        Sets the CNBP Id.
+        :return: None
+        """
+        if cnbp_id is None:
+            cnbp_id = ''
+
+        self.CNBPId = cnbp_id
 
     def set_case_id(self, case_id) -> None:
         """
