@@ -127,19 +127,20 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
 
     table_configuration = transaction.data_import_configuration
 
-    # Create a blank dictionary.
-    record_text = {}
-
     # If this is the first row of data and the current table has authority on any ids
     if index_row == 0 and table_configuration[index_table][AUTHORITY_ON_IDS] is not None:
         # Set all case related ids that the current table has authority on
         set_case_related_ids(database_column_list, index_row, index_table, rows, transaction)
-        # If the current table is the table holding additional ids having a 1 to 1 relationship
-        # with the hospital record number.
-        if table_configuration[index_table][DATABASE_TABLE_NAME].lower() == \
-                redcap_form_holding_ids_directly_linked_to_hospital_record_numbers:
-            # Add any additional id that has a 1 to 1 relationship with the hospital record number.
-            record_text["cnbpid"] = transaction.CNBPId
+
+    # Create a blank dictionary.
+    record_text = {}
+
+    # If the current table is the table holding additional ids having a 1 to 1 relationship
+    # with the hospital record number.
+    if table_configuration[index_table][DATABASE_TABLE_NAME].lower() == \
+            redcap_form_holding_ids_directly_linked_to_hospital_record_numbers:
+        # Add any additional id that has a 1 to 1 relationship with the hospital record number.
+        record_text["cnbpid"] = transaction.CNBPId
 
     # Add the ID
     pk_for_filter = table_configuration[index_table][PRIMARY_KEY_NAME]
