@@ -1,13 +1,15 @@
 import unittest
 import DICOM.API
 
-class UT_DICOMAnonymization(unittest.TestCase):
 
+@pytest.mark.skip
+class UT_DICOMAnonymization(unittest.TestCase):
     @staticmethod
     def test_folder():
 
         # Retrieve list of files to be anonymized.
         from pydicom.data import get_testdata_files
+
         files = get_testdata_files("[mM][rR][iI]")
 
         # Call the API under testings.

@@ -16,7 +16,6 @@ logger = logging.getLogger()
 
 
 class DICOM_converter:
-
     @staticmethod
     def DICOM_universal_convert(input_folder, output_folder):
         """
@@ -36,6 +35,7 @@ class DICOM_converter:
         DICOM_converter.raw_sorted_decompressed(input_folder, output_folder)
         DICOM_converter.nii(input_folder, output_folder)
         from pathlib import Path
+
         nii_cube = Path.joinpath(Path(output_folder), "raw_sorted_decompressed")
         nii_cube_output = Path.joinpath(Path(output_folder), "nii")
         DICOM_converter.nii_cube_mricron(nii_cube, nii_cube_output)
@@ -84,7 +84,9 @@ class DICOM_converter:
         os.chdir(output_folder)
         create("raw_sorted_decompressed")
         logger.info("Generating sorted and decompressed DICOM files:")
-        path_raw_sorted_decompressed = os.path.join(output_folder, "raw_sorted_decompressed")
+        path_raw_sorted_decompressed = os.path.join(
+            output_folder, "raw_sorted_decompressed"
+        )
         DICOM_sort.into_folder(input_folder, path_raw_sorted_decompressed)
         DICOM_decompress.decompress_folder(path_raw_sorted_decompressed)
         DICOM_convert.fix_series(path_raw_sorted_decompressed)
@@ -106,7 +108,6 @@ class DICOM_converter:
         DICOM_convert.fix_series(path_nii)
         logger.info("Nii files generated!")
 
-
     @staticmethod
     def nii_cube_mricron(input_folder, output_folder):
         """
@@ -122,7 +123,6 @@ class DICOM_converter:
             DICOM_convert.to_nii_mricron(input_path, output_folder)
         logger.info("CUBE Nii files generated!")
 
-
     @staticmethod
     def DICOMOBJ_finder(input_root_folder):
         """
@@ -132,7 +132,7 @@ class DICOM_converter:
         :return:
         """
         os.chdir(input_root_folder)
-        list_path = glob.glob('**/DICOMOBJ', recursive=True)
+        list_path = glob.glob("**/DICOMOBJ", recursive=True)
         list_full_path = []
         for path in list_path:
             list_full_path.append(os.path.abspath(path))
@@ -153,10 +153,10 @@ class DICOM_converter:
                 list_CUBE_folders.append(folder)
         return list_CUBE_folders
 
-
-
     @staticmethod
-    def DICOMOBJ_converter(input_root_folder, default_folder=f"DICOM_UniversalConvert-{unique_name()}"):
+    def DICOMOBJ_converter(
+        input_root_folder, default_folder=f"DICOM_UniversalConvert-{unique_name()}"
+    ):
         """
         Create a new folder with
         :param input_root_folder:
@@ -165,7 +165,7 @@ class DICOM_converter:
 
         path_list = DICOM_converter.DICOMOBJ_finder(input_root_folder)
         for path in path_list:
-            logger.info("Begin converting folder: "+path)
+            logger.info("Begin converting folder: " + path)
             # Get higher folder path.
             path_source = os.path.dirname(path)
 
@@ -179,16 +179,17 @@ class DICOM_converter:
             DICOM_converter.DICOM_universal_convert(path, path_result)
             logger.info(f"Finished converting: {path}")
 
-
     @staticmethod
-    def DICOM_universal_convert_default(input_root_folder, name_default_folder = f"DICOM_UniversalConvert-{unique_name()}"):
+    def DICOM_universal_convert_default(
+        input_root_folder, name_default_folder=f"DICOM_UniversalConvert-{unique_name()}"
+    ):
         """
         Create a new folder with
         :param input_root_folder:
         :return:
         """
 
-        logger.info("Begin converting folder: "+input_root_folder)
+        logger.info("Begin converting folder: " + input_root_folder)
 
         # Generate the potential name for the new path.
         path_result = f"{input_root_folder}-{name_default_folder}"
@@ -199,6 +200,7 @@ class DICOM_converter:
         # Trigger the subject specific convertion.
         DICOM_converter.DICOM_universal_convert(input_root_folder, path_result)
         logger.info(f"Finished converting: {input_root_folder}")
+
     #
     # @staticmethod
     # def fix_dcm2nii_filename(input_nii_folder):
@@ -231,15 +233,9 @@ class DICOM_converter:
     #         for sequence_number in  sequence_list:
     #             if sequence_prefix in file:
 
+    # Find the XXX_sequence corredponding to that.
 
-
-
-            # Find the XXX_sequence corredponding to that.
-
-
-            # Rename the CUBE sequence to convert this properly.
-
-
+    # Rename the CUBE sequence to convert this properly.
 
 
 if __name__ == "__main__":
@@ -251,7 +247,9 @@ if __name__ == "__main__":
         logger.info(f"The arguments are: {str(sys.argv)}")
 
     if len(sys.argv) != 3:
-        input_root_folder = r"/toshiba2/Mathieus_MRI_Sab/HIE_Raw/HIE_018_3205585_ResearchPAC"
+        input_root_folder = (
+            r"/toshiba2/Mathieus_MRI_Sab/HIE_Raw/HIE_018_3205585_ResearchPAC"
+        )
     else:
         logger.info(f"First Argument, input root folder path:{sys.argv[1]}")
         logger.info(f"Second Argument, output folder path: {sys.argv[2]}")
@@ -259,4 +257,4 @@ if __name__ == "__main__":
         output_folder = sys.argv[2]
 
     DICOM_converter.DICOM_universal_convert_default(input_root_folder)
-    #DICOM_decompress.decompress_folder(r"/toshiba2/Mathieus_MRI_Sab/HIE_Raw/HIE_023_3226838_DICOMUniversal_2019-04-03/raw_sorted_decompressed")
+    # DICOM_decompress.decompress_folder(r"/toshiba2/Mathieus_MRI_Sab/HIE_Raw/HIE_023_3226838_DICOMUniversal_2019-04-03/raw_sorted_decompressed")

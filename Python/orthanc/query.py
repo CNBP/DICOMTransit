@@ -17,13 +17,13 @@ from tqdm import tqdm
 
 logger = logging.getLogger()
 
-orthanc_credential = collections.namedtuple('orthanc_credential', 'url user password')
+orthanc_credential = collections.namedtuple("orthanc_credential", "url user password")
+
 
 class orthanc_query:
-
     @staticmethod
     def authenticateOrthanc():
-        #todo: all the get, set can be potentially using a decorator function to authenticate.
+        # todo: all the get, set can be potentially using a decorator function to authenticate.
         raise NotImplementedError
         pass
 
@@ -34,14 +34,13 @@ class orthanc_query:
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        
+
         logger.debug(f"Getting Orthanc endpoint: {endpoint}")
 
         with requests.Session() as s:
             r = s.get(endpoint)
             logger.debug(f"Get Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r.json()
-
 
     @staticmethod
     def getOrthanc(endpoint, orthanc_credential):
@@ -50,14 +49,18 @@ class orthanc_query:
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        
-        logger.debug("Getting Orthanc endpoint: "+ endpoint)
+
+        logger.debug("Getting Orthanc endpoint: " + endpoint)
 
         with requests.Session() as s:
-            r = s.get(endpoint, auth=HTTPBasicAuth(orthanc_credential.user, orthanc_credential.password))
+            r = s.get(
+                endpoint,
+                auth=HTTPBasicAuth(
+                    orthanc_credential.user, orthanc_credential.password
+                ),
+            )
             logger.debug(f"Get Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r.json()
-
 
     @staticmethod
     def postOrthanc(endpoint, credential: orthanc_credential, data):
@@ -67,10 +70,14 @@ class orthanc_query:
         :param data
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        
-        logger.debug("Post Orthanc endpoint: "+ endpoint)
+
+        logger.debug("Post Orthanc endpoint: " + endpoint)
         with requests.Session() as s:
-            r = s.post(endpoint, auth=HTTPBasicAuth(credential.user, credential.password), files=data)
+            r = s.post(
+                endpoint,
+                auth=HTTPBasicAuth(credential.user, credential.password),
+                files=data,
+            )
             logger.debug(f"Post Result: {str(r.status_code)} {r.reason}")
             return r.status_code, r
 
@@ -81,10 +88,12 @@ class orthanc_query:
         :param endpoint:
         :return: bool on if such PSCID (INSTITUTIONID + PROJECTID + SUBJECTID) exist already.
         """
-        
+
         logger.debug(f"Deleting Orthanc endpoint: {endpoint} at")
         with requests.Session() as s:
-            r = s.delete(endpoint, auth=HTTPBasicAuth(credential.user, credential.password))
+            r = s.delete(
+                endpoint, auth=HTTPBasicAuth(credential.user, credential.password)
+            )
             logger.debug(f"Deletion Result: {str(r.status_code)} {r.reason}")
         return r.status_code, r.json()
 
@@ -96,26 +105,30 @@ class orthanc_query:
         :return: status of the get requests, and the actual local file name saved in the process.
         """
 
-        
         logger.debug(f"Downloading Orthanc endpoint: {endpoint}")
 
         zip_path = config_get("ZipPath")
         with requests.Session() as s:
-            r = s.get(endpoint, stream=True, verify=False, auth=HTTPBasicAuth(credential.user, credential.password))
+            r = s.get(
+                endpoint,
+                stream=True,
+                verify=False,
+                auth=HTTPBasicAuth(credential.user, credential.password),
+            )
 
             # Compute total size to be downloaded
-            total_size = int(r.headers.get('content-length', 0))
-            total_size_mb = round(total_size/1024/1024, 3)
+            total_size = int(r.headers.get("content-length", 0))
+            total_size_mb = round(total_size / 1024 / 1024, 3)
             # Generate the full output path
             local_file_full_path = os.path.join(zip_path, f"{unique_name()}.zip")
 
             progress_bar = tqdm(unit="Mb", total=total_size_mb, position=0)
 
             # NOTE the stream=True parameter
-            with open(local_file_full_path, 'wb') as f:
+            with open(local_file_full_path, "wb") as f:
                 for chunk in r.iter_content(chunk_size=1024):
                     if chunk:  # filter out keep-alive new chunks
-                        chunk_mb = round(len(chunk)/1024/1024, 3)
+                        chunk_mb = round(len(chunk) / 1024 / 1024, 3)
                         progress_bar.update(chunk_mb)
                         f.write(chunk)
 
@@ -180,7 +193,9 @@ class orthanc_query:
 
         # Try to upload
         try:
-            response_code, _ = orthanc_query.postOrthanc(credential.url, credential, data)
+            response_code, _ = orthanc_query.postOrthanc(
+                credential.url, credential, data
+            )
             logger.debug("Importing %s" % path)
 
             if response_code == 200:
@@ -191,6 +206,7 @@ class orthanc_query:
                 return 0
         except Exception as e:
             logger.error(e)
-            logger.error(" => unable to connect (Is Orthanc running? Is there a password?)\n")
+            logger.error(
+                " => unable to connect (Is Orthanc running? Is there a password?)\n"
+            )
             return 0
-

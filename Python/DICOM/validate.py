@@ -7,11 +7,10 @@ from pydicom.filereader import InvalidDicomError
 from pydicom.filereader import read_file
 
 
-
 logger = logging.getLogger()
 
-class DICOM_validate:
 
+class DICOM_validate:
     @staticmethod
     def file(file_path):
         """
@@ -19,7 +18,6 @@ class DICOM_validate:
         :param file_path:
         :return:
         """
-
 
         global dicom
         dicom = None
@@ -30,7 +28,7 @@ class DICOM_validate:
             logger.warning(f"{file_path} is not a DICOM file. Skipping")
             return False, None
 
-        #if dicom.
+        # if dicom.
 
         return True, dicom
 
@@ -60,7 +58,6 @@ class DICOM_validate:
         # List to store all validated DICOM files.
         validated_DICOM_files = []
 
-
         logger.info("Checking individual dicom files for possible discrepencies.")
 
         # Check individual DICOM file for consistencies.
@@ -72,7 +69,6 @@ class DICOM_validate:
                 logger.error(f"Bad DICOM files detected: {file}")
                 continue
 
-
             # The following section checks individual files and determine if all files have consistency name/patient etc.
             # Useful for unanticipated ZIP files which can be contaminated.
             # Not useful when dealing with ORTHANC output files.
@@ -81,29 +77,39 @@ class DICOM_validate:
                 # todo: what if one of them is NONE?
                 # todo: what if the date and other things are inconsistent?
                 # Record first instance of patient ID and patient name.
-                if PatientID == '' and PatientName == '':
+                if PatientID == "" and PatientName == "":
                     Success, PatientID = DICOM_elements.retrieve(file, "PatientID")
                     Success, PatientName = DICOM_elements.retrieve(file, "PatientName")
 
                     # raise issue if not successful
                     if not Success:
-                        logger.error("DICOM meta data retrieval failure EVEN for the first DICOM FILE?! Checking next one.")
+                        logger.error(
+                            "DICOM meta data retrieval failure EVEN for the first DICOM FILE?! Checking next one."
+                        )
                     else:
                         name = PatientName.original_string.decode("latin_1")
-                        logger.debug(f"DICOM meta data retrieval success: {PatientID } {name}")
+                        logger.debug(
+                            f"DICOM meta data retrieval success: {PatientID } {name}"
+                        )
 
                     # Regardless of success of failure, must continue to process the next file.
                     continue
 
                 # Check consistencies across folders in terms of patient ID, NAME.
                 Success1, CurrentPatientID = DICOM_elements.retrieve(file, "PatientID")
-                Success2, CurrentPatientName = DICOM_elements.retrieve(file, "PatientName")
+                Success2, CurrentPatientName = DICOM_elements.retrieve(
+                    file, "PatientName"
+                )
 
                 if not Success1 or not Success2:
-                    logger.error("Could not retrieve fields for comparison. At least ONE DICOM file has inconsistent Patient ID/NAME field.")
+                    logger.error(
+                        "Could not retrieve fields for comparison. At least ONE DICOM file has inconsistent Patient ID/NAME field."
+                    )
                     return False, None
 
-                if not (PatientID == CurrentPatientID) or not (PatientName == CurrentPatientName):
+                if not (PatientID == CurrentPatientID) or not (
+                    PatientName == CurrentPatientName
+                ):
                     logger.info("PatientID or Name mismatch from the dicom archive. .")
                     return False, None
 
@@ -111,4 +117,4 @@ class DICOM_validate:
 
         return True, validated_DICOM_files
 
-    #if __name__ == '__main__':
+    # if __name__ == '__main__':

@@ -13,9 +13,10 @@ logger = logging.getLogger()
 
 # Getting credential from the environment.
 url, username, password = orthanc.API.get_prod_orthanc_credentials()
-#url, username, password = orthanc.API.get_dev_orthanc_credentials()
+# url, username, password = orthanc.API.get_dev_orthanc_credentials()
 
 url_instances = urllib.parse.urljoin(url, "/instances")
+
 
 def read_file(path_file):
     """
@@ -27,18 +28,21 @@ def read_file(path_file):
     # PreRead the file.
 
     file = open(path_file, "rb")
-    content = {'file': file.read()}
+    content = {"file": file.read()}
     file.close()
     return content
+
 
 def read_upload_file(path_file):
 
     # check if the file is validated before continueing
-    if (DICOM_validate.file(path_file)):
+    if DICOM_validate.file(path_file):
         content = read_file(path_file)
 
         # Upload and keep track of success.
-        success = orthanc_query.upload(path_file, url_instances, username, password, content)
+        success = orthanc_query.upload(
+            path_file, url_instances, username, password, content
+        )
         logger.debug(f"Finished uploading:{path_file}")
         return success
     else:
@@ -63,11 +67,12 @@ def upload_retrospective_study(path_study_root_folder_path: Path):
     success_count = 0
     total_file_count = 0
 
-
     if os.path.isfile(path_study_root_folder_path):
         # Upload a single file
         total_file_count = 1
-        success_count = orthanc_query.upload(path_study_root_folder_path, url_instances, username, password)
+        success_count = orthanc_query.upload(
+            path_study_root_folder_path, url_instances, username, password
+        )
     else:
         # Recursively upload a directory
         for root, dirs, files in os.walk(path_study_root_folder_path):
@@ -83,21 +88,29 @@ def upload_retrospective_study(path_study_root_folder_path: Path):
 
             # Parallel process them
             num_cores = multiprocessing.cpu_count()
-            results = Parallel(n_jobs=num_cores)(delayed(read_upload_file)(i) for i in list_files)
+            results = Parallel(n_jobs=num_cores)(
+                delayed(read_upload_file)(i) for i in list_files
+            )
             success_count = sum(results)
 
-    
     if success_count == total_file_count:
-        logger.info("\nSummary: all %d DICOM file(s) have been imported successfully" % success_count)
+        logger.info(
+            "\nSummary: all %d DICOM file(s) have been imported successfully"
+            % success_count
+        )
     else:
-        logger.warning("\nSummary: %d out of %d files have been imported successfully as DICOM instances" % (success_count, total_file_count))
+        logger.warning(
+            "\nSummary: %d out of %d files have been imported successfully as DICOM instances"
+            % (success_count, total_file_count)
+        )
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     import time
+
     start = time.time()
     logging.basicConfig(level=logging.INFO)
     path_input = Path(r"/toshiba4/bayX_backup/Research PAC/Batch2")
     upload_retrospective_study(path_input)
     end = time.time()
-    print(str((end - start)/60)+" minutes")
+    print(str((end - start) / 60) + " minutes")

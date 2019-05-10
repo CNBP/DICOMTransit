@@ -10,7 +10,6 @@ logger = logging.getLogger()
 
 
 class DICOM_convert:
-
     @staticmethod
     def to_nii(input_folder, output_folder):
         """
@@ -25,13 +24,22 @@ class DICOM_convert:
         try:
 
             # SUPER IMPORTANT! MAKE SURE dcm2niix by Chris Roden is in the system path!
-            subprocess.check_output(['dcm2niix',
-                                     '-b', 'y',
-                                     '-z', 'y',
-                                     '-v', 'y',
-                                     '-f', "%s_%p",
-                                     '-o', output_folder,
-                                    input_folder])
+            subprocess.check_output(
+                [
+                    "dcm2niix",
+                    "-b",
+                    "y",
+                    "-z",
+                    "y",
+                    "-v",
+                    "y",
+                    "-f",
+                    "%s_%p",
+                    "-o",
+                    output_folder,
+                    input_folder,
+                ]
+            )
 
         # When dcmdjpeg has errors
         except subprocess.CalledProcessError as e:
@@ -72,15 +80,24 @@ class DICOM_convert:
 
             logger.info(path_dcm2nii)
 
-
             # SUPER IMPORTANT! MAKE SURE dcm2niix by Chris Roden is in the system path!
-            subprocess.check_output(['dcm2nii',
-                                     '-d', 'N',
-                                     '-p', 'N',
-                                     '-r', 'N',
-                                     '-g', 'N',
-                                     '-o', output_folder,
-                                     input_folder], cwd=output_folder)
+            subprocess.check_output(
+                [
+                    "dcm2nii",
+                    "-d",
+                    "N",
+                    "-p",
+                    "N",
+                    "-r",
+                    "N",
+                    "-g",
+                    "N",
+                    "-o",
+                    output_folder,
+                    input_folder,
+                ],
+                cwd=output_folder,
+            )
 
         # When dcmdjpeg has errors
         except subprocess.CalledProcessError as e:
@@ -105,10 +122,10 @@ class DICOM_convert:
         """
         os.chdir(input_folder)
         for file in os.listdir(input_folder):
-            if re.match(r'^[0-9]_', file):
-                os.rename(file, '00'+ file)
-            elif re.match(r'^[0-9][0-9]_', file):
-                os.rename(file, '0'+ file)
+            if re.match(r"^[0-9]_", file):
+                os.rename(file, "00" + file)
+            elif re.match(r"^[0-9][0-9]_", file):
+                os.rename(file, "0" + file)
 
     @staticmethod
     def handl_cube_conversion():
@@ -129,4 +146,4 @@ class DICOM_convert:
 
 if __name__ == "__main__":
     DICOM_convert.fix_series(r"C:\FullyAnonymizedSubjects\Wed3ConvertResult\raw_sorted")
-    #DICOM_convert.to_nii(r"C:\FullyAnonymizedSubjects\2018-08-15_TestSubject2\Wed2-Decompressed", r"C:\FullyAnonymizedSubjects\2018-08-15_TestSubject2\Test")
+    # DICOM_convert.to_nii(r"C:\FullyAnonymizedSubjects\2018-08-15_TestSubject2\Wed2-Decompressed", r"C:\FullyAnonymizedSubjects\2018-08-15_TestSubject2\Test")

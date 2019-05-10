@@ -29,9 +29,9 @@ import redcap.development
 # Creat the local configuration database if it hasn't already exist.
 if not os.path.exists("LocalDB/dtconfigure.sqlite"):
     try:
-        os.chdir('Python')
-        subprocess.check_output(['flask', "--help"])
-        subprocess.check_output(['flask', "init-db"])
+        os.chdir("Python")
+        subprocess.check_output(["flask", "--help"])
+        subprocess.check_output(["flask", "init-db"])
     except Exception as e:
         raise ValueError("Could not initialize local database")
 
@@ -56,4 +56,4 @@ except Exception as e:
 # Wait 5s before opening webbrower.
 time.sleep(5)
 
-webbrowser.open('http://127.0.0.1:5000/')  # Open the webpage
+webbrowser.open("http://127.0.0.1:5000/")  # Open the webpage

@@ -13,8 +13,8 @@ import logging
 
 logger = logging.getLogger()
 
-class DICOM_decompress:
 
+class DICOM_decompress:
     @staticmethod
     def save(input_path):
         """
@@ -26,7 +26,6 @@ class DICOM_decompress:
         base, filename = os.path.split(input_path)
         os.chdir(base)
         DICOM_decompress.save_as(filename, filename)
-
 
     @staticmethod
     def save_as(input_file, out_put):
@@ -51,14 +50,15 @@ class DICOM_decompress:
 
         os.environ["DCMDICTPATH"] = os.path.join(path_dcm, "dicom.dic")
 
-
-        #if os.path.exists(out_put):
+        # if os.path.exists(out_put):
         #    logger.warn("Output_exist already. !!!OVERWRITING!!!")
 
         try:
             # SUPER IMPORTANT! MAKE SURE DCMDJPEG is in the system path!
-            #subprocess.check_output(['dcmdjpeg', input_file, out_put], cwd=Path(path_dcm))
-            subprocess.check_output(['dcmdjpeg', input_file, out_put])  # using the system default dependencies will less likely result in SysError7 about path.
+            # subprocess.check_output(['dcmdjpeg', input_file, out_put], cwd=Path(path_dcm))
+            subprocess.check_output(
+                ["dcmdjpeg", input_file, out_put]
+            )  # using the system default dependencies will less likely result in SysError7 about path.
 
         # When dcmdjpeg has errors
         except subprocess.CalledProcessError as e:
@@ -100,9 +100,17 @@ class DICOM_decompress:
 
         if not ("1.2.840.10008.1.2" in transfer_syntax):
             raise ValueError
-        elif transfer_syntax == "1.2.840.10008.1.2" or transfer_syntax[18] == '1' or transfer_syntax[18] == '2':
+        elif (
+            transfer_syntax == "1.2.840.10008.1.2"
+            or transfer_syntax[18] == "1"
+            or transfer_syntax[18] == "2"
+        ):
             return False
-        elif transfer_syntax[18] == '4' or transfer_syntax[18] == '5' or transfer_syntax[18] == '6':
+        elif (
+            transfer_syntax[18] == "4"
+            or transfer_syntax[18] == "5"
+            or transfer_syntax[18] == "6"
+        ):
             return True
         else:
             raise ValueError
@@ -135,7 +143,10 @@ class DICOM_decompress:
         import pydicom.uid
 
         # Now read the meta information.
-        if DICOM.file_meta.TransferSyntaxUID in pydicom.uid.UncompressedPixelTransferSyntaxes:
+        if (
+            DICOM.file_meta.TransferSyntaxUID
+            in pydicom.uid.UncompressedPixelTransferSyntaxes
+        ):
             return True
         else:
             return False
@@ -147,7 +158,6 @@ class DICOM_decompress:
         :param file_list:
         :return:
         """
-
 
         for file in tqdm(file_list, position=0):
 
@@ -161,7 +171,9 @@ class DICOM_decompress:
             # check if the file is compressed.
             TransferSyntax = DICOM_decompress.get_transferSyntax(file)
             try:
-                RequireDecompression = DICOM_decompress.check_decompression(TransferSyntax)
+                RequireDecompression = DICOM_decompress.check_decompression(
+                    TransferSyntax
+                )
                 if RequireDecompression:
                     DICOM_decompress.save(file)
 

@@ -3,11 +3,12 @@ from PythonUtils.folder import recursive_list
 from DICOM.validate import DICOM_validate
 from DICOM.elements import DICOM_elements
 
-output=[]
+output = []
 
 """
 A batch script to download study date and patient birth date information into files. 
 """
+
 
 def BatchDateCalculation(path):
     file_list = recursive_list(path)
@@ -17,7 +18,9 @@ def BatchDateCalculation(path):
 
             # Try to extract these information from the files.
             success1, StudyDate = DICOM_elements.retrieve(file, "StudyDate")
-            success2, PatientBirthDate = DICOM_elements.retrieve(file, "PatientBirthDate")
+            success2, PatientBirthDate = DICOM_elements.retrieve(
+                file, "PatientBirthDate"
+            )
             success3, age = DICOM_elements.compute_age(file)
 
             # Skip this file if it is not successful.
@@ -29,8 +32,8 @@ def BatchDateCalculation(path):
             print(A)
             output.append(A)
 
-    with open("output.csv",'w') as resultFile:
-        wr = csv.writer(resultFile, dialect='excel')
+    with open("output.csv", "w") as resultFile:
+        wr = csv.writer(resultFile, dialect="excel")
         wr.writerow(output)
 
 
