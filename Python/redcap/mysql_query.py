@@ -31,11 +31,8 @@ def send_mysql_data(transaction: RedcapTransaction) -> (bool, str):
     for tablename, tablefields in tablelist:
         create_mysql_table(tablename, tablefields)
 
-    # Filter valid dictionary entries that contains redcap_repeat_instrument. (Otherwise, we need to ignore the entry)
-    valid_redcap_queue = [x for x in transaction.redcap_queue if x[0].get("redcap_repeat_instrument") is not None]
-
-    # Get entries to create.  (Group by table name - redcap_repeat_instrument is the tablename.)
-    entrieslist = groupby(valid_redcap_queue, lambda f: f[0]["redcap_repeat_instrument"])
+    # Get entries to create.  (Group by table name - get_mysql_tablename return the tablename to use)
+    entrieslist = groupby(transaction.redcap_queue, lambda f: get_mysql_tablename(transaction.redcap_metadata, f[0]))
 
     # For each table - (insert entries/lines).
     for tablename, entries in entrieslist:
@@ -43,6 +40,37 @@ def send_mysql_data(transaction: RedcapTransaction) -> (bool, str):
 
     # Return success.
     return True, "All data in queue has been sent to MySQL."
+
+
+def get_mysql_tablename(metadata: list, entries: dict) -> str:
+    """
+    Get the line tablename. (For the entries) (If there is no redcap_repeat_instrument then it will look inside the redcap_metadata.
+    :param metadata: List of fields (metadata inside redcap)
+    :param entries: List of fields (Line to insert inside mysql with fieldname.)
+    :return: tablename.
+    """
+
+    # Check if there is a redcap_repeat_instrument inside the line to insert.
+    redcap_repeat_instrument = entries.get("redcap_repeat_instrument")
+
+    # If there is a redcap_repeat_instrument then we need to return the value.
+    if redcap_repeat_instrument is not None:
+        return redcap_repeat_instrument
+
+    # For each field in metadata.
+    for field in metadata:
+
+        # For each fields inside the entries/fields (the line to insert)
+        for fieldname, fieldvalue in dict(map(reversed, entries.items())).items():
+
+            # If the entry dictionary contains the field name. (field[0] = fieldname)
+            if field[0] == fieldname:
+
+                # Then we need to return the current table name. (field[3] = tablename)
+                return field[3]
+
+    # We don't know what is the current table.
+    return "unknown"
 
 
 def prepare_mysql_metadata_stage5(transaction: RedcapTransaction) -> RedcapTransaction:
@@ -54,12 +82,8 @@ def prepare_mysql_metadata_stage5(transaction: RedcapTransaction) -> RedcapTrans
     :return: Updated RedcapTransaction (stage 5)
     """
 
-    # Filter valid dictionary entries that contains redcap_repeat_instrument. (Otherwise, we need to ignore the entry)
-    # redcap_repeat_instrument = tablename to use. (If we don't have the tablename then we can't insert the entry)
-    valid_redcap_queue = [x for x in transaction.redcap_queue if x[0].get("redcap_repeat_instrument") is not None]
-
-    # Get entries to create.  (Group by table name - redcap_repeat_instrument is the tablename.)
-    entrieslist_redcap_queue = groupby(valid_redcap_queue, lambda f: f[0]["redcap_repeat_instrument"])
+    # Get entries to create.  (Group by table name - get_mysql_tablename return the tablename to use)
+    entrieslist_redcap_queue = groupby(transaction.redcap_queue, lambda f: get_mysql_tablename(transaction.redcap_metadata, f[0]))
 
     # For each table - (insert entries/lines).
     for tablename_redcap_queue, entries_redcap_queue in entrieslist_redcap_queue:
