@@ -12,6 +12,10 @@ from redcap import development as environment
 #  Constants
 # ----------------------------------------------------------------------------------------------------------------------
 
+cnn_connection_string = environment.CNN_CONNECTION_STRING
+cnfun_connection_string = environment.CNFUN_CONNECTION_STRING
+
+redcap_export_enabled = environment.REDCAP_EXPORT_ENABLED
 redcap_api_url = environment.REDCAP_API_URL
 redcap_record_id_field_name_cnn_admission = "caseid"
 redcap_record_id_field_name_cnn_baby = "babyid"
@@ -27,10 +31,9 @@ redcap_repeat_instrument_key_name = "redcap_repeat_instrument"
 redcap_repeat_instance_key_name = "redcap_repeat_instance"
 redcap_complete_status_suffix = "_complete"
 redcap_complete_status_value = 2
+redcap_form_holding_ids_directly_linked_to_hospital_record_numbers = "admission"
 redcap_fields_to_ignore_process_field_warnings = ["masterid","cnbpid"]
-cnn_connection_string = environment.CNN_CONNECTION_STRING
-cnfun_connection_string = environment.CNFUN_CONNECTION_STRING
-redcap_export_enabled = environment.REDCAP_EXPORT_ENABLED
+
 mysql_export_enabled = environment.MYSQL_EXPORT_ENABLED
 mysql_export_host = environment.MYSQL_EXPORT_HOST
 mysql_export_port = environment.MYSQL_EXPORT_PORT
