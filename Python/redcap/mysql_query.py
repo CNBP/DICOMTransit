@@ -12,6 +12,11 @@ from redcap.constants import mysql_export_host, mysql_export_port, mysql_export_
 from redcap.enums import MySQLType
 from redcap.transaction import RedcapTransaction
 from itertools import groupby
+import logging
+import sys
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def send_mysql_data(transaction: RedcapTransaction) -> (bool, str):
@@ -29,14 +34,22 @@ def send_mysql_data(transaction: RedcapTransaction) -> (bool, str):
 
     # For each table - (create table).
     for tablename, tablefields in tablelist:
-        create_mysql_table(tablename, tablefields)
+
+        # If table name is valid, otherwise show a warning.
+        if not tablename == "unknown":
+            create_mysql_table(tablename, tablefields)
+        else:
+            logger.info('Warning! : An unknown table name detected')
 
     # Get entries to create.  (Group by table name - get_mysql_tablename return the tablename to use)
     entrieslist = groupby(transaction.redcap_queue, lambda f: get_mysql_tablename(transaction.redcap_metadata, f[0]))
 
     # For each table - (insert entries/lines).
     for tablename, entries in entrieslist:
-        insert_mysql_entries(tablename, entries)
+
+        # If table name is valid.
+        if not tablename == "unknown":
+            insert_mysql_entries(tablename, entries)
 
     # Return success.
     return True, "All data in queue has been sent to MySQL."
@@ -57,14 +70,20 @@ def get_mysql_tablename(metadata: list, entries: dict) -> str:
     if redcap_repeat_instrument is not None:
         return redcap_repeat_instrument
 
+    # If the last field inside entries is complete then it's the tablename. ( <tablename>_complete )
+    lastfieldname = list(entries.items())[-1][0]
+    if "complete" in lastfieldname:
+        return lastfieldname.replace("_complete", "")
+
     # For each field in metadata.
     for field in metadata:
 
         # For each fields inside the entries/fields (the line to insert)
-        for fieldname, fieldvalue in dict(map(reversed, entries.items())).items():
+        listentries = [(k,v) for k,v in entries.items()]
+        for entry in reversed(listentries):
 
             # If the entry dictionary contains the field name. (field[0] = fieldname)
-            if field[0] == fieldname:
+            if field[0] == entry[0]:
 
                 # Then we need to return the current table name. (field[3] = tablename)
                 return field[3]
@@ -230,11 +249,16 @@ def convert_redcap_to_mysql_fieldname(tablename: str, fieldname: str) -> str:
     """
 
     # If table name start with mst then we need to remove mst.
-    # Otherwise we will not be able to remove the useless name in the field like - [tablename_] because mst is not there.
+    # Otherwise we will not be able to remove the useless name in the field like - [tablename_]
+    # because mst is not there.
+    #
+    # We need to transform order to position and system to systems, otherwise mysql request will crash.
+    # (It will think it's a mysql parameter)
+
     if tablename.startswith("mst"):
-        return fieldname.replace(tablename[3:] + "_", "").replace("order", "position")
+        return fieldname.replace(tablename[3:] + "_", "").replace("order", "position").replace("system", "system_")
     else:
-        return fieldname.replace(tablename + "_", "").replace("order", "position")
+        return fieldname.replace(tablename + "_", "").replace("order", "position").replace("system", "system_")
 
 
 def wipe_all_mysql_data() -> None:
