@@ -565,6 +565,7 @@ class DICOMTransitImport(object):
             ST_zip_uploaded,
             ST_zip_inserted,
             prepare=[self.UpdateLORISStatus.__name__],
+            conditions=[self.CheckUploadSuccess.__name__],
             unless=[self.is_LORIS_Unavailable.__name__],
             after=[
                 self.InsertSubjectData.__name__,
@@ -1043,9 +1044,11 @@ class DICOMTransitImport(object):
         self.scan_anonymized = self.DICOM_package.validate_anonymization()
         logger.info("Double checking anonymization is successful.")
 
+
     def ZipFiles(self):
         # This will update DICOM_package.zip location.
         self.DICOM_package.zip()
+
 
     def UploadZip(self):
 
@@ -1066,6 +1069,7 @@ class DICOMTransitImport(object):
             f"{self.DICOM_package.zipname}.zip",
             self.mri_uploadID,
         )
+
 
     def RecordInsertion(self):
         # Set the completion status to ZERO
@@ -1155,6 +1159,7 @@ class DICOMTransitImport(object):
         else:
             self.trigger_wrap(TR_DetectedNetworkError)
 
+
     def UpdateLocalDBStatus(self):
         # Read local db. See if it exist based on the setting.
         from LocalDB.API import check_status
@@ -1164,6 +1169,7 @@ class DICOMTransitImport(object):
             logger.debug("LocalDB system status OKAY!")
         else:
             self.trigger_wrap(TR_DetectedLocalDBError)
+
 
     def UpdateOrthancStatus(self):
         # Check ENV for the predefined Orthanc URL to ensure that it exists.
@@ -1321,7 +1327,7 @@ if __name__ == "__main__":
             else:
                 # that previous statement will transition to waiting state.
                 logger.info(
-                    f"Orthanc did not detect any new data. Sleeping one hour. Current time:{unique_name()}"
+                    f"Orthanc did not detect any new data. Sleeping ONE HOUR. Current time:{unique_name()}"
                 )
                 check_new_data = True
                 time.sleep(3600)

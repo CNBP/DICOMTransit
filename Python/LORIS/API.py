@@ -245,15 +245,15 @@ def upload_visit_DICOM(local_path: str, DCCID: int, VisitLabel: str, isPhantom: 
     # Validations:
     if not os.path.isfile(local_path):
         logger.error(f"{local_path} is not a valid path to a file to be uploaded. ")
-        return None
+        raise FileNotFoundError(f"{local_path} is not a valid path to a file to be uploaded.")
 
     if not LORIS_validation.validate_DCCID(DCCID):
         logger.error(f"Provided DCCID: {DCCID} is invalid.")
-        return None
+        return ValueError(f"Provided DCCID: {DCCID} is invalid.")
 
     if not LORIS_timepoint.check_timepoint_compliance(VisitLabel):
         logger.error(f"Provided timepoint:{VisitLabel} is invalid.")
-        return None
+        return ValueError(f"Provided timepoint:{VisitLabel} is invalid.")
 
     filename = os.path.basename(local_path)
 
@@ -267,7 +267,7 @@ def upload_visit_DICOM(local_path: str, DCCID: int, VisitLabel: str, isPhantom: 
     response_success, token = LORIS_query.login()
     if not response_success:
         logger.error(f"Failed to login to LORIS. Check internet connections.")
-        raise ConnectionError
+        raise ConnectionError(f"Failed to login to LORIS. Check internet connections.")
 
     # Get the status code and process the atual
     status_code, response = LORIS_query.putCNBPDICOM(token, endpoint, data, isPhantom)
@@ -282,12 +282,12 @@ def upload_visit_DICOM(local_path: str, DCCID: int, VisitLabel: str, isPhantom: 
     # Check if it is 403: permission error.
     if LORIS_helper.is_response(status_code, 403):
         logger.critical("The credential in the configuration for uploading to LORIS is incorrect, you do not have the credential to upload files!")
-        return None
+        raise ValueError("The credential in the configuration for uploading to LORIS is incorrect, you do not have the credential to upload files!")
 
     # Check for when the response is properly 200.
-    elif LORIS_helper.is_response(status_code, 200):
+    elif LORIS_helper.is_response(status_code, 202):
 
-        logger.info("Status Code: 200 received properly.")
+        logger.info("Status Code: 202 received properly.")
         logger.info("Attempting to decode the JSON response:")
 
         # Convert to JSON.
@@ -296,20 +296,20 @@ def upload_visit_DICOM(local_path: str, DCCID: int, VisitLabel: str, isPhantom: 
         # If there is mri upload ID, return it, other wise, do not return.
         if "mri_upload_id" in json_response:
             upload_id = json_response["mri_upload_id"]
-            logger.debug(f"Successfully uploaded and server returned 200 with Upload ID of:{upload_id}")
+            logger.debug(f"Successfully uploaded and server returned 202 with Upload ID of:{upload_id}")
             return upload_id
 
-        logger.error(f"Successfully uploaded and server returned 200, but returned JSON does not contain 'mri_upload_id'")
-        return None
+        logger.error(f"Successfully uploaded and server returned 202, but returned JSON does not contain 'mri_upload_id'")
+        raise ValueError(f"Successfully uploaded and server returned 202, but returned JSON does not contain 'mri_upload_id'")
 
     # other. non 200 response.
-    elif not LORIS_helper.is_response(status_code, 200):
+    elif not LORIS_helper.is_response(status_code, 202):
         logger.critical(f"Upload process has returned a non-200 RESPONSE. Status code returned is {status_code}")
-        return None
+        raise ValueError(f"Upload process has returned a non-200 RESPONSE. Status code returned is {status_code}")
 
     else:
         logger.error("Unanticipated status code condition encountered.")
-        return None
+        raise UnboundLocalError("Unanticipated status code condition encountered.")
 
 
 def old_upload(local_path):

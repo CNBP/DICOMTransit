@@ -18,7 +18,7 @@ def check_status() -> bool:
     """
     credential = get_prod_orthanc_credentials()
     try:
-        endpoint = f"{credential.url}patients/"
+        endpoint = f"{credential.url}studies/"
         reseponse_code, _ = orthanc_query.getOrthanc(endpoint, credential)
         success = LORIS_helper.is_response(reseponse_code, 200)
     except:
