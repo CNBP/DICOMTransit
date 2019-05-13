@@ -22,6 +22,7 @@ def check_status() -> bool:
     :return:
     """
     from LORIS.query import LORIS_query
+
     status_LORIS, _ = LORIS_query.login()
     return status_LORIS
 
@@ -49,6 +50,7 @@ def check_online_status() -> bool:
 
     # WWW check vs Google
     import urllib.request
+
     status_google = urllib.request.urlopen("https://google.com").getcode()
     if not LORIS_helper.is_response(status_google, 200):
         return False
@@ -67,13 +69,13 @@ def old_trigger_insertion(zip_name: str):
     :param zip_name:
     :return:
     """
-    #zip_name = "VTXGL019996_206839_V1"
+    # zip_name = "VTXGL019996_206839_V1"
 
     # Form the JSON representing the scan.
     JSON_scan = {
-        'file': f"/data/incoming/{zip_name}.zip",
-        'phantom': "N",
-        'candidate': zip_name
+        "file": f"/data/incoming/{zip_name}.zip",
+        "phantom": "N",
+        "candidate": zip_name,
     }
     # Concatenate the scan.
     scans = [JSON_scan]
@@ -81,7 +83,10 @@ def old_trigger_insertion(zip_name: str):
     # Trigger its insertion by calling the API.
     trigger_dicom_insert(scans)
 
-def new_trigger_insertion(DCCID: int, VisitLabel: str, filename:str, mri_upload_id: int) -> int:
+
+def new_trigger_insertion(
+    DCCID: int, VisitLabel: str, filename: str, mri_upload_id: int
+) -> int:
     """
     Trigger the insertion of the subject files and then return the process_id which can be checked later on.
     :param DCCID:
@@ -99,10 +104,11 @@ def new_trigger_insertion(DCCID: int, VisitLabel: str, filename:str, mri_upload_
         raise ConnectionError
 
     import json
+
     request_dictionary = {
         "process_type": "mri_upload",
         "Filename": filename,
-        "mri_upload_id": mri_upload_id
+        "mri_upload_id": mri_upload_id,
     }
 
     # the request in json format ready for payload.
@@ -115,7 +121,10 @@ def new_trigger_insertion(DCCID: int, VisitLabel: str, filename:str, mri_upload_
 
     if LORIS_helper.is_response(status_code, 202):
         response_dict = response.json()
-        if "processes" in response_dict and "process_id" in response_dict["processes"][0]:
+        if (
+            "processes" in response_dict
+            and "process_id" in response_dict["processes"][0]
+        ):
             process_id = int(response_dict["processes"][0]["process_id"])
 
     return process_id
@@ -128,14 +137,18 @@ def increment_timepoint(DCCID: int):
     :return:
     """
     from LORIS.query import LORIS_query
+
     success, token = LORIS_query.login()
     if not success:
         raise ConnectionError("LORIS Login failed!")
 
     from LORIS.timepoint import LORIS_timepoint
+
     success, timepoint = LORIS_timepoint.increaseTimepoint(token, DCCID)
     if not success:
-        raise ConnectionError("LORIS not responsive while trying to increase timepoints!")
+        raise ConnectionError(
+            "LORIS not responsive while trying to increase timepoints!"
+        )
     return timepoint
 
 
@@ -154,10 +167,9 @@ def create_candidate(project, birthday, gender) -> (bool, int, int):
     if not success:
         raise ConnectionError("LORIS not responsive while trying to create candidate")
 
-
-    #responded, success = LORIS_candidates.checkDCCIDExist(token, DCCID)
-    #assert responded
-    #assert success
+    # responded, success = LORIS_candidates.checkDCCIDExist(token, DCCID)
+    # assert responded
+    # assert success
 
     success, PSCID = LORIS_candidates.checkDCCIDExist(token, DCCID)
     if not success:
@@ -182,7 +194,9 @@ def get_all_timepoints(DCCID: int) -> List[str]:
         raise ConnectionError
 
     # Get Candidate JSON.
-    response_success, candidate_json = LORIS_query.getCNBP(token, "candidates/"+str(DCCID))
+    response_success, candidate_json = LORIS_query.getCNBP(
+        token, "candidates/" + str(DCCID)
+    )
     if not response_success:
         raise ConnectionError
 
@@ -209,7 +223,7 @@ def get_allUID(DCCID: int) -> List[str]:
     # Get Candidate JSON.
     visits = get_all_timepoints(DCCID)
 
-    list_series_UID=[]
+    list_series_UID = []
 
     # Loop through all visits.
     if len(visits) > 0:
@@ -217,7 +231,9 @@ def get_allUID(DCCID: int) -> List[str]:
         # Get dicom series info and then make sure they have series UID and then return them.
         for visit in visits:
 
-            response_success, dicom_info = LORIS_query.getCNBP(token, f"candidates/{str(DCCID)}/{visit}/dicoms")
+            response_success, dicom_info = LORIS_query.getCNBP(
+                token, f"candidates/{str(DCCID)}/{visit}/dicoms"
+            )
 
             if "DicomTars" in dicom_info:
                 list_dicom_tars = dicom_info["DicomTars"]
@@ -241,19 +257,21 @@ def upload_visit_DICOM(local_path: str, DCCID: int, VisitLabel: str, isPhantom: 
     from LORIS.validate import LORIS_validation
     from LORIS.timepoint import LORIS_timepoint
 
-
     # Validations:
     if not os.path.isfile(local_path):
-        logger.error(f"{local_path} is not a valid path to a file to be uploaded. ")
-        raise FileNotFoundError(f"{local_path} is not a valid path to a file to be uploaded.")
+        error_string = f"{local_path} is not a valid path to a file to be uploaded. "
+        logger.error(error_string)
+        raise FileNotFoundError(error_string)
 
     if not LORIS_validation.validate_DCCID(DCCID):
-        logger.error(f"Provided DCCID: {DCCID} is invalid.")
-        return ValueError(f"Provided DCCID: {DCCID} is invalid.")
+        error_string = f"Provided DCCID: {DCCID} is invalid."
+        logger.error(error_string)
+        return ValueError(error_string)
 
     if not LORIS_timepoint.check_timepoint_compliance(VisitLabel):
-        logger.error(f"Provided timepoint:{VisitLabel} is invalid.")
-        return ValueError(f"Provided timepoint:{VisitLabel} is invalid.")
+        error_string = f"Provided timepoint:{VisitLabel} is invalid."
+        logger.error(error_string)
+        return ValueError(error_string)
 
     filename = os.path.basename(local_path)
 
@@ -261,13 +279,14 @@ def upload_visit_DICOM(local_path: str, DCCID: int, VisitLabel: str, isPhantom: 
     endpoint = f"/candidates/{DCCID}/{VisitLabel}/dicoms/{filename}"
 
     # Get Data: Read file into filestream object data
-    data = open(local_path, 'rb')
+    data = open(local_path, "rb")
 
     # Get token.
     response_success, token = LORIS_query.login()
     if not response_success:
-        logger.error(f"Failed to login to LORIS. Check internet connections.")
-        raise ConnectionError(f"Failed to login to LORIS. Check internet connections.")
+        error_string = f"Failed to login to LORIS. Check internet connections."
+        logger.error(error_string)
+        raise ConnectionError(error_string)
 
     # Get the status code and process the atual
     status_code, response = LORIS_query.putCNBPDICOM(token, endpoint, data, isPhantom)
@@ -278,14 +297,24 @@ def upload_visit_DICOM(local_path: str, DCCID: int, VisitLabel: str, isPhantom: 
     # log the response code.
     logger.debug(response)
 
+    return process_upload_response(response)
+
+
+def process_upload_response(response):
+    """
+    Check the upload response and then try to extract the process ID and UploadID
+    :param response:
+    :return:
+    """
 
     # Check if it is 403: permission error.
-    if LORIS_helper.is_response(status_code, 403):
-        logger.critical("The credential in the configuration for uploading to LORIS is incorrect, you do not have the credential to upload files!")
-        raise ValueError("The credential in the configuration for uploading to LORIS is incorrect, you do not have the credential to upload files!")
+    if LORIS_helper.is_response(response.status_code, 403):
+        warning_string = "The credential in the configuration for uploading to LORIS is incorrect, you do not have the credential to upload files!"
+        logger.critical(warning_string)
+        raise ValueError(warning_string)
 
     # Check for when the response is properly 200.
-    elif LORIS_helper.is_response(status_code, 202):
+    elif LORIS_helper.is_response(response.status_code, 202):
 
         logger.info("Status Code: 202 received properly.")
         logger.info("Attempting to decode the JSON response:")
@@ -293,23 +322,39 @@ def upload_visit_DICOM(local_path: str, DCCID: int, VisitLabel: str, isPhantom: 
         # Convert to JSON.
         json_response = response.json()
 
-        # If there is mri upload ID, return it, other wise, do not return.
-        if "mri_upload_id" in json_response:
-            upload_id = json_response["mri_upload_id"]
-            logger.debug(f"Successfully uploaded and server returned 202 with Upload ID of:{upload_id}")
-            return upload_id
+        """
+        The Keys Will return: 
+            MRI upload ID
+            Status
+            Processes:
+        """
 
-        logger.error(f"Successfully uploaded and server returned 202, but returned JSON does not contain 'mri_upload_id'")
-        raise ValueError(f"Successfully uploaded and server returned 202, but returned JSON does not contain 'mri_upload_id'")
+        # If there is mri upload ID, return it, other wise, do not return.
+        if "processes" in json_response:
+            # fixme: should attempt ot extract not only MRI_upload ID but also the process ID to return
+            return 0
+
+        elif "mri_upload_id" in json_response:
+            upload_id = json_response["mri_upload_id"]
+            logger.debug(
+                f"Successfully uploaded and server returned 202 with Upload ID of:{upload_id}"
+            )
+            return upload_id
+        else:
+            warning_string = "Successfully uploaded and server returned 202, but returned JSON does not contain 'mri_upload_id'"
+            logger.error(warning_string)
+            raise ValueError(warning_string)
 
     # other. non 200 response.
-    elif not LORIS_helper.is_response(status_code, 202):
-        logger.critical(f"Upload process has returned a non-200 RESPONSE. Status code returned is {status_code}")
-        raise ValueError(f"Upload process has returned a non-200 RESPONSE. Status code returned is {status_code}")
+    elif not LORIS_helper.is_response(response.status_code, 202):
+        warning_string = f"Upload process has returned a non-202 RESPONSE. Status code returned is {response.status_code}"
+        logger.critical(warning_string)
+        raise ValueError(warning_string)
 
     else:
-        logger.error("Unanticipated status code condition encountered.")
-        raise UnboundLocalError("Unanticipated status code condition encountered.")
+        warning_string = "Unanticipated status code condition encountered."
+        logger.error(warning_string)
+        raise UnboundLocalError(warning_string)
 
 
 def old_upload(local_path):
@@ -326,11 +371,18 @@ def old_upload(local_path):
     LORISHostUsername = config_get("LORISHostUsername")
     LORISHostPassword = config_get("LORISHostPassword")
 
-    Client = LORIS_helper.getProxySSHClient(ProxyIP, ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername,
-                                            LORISHostPassword)
+    Client = LORIS_helper.getProxySSHClient(
+        ProxyIP,
+        ProxyUsername,
+        ProxyPassword,
+        LORISHostIP,
+        LORISHostUsername,
+        LORISHostPassword,
+    )
 
     file_name = os.path.basename(local_path)
-    LORIS_helper.uploadThroughClient(Client, "//data/incoming/"+file_name, local_path)
+    LORIS_helper.uploadThroughClient(Client, "//data/incoming/" + file_name, local_path)
+
 
 """
 def trigger_insertion(file_name):

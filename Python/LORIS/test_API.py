@@ -27,7 +27,9 @@ class UT_LORISAPI(unittest.TestCase):
         return get_allUID(471400)
 
     def test_upload_visit_DICOM(self):
-        upload_visit_DICOM(r"C:\Users\Yang Ding\Desktop\VXS0000057_229523_V1.zip", 229523, "V1", False)
+        upload_visit_DICOM(
+            r"C:\Users\Yang Ding\Desktop\VXS0000057_229523_V1.zip", 229523, "V1", False
+        )
 
     def test_trigger_insertion(self):
         new_trigger_insertion(229523, "V1", "VXS0000057_229523_V1.zip", 59)

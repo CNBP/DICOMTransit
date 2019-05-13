@@ -1,9 +1,8 @@
-#import os
-#import sys
+# import os
+# import sys
 
 
-class DICOM_assign():
-
+class DICOM_assign:
     @staticmethod
     def project(DICOM_path):
         """

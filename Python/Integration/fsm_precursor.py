@@ -11,10 +11,10 @@ if __name__ == "__main__":
     # Eventually, a finite state machine will be built out of this
 
     credential = orthanc.API.get_prod_orthanc_credentials()
-    #credential = orthanc.API.get_local_orthanc_credentials()
+    # credential = orthanc.API.get_local_orthanc_credentials()
 
     # Get list of subjects.
-    #list_subjects = orthanc.API.get_list_of_subjects(url, user, password)
+    # list_subjects = orthanc.API.get_list_of_subjects(url, user, password)
     list_subjects = orthanc.API.get_list_of_subjects_noauth(credential.url)
 
     assert len(list_subjects) > 0
@@ -22,7 +22,9 @@ if __name__ == "__main__":
     # Get ALL subjects, loop through them
     for subject in list_subjects[2:5]:
         try:
-            subject_url = f"{credential.url}patients/{subject }/archive"  # it must contain patients/ and archive in the path name
+            subject_url = (
+                f"{credential.url}patients/{subject }/archive"
+            )  # it must contain patients/ and archive in the path name
 
             zip_file = orthanc.API.get_StudyUID_zip(subject_url, credential)
             dicom_folder = orthanc.API.unpack_subject_zip(zip_file)
@@ -43,7 +45,9 @@ if __name__ == "__main__":
                 DICOM_package.project = "loris"
 
                 # create new PSCID and get DCCID
-                success, DCCID, PSCID = LORIS.API.create_candidate(DICOM_package.project, DICOM_package.birthday, DICOM_package.gender)
+                success, DCCID, PSCID = LORIS.API.create_candidate(
+                    DICOM_package.project, DICOM_package.birthday, DICOM_package.gender
+                )
 
                 # Local Variable for anonymization.
                 DICOM_package.DCCID = DCCID
@@ -58,13 +62,18 @@ if __name__ == "__main__":
 
             elif MRN_exist is True:
                 import datetime
+
                 # Intervention block: Check scan dates to see if they have already been inserted.
                 DICOM_date = DICOM_package.scan_date
                 API_date_string = LocalDB.API.get_scan_date(DICOM_package.MRN)
-                LocalDB_date = datetime.datetime.strptime(API_date_string,"%Y-%m-%d %H:%M:%S")
+                LocalDB_date = datetime.datetime.strptime(
+                    API_date_string, "%Y-%m-%d %H:%M:%S"
+                )
 
-                if (DICOM_date == LocalDB_date):
-                    print("Scan date already exist in the database. Data likely already exist. Consider manual intervention. ")
+                if DICOM_date == LocalDB_date:
+                    print(
+                        "Scan date already exist in the database. Data likely already exist. Consider manual intervention. "
+                    )
                     continue
 
                 # Use MRN to retrieve CNBPID, update the dicom-package
@@ -74,8 +83,8 @@ if __name__ == "__main__":
                 DICOM_package.DCCID = LocalDB.API.get_DCCID(DICOM_package.MRN)
 
                 # Get the latest local known timepoint:
-                #last_database_timepoint = LocalDB.API.get_timepoint(DICOM_package.MRN)
-                #print("Last known timepoint: "+last_database_timepoint)
+                # last_database_timepoint = LocalDB.API.get_timepoint(DICOM_package.MRN)
+                # print("Last known timepoint: "+last_database_timepoint)
 
                 # Using LORIS API to create the new timepoint:
                 latest_timepoint = LORIS.API.increment_timepoint(DCCID)
@@ -87,16 +96,25 @@ if __name__ == "__main__":
 
                 # Write to database and also online.
             else:
-                raise ValueError("Ambigious MRN existence status. Check code for error.")  # Any unanticipated errors.
+                raise ValueError(
+                    "Ambigious MRN existence status. Check code for error."
+                )  # Any unanticipated errors.
 
             # Generate new string with everything.
             DICOM_package.zipname = f"{DICOM_package.CNBPID}_{str(DICOM_package.DCCID)}_{DICOM_package.timepoint}"
 
             # Anonymize to Zip
-            DICOM.API.anonymize_to_zip(DICOM_package.dicom_folder, DICOM_package.zipname)
+            DICOM.API.anonymize_to_zip(
+                DICOM_package.dicom_folder, DICOM_package.zipname
+            )
 
             # Upload
-            LORIS.API.old_upload(os.path.join(r"C:\GitHub\DICOMTransit\Python\data_archives", DICOM_package.zipname + ".zip"))
+            LORIS.API.old_upload(
+                os.path.join(
+                    r"C:\GitHub\DICOMTransit\Python\data_archives",
+                    DICOM_package.zipname + ".zip",
+                )
+            )
 
             # Trigger insertion.
             LORIS.API.new_trigger_insertion(DICOM_package.zipname)

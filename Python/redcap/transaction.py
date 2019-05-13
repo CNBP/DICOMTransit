@@ -9,6 +9,7 @@ from redcap.enums import Field
 #  RedcapTransaction
 # ----------------------------------------------------------------------------------------------------------------------
 
+
 class RedcapTransaction:
 
     data_import_configuration = []
@@ -34,7 +35,9 @@ class RedcapTransaction:
         :param index_hospital_record_number: Index of Hospital Record Number
         :return: None
         """
-        self.HospitalRecordNumber = self.hospital_record_numbers[index_hospital_record_number]
+        self.HospitalRecordNumber = self.hospital_record_numbers[
+            index_hospital_record_number
+        ]
         self.CaseId = -1
         self.BabyId = -1
         self.MotherId = -1

@@ -5,8 +5,12 @@
 from redcap.common import process_field
 from redcap.constants import *
 from redcap.enums import Field
-from redcap.local_odbc import get_case_ids, get_database_column_names, get_data_rows_for_patient_table,\
-    get_primary_key_name
+from redcap.local_odbc import (
+    get_case_ids,
+    get_database_column_names,
+    get_data_rows_for_patient_table,
+    get_primary_key_name,
+)
 from redcap.query import get_fields
 from redcap.transaction import RedcapTransaction
 from LocalDB.API import set_CNNIDs
@@ -92,13 +96,19 @@ def process_table(index_table, transaction: RedcapTransaction):
     table_configuration = transaction.data_import_configuration
 
     # Get current table redcap fields.
-    current_table_redcap_fields = get_fields(table_configuration[index_table][REDCAP_FORM_NAME], transaction)
+    current_table_redcap_fields = get_fields(
+        table_configuration[index_table][REDCAP_FORM_NAME], transaction
+    )
 
     # Get database columns list.
-    database_column_list = get_database_column_names(table_configuration[index_table], transaction)
+    database_column_list = get_database_column_names(
+        table_configuration[index_table], transaction
+    )
 
     # Get all data for this case in this patient table
-    rows = get_data_rows_for_patient_table(table_configuration[index_table], transaction)
+    rows = get_data_rows_for_patient_table(
+        table_configuration[index_table], transaction
+    )
 
     # If no data were retrieved from the database, skip.
     if rows is None:
@@ -107,10 +117,24 @@ def process_table(index_table, transaction: RedcapTransaction):
     # For each row of data retrieved from the database
     for index_row in range(len(rows)):
 
-        process_row(current_table_redcap_fields, database_column_list, index_row, index_table, rows, transaction)
+        process_row(
+            current_table_redcap_fields,
+            database_column_list,
+            index_row,
+            index_table,
+            rows,
+            transaction,
+        )
 
 
-def process_row(current_table_redcap_fields, database_column_list, index_row, index_table, rows, transaction):
+def process_row(
+    current_table_redcap_fields,
+    database_column_list,
+    index_row,
+    index_table,
+    rows,
+    transaction,
+):
     """
     Process each row of the current table for the current MRN.
     :param current_table_redcap_fields: Current table REDCap fields
@@ -125,8 +149,13 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
     table_configuration = transaction.data_import_configuration
 
     # If this is the first row of data and the current table has authority on any ids
-    if index_row == 0 and table_configuration[index_table][AUTHORITY_ON_IDS] is not None:
-        set_case_related_ids(database_column_list, index_row, index_table, rows, transaction)
+    if (
+        index_row == 0
+        and table_configuration[index_table][AUTHORITY_ON_IDS] is not None
+    ):
+        set_case_related_ids(
+            database_column_list, index_row, index_table, rows, transaction
+        )
 
     # Create a blank dictionary.
     record_text = {}
@@ -156,24 +185,39 @@ def process_row(current_table_redcap_fields, database_column_list, index_row, in
 
     # Set repeatable data (if applicable).
     if table_configuration[index_table][IS_REPEATABLE_INSTRUMENT]:
-        record_text[redcap_repeat_instrument_key_name] = table_configuration[index_table][REDCAP_FORM_NAME].lower()
+        record_text[redcap_repeat_instrument_key_name] = table_configuration[
+            index_table
+        ][REDCAP_FORM_NAME].lower()
         record_text[redcap_repeat_instance_key_name] = str(index_row + 1)
 
     # For each REDCap field in this table
     for index_field in range(len(current_table_redcap_fields)):
 
-        process_field(index_field, current_table_redcap_fields, database_column_list, index_row, record_text, rows)
+        process_field(
+            index_field,
+            current_table_redcap_fields,
+            database_column_list,
+            index_row,
+            record_text,
+            rows,
+        )
 
     # Mark this table entry as 'complete'.
-    redcap_complete_status_key_name = table_configuration[index_table][REDCAP_FORM_NAME].lower() + \
-                                      redcap_complete_status_suffix
+    redcap_complete_status_key_name = (
+        table_configuration[index_table][REDCAP_FORM_NAME].lower()
+        + redcap_complete_status_suffix
+    )
     record_text[redcap_complete_status_key_name] = redcap_complete_status_value
 
     # Add this item to the REDCap queue.
-    transaction.add_redcap_queue(record_text, table_configuration[index_table][REDCAP_PROJECT])
+    transaction.add_redcap_queue(
+        record_text, table_configuration[index_table][REDCAP_PROJECT]
+    )
 
 
-def set_case_related_ids(database_column_list, index_row, index_table, rows, transaction):
+def set_case_related_ids(
+    database_column_list, index_row, index_table, rows, transaction
+):
     """
     This function will set all case related ids that the current table has authority on
     :param database_column_list: Database columns list

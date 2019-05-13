@@ -10,8 +10,8 @@ from PythonUtils.intmath import int_incrementor
 
 logger = logging.getLogger()
 
-class LORIS_timepoint:
 
+class LORIS_timepoint:
     @staticmethod
     def check_timepoint_compliance(input_string: str) -> bool:
         """
@@ -33,10 +33,11 @@ class LORIS_timepoint:
         if timepoint_number.isalpha():
             return False
 
-        if timepoint_number.isnumeric() and timepoint_number.isdigit(): # be wary of edge case like ³
+        if (
+            timepoint_number.isnumeric() and timepoint_number.isdigit()
+        ):  # be wary of edge case like ³
             return True
         return False
-
 
     @staticmethod
     def visit_number_extraction(string: str):
@@ -48,9 +49,9 @@ class LORIS_timepoint:
         """
         number_extracted = LORIS_helper.number_extraction(string)
 
-        #return last number from the timepoint string: usually it should be V2 or T3 things like that.
+        # return last number from the timepoint string: usually it should be V2 or T3 things like that.
         if len(number_extracted) > 1:
-            return number_extracted[len(number_extracted)-1]
+            return number_extracted[len(number_extracted) - 1]
         else:
             return number_extracted[0]
 
@@ -62,9 +63,11 @@ class LORIS_timepoint:
         :param DCCID: DCCID to retrieve the last timepoint of
         :return: a string representation of the last time point.
         """
-        assert(LORIS_validation.validate_DCCID(DCCID)) # Ensure it actually first exist.
+        assert LORIS_validation.validate_DCCID(DCCID)  # Ensure it actually first exist.
 
-        response_success, candidate_json = LORIS_query.getCNBP(token, r"candidates/" + str(DCCID)) # should exist as earlier check revealed.
+        response_success, candidate_json = LORIS_query.getCNBP(
+            token, r"candidates/" + str(DCCID)
+        )  # should exist as earlier check revealed.
 
         # preliminary exit condition
         if not response_success:
@@ -73,7 +76,9 @@ class LORIS_timepoint:
         candidate_visits_list = candidate_json.get("Visits")
 
         if len(candidate_visits_list) > 0:
-            return candidate_visits_list[len(candidate_visits_list)-1] # return the LAST TIME POINT!
+            return candidate_visits_list[
+                len(candidate_visits_list) - 1
+            ]  # return the LAST TIME POINT!
         return None
 
     @staticmethod
@@ -84,12 +89,12 @@ class LORIS_timepoint:
         :param DCCID: the DCCID of the existing subject.
         :return: if creation request is successful, and what label is actually created.
         """
-        #todo: must handle the special edge case where timepoint reach V10 etc where two or three more digits are there!
+        # todo: must handle the special edge case where timepoint reach V10 etc where two or three more digits are there!
 
         timepoint_label = ""
 
         # ensure valid input and subject actually exist.
-        assert (LORIS_validation.validate_DCCID(DCCID))
+        assert LORIS_validation.validate_DCCID(DCCID)
         subject_exist, _ = LORIS_candidates.checkDCCIDExist(token, DCCID)
         if not subject_exist:
             return False, None
@@ -102,7 +107,6 @@ class LORIS_timepoint:
         else:
             visit_number = LORIS_timepoint.visit_number_extraction(latest_timepoint)
             new_visit_number = int_incrementor(visit_number)
-
 
             prefix = config_get("timepoint_prefix")
 
@@ -121,25 +125,32 @@ class LORIS_timepoint:
         :param time_point:
         :return:
         """
-        endpoint = r"/candidates/"+str(DCCID)+r"/"+time_point
-        MetaData = {"CandID": DCCID, "Visit": time_point, "Site": config_get("institutionName"), "Battery" : "CNBP"} # default to CNBP for NOW
+        endpoint = r"/candidates/" + str(DCCID) + r"/" + time_point
+        MetaData = {
+            "CandID": DCCID,
+            "Visit": time_point,
+            "Site": config_get("institutionName"),
+            "Battery": "CNBP",
+        }  # default to CNBP for NOW
         Meta = {"Meta": MetaData}
         JSON = json.dumps(Meta)
         status_code, _ = LORIS_query.putCNBP(token, endpoint, JSON)
-        success = LORIS_helper.is_response(status_code, 201) # 201 signify successufl subject timepoint creation!
+        success = LORIS_helper.is_response(
+            status_code, 201
+        )  # 201 signify successufl subject timepoint creation!
 
         # response should be null!
         return success
 
 
 # Only executed when running directly.
-if __name__ == '__main__':
+if __name__ == "__main__":
     # print(login())
     # getCNBP("projects")
     # assert(checkPSCIDExist("CNBP0020002"))
     Success, token = LORIS_query.login()
     # createTimePoint(token, 559776, "V9")
     success, latest_timepoint = LORIS_timepoint.increaseTimepoint(token, 635425)
-    print (success)
-    print (latest_timepoint)
+    print(success)
+    print(latest_timepoint)
     # print("Test complete")

@@ -11,82 +11,86 @@ import os
 
 logger = logging.getLogger()
 
+
 class DICOMPackage:
     """
     DICOM package class that represents a collection of DICOM
     files with shared ID, CNBP, timepoint, MRN etc information usually obtained from the same session
     """
+
     def __init__(self, dicom_folder=None, consistency_check=True):
         logger.info("Creating subject specific DICOM package class")
         # Set the DICOM_folder attribute
-        self.__dicom_folder__ = dicom_folder  # reference kept to prevent auto garbage collection
+        self.__dicom_folder__ = (
+            dicom_folder
+        )  # reference kept to prevent auto garbage collection
         self.dicom_folder: str = dicom_folder.name
 
         # Set default value.
         self.validity: bool = None
-        self.dicom_files: list = None # should already be validated and vetted by the DICOM_validate.path routine
+        self.dicom_files: list = None  # should already be validated and vetted by the DICOM_validate.path routine
 
         # series UID: used to tell if a scan has been uploaded before.
         self.list_series_UID = None
 
         # Update validity and dicom_files. This flag is used successful
-        self.validity, self.dicom_files, self.list_series_UID = DICOM_elements_batch.traversal(self.dicom_folder, consistency_check) #actual path stored in name.
+        self.validity, self.dicom_files, self.list_series_UID = DICOM_elements_batch.traversal(
+            self.dicom_folder, consistency_check
+        )  # actual path stored in name.
 
-        self.CNBPID: str = None # also known as PSCI id
+        self.CNBPID: str = None  # also known as PSCI id
         self.DCCID: int = None
         self.timepoint: str = None
 
+        self.studies: str = None  # study description from raw DICOM
+        self.project: str = None  # the actual project ID used on LORIS.
 
-        self.studies: str = None # study description from raw DICOM
-        self.project: str = None # the actual project ID used on LORIS.
-
-        self.MRN: int = None # Medical Record Number
+        self.MRN: int = None  # Medical Record Number
         self.birthday = None
         self.sex = None
         self.gender = None
         self.scan_date = None
 
-
         self.is_anonymized: bool = False
         self.is_zipped: bool = False
-        self.zipname: str = None # this zip name has NO EXTENSION! Many code assume its extension is ZIP.
+        self.zipname: str = None  # this zip name has NO EXTENSION! Many code assume its extension is ZIP.
         self.zip_location: str = None
 
         logger.info("Commencing subject specific checks. ")
 
-
-
-
         # todo study inference is not robust. Need debug and refactoring.
-        #success = self.update_study()
-        #assert success
+        # success = self.update_study()
+        # assert success
 
         # todo project inference is not robust. Need debug and refactoring.
-        #success = self.update_project()
-        #assert success
-
-
-
+        # success = self.update_project()
+        # assert success
 
         success = self.update_scan_date()
         if success:
             logger.info("Subject specific scan date pass check.")
         else:
-            logger.error("Subject scan data did not include scan date, high likelyhood of corrupt data or non-patient data. Assuming a default scan date of 1900-01-01")
-            raise ValueError("DICOM") #FIXME: enable these after full debug test.
+            logger.error(
+                "Subject scan data did not include scan date, high likelyhood of corrupt data or non-patient data. Assuming a default scan date of 1900-01-01"
+            )
+            raise ValueError("DICOM")  # FIXME: enable these after full debug test.
 
         success = self.update_birthdate()
         if success:
             logger.info("Subject specific birthdate pass check.")
         else:
-            logger.error("Subjects have NO BIRTHDATE! LORIS interaction will not function.")
+            logger.error(
+                "Subjects have NO BIRTHDATE! LORIS interaction will not function."
+            )
             raise ValueError("DICOM")
 
         success = self.update_sex()
         if success:
             logger.info("Subject specific sex pass check.")
         else:
-            logger.error("Subjects have NO BIRTHDATE! LORIS interaction will not function.")
+            logger.error(
+                "Subjects have NO BIRTHDATE! LORIS interaction will not function."
+            )
             ValueError("DICOM")
 
         success = self.update_gender()
@@ -96,8 +100,9 @@ class DICOMPackage:
             logger.error("Subject gender failed check.")
             ValueError("DICOM")
 
-        logger.debug(f"DICOMPackage successfully initialized based on {self.dicom_folder}")
-
+        logger.debug(
+            f"DICOMPackage successfully initialized based on {self.dicom_folder}"
+        )
 
     def check_validity(self):
         """
@@ -106,19 +111,19 @@ class DICOMPackage:
         :return:
         """
 
-
         # Update validity and dicom_files if they have not been done before.
         if self.validity is None:
             # Force an individual file level naming/user ID consistency check.
-            self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder, consistency_check=True)
+            self.validity, self.dicom_files = DICOM_validate.path(
+                self.dicom_folder, consistency_check=True
+            )
 
         # Check validity before moving forward with the update process:
         if self.validity is True:
-            #package_function()
+            # package_function()
             return True
         else:
             return False
-
 
     def update_study(self):
         """
@@ -127,6 +132,7 @@ class DICOMPackage:
         """
         if self.check_validity():
             import DICOM.API
+
             # retrieve all the possible studies.
             self.studies = DICOM.API.retrieve_study_protocol(self.dicom_files)
             return True
@@ -140,8 +146,8 @@ class DICOMPackage:
         """
         if self.check_validity():
             import DICOM.API
-            self.project = DICOM.API.study_validation(self.studies)
 
+            self.project = DICOM.API.study_validation(self.studies)
 
     def update_birthdate(self):
         """
@@ -150,14 +156,18 @@ class DICOMPackage:
         """
         if self.check_validity():
             from DICOM.elements import DICOM_elements
+
             # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the birthday from first file.
-            success, self.birthday = DICOM_elements.retrieve_birthday(self.dicom_files[0])
+            success, self.birthday = DICOM_elements.retrieve_birthday(
+                self.dicom_files[0]
+            )
             if not success:
-                raise ValueError(f"Could not retrieve birthday from DICOM file {self.dicom_files[0]}")
+                raise ValueError(
+                    f"Could not retrieve birthday from DICOM file {self.dicom_files[0]}"
+                )
             return success
         else:
             return False
-
 
     def update_sex(self):
         """
@@ -166,14 +176,16 @@ class DICOMPackage:
         """
         if self.check_validity():
             from DICOM.elements import DICOM_elements
+
             # dicom_files are already vetted, and all of them are consistent in terms of MRN, just load the sex from first file.
             success, self.sex = DICOM_elements.retrieve_sex(self.dicom_files[0])
             if not success:
-                raise ValueError(f"Could not retrieve sex from DICOM file {self.dicom_files[0]}")
+                raise ValueError(
+                    f"Could not retrieve sex from DICOM file {self.dicom_files[0]}"
+                )
             return success
         else:
             return False
-
 
     def update_gender(self):
         """
@@ -189,7 +201,6 @@ class DICOMPackage:
         else:
             return False
 
-
     def update_scan_date(self):
         """
         Retrieve the scan date from the DIOCM files and then update the DICOM archive.
@@ -197,16 +208,19 @@ class DICOMPackage:
         """
         if self.check_validity():
             from DICOM.elements import DICOM_elements
-            success, self.scan_date = DICOM_elements.retrieve_scan_date(self.dicom_files[0])
+
+            success, self.scan_date = DICOM_elements.retrieve_scan_date(
+                self.dicom_files[0]
+            )
             if success:
                 return success
             else:
                 from datetime import datetime
+
                 self.scan_date = datetime.strptime("19000101", "%Y%m%d")
                 return False
         else:
             return False
-
 
     def update_MRN(self):
         """
@@ -222,8 +236,7 @@ class DICOMPackage:
         else:
             return False
 
-
-    def get_dicom_files(self, consistency_check = True):
+    def get_dicom_files(self, consistency_check=True):
         """
         A more secure way of getting DICOM files instead of directly reading the attribute (as it can be None)
         :return:
@@ -231,9 +244,10 @@ class DICOMPackage:
 
         # Validate all files and load them if they have not been loaded before.
         if self.dicom_files is None:
-            self.validity, self.dicom_files = DICOM_validate.path(self.dicom_folder, consistency_check)
+            self.validity, self.dicom_files = DICOM_validate.path(
+                self.dicom_folder, consistency_check
+            )
         return self.dicom_files
-
 
     def update_sUID(self) -> List[str]:
         """
@@ -241,9 +255,9 @@ class DICOMPackage:
         :return:
         """
         from DICOM.elements_batch import DICOM_elements_batch
+
         self.list_series_UID = DICOM_elements_batch.retrieve_sUID(self.dicom_files)
         return self.list_series_UID
-
 
     def anonymize(self):
         """
@@ -254,7 +268,11 @@ class DICOMPackage:
             logger.error("CNBPID, DCCID, Timepoint value is NONE!")
             raise ValueError
 
-        if not LORIS_validation.validate_CNBPID(self.CNBPID) or not LORIS_validation.validate_DCCID(self.DCCID) or not LORIS_timepoint.check_timepoint_compliance(self.timepoint):
+        if (
+            not LORIS_validation.validate_CNBPID(self.CNBPID)
+            or not LORIS_validation.validate_DCCID(self.DCCID)
+            or not LORIS_timepoint.check_timepoint_compliance(self.timepoint)
+        ):
             logger.error("CNBPID, DCCID, Timepoint value failed!")
             raise ValueError
 
@@ -263,9 +281,9 @@ class DICOMPackage:
         self.zipname = f"{self.CNBPID}_{str(self.DCCID)}_{self.timepoint}"
 
         from DICOM.anonymize import DICOM_anonymize
+
         DICOM_anonymize.folder(self.dicom_folder, self.zipname)
         self.is_anonymized = True
-
 
     def validate_anonymization(self):
         """
@@ -278,14 +296,16 @@ class DICOMPackage:
         if not len(self.dicom_files) > 0:
             raise ValueError("Empty list of DICOM files. ")
         if self.zipname is None:
-            raise ValueError("You have not generated the PSCID_DCCID_Visit name properly!")
+            raise ValueError(
+                "You have not generated the PSCID_DCCID_Visit name properly!"
+            )
 
         # Loop through all files and check.
         from DICOM.API import check_anonymization
+
         success = check_anonymization(self.dicom_files, self.zipname)
         self.is_anonymized = success
         return success
-
 
     def zip(self):
         """
@@ -301,5 +321,5 @@ class DICOMPackage:
         zip_with_name(self.dicom_folder, self.zipname)
 
         # update zip location, this is the ABSOLUTE path.
-        self.zip_location = os.path.join(zip_storage_path, self.zipname+".zip")
+        self.zip_location = os.path.join(zip_storage_path, self.zipname + ".zip")
         self.is_zipped = True

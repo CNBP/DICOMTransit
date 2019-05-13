@@ -9,12 +9,13 @@ import unittest
 #  UT_REDCapQuery
 # ----------------------------------------------------------------------------------------------------------------------
 
-class UT_REDCapQuery(unittest.TestCase):
 
+class UT_REDCapQuery(unittest.TestCase):
     @staticmethod
     def test_load_metadata():
         from redcap.transaction import RedcapTransaction
         from redcap.query import load_metadata
+
         transact = RedcapTransaction()
         load_metadata(transact)
 

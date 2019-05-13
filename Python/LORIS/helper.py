@@ -6,8 +6,8 @@ from settings import config_get
 
 logger = logging.getLogger()
 
-class LORIS_helper:
 
+class LORIS_helper:
     @staticmethod
     def number_extraction(string: str):
         """
@@ -16,7 +16,8 @@ class LORIS_helper:
         :return: a LIST of strings of number!
         """
         import re
-        return re.findall(r'\d+', string)
+
+        return re.findall(r"\d+", string)
 
     @staticmethod
     def is_response(status_code: int, expected_code: int) -> bool:
@@ -55,10 +56,9 @@ class LORIS_helper:
         :return:
         """
 
-
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        #ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
+        # ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
         ssh.connect(remote_ip, username=remote_login, password=remote_pw)
         sftp = ssh.open_sftp()
         remote_full_path = f"{remote_path}/{local_file_path}"
@@ -97,7 +97,14 @@ class LORIS_helper:
         return client
 
     @staticmethod
-    def getProxySSHClient(proxy_ip, proxy_login, proxy_pw, destination_ip, destination_login, destination_pw):
+    def getProxySSHClient(
+        proxy_ip,
+        proxy_login,
+        proxy_pw,
+        destination_ip,
+        destination_login,
+        destination_pw,
+    ):
         """
         Establish a SSH client through the proxy.
         :param proxy_ip:    IP address of the proxy server.
@@ -114,8 +121,8 @@ class LORIS_helper:
         # Establish transport layer through the proxy
         transport = proxy.get_transport()
         dest_addr = (destination_ip, 22)
-        local_addr = ('127.0.0.1', 10022)
-        proxy_transport = transport.open_channel('direct-tcpip', dest_addr, local_addr)
+        local_addr = ("127.0.0.1", 10022)
+        proxy_transport = transport.open_channel("direct-tcpip", dest_addr, local_addr)
 
         # Create a new paramiko SSH client through the
         client = paramiko.SSHClient()
@@ -127,7 +134,13 @@ class LORIS_helper:
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         # Connect the client and return it.
-        client.connect(destination_ip, 22, username=destination_login, password=destination_pw, sock=proxy_transport)
+        client.connect(
+            destination_ip,
+            22,
+            username=destination_login,
+            password=destination_pw,
+            sock=proxy_transport,
+        )
 
         return client
 
@@ -147,7 +160,7 @@ class LORIS_helper:
         print("stdout: ", stdout.readlines())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     ProxyIP = config_get("ProxyIP")
     ProxyUsername = config_get("ProxyUsername")
     ProxyPassword = config_get("ProxyPassword")
@@ -155,6 +168,15 @@ if __name__ == '__main__':
     LORISHostUsername = config_get("LORISHostUsername")
     LORISHostPassword = config_get("LORISHostPassword")
 
-    Client = LORIS_helper.getProxySSHClient(ProxyIP,  ProxyUsername, ProxyPassword, LORISHostIP, LORISHostUsername, LORISHostPassword)
-    LORIS_helper.uploadThroughClient(Client, "//data/incoming/VTXGL019999_598399_V1.zip", "VTXGL019999_598399_V1.zip")
-    #LORIS_helper.triggerCommand(Client, "pwd;cd /opt;pwd;ls")
+    Client = LORIS_helper.getProxySSHClient(
+        ProxyIP,
+        ProxyUsername,
+        ProxyPassword,
+        LORISHostIP,
+        LORISHostUsername,
+        LORISHostPassword,
+    )
+    LORIS_helper.uploadThroughClient(
+        Client, "//data/incoming/VTXGL019999_598399_V1.zip", "VTXGL019999_598399_V1.zip"
+    )
+    # LORIS_helper.triggerCommand(Client, "pwd;cd /opt;pwd;ls")

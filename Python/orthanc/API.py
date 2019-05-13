@@ -82,7 +82,9 @@ def get_all_subject_StudyUIDs(credential: orthanc_credential) -> List[List[str]]
     return list_studies
 
 
-def get_StudyUID_zip(orthanc_URL_with_StudyUID: str, credential: orthanc_credential) -> str:
+def get_StudyUID_zip(
+    orthanc_URL_with_StudyUID: str, credential: orthanc_credential
+) -> str:
     """
     Obtain the actual zip files of the subject based on the UUID given and unzip them to a temporary folder, and return it.
     :param orthanc_URL_with_StudyUID:
@@ -132,7 +134,5 @@ def delete_study(StudyUID: str) -> bool:
     :return: successful deletion status.
     """
     credential = get_prod_orthanc_credentials()
-    reseponse_code, _ = orthanc_query.deleteOrthanc(
-        f"studies/{StudyUID}", credential
-    )
+    reseponse_code, _ = orthanc_query.deleteOrthanc(f"studies/{StudyUID}", credential)
     return LORIS_helper.is_response(reseponse_code, 200)

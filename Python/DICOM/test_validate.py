@@ -8,10 +8,7 @@ from DICOM.validate import DICOM_validate
 from pydicom.data import get_testdata_files
 
 
-
-
 class UT_DICOMValidation(unittest.TestCase):
-
     @staticmethod
     def test_MRN():
         string = 1234567
@@ -41,4 +38,3 @@ class UT_DICOMValidation(unittest.TestCase):
         file_name = get_testdata_files("README.txt")[0]
         success, _ = DICOM_validate.file(file_name)
         assert not success
-

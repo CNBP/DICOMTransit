@@ -7,8 +7,8 @@ from tqdm import tqdm
 
 logger = logging.getLogger()
 
-class DICOM_sort:
 
+class DICOM_sort:
     @staticmethod
     def into_folder(input_folder, output_folder):
         """
@@ -17,8 +17,7 @@ class DICOM_sort:
         :return:
         """
 
-
-        #Element to check: Series number.
+        # Element to check: Series number.
 
         from PythonUtils.file import flatcopy
         from PythonUtils.folder import recursive_list
@@ -28,7 +27,6 @@ class DICOM_sort:
 
         if not os.path.isdir(output_folder):
             os.mkdir(output_folder)
-
 
         # copy them to a flat structure to the output folder.
         flatcopy(file_list, output_folder, DICOM_validate.file)
@@ -48,19 +46,23 @@ class DICOM_sort:
 
             success1, SeriesNumber = DICOM_elements.retrieve(file, "SeriesNumber")
 
-            success2, SeriesDescription = DICOM_elements.retrieve(file, "SeriesDescription")
+            success2, SeriesDescription = DICOM_elements.retrieve(
+                file, "SeriesDescription"
+            )
 
             if not success1 or not success2:
-                logger.info(f"Skipped file with no acquisition series information: {file}")
+                logger.info(
+                    f"Skipped file with no acquisition series information: {file}"
+                )
                 exception_encountered = exception_encountered + 1
                 continue
 
             # Check MRI Series folder exists
-            DestinationFolder = str(SeriesNumber) + '_' + SeriesDescription
-            DestinationFolder = DestinationFolder.replace(' ', '_')
-            DestinationFolder = DestinationFolder.replace(':', '_')
-            DestinationFolder = DestinationFolder.replace(r'/', '_')
-            DestinationFolder = DestinationFolder.replace(r'\\', '_')
+            DestinationFolder = str(SeriesNumber) + "_" + SeriesDescription
+            DestinationFolder = DestinationFolder.replace(" ", "_")
+            DestinationFolder = DestinationFolder.replace(":", "_")
+            DestinationFolder = DestinationFolder.replace(r"/", "_")
+            DestinationFolder = DestinationFolder.replace(r"\\", "_")
 
             # Make destination folder if not exist.
             os.chdir(output_folder)
@@ -75,4 +77,7 @@ class DICOM_sort:
 
 
 if __name__ == "__main__":
-    DICOM_sort.into_folder("C:\FullyAnonymizedSubjects\StreamLineTest", "C:\FullyAnonymizedSubjects\StreamLineTest\Test")
+    DICOM_sort.into_folder(
+        "C:\FullyAnonymizedSubjects\StreamLineTest",
+        "C:\FullyAnonymizedSubjects\StreamLineTest\Test",
+    )

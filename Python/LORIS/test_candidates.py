@@ -8,9 +8,8 @@ import sys
 
 logger = logging.getLogger()
 
+
 class UT_LORISCandidates(unittest.TestCase):
-
-
     def test_create_delete_subject(self):
         """
         Check both the creation and deletion of the subject for LORIS.
@@ -25,11 +24,11 @@ class UT_LORISCandidates(unittest.TestCase):
         # Example PSCI ID.
         PSCID = "VSX9990987"
 
-        success, DCCID = LORIS_candidates.createCandidate(token, "loris", "1986-11-18", "Male") #todo: check project ensure it is validated. Might need reassignment
+        success, DCCID = LORIS_candidates.createCandidate(
+            token, "loris", "1986-11-18", "Male"
+        )  # todo: check project ensure it is validated. Might need reassignment
         assert success
         LORIS_candidates.deleteCandidateCNBP(DCCID, PSCID)
-
-
 
     # Commenting out this function until project implementation has been sorted out
     """    
@@ -59,6 +58,7 @@ class UT_LORISCandidates(unittest.TestCase):
         assert LORIS_validation.validate_CNBPID(PSCID2)
         assert not LORIS_validation.validate_CNBPID(PSCID3)
         assert not LORIS_validation.validate_CNBPID(PSCID4)
+
 
 if __name__ == "__main__":
     UT_LORISCandidates.test_CNBP_PSCID()

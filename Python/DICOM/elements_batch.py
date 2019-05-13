@@ -6,10 +6,10 @@ import os
 from PythonUtils.folder import recursive_list
 from pydicom.dataset import FileDataset
 
-logger=logging.getLogger()
+logger = logging.getLogger()
+
 
 class DICOM_elements_batch:
-
     @staticmethod
     def retrieve_sUID(dicom_files: list, sample_rate: int = 10) -> List[str]:
         """
@@ -17,7 +17,9 @@ class DICOM_elements_batch:
         :param dicom_files:
         :return:
         """
-        logger.debug("Commencing unique series UID retrieval across representative DICOM files provided. ")
+        logger.debug(
+            "Commencing unique series UID retrieval across representative DICOM files provided. "
+        )
         from DICOM.elements import DICOM_elements
 
         # Randomly sample the list every 10 items as most DICOM scans have at least 10 DICOM files and this ensures performance.
@@ -28,10 +30,11 @@ class DICOM_elements_batch:
             success, UID = DICOM_elements.retrieve_seriesUID(file)
             if UID not in list_unique_sUID:
                 list_unique_sUID.append(UID)
-        logger.debug("Finished compiling a representative samples of unique series UID across DICOM files provided.")
+        logger.debug(
+            "Finished compiling a representative samples of unique series UID across DICOM files provided."
+        )
 
         return list_unique_sUID
-
 
     @staticmethod
     def traversal(dir_path: str, consistency_check: bool = True):
@@ -60,10 +63,11 @@ class DICOM_elements_batch:
         validated_DICOM_files = []
 
         from DICOM.elements import DICOM_elements
+
         logger.info("Traversing individual dicom file for validation information.")
 
         list_unique_sUID = []
-        previous_sUID = None # a shorthand to bypass the list check.
+        previous_sUID = None  # a shorthand to bypass the list check.
         # Check individual DICOM file for consistencies.
         for file in tqdm(files, position=0):
 
@@ -71,7 +75,9 @@ class DICOM_elements_batch:
             is_DICOM, dicom_obj = DICOM_validate.file(file)
 
             if not is_DICOM:
-                logger.error(f"Bad DICOM files detected: {file}. They are not returned in the validated list!")
+                logger.error(
+                    f"Bad DICOM files detected: {file}. They are not returned in the validated list!"
+                )
 
                 continue
 
@@ -83,31 +89,45 @@ class DICOM_elements_batch:
                 # todo: what if one of them is NONE?
                 # todo: what if the date and other things are inconsistent?
                 # Record first instance of patient ID and patient name.
-                if PatientID == '' and PatientName == '':
-                    Success, PatientID = DICOM_elements.retrieve_fast(dicom_obj, "PatientID")
-                    Success, PatientName = DICOM_elements.retrieve_fast(dicom_obj, "PatientName")
+                if PatientID == "" and PatientName == "":
+                    Success, PatientID = DICOM_elements.retrieve_fast(
+                        dicom_obj, "PatientID"
+                    )
+                    Success, PatientName = DICOM_elements.retrieve_fast(
+                        dicom_obj, "PatientName"
+                    )
 
                     # raise issue if not successful
                     if not Success:
                         logger.error(
-                            "DICOM meta data retrieval failure EVEN for the first DICOM FILE?! Checking next one.")
+                            "DICOM meta data retrieval failure EVEN for the first DICOM FILE?! Checking next one."
+                        )
                     else:
                         name = PatientName.original_string.decode("latin_1")
-                        logger.debug(f"DICOM meta data retrieval success: {PatientID} {name}")
+                        logger.debug(
+                            f"DICOM meta data retrieval success: {PatientID} {name}"
+                        )
 
                     # Regardless of success of failure, must continue to process the next file.
                     continue
 
                 # Check consistencies across folders in terms of patient ID, NAME.
-                Success1, CurrentPatientID = DICOM_elements.retrieve_fast(dicom_obj, "PatientID")
-                Success2, CurrentPatientName = DICOM_elements.retrieve_fast(dicom_obj, "PatientName")
+                Success1, CurrentPatientID = DICOM_elements.retrieve_fast(
+                    dicom_obj, "PatientID"
+                )
+                Success2, CurrentPatientName = DICOM_elements.retrieve_fast(
+                    dicom_obj, "PatientName"
+                )
 
                 if not Success1 or not Success2:
                     logger.error(
-                        "Could not retrieve fields for comparison. At least ONE DICOM file has inconsistent Patient ID/NAME field.")
+                        "Could not retrieve fields for comparison. At least ONE DICOM file has inconsistent Patient ID/NAME field."
+                    )
                     return False, None
 
-                if not (PatientID == CurrentPatientID) or not (PatientName == CurrentPatientName):
+                if not (PatientID == CurrentPatientID) or not (
+                    PatientName == CurrentPatientName
+                ):
                     logger.info("PatientID or Name mismatch from the dicom archive. .")
                     return False, None
 
@@ -122,9 +142,10 @@ class DICOM_elements_batch:
 
         return True, validated_DICOM_files, list_unique_sUID
 
-
     @staticmethod
-    def retrieval(dicom_object: FileDataset, DICOM_properties = List[str]) -> (bool, Optional[List[str]]):
+    def retrieval(
+        dicom_object: FileDataset, DICOM_properties=List[str]
+    ) -> (bool, Optional[List[str]]):
         """
         Retrieve a series of properties from an in memory DICOM object.
         :param dicom_object:
@@ -133,12 +154,11 @@ class DICOM_elements_batch:
         """
         list_properties = []
         for DICOM_property in DICOM_properties:
-            success, retrieved_property = DICOM_elements.retrieve_fast(dicom_object, DICOM_property)
+            success, retrieved_property = DICOM_elements.retrieve_fast(
+                dicom_object, DICOM_property
+            )
             if success:
                 list_properties.append(retrieved_property)
             else:
                 return False, None
         return True, list_properties
-
-
-

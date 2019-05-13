@@ -12,6 +12,7 @@ from redcap.transaction import RedcapTransaction
 #  Local ODBC
 # ----------------------------------------------------------------------------------------------------------------------
 
+
 def get_database_column_names(table_info, transaction: RedcapTransaction):
     """
     Returns a list of fields contained within a database table.
@@ -29,18 +30,24 @@ def get_database_column_names(table_info, transaction: RedcapTransaction):
         conn = pyodbc.connect(get_connection_string(table_info[DATABASE]))
         odbc_cursor = conn.cursor()
 
-        result = odbc_cursor.execute('SELECT * FROM [' + table_info[DATABASE_TABLE_NAME].lower() + '] WHERE 1=0')
+        result = odbc_cursor.execute(
+            "SELECT * FROM [" + table_info[DATABASE_TABLE_NAME].lower() + "] WHERE 1=0"
+        )
         database_columns = [tuple[0] for tuple in result.description]
 
         odbc_cursor.close()
         conn.close
 
         # Store a copy of column names for this table in local memory.
-        transaction.database_column_names[table_info[DATABASE_TABLE_NAME].lower()] = database_columns
+        transaction.database_column_names[
+            table_info[DATABASE_TABLE_NAME].lower()
+        ] = database_columns
 
     else:
         # Get column names from cache.
-        database_columns = transaction.database_column_names[table_info[DATABASE_TABLE_NAME].lower()]
+        database_columns = transaction.database_column_names[
+            table_info[DATABASE_TABLE_NAME].lower()
+        ]
 
     return database_columns
 
@@ -55,16 +62,24 @@ def get_case_ids(transaction: RedcapTransaction):
     case_ids = []
 
     primary_key_filter_name = Field.HospitalRecordNumber.name
-    primary_key_filter_value = str(transaction.get_primary_key_value(Field.HospitalRecordNumber.value))
+    primary_key_filter_value = str(
+        transaction.get_primary_key_value(Field.HospitalRecordNumber.value)
+    )
 
-    if primary_key_filter_name == '' or primary_key_filter_value == '' or primary_key_filter_value == 'None':
+    if (
+        primary_key_filter_name == ""
+        or primary_key_filter_value == ""
+        or primary_key_filter_value == "None"
+    ):
         return None
 
-    select_statement = ("SELECT [CaseId] FROM [Admission] WHERE [" +
-                        primary_key_filter_name +
-                        "] = '" +
-                        primary_key_filter_value +
-                        "'")
+    select_statement = (
+        "SELECT [CaseId] FROM [Admission] WHERE ["
+        + primary_key_filter_name
+        + "] = '"
+        + primary_key_filter_value
+        + "'"
+    )
 
     conn = pyodbc.connect(get_connection_string(1))
     odbc_cursor = conn.cursor()
@@ -94,35 +109,45 @@ def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
     if table_info is None:
         return None
 
-    if table_info[DATABASE_TABLE_NAME] == '':
+    if table_info[DATABASE_TABLE_NAME] == "":
         return None
 
     primary_key_filter_name = str(get_primary_key_name(table_info[PRIMARY_KEY_NAME]))
-    primary_key_filter_value = str(transaction.get_primary_key_value(table_info[PRIMARY_KEY_VALUE]))
+    primary_key_filter_value = str(
+        transaction.get_primary_key_value(table_info[PRIMARY_KEY_VALUE])
+    )
     primary_key_data_type = get_primary_key_data_type(table_info[PRIMARY_KEY_VALUE])
 
-    if primary_key_filter_name == '' or primary_key_filter_value == '' or primary_key_filter_value == 'None':
+    if (
+        primary_key_filter_name == ""
+        or primary_key_filter_value == ""
+        or primary_key_filter_value == "None"
+    ):
         return None
 
     if primary_key_data_type == DataType.String.value:
-        select_statement = ("SELECT * FROM [" +
-                            table_info[DATABASE_TABLE_NAME] +
-                            "] WHERE [" +
-                            primary_key_filter_name +
-                            "] = '" +
-                            primary_key_filter_value +
-                            "'")
+        select_statement = (
+            "SELECT * FROM ["
+            + table_info[DATABASE_TABLE_NAME]
+            + "] WHERE ["
+            + primary_key_filter_name
+            + "] = '"
+            + primary_key_filter_value
+            + "'"
+        )
     elif primary_key_data_type == DataType.Integer.value:
-        select_statement = ("SELECT * FROM [" +
-                            table_info[DATABASE_TABLE_NAME] +
-                            "] WHERE [" +
-                            primary_key_filter_name +
-                            "] = " +
-                            primary_key_filter_value)
+        select_statement = (
+            "SELECT * FROM ["
+            + table_info[DATABASE_TABLE_NAME]
+            + "] WHERE ["
+            + primary_key_filter_name
+            + "] = "
+            + primary_key_filter_value
+        )
     else:
-        select_statement = ''
+        select_statement = ""
 
-    if select_statement != '':
+    if select_statement != "":
 
         conn = pyodbc.connect(get_connection_string(table_info[DATABASE]))
         odbc_cursor = conn.cursor()
@@ -147,9 +172,9 @@ def get_data_rows_for_reference_table(table_info):
     :return: List of all the rows obtained from the query.
     """
     if table_info is not None:
-        if table_info[DATABASE_TABLE_NAME] != '':
+        if table_info[DATABASE_TABLE_NAME] != "":
 
-            select_statement = 'SELECT * FROM [' + table_info[DATABASE_TABLE_NAME] + ']'
+            select_statement = "SELECT * FROM [" + table_info[DATABASE_TABLE_NAME] + "]"
 
             conn = pyodbc.connect(get_connection_string(table_info[DATABASE]))
             odbc_cursor = conn.cursor()
@@ -180,7 +205,7 @@ def get_connection_string(database):
     elif database == Database.CNFUN.value:
         return cnfun_connection_string
     else:
-        return ''
+        return ""
 
 
 def get_primary_key_name(primary_key):

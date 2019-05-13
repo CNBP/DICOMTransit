@@ -1,18 +1,20 @@
 import argparse
-import os ,sys
+import os, sys
 import logging
 from crontab import CronTab
 
 # Get access to CronTab.
 system_cron = CronTab()
-user_cron = CronTab('root')
-file_cron = CronTab(tabfile='filename.tab')
-mem_cron = CronTab(tab="""
+user_cron = CronTab("root")
+file_cron = CronTab(tabfile="filename.tab")
+mem_cron = CronTab(
+    tab="""
     * * * * * command
-    """)
+    """
+)
+
 
 class CronManager:
-
     def __init__(self):
         self.cron = CronTab(user=True)
 

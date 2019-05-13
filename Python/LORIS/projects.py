@@ -1,18 +1,12 @@
-
-
-
-
 class LORIS_projects:
-
     @staticmethod
     def query():
         projects: list
 
-        
         return projects
 
     @staticmethod
-    def validate(project:str):
+    def validate(project: str):
         current_projects = LORIS_projects.query()
 
         # Set default to false
@@ -24,4 +18,3 @@ class LORIS_projects:
             validation_success = False
 
         return validation_success
-

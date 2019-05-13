@@ -1,6 +1,3 @@
-
-
-
 """
 This file deals with retrospective DICOM files exported from PAC manually. It calls common processing pipeline elements.
 Mainly used for research organization purposes.

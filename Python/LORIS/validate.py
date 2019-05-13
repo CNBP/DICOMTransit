@@ -1,4 +1,3 @@
-
 import json
 import logging
 from settings import config_get
@@ -11,9 +10,7 @@ import math
 logger = logging.getLogger()
 
 
-
 class LORIS_validation:
-
     @staticmethod
     def validate_MRN(input_string: str) -> bool:
         """
@@ -21,7 +18,7 @@ class LORIS_validation:
         :param input_string:
         :return:
         """
-        string=str(input_string)
+        string = str(input_string)
         if not string.isdigit():
             return False
         try:
@@ -40,7 +37,7 @@ class LORIS_validation:
         :param project:
         :return:
         """
-        #fixme need to implement project validation.
+        # fixme need to implement project validation.
         pass
 
     @staticmethod
@@ -50,7 +47,6 @@ class LORIS_validation:
         :param birth_date:
         :return:
         """
-
 
         # Sanity check for scan date within the past 100 years.
         birth_date = datetime.strptime(birth_date, "%Y%m%d")
@@ -90,7 +86,6 @@ class LORIS_validation:
         else:  # Generic catchall false condition
             return False
 
-
     @staticmethod
     def validate_sex(sex: str) -> bool:
         """
@@ -98,7 +93,11 @@ class LORIS_validation:
         :param sex:
         :return:
         """
-        if sex.lower() == "M".lower() or sex.lower() == "O".lower() or sex.lower() == "F".lower():
+        if (
+            sex.lower() == "M".lower()
+            or sex.lower() == "O".lower()
+            or sex.lower() == "F".lower()
+        ):
             return True
         else:
             return False
@@ -126,7 +125,6 @@ class LORIS_validation:
         else:
             return True
 
-
     @staticmethod
     def validate_projectID(input_projectID: str) -> bool:
         """
@@ -148,7 +146,6 @@ class LORIS_validation:
         else:
             return False
 
-
     @staticmethod
     def validate_subjectID(input_subjectID: str) -> bool:
         if not input_subjectID.isdigit():
@@ -159,7 +156,6 @@ class LORIS_validation:
         else:
             return False
 
-
     @staticmethod
     def validate_CNBPID(CNBPID: str) -> bool:
         """
@@ -168,11 +164,10 @@ class LORIS_validation:
         :return:
         """
 
-
         # Parse from input CNBPID
         success, input_institution, input_subject = LORIS_candidates.parse_PSCID(CNBPID)
 
-        '''Guard Block'''
+        """Guard Block"""
         # Ensure parsing success
         if not success:
             return False

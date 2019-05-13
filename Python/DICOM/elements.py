@@ -7,8 +7,8 @@ from pydicom.dataset import FileDataset
 
 logger = logging.getLogger()
 
-class DICOM_elements:
 
+class DICOM_elements:
     @staticmethod
     def retrieve(file_path: str, data_element: str) -> (bool, Optional[str]):
         """
@@ -24,7 +24,6 @@ class DICOM_elements:
 
         return DICOM_elements.retrieve_fast(DICOM, data_element)
 
-
     @staticmethod
     def retrieve_fast(DICOM_data: FileDataset, data_element: str) -> (bool, str):
         """
@@ -39,7 +38,7 @@ class DICOM_elements:
             element_values = DICOM_data.data_element(data_element).value
             return True, element_values
         except KeyError:
-            #todo: dicomdir situation most likely ends here.
+            # todo: dicomdir situation most likely ends here.
             fail_reason = f"In memory retrieve of DICOM element failed. The data element provided: {data_element}, does not appear to exist"
             logger.error(fail_reason)
             return False, fail_reason
@@ -49,7 +48,9 @@ class DICOM_elements:
             return False, fail_reason
 
     @staticmethod
-    def update(file_path: str, data_element: str, element_value, out_path) -> (bool, str):
+    def update(
+        file_path: str, data_element: str, element_value, out_path
+    ) -> (bool, str):
         """
         Update a particular data_element to the desired value, then write back to the SOURCE FILE!
         :param file_path:
@@ -64,16 +65,18 @@ class DICOM_elements:
         if not success:
             return False, "DICOM not valid."
 
-        success, DICOM_updated = DICOM_elements.update_in_memory(DICOM, data_element, element_value)
+        success, DICOM_updated = DICOM_elements.update_in_memory(
+            DICOM, data_element, element_value
+        )
         if success:
             DICOM_updated.save_as(out_path)
             return True, "No error"
         return False, "Catch all error path"
 
-
-
     @staticmethod
-    def update_in_memory(dicom_object: FileDataset, data_element: str, element_value: str):
+    def update_in_memory(
+        dicom_object: FileDataset, data_element: str, element_value: str
+    ):
         """
         Update a particular data_element to the desired value, then write back to the SOURCE FILE!
         :param dicom_object:
@@ -89,12 +92,14 @@ class DICOM_elements:
 
         except KeyError:
             logger.error(f"Key {data_element } does not exist, creating the key.")
-            return False, "DICOM key field does not exist. Not sure how to database one yet. "
+            return (
+                False,
+                "DICOM key field does not exist. Not sure how to database one yet. ",
+            )
         except:
             return False, "Generic error encountered while anonymizing file!"
 
         return True, dicom_object
-
 
     @staticmethod
     def retrieve_MRN(file_path: str):
@@ -112,9 +117,11 @@ class DICOM_elements:
         elif LORIS_validation.validate_MRN(MRN):
             return True, MRN
         else:
-            logger.error("Was not able to validate the MRN number. Invalid format perhaps? Expected SEVEN digis, got "+MRN)
+            logger.error(
+                "Was not able to validate the MRN number. Invalid format perhaps? Expected SEVEN digis, got "
+                + MRN
+            )
             return False, None
-
 
     @staticmethod
     def retrieve_patient_id(file_path: str):
@@ -150,7 +157,6 @@ class DICOM_elements:
         else:
             return True, name
 
-
     @staticmethod
     def retrieve_seriesUID(file_path):
         """
@@ -180,7 +186,6 @@ class DICOM_elements:
         # todo: to be debugged. Check detailed conditions.
         from datetime import datetime
 
-
         # Retrieve the data element.
         success, SeriesDate = DICOM_elements.retrieve(file_path, "SeriesDate")
 
@@ -188,7 +193,9 @@ class DICOM_elements:
             logger.error("File failed.")
             return False, None
         elif SeriesDate is None:  # null check.
-            logger.error("Date not specified, it is EMPTY! Handle with care with project inference")
+            logger.error(
+                "Date not specified, it is EMPTY! Handle with care with project inference"
+            )
             return False, None
         elif SeriesDate == "":
             logger.error("Retrieval of study value failed. Invalid value.")
@@ -196,7 +203,6 @@ class DICOM_elements:
         else:
             # Convert it to date.
             return True, datetime.strptime(SeriesDate, "%Y%m%d")
-
 
     @staticmethod
     def retrieve_study(file_path):
@@ -208,15 +214,16 @@ class DICOM_elements:
 
         success, value = DICOM_elements.retrieve(file_path, "StudyDescription")
 
-        if value=="":
-            logger.error("Optional study not specified, it is EMPTY! Handle with care with project inference")
+        if value == "":
+            logger.error(
+                "Optional study not specified, it is EMPTY! Handle with care with project inference"
+            )
             return True, value
         elif not success or value is None:
             logger.error("Retrieval of study value failed. Invalid value.")
             return False, None
-        else: #todo see if there are ways to validate this part vs study
+        else:  # todo see if there are ways to validate this part vs study
             return True, value
-
 
     @staticmethod
     def retrieve_birthday(file_path):
@@ -235,15 +242,14 @@ class DICOM_elements:
 
             # Import stirng to datetime, convert to compliant date time
             import datetime
-            birthdate = datetime.datetime.strptime(value,'%Y%m%d')
-            birthdate_loris_format = birthdate.strftime('%Y-%m-%d')
+
+            birthdate = datetime.datetime.strptime(value, "%Y%m%d")
+            birthdate_loris_format = birthdate.strftime("%Y-%m-%d")
 
             return True, birthdate_loris_format
         else:
             logger.error("Birthdate failed validation. Bad date.")
             return False, None
-
-
 
     @staticmethod
     def retrieve_sex(file_path):
@@ -252,7 +258,6 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-
 
         success, value = DICOM_elements.retrieve(file_path, "PatientSex")
 
@@ -264,8 +269,6 @@ class DICOM_elements:
         else:
             logger.error("Unexpected value. Should be M, F, O")
             return False, None
-
-
 
     @staticmethod
     def compute_age(file_path):
@@ -282,14 +285,17 @@ class DICOM_elements:
         if not success:
             return False, None
         from datetime import datetime
+
         scan_date = datetime.strptime(DICOM.SeriesDate, "%Y%m%d")
         birthday = datetime.strptime(DICOM.PatientBirthDate, "%Y%m%d")
-        age = relativedelta(scan_date,birthday)
+        age = relativedelta(scan_date, birthday)
         # age = scan_date - birthday
         return True, age
 
+
 if __name__ == "__main__":
     from pydicom.data import get_testdata_files
+
     file_names = get_testdata_files("[Jj][Pp][Ee][Gg]")
-    #for file in file_names:
+    # for file in file_names:
     #    retri

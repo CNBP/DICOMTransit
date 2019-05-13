@@ -12,7 +12,9 @@ class UT_DICOMElement(unittest.TestCase):
 
         # files = get_testdata_files("[Jj][Pp][Ee][Gg]")
         for file in file_names:
-            A, _ = DICOM_elements.retrieve(file, "StudyDescription") # can be ''
-            B, _ = DICOM_elements.retrieve(file, "PatientBirthDate") # can be 1995-12-19
-            C, _ = DICOM_elements.retrieve(file, "PatientSex") # can be M or F
+            A, _ = DICOM_elements.retrieve(file, "StudyDescription")  # can be ''
+            B, _ = DICOM_elements.retrieve(
+                file, "PatientBirthDate"
+            )  # can be 1995-12-19
+            C, _ = DICOM_elements.retrieve(file, "PatientSex")  # can be M or F
             assert A and B and C

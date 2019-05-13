@@ -31,52 +31,58 @@ def update_redcap_data():
     """
 
     # Indicate that the script is started.
-    logger.info('Update REDCap Data Started: ' + str(datetime.datetime.now()))
+    logger.info("Update REDCap Data Started: " + str(datetime.datetime.now()))
 
     # Initialize the RedcapTransaction class object to be past and returned each step of the way.
     transaction_stage0 = RedcapTransaction()
 
     # Load data import configuration matrix.
-    logger.info('Loading Data Import Configuration...')
+    logger.info("Loading Data Import Configuration...")
     transaction_stage1_initialized = initialize_import_configuration(transaction_stage0)
-    logger.info('Done.')
+    logger.info("Done.")
 
     # Get all information about REDCap table names and fields.
-    logger.info('Loading REDCap Metadata...')
+    logger.info("Loading REDCap Metadata...")
     transaction_stage2_meta_added = load_metadata(transaction_stage1_initialized)
-    logger.info('Done.')
+    logger.info("Done.")
 
     # Get all hospital record numbers.
-    logger.info('Loading Hospital Record Numbers...')
+    logger.info("Loading Hospital Record Numbers...")
     # Change this flag in environment module or here to force local of DB loading.
-    transaction_stage2_meta_added.hospital_record_numbers = \
-        load_hospital_record_numbers(environment.USE_LOCAL_HOSPITAL_RECORD_NUMBERS_LIST)
-    logger.info('Done.')
+    transaction_stage2_meta_added.hospital_record_numbers = load_hospital_record_numbers(
+        environment.USE_LOCAL_HOSPITAL_RECORD_NUMBERS_LIST
+    )
+    logger.info("Done.")
 
     # Prepare Reference Data.
-    logger.info('Preparing Reference Data Transfer...')
-    transaction_stage3_references_added = prepare_reference_tables(transaction_stage2_meta_added)
-    logger.info('Done.')
+    logger.info("Preparing Reference Data Transfer...")
+    transaction_stage3_references_added = prepare_reference_tables(
+        transaction_stage2_meta_added
+    )
+    logger.info("Done.")
 
     # Prepare Patient Data.
-    logger.info('Preparing Patient Data Transfer...')
-    transaction_stage4_patients_added = prepare_patient_tables(transaction_stage3_references_added)
-    logger.info('Done.')
+    logger.info("Preparing Patient Data Transfer...")
+    transaction_stage4_patients_added = prepare_patient_tables(
+        transaction_stage3_references_added
+    )
+    logger.info("Done.")
 
     # Wipe all existing data from REDCap.
-    logger.info('Wiping ALL existing data from REDCap...')
+    logger.info("Wiping ALL existing data from REDCap...")
     wipe_all_redcap_data()
-    logger.info('Done.')
+    logger.info("Done.")
 
     # Send data to REDCap.
-    logger.info('Sending ALL data to REDCap...')
+    logger.info("Sending ALL data to REDCap...")
     send_data(transaction_stage4_patients_added)
-    logger.info('Done.')
+    logger.info("Done.")
 
     # Indicate that the script is completed.
-    logger.info('Update REDCap Data Completed: ' + str(datetime.datetime.now()))
+    logger.info("Update REDCap Data Completed: " + str(datetime.datetime.now()))
 
     return
+
 
 if __name__ == "__main__":
     # Update REDCap Data.

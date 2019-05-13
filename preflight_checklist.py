@@ -41,14 +41,16 @@ DETACHED_PROCESS = 0x00000008
 
 try:
     if sys.platform == "win32":
-        pid = subprocess.Popen(['flask', "run"], creationflags=DETACHED_PROCESS).pid #todo: wrap this into a starter function to run at will.
+        pid = subprocess.Popen(
+            ["flask", "run"], creationflags=DETACHED_PROCESS
+        ).pid  # todo: wrap this into a starter function to run at will.
     else:
 
         # linux might need
         #   sudo lsof -t -i tcp:5000 | xargs kill -9
         # to kill
 
-        pid = subprocess.Popen(['flask', "run"]).pid
+        pid = subprocess.Popen(["flask", "run"]).pid
 
 except Exception as e:
     raise ValueError

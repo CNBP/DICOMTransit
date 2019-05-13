@@ -7,8 +7,8 @@ from settings import config_get
 
 logger = logging.getLogger()
 
-class LORIS_query:
 
+class LORIS_query:
     @staticmethod
     def login():
         """
@@ -17,25 +17,24 @@ class LORIS_query:
         """
 
         from settings import config_get
+
         username = config_get("LORISusername")
         password = config_get("LORISpassword")
 
-        data = json.dumps({"username":username, "password":password})
+        data = json.dumps({"username": username, "password": password})
 
-        #Login URL
+        # Login URL
         url = config_get("LORISurl")
-        updated_url = url + 'login'
-
+        updated_url = url + "login"
 
         # requests style login # NOT WORKING!
         r = requests.post(updated_url, data=data)
-
 
         logger.debug(str(r.status_code) + r.reason)
 
         response_json = r.json()
 
-        return LORIS_helper.is_response(r.status_code, 200), response_json.get('token')
+        return LORIS_helper.is_response(r.status_code, 200), response_json.get("token")
 
     @staticmethod
     def getCNBP(token, endpoint):
@@ -50,7 +49,7 @@ class LORIS_query:
         url = config_get("LORISurl")
         updatedurl = url + endpoint
         logger.debug(updatedurl)
-        HEADERS = {'Authorization': 'token {}'.format(token)}
+        HEADERS = {"Authorization": "token {}".format(token)}
 
         with requests.Session() as s:
             s.headers.update(HEADERS)
@@ -69,13 +68,15 @@ class LORIS_query:
         :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
         """
 
-        logger.debug("Posting data to: "+endpoint)
-        logger.debug("Data: "+data)
-        logger.debug("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
+        logger.debug("Posting data to: " + endpoint)
+        logger.debug("Data: " + data)
+        logger.debug(
+            "!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!"
+        )
         url = config_get("LORISurl")
         updatedurl = url + endpoint
 
-        HEADERS = {'Authorization': 'token {}'.format(token)}
+        HEADERS = {"Authorization": "token {}".format(token)}
 
         with requests.Session() as s:
             s.headers.update(HEADERS)
@@ -94,14 +95,16 @@ class LORIS_query:
         :return: bool on if request is successful, r for the request (CAN BE NULL for 201 based requests)
         """
 
-        logger.debug("Putting data to: "+endpoint)
-        logger.debug("Data: "+data)
-        logger.debug("!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!")
+        logger.debug("Putting data to: " + endpoint)
+        logger.debug("Data: " + data)
+        logger.debug(
+            "!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!"
+        )
 
         url = config_get("LORISurl")
         updatedurl = url + endpoint
 
-        HEADERS = {'Authorization': 'token {}'.format(token)}
+        HEADERS = {"Authorization": "token {}".format(token)}
 
         with requests.Session() as s:
             s.headers.update(HEADERS)
@@ -122,16 +125,13 @@ class LORIS_query:
 
         logger.debug(f"Uploading Imaging data to: {endpoint}")
 
-
         url = config_get("LORISurl")
         updatedurl = url + endpoint
 
         if isPhantom:
-            HEADERS = {'Authorization': f'token {token}',
-                       'X-Is-Phantom': '1'}
+            HEADERS = {"Authorization": f"token {token}", "X-Is-Phantom": "1"}
         else:
-            HEADERS = {'Authorization': f'token {token}',
-                       'X-Is-Phantom': '0'}
+            HEADERS = {"Authorization": f"token {token}", "X-Is-Phantom": "0"}
 
         with requests.Session() as s:
             s.headers.update(HEADERS)
@@ -142,8 +142,8 @@ class LORIS_query:
 
 
 # Only executed when running directly.
-if __name__ == '__main__':
-    #print(login())
-    #getCNBP("projects")
+if __name__ == "__main__":
+    # print(login())
+    # getCNBP("projects")
     Success, token = LORIS_query.login()
-    #print("Test complete")
+    # print("Test complete")

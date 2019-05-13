@@ -8,9 +8,8 @@ from typing import List
 
 logger = logging.getLogger()
 
+
 class DICOM_anonymize:
-
-
     @staticmethod
     def folder(input_folder: str, new_ID: str) -> List[str]:
         """
@@ -33,18 +32,19 @@ class DICOM_anonymize:
         :return:
         """
 
-
         exception_count = 0
         exception_files = []
 
         for file in tqdm(file_list, position=0):
-            #logger.debug(f"Anonymizing: {file}")
+            # logger.debug(f"Anonymizing: {file}")
             save_success = DICOM_anonymize.save(file, new_ID)
             if not save_success:
-                exception_count =+ 1
+                exception_count = +1
                 exception_files = exception_files.append(file)
 
-        logger.debug(f"Total exception encountered during anonymization: {str(exception_count)}")
+        logger.debug(
+            f"Total exception encountered during anonymization: {str(exception_count)}"
+        )
         return exception_files
 
     @staticmethod
@@ -58,7 +58,6 @@ class DICOM_anonymize:
         """
         save_as_success = DICOM_anonymize.save_as(file_path, NewID, file_path)
         return save_as_success
-
 
     @staticmethod
     def save_as(in_path: str, NewID: str, out_path: str) -> bool:
@@ -78,14 +77,17 @@ class DICOM_anonymize:
         if not success:
             return False
 
-
         # Anonymize PatientID with the NewID provided.
-        success1, DICOM_updated = DICOM_elements.update_in_memory(DICOM, "PatientID", NewID)
+        success1, DICOM_updated = DICOM_elements.update_in_memory(
+            DICOM, "PatientID", NewID
+        )
         if not success1:
             return False
 
         # Anonymize PatientName with the NewID provided.
-        success2, DICOM_updated = DICOM_elements.update_in_memory(DICOM_updated, "PatientName", NewID)
+        success2, DICOM_updated = DICOM_elements.update_in_memory(
+            DICOM_updated, "PatientName", NewID
+        )
 
         # Return after encuring both anonymization process are successful.
         if success2:
@@ -95,6 +97,4 @@ class DICOM_anonymize:
             return False
 
 
-
-
-#if __name__ is "__main__":
+# if __name__ is "__main__":

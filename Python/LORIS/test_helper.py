@@ -8,7 +8,6 @@ from settings import config_get
 
 
 class UT_LORISHelper(unittest.TestCase):
-
     def test_number_extraction(self):
         Prefix = "V"
         numbers = [1, 2, 3, 9, 10, 11, 12, 100, 101, 102]
@@ -22,7 +21,6 @@ class UT_LORISHelper(unittest.TestCase):
 
         for tupleItem in DualList:
             assert str(tupleItem[0]) == LORIS_helper.number_extraction(tupleItem[1])[0]
-
 
     # Obsolete.
 

@@ -29,7 +29,7 @@ def get_fields(redcap_form_name, transaction: RedcapTransaction):
     """
     redcap_fields = []
 
-    if len(transaction.redcap_metadata) > 0 and not redcap_form_name == '':
+    if len(transaction.redcap_metadata) > 0 and not redcap_form_name == "":
 
         if redcap_form_name.lower() not in transaction.redcap_fields:
 
@@ -40,11 +40,21 @@ def get_fields(redcap_form_name, transaction: RedcapTransaction):
                 # transaction.redcap_metadata[i][2] is field_label
                 # transaction.redcap_metadata[i][3] is form_name
 
-                if ([transaction.redcap_metadata[i][2], transaction.redcap_metadata[i][0]] not in
-                        redcap_fields
-                        and transaction.redcap_metadata[i][3].lower() == redcap_form_name.lower()):
-                    redcap_fields.append([transaction.redcap_metadata[i][2],
-                                          transaction.redcap_metadata[i][0]])
+                if (
+                    [
+                        transaction.redcap_metadata[i][2],
+                        transaction.redcap_metadata[i][0],
+                    ]
+                    not in redcap_fields
+                    and transaction.redcap_metadata[i][3].lower()
+                    == redcap_form_name.lower()
+                ):
+                    redcap_fields.append(
+                        [
+                            transaction.redcap_metadata[i][2],
+                            transaction.redcap_metadata[i][0],
+                        ]
+                    )
 
             transaction.redcap_fields[redcap_form_name.lower()] = redcap_fields
 
@@ -66,14 +76,24 @@ def load_metadata(transaction: RedcapTransaction):
     for p in Project:
 
         # Get all metadata rows.
-        payload = {'token': get_project_token(p.name), 'format': 'json', 'content': 'metadata'}
+        payload = {
+            "token": get_project_token(p.name),
+            "format": "json",
+            "content": "metadata",
+        }
         response = post(redcap_api_url, data=payload)
         metadata = response.json()
 
         # Add each metadata row to a local list.
         for field in metadata:
             transaction.redcap_metadata.append(
-                [field['field_name'], field['field_type'], field['field_label'], field['form_name']])
+                [
+                    field["field_name"],
+                    field["field_type"],
+                    field["field_label"],
+                    field["form_name"],
+                ]
+            )
 
     return transaction
 
@@ -87,7 +107,7 @@ def wipe_all_redcap_data():
     for p in Project:
 
         # Delete all records.
-        delete_records(get_record_ids(p.name),get_project_token(p.name))
+        delete_records(get_record_ids(p.name), get_project_token(p.name))
 
 
 def send_data(transaction: RedcapTransaction):
@@ -143,21 +163,26 @@ def import_records(records, project_token):
         return False, "Record queue is empty"
 
     # If a token was not provided
-    if project_token == '' or project_token is None:
+    if project_token == "" or project_token is None:
         return False, "Project token %s is invalid!" % project_token
 
     # Prepare HTTP request.
-    payload = {'token': project_token, 'format': 'json', 'content': 'record', 'type': 'flat',
-               'overwriteBehavior': 'overwrite'}
-    json_string = dumps(records, separators=(',', ':'))
-    payload['data'] = json_string
+    payload = {
+        "token": project_token,
+        "format": "json",
+        "content": "record",
+        "type": "flat",
+        "overwriteBehavior": "overwrite",
+    }
+    json_string = dumps(records, separators=(",", ":"))
+    payload["data"] = json_string
 
     # Send HTTP request.
     response = post(redcap_api_url, data=payload)
 
     # If the request was not successful
     if not response.status_code == 200:
-        logger.error('There was an error in an API call: ' + response.text)
+        logger.error("There was an error in an API call: " + response.text)
 
     # Remove all records from batch.
     records[:] = []
@@ -177,20 +202,25 @@ def get_record_ids(project):
     logger = logging.getLogger(__name__)
 
     # If a project name was not provided
-    if project == '' or project is None:
+    if project == "" or project is None:
         return False, "Project name %s is invalid!" % project
 
     # Get project token.
     project_token = get_project_token(project)
 
     # Get all record ids.
-    payload = {'token':project_token, 'format': 'json', 'content': 'record', 'fields': [get_project_record_id_field_name(project)]}
+    payload = {
+        "token": project_token,
+        "format": "json",
+        "content": "record",
+        "fields": [get_project_record_id_field_name(project)],
+    }
     response = post(redcap_api_url, data=payload)
     metadata = response.json()
 
     # If the request was not successful
     if not response.status_code == 200:
-        logger.error('There was an error in an API call: ' + response.text)
+        logger.error("There was an error in an API call: " + response.text)
         return False
 
     # Add each record id to a list.
@@ -215,20 +245,20 @@ def delete_records(record_ids, project_token):
         return False, "Record list is empty"
 
     # If a token was not provided
-    if project_token == '' or project_token is None:
+    if project_token == "" or project_token is None:
         return False, "Project token %s is invalid!" % project_token
 
     # Prepare HTTP request.
-    payload = {'token': project_token, 'action': 'delete', 'content': 'record'}
+    payload = {"token": project_token, "action": "delete", "content": "record"}
     for record_id_index in range(len(record_ids)):
-        payload['records[' + str(record_id_index) + ']'] = record_ids[record_id_index]
+        payload["records[" + str(record_id_index) + "]"] = record_ids[record_id_index]
 
     # Send HTTP request.
     response = post(redcap_api_url, data=payload)
 
     # If the request was not successful
     if not response.status_code == 200:
-        logger.error('There was an error in an API call: ' + response.text)
+        logger.error("There was an error in an API call: " + response.text)
 
     return True, "Success in deleting."
 
@@ -250,7 +280,7 @@ def get_project_token(project):
     elif project == Project.patient.name:
         return redcap_token_cnfun_patient
     else:
-        return ''
+        return ""
 
 
 def get_project_record_id_field_name(project):
@@ -270,4 +300,4 @@ def get_project_record_id_field_name(project):
     elif project == Project.patient.name:
         return redcap_record_id_field_name_cnfun_patient
     else:
-        return ''
+        return ""

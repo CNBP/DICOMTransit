@@ -1044,11 +1044,9 @@ class DICOMTransitImport(object):
         self.scan_anonymized = self.DICOM_package.validate_anonymization()
         logger.info("Double checking anonymization is successful.")
 
-
     def ZipFiles(self):
         # This will update DICOM_package.zip location.
         self.DICOM_package.zip()
-
 
     def UploadZip(self):
 
@@ -1060,16 +1058,19 @@ class DICOMTransitImport(object):
             False,
         )
 
-
     def InsertSubjectData(self):
-        # Trigger insertion.
-        self.process_ID = LORIS.API.new_trigger_insertion(
-            self.DICOM_package.DCCID,
-            self.DICOM_package.timepoint,
-            f"{self.DICOM_package.zipname}.zip",
-            self.mri_uploadID,
-        )
+        # Speical cases when auto-launch is on. The process is already triggered.
+        if self.mri_uploadID == 0:
+            return
 
+        # Trigger insertion.
+        else:
+            self.process_ID = LORIS.API.new_trigger_insertion(
+                self.DICOM_package.DCCID,
+                self.DICOM_package.timepoint,
+                f"{self.DICOM_package.zipname}.zip",
+                self.mri_uploadID,
+            )
 
     def RecordInsertion(self):
         # Set the completion status to ZERO
@@ -1159,7 +1160,6 @@ class DICOMTransitImport(object):
         else:
             self.trigger_wrap(TR_DetectedNetworkError)
 
-
     def UpdateLocalDBStatus(self):
         # Read local db. See if it exist based on the setting.
         from LocalDB.API import check_status
@@ -1169,7 +1169,6 @@ class DICOMTransitImport(object):
             logger.debug("LocalDB system status OKAY!")
         else:
             self.trigger_wrap(TR_DetectedLocalDBError)
-
 
     def UpdateOrthancStatus(self):
         # Check ENV for the predefined Orthanc URL to ensure that it exists.
