@@ -8,14 +8,14 @@ from pathlib import Path
 from joblib import Parallel, delayed
 import multiprocessing
 from DICOM.validate import DICOM_validate
-
+from PythonUtils.folder import recursive_list
 logger = logging.getLogger()
 
 # Getting credential from the environment.
-url, username, password = orthanc.API.get_prod_orthanc_credentials()
+credential = orthanc.API.get_prod_orthanc_credentials()
 # url, username, password = orthanc.API.get_dev_orthanc_credentials()
 
-url_instances = urllib.parse.urljoin(url, "/instances")
+url_instances = urllib.parse.urljoin(credential.url, "/instances")
 
 
 def read_file(path_file):
@@ -41,7 +41,7 @@ def read_upload_file(path_file):
 
         # Upload and keep track of success.
         success = orthanc_query.upload(
-            path_file, url_instances, username, password, content
+            path_file, credential, content
         )
         logger.debug(f"Finished uploading:{path_file}")
         return success
@@ -49,7 +49,7 @@ def read_upload_file(path_file):
         return False
 
 
-def upload_retrospective_study(path_study_root_folder_path: Path):
+def upload_retrospective_study(path_study_root_folder_path):
     """
     Sample script to recursively import in Orthanc all the DICOM files
     that are stored in some path. Please make sure that Orthanc is running
@@ -70,28 +70,26 @@ def upload_retrospective_study(path_study_root_folder_path: Path):
     if os.path.isfile(path_study_root_folder_path):
         # Upload a single file
         total_file_count = 1
-        success_count = orthanc_query.upload(
-            path_study_root_folder_path, url_instances, username, password
-        )
+        success_count = read_upload_file(path_study_root_folder_path)
     else:
         # Recursively upload a directory
-        for root, dirs, files in os.walk(path_study_root_folder_path):
+        list_files = recursive_list(path_study_root_folder_path)
 
-            list_files = []
+        total_file_count = len(list_files)
 
-            # Generate hte list of files as input.
-            for f in tqdm(files):
-                path_file = os.path.join(root, f)
-                list_files.append(path_file)
+        # Serial rocess them:
+        for file in list_files:
+            read_upload_file(file)
 
-            total_file_count = len(list_files)
 
-            # Parallel process them
-            num_cores = multiprocessing.cpu_count()
-            results = Parallel(n_jobs=num_cores)(
-                delayed(read_upload_file)(i) for i in list_files
-            )
-            success_count = sum(results)
+        # Parallel process them
+        # num_cores = multiprocessing.cpu_count()
+        # results = Parallel(n_jobs=num_cores)(
+        #     delayed(read_upload_file)(i) for i in list_files
+        # )
+
+
+        #success_count = sum(results)
 
     if success_count == total_file_count:
         logger.info(
@@ -110,7 +108,7 @@ if __name__ == "__main__":
 
     start = time.time()
     logging.basicConfig(level=logging.INFO)
-    path_input = Path(r"/toshiba4/bayX_backup/Research PAC/Batch2")
+    path_input = r"/toshiba4/bayX_backup/ResearchPAC/Batch3/"
     upload_retrospective_study(path_input)
     end = time.time()
     print(str((end - start) / 60) + " minutes")

@@ -7,7 +7,7 @@ import os
 import shutil
 import zipfile
 import collections
-
+import urllib.parse
 from PythonUtils.file import is_name_unique, unique_name
 from requests.auth import HTTPBasicAuth
 
@@ -193,8 +193,10 @@ class orthanc_query:
 
         # Try to upload
         try:
-            response_code, _ = orthanc_query.postOrthanc(
-                credential.url, credential, data
+
+
+            response_code, response_ = orthanc_query.postOrthanc(
+                urllib.parse.urljoin(credential.url, "instances"), credential, data
             )
             logger.debug("Importing %s" % path)
 
