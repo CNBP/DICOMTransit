@@ -76,7 +76,37 @@ class RedcapTransaction:
         :param project: Project Configuration Number where this record belongs
         :return: None
         """
-        self.redcap_queue.append([record_text, project])
+
+        # Create current element tuple.
+        current_element = [record_text, project]
+
+        # If element already exist in the redcap queue.
+        if not self.if_element_exist_in_redcap_queue(current_element):
+
+            # If it's a new element then, we need to add to redcap_queue.
+            self.redcap_queue.append(current_element)
+
+    def if_element_exist_in_redcap_queue(self, element) -> bool:
+        """
+        Check if element exist in redcap queue.
+        :param element: Element to be inserted.
+        :return: bool
+        """
+
+        # For each fields inside the table.
+        for queue_element in self.redcap_queue:
+
+            # Check if the same dictionary
+            dictionary1 = queue_element[0].items()
+            dictionary2 = element[0].items()
+            equal_length = len(dictionary1 & dictionary2)
+
+            # If the same element, then we need to do nothing, (already exist).
+            if equal_length == len(dictionary1) and equal_length == len(dictionary2) and queue_element[1] == element[1]:
+                return True
+
+            # Element not found.
+            return False
 
     def get_primary_key_value(self, primary_key) -> int:
         """
