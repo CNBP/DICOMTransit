@@ -105,7 +105,7 @@ def get_StudyUID_zip(
     return local_zip_file_path
 
 
-def unpack_subject_zip(zip_file: str) -> tempfile.TemporaryDirectory:
+def unpack_subject_zip(zip_file: str, temp_folder: str = "/toshiba4/tmp") -> tempfile.TemporaryDirectory:
     """
     Unpack the given Zip file to a temporary folder and return the reference to that temporary folder.
     :param zip_file:
@@ -113,7 +113,7 @@ def unpack_subject_zip(zip_file: str) -> tempfile.TemporaryDirectory:
     """
 
     # Create the temporary directory
-    folder = tempfile.TemporaryDirectory(prefix=unique_name())
+    folder = tempfile.TemporaryDirectory(prefix=unique_name(), dir=temp_folder)
 
     logger.debug("Subject ZIP temporary location created at:" + folder.name)
     logger.debug("Unzipping to that location")
@@ -121,6 +121,7 @@ def unpack_subject_zip(zip_file: str) -> tempfile.TemporaryDirectory:
     orthanc_query.flatUnZip(zip_file, folder.name)
 
     logger.debug("Unzip completed. ")
+
     # Remove the zip file.
     os.remove(zip_file)
     logger.debug("Removing zip archived.")

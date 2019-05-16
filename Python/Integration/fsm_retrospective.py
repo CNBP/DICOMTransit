@@ -77,16 +77,17 @@ def upload_retrospective_study(path_study_root_folder_path):
 
         total_file_count = len(list_files)
 
-        # Serial rocess them:
-        for file in list_files:
-            read_upload_file(file)
+        # Serial process them:
+        #for file in tqdm(list_files):
+        #    if read_upload_file(file):
+        #        success_count += 1
 
 
         # Parallel process them
-        # num_cores = multiprocessing.cpu_count()
-        # results = Parallel(n_jobs=num_cores)(
-        #     delayed(read_upload_file)(i) for i in list_files
-        # )
+        num_cores = multiprocessing.cpu_count()
+        results = Parallel(n_jobs=num_cores)(
+             delayed(read_upload_file)(i) for i in list_files
+        )
 
 
         #success_count = sum(results)
@@ -108,7 +109,7 @@ if __name__ == "__main__":
 
     start = time.time()
     logging.basicConfig(level=logging.INFO)
-    path_input = r"/toshiba4/bayX_backup/ResearchPAC/Batch3/"
+    path_input = r"/toshiba4/bayX_backup/ResearchPAC/Batch1/"
     upload_retrospective_study(path_input)
     end = time.time()
-    print(str((end - start) / 60) + " minutes")
+    print(str((end - start) / 60 / 60) + " hours")
