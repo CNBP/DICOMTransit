@@ -28,6 +28,7 @@ setup(name='DICOMTransit',
 		'flask'
 		'transitions'
 		'mysql-connector-python'
+		'couchdb'
 	],
 	zip_safe=False)
 
