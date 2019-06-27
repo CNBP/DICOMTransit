@@ -13,7 +13,7 @@ from redcap.local_odbc import (
 )
 from redcap.query import get_fields
 from redcap.transaction import RedcapTransaction
-from LocalDB.API import set_CNNIDs
+from LocalDB.API import set_CNNIDs, get_CNBP
 
 import sys
 import logging
@@ -27,7 +27,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def prepare_patient_tables(transaction: RedcapTransaction):
+def prepare_patient_tables(transaction: RedcapTransaction) -> RedcapTransaction:
     """
     Creates REDCap records for of all patient tables and adds them to the global queue (only for each hospital record
     number loaded).
@@ -40,6 +40,9 @@ def prepare_patient_tables(transaction: RedcapTransaction):
 
         # Set hospital record number.
         transaction.set_hospital_record_number(index_hospital_record_number)
+
+        # Set any additional id that has a 1 to 1 relationship with the hospital record number.
+        transaction.set_cnbp_id(get_CNBP(transaction.HospitalRecordNumber))
 
         # Get all case ids related to this Hospital Record Number
         cases = get_case_ids(transaction)
@@ -62,7 +65,7 @@ def prepare_patient_tables(transaction: RedcapTransaction):
     return transaction
 
 
-def process_case(transaction: RedcapTransaction):
+def process_case(transaction: RedcapTransaction) -> None:
     """
     Process a case.
     :param transaction: RedcapTransaction
@@ -85,7 +88,7 @@ def process_case(transaction: RedcapTransaction):
         process_table(index_table, transaction)
 
 
-def process_table(index_table, transaction: RedcapTransaction):
+def process_table(index_table, transaction: RedcapTransaction) -> None:
     """
     Process each patient table.
     :param index_table: Index of current table
@@ -127,14 +130,7 @@ def process_table(index_table, transaction: RedcapTransaction):
         )
 
 
-def process_row(
-    current_table_redcap_fields,
-    database_column_list,
-    index_row,
-    index_table,
-    rows,
-    transaction,
-):
+def process_row(current_table_redcap_fields, database_column_list, index_row, index_table, rows, transaction) -> None:
     """
     Process each row of the current table for the current MRN.
     :param current_table_redcap_fields: Current table REDCap fields
@@ -149,16 +145,19 @@ def process_row(
     table_configuration = transaction.data_import_configuration
 
     # If this is the first row of data and the current table has authority on any ids
-    if (
-        index_row == 0
-        and table_configuration[index_table][AUTHORITY_ON_IDS] is not None
-    ):
-        set_case_related_ids(
-            database_column_list, index_row, index_table, rows, transaction
-        )
+    if index_row == 0 and table_configuration[index_table][AUTHORITY_ON_IDS] is not None:
+        # Set all case related ids that the current table has authority on
+        set_case_related_ids(database_column_list, index_row, index_table, rows, transaction)
 
     # Create a blank dictionary.
     record_text = {}
+
+    # If the current table is the table holding additional ids having a 1 to 1 relationship
+    # with the hospital record number.
+    if table_configuration[index_table][DATABASE_TABLE_NAME].lower() == \
+            redcap_form_holding_ids_directly_linked_to_hospital_record_numbers:
+        # Add any additional id that has a 1 to 1 relationship with the hospital record number.
+        record_text["cnbpid"] = transaction.CNBPId
 
     # Add the ID
     pk_for_filter = table_configuration[index_table][PRIMARY_KEY_NAME]
@@ -215,9 +214,7 @@ def process_row(
     )
 
 
-def set_case_related_ids(
-    database_column_list, index_row, index_table, rows, transaction
-):
+def set_case_related_ids(database_column_list, index_row, index_table, rows, transaction) -> None:
     """
     This function will set all case related ids that the current table has authority on
     :param database_column_list: Database columns list

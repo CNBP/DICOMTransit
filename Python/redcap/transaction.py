@@ -29,7 +29,10 @@ class RedcapTransaction:
     PatientId = -1
     MasterId = -1
 
-    def set_hospital_record_number(self, index_hospital_record_number):
+    # Additional Temporary Ids having a 1 to 1 relationship with the hospital record numbers.
+    CNBPId = -1
+
+    def set_hospital_record_number(self, index_hospital_record_number) -> None:
         """
         Sets the hospital record number and resets all other temporary ids.
         :param index_hospital_record_number: Index of Hospital Record Number
@@ -46,7 +49,17 @@ class RedcapTransaction:
         self.PatientId = -1
         self.MasterId = -1
 
-    def set_case_id(self, case_id):
+    def set_cnbp_id(self, cnbp_id) -> None:
+        """
+        Sets the CNBP Id.
+        :return: None
+        """
+        if cnbp_id is None:
+            cnbp_id = ''
+
+        self.CNBPId = cnbp_id
+
+    def set_case_id(self, case_id) -> None:
         """
         Sets the case id and resets all temporary ids related to a case.
         :return: None
@@ -59,16 +72,46 @@ class RedcapTransaction:
         self.PatientId = -1
         self.MasterId = -1
 
-    def add_redcap_queue(self, record_text, project):
+    def add_redcap_queue(self, record_text, project) -> None:
         """
         Adds a record to the list of records to send to REDCap.
         :param record_text: Record data
         :param project: Project Configuration Number where this record belongs
         :return: None
         """
-        self.redcap_queue.append([record_text, project])
 
-    def get_primary_key_value(self, primary_key):
+        # Create current element tuple.
+        current_element = [record_text, project]
+
+        # If element already exist in the redcap queue.
+        if not self.if_element_exist_in_redcap_queue(current_element):
+
+            # If it's a new element then, we need to add to redcap_queue.
+            self.redcap_queue.append(current_element)
+
+    def if_element_exist_in_redcap_queue(self, element) -> bool:
+        """
+        Check if element exist in redcap queue.
+        :param element: Element to be inserted.
+        :return: bool
+        """
+
+        # For each fields inside the table.
+        for queue_element in self.redcap_queue:
+
+            # Check if the same dictionary
+            dictionary1 = queue_element[0].items()
+            dictionary2 = element[0].items()
+            equal_length = len(dictionary1 & dictionary2)
+
+            # If the same element, then we need to do nothing, (already exist).
+            if equal_length == len(dictionary1) and equal_length == len(dictionary2) and queue_element[1] == element[1]:
+                return True
+
+            # Element not found.
+            return False
+
+    def get_primary_key_value(self, primary_key) -> int:
         """
         Get Primary Key Value
         :param primary_key: Primary Key Configuration Number

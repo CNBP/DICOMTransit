@@ -33,6 +33,9 @@ setup(
         "werkzeug"
         "flask"
         "transitions"
+        'couchdb'
+		'mysql-connector-python'
     ],
     zip_safe=False,
 )
+		

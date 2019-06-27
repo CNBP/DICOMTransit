@@ -3,6 +3,7 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 import pyodbc
+from typing import List
 from redcap.constants import *
 from redcap.enums import Database, Field, DataType
 from redcap.transaction import RedcapTransaction
@@ -12,13 +13,12 @@ from redcap.transaction import RedcapTransaction
 #  Local ODBC
 # ----------------------------------------------------------------------------------------------------------------------
 
-
-def get_database_column_names(table_info, transaction: RedcapTransaction):
+def get_database_column_names(table_info, transaction: RedcapTransaction) -> List[Field]:
     """
     Returns a list of fields contained within a database table.
     :param table_info: Table Information
     :param transaction: RedcapTransaction
-    :return: List of fields
+    :return: List of fields or None if table not found.
     """
     if table_info is None:
         return None
@@ -52,11 +52,11 @@ def get_database_column_names(table_info, transaction: RedcapTransaction):
     return database_columns
 
 
-def get_case_ids(transaction: RedcapTransaction):
+def get_case_ids(transaction: RedcapTransaction) -> List[int]:
     """
     Get Case Ids
     :param transaction: RedcapTransaction
-    :return: List of all the case ids related to the current hospital record number.
+    :return: List of all the case ids related to the current hospital record number or None if table not found.
     """
 
     case_ids = []
@@ -99,12 +99,114 @@ def get_case_ids(transaction: RedcapTransaction):
     return case_ids
 
 
-def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
+def get_cnfunid_by_cnnid(cnnid: int) -> int:
+    """
+    Get cnfun id using the cnn id ( cnn - case id )
+    :param cnnid: int (cnnid (case id))
+    :return: int cnfun patient id (Return -1 if no match found)
+    """
+
+    # Preparing CNN database - SQL request.
+    select_statement = ("SELECT baby.PatientUI FROM Admission admission, Baby baby WHERE admission.CaseId = '" + cnnid + "' AND admission.BabyId=baby.BabyId")
+
+    # Connecting to CNN database.
+    conn = pyodbc.connect(get_connection_string(1))
+    odbc_cursor = conn.cursor()
+
+    # Executing SQL request.
+    odbc_cursor.execute(select_statement)
+    data = odbc_cursor.fetchone()
+
+    # Closing connection.
+    odbc_cursor.close()
+    conn.close
+
+    # If not found, we return -1.
+    if data == None:
+        return -1
+
+    # Preparing CNFUN database - SQL request.
+    patientui = data[0]
+    select_statement = ("SELECT PatientId FROM Patients WHERE CNNPatientUI = '" + patientui + "'")
+
+    # Connecting to CNFUN database.
+    conn = pyodbc.connect(get_connection_string(2))
+    odbc_cursor = conn.cursor()
+
+    # Executing SQL request.
+    odbc_cursor.execute(select_statement)
+    data = odbc_cursor.fetchone()
+
+    # Closing connection.
+    odbc_cursor.close()
+    conn.close
+
+    # If not found, we return -1.
+    if data == None:
+        return -1
+
+    # Return CNFUN - patient id.
+    patientid = data[0]
+    return patientid
+
+
+def get_cnfunid_by_mrn(mrn: int) -> int:
+    """
+    Get cnfun id using the mrn id ( Medical record number )
+    :param mrn: int (mrn - Medical record number)
+    :return: int cnfun patient id (Return -1 if no match found)
+    """
+
+    # Preparing CNN database - SQL request.
+    select_statement = ("SELECT baby.PatientUI FROM Admission admission, Baby baby WHERE admission.HospitalRecordNumber = '" + mrn + "' AND admission.BabyId=baby.BabyId")
+
+    # Connecting to CNN database.
+    conn = pyodbc.connect(get_connection_string(1))
+    odbc_cursor = conn.cursor()
+
+    # Executing SQL request.
+    odbc_cursor.execute(select_statement)
+    data = odbc_cursor.fetchone()
+
+    # Closing connection.
+    odbc_cursor.close()
+    conn.close
+
+    # If not found, we return -1.
+    if data == None:
+        return -1
+
+    # Preparing CNFUN database - SQL request.
+    patientui = data[0]
+    select_statement = ("SELECT PatientId FROM Patients WHERE CNNPatientUI = '" + patientui + "'")
+
+    # Connecting to CNFUN database.
+    conn = pyodbc.connect(get_connection_string(2))
+    odbc_cursor = conn.cursor()
+
+    # Executing SQL request.
+    odbc_cursor.execute(select_statement)
+    data = odbc_cursor.fetchone()
+
+    # Closing connection.
+    odbc_cursor.close()
+    conn.close
+
+    # If not found, we return -1.
+    if data == None:
+        return -1
+
+    # Return CNFUN - patient id.
+    patientid = data[0]
+    return patientid
+
+
+def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction) -> list:
     """
     Gets all rows of data for a specific patient table.
     :param table_info: Table Information
     :param transaction: RedcapTransaction
-    :return: List of all the rows obtained from the query.
+    :return: List of all the rows obtained from the query or None if table not found.
     """
     if table_info is None:
         return None
@@ -165,11 +267,11 @@ def get_data_rows_for_patient_table(table_info, transaction: RedcapTransaction):
         return None
 
 
-def get_data_rows_for_reference_table(table_info):
+def get_data_rows_for_reference_table(table_info) -> list:
     """
     Gets all rows of data for a specific reference table.
     :param table_info: Table Information
-    :return: List of all the rows obtained from the query.
+    :return: List of all the rows obtained from the query or None if table not found.
     """
     if table_info is not None:
         if table_info[DATABASE_TABLE_NAME] != "":
@@ -194,7 +296,7 @@ def get_data_rows_for_reference_table(table_info):
         return None
 
 
-def get_connection_string(database):
+def get_connection_string(database) -> str:
     """
     Get Connection String
     :param database: Database Configuration Number
@@ -208,11 +310,11 @@ def get_connection_string(database):
         return ""
 
 
-def get_primary_key_name(primary_key):
+def get_primary_key_name(primary_key) -> str:
     """
     Get Primary Key Name
     :param primary_key: Primary Key Configuration Number
-    :return: Primary Key Name
+    :return: String - Primary Key Name
     """
     if primary_key == Field.BabyId.value:
         return Field.BabyId.name
@@ -234,11 +336,11 @@ def get_primary_key_name(primary_key):
         return Field.Unknown.name
 
 
-def get_primary_key_data_type(primary_key):
+def get_primary_key_data_type(primary_key) -> str:
     """
     Get Primary Key Data Type
     :param primary_key: Primary Key Configuration Number
-    :return: Data Type Configuration Value
+    :return: String - Data Type Configuration Value
     """
     if primary_key == Field.BabyId.value:
         return DataType.Integer.value

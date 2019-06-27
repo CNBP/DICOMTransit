@@ -11,3 +11,5 @@ config
 werkzeug
 flask
 transitions
+mysql-connector-python
+couchdb
