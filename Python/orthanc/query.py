@@ -92,7 +92,9 @@ class orthanc_query:
         logger.debug(f"Deleting Orthanc endpoint: {endpoint} at")
         with requests.Session() as s:
             r = s.delete(
-                endpoint, auth=HTTPBasicAuth(credential.user, credential.password)
+                # form the full path to the end point by combining the URL with the end point.
+                urllib.parse.urljoin(credential.url, endpoint),
+                auth=HTTPBasicAuth(credential.user, credential.password)
             )
             logger.debug(f"Deletion Result: {str(r.status_code)} {r.reason}")
         return r.status_code, r.json()

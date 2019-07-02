@@ -11,8 +11,9 @@ import LocalDB.API
 import pickle
 from DICOM.DICOMPackage import DICOMPackage
 from PythonUtils.file import unique_name
+from PythonUtils.PUDateTime import sleep_until
 from settings import config_get
-
+from datetime import time as timeobject
 
 # Sentry Log Monitoring Service SDK:
 import sentry_sdk
@@ -264,7 +265,7 @@ class DICOMTransitImport(object):
         self.orthanc_list_all_StudiesUIDs: list = []
         # this variable keeps track of the INDEX among the list returned by Orthanc which the current processing is being done. In theory, it should never be more than 1 as WHEN we detected already inserted subjects against local database, we removed that entry from the list and go to the next one.
         self.orthanc_index_current_study = 0
-        self.orthanc_buffer_limit: int = 50
+        self.orthanc_studies_buffer_limit: int = 50 # the maximum number of studies that will be kept in Orthanc.
 
     def setup_machine(self):
 
@@ -802,7 +803,7 @@ class DICOMTransitImport(object):
 
         # If currently, Orthanc has more than subjects we plan to keep, remove the subject we just checked WHICH we know has already been inserted.
         # Note that THIS does not influnece the list in any ways, It influence Orthanc subjects DIRECTLY.
-        if len(self.orthanc_list_all_StudiesUIDs) > self.orthanc_buffer_limit:
+        if len(self.orthanc_list_all_StudiesUIDs) > self.orthanc_studies_buffer_limit:
             studyUID = self.orthanc_list_all_StudiesUIDs[
                 self.orthanc_index_current_study
             ]
@@ -1326,10 +1327,12 @@ if __name__ == "__main__":
             else:
                 # that previous statement will transition to waiting state.
                 logger.info(
-                    f"Orthanc did not detect any new data. Sleeping ONE HOUR. Current time:{unique_name()}"
+                    f"Orthanc did not detect any new data. Sleeping until 19:00. Current time:{unique_name()}"
                 )
                 check_new_data = True
-                time.sleep(3600)
+
+                sleep_until(timeobject(hour=19))
+
                 continue
 
             current_import_process.trigger_wrap(
@@ -1392,10 +1395,10 @@ if __name__ == "__main__":
             current_import_process.trigger_wrap(TR_ResumeMonitoring)
 
             logger.info(
-                f"One pass through insertion of ALL orthanc data is now complete. Sleeping 60m before checking next cycle. Current time: {unique_name()}"
+                f"One pass through insertion of ALL orthanc data is now complete. Sleeping until 19:00 before checking next cycle. Current time: {unique_name()}"
             )
             check_new_data = True
-            time.sleep(3600)
+            sleep_until(timeobject(hour=19))
 
         except (NotImplementedError, ValueError):
             # except (ValueError, AssertionError, IOError, OSError, AssertionError, MachineError, ConnectionError):

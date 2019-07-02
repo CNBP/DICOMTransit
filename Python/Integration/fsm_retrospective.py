@@ -109,7 +109,7 @@ if __name__ == "__main__":
 
     start = time.time()
     logging.basicConfig(level=logging.INFO)
-    path_input = r"/toshiba4/bayX_backup/ResearchPAC/Batch1/"
+    path_input = r"/toshiba2/Mathieus_MRI_Sab/CHD_dTGA_Raw"
     upload_retrospective_study(path_input)
     end = time.time()
     print(str((end - start) / 60 / 60) + " hours")
