@@ -82,15 +82,16 @@ def upload_retrospective_study(path_study_root_folder_path):
         #    if read_upload_file(file):
         #        success_count += 1
 
-
         # Parallel process them
         num_cores = multiprocessing.cpu_count()
+
+        # Store the output in a list
         results = Parallel(n_jobs=num_cores)(
              delayed(read_upload_file)(i) for i in list_files
         )
 
-
-        #success_count = sum(results)
+        # Count success.
+        success_count = results.count(True)
 
     if success_count == total_file_count:
         logger.info(
@@ -109,7 +110,7 @@ if __name__ == "__main__":
 
     start = time.time()
     logging.basicConfig(level=logging.INFO)
-    path_input = r"/toshiba2/Mathieus_MRI_Sab/CHD_dTGA_Raw"
+    path_input = r"/toshiba2/Mathieus_MRI_Sab/CHD_dTGA_Raw/ToUpload"
     upload_retrospective_study(path_input)
     end = time.time()
     print(str((end - start) / 60 / 60) + " hours")
