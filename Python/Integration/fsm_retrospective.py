@@ -110,7 +110,7 @@ if __name__ == "__main__":
 
     start = time.time()
     logging.basicConfig(level=logging.INFO)
-    path_input = r"/toshiba2/Mathieus_MRI_Sab/CHD_dTGA_Raw/ToUpload"
+    path_input = r"/toshiba2/Genetic_MRI_all_Sab"
     upload_retrospective_study(path_input)
     end = time.time()
     print(str((end - start) / 60 / 60) + " hours")

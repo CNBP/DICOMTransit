@@ -1,0 +1,9 @@
+Example CronTab setup:
+
+
+Enter below to set CRON:
+    crontab -e
+Add this line based on where the BIN python is located for the environment:
+    31 18 * * * /home/dyt811/anaconda3/envs/DICOMTransit/bin/python /toshiba4/DICOMTransit/Python/scheduler/run_LocalDB_dump.py
+    #daily, 18:30 it will dump a LocalDB corresponding table. Ensure the PATh is to the PYTHON of your Conda ENV and the proper path to to the localdatabase dump
+

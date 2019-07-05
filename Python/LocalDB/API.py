@@ -40,6 +40,27 @@ def check_status() -> bool:
     else:
         return False
 
+def get_list_CNBPID() -> List[str]:
+    """
+    Return a list of all CNBPID (Key) from the database.
+    :return:
+    """
+    # Load local database from .env file
+    database_path = config_get("LocalDatabasePath")
+
+    list_CNBPID = []
+
+    success, result_rows = LocalDB_query.get_all(
+        database_path, CNBP_blueprint.table_name, "CNBPID"
+    )
+
+    for row in result_rows:
+        list_CNBPID.append(row[0])  # MRN is the first variable requested.
+
+    return (
+        list_CNBPID
+    )
+
 
 def get_list_MRN() -> List[int]:
     """

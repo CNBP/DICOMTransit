@@ -6,14 +6,16 @@ import dotenv
 import webbrowser
 
 # Run this before anything.
+import os
+path_module = os.path.dirname(os.path.realpath(__file__))
 
 # Some preliminary work to automaticly source the binaries. Not working yet. todo: testing in Win and Linux, for subprocesses.
-sys.path.append("BinDependency/dcm2nii")
-sys.path.append("BinDependency/dcm2niix")
-sys.path.append("BinDependency/dcmtoolkit")
-sys.path.append("Python/PythonUtils")
-sys.path.append("Python/")
-sys.path.append("Python/configurator")
+sys.path.append(f"{path_module}/BinDependency/dcm2nii")
+sys.path.append(f"{path_module}/BinDependency/dcm2niix")
+sys.path.append(f"{path_module}/BinDependency/dcmtoolkit")
+sys.path.append(f"{path_module}/Python/PythonUtils")
+sys.path.append(f"{path_module}/Python/")
+sys.path.append(f"{path_module}/Python/configurator")
 
 os.environ["FLASK_APP"] = "configurator.dtconfigure"
 os.environ["FLASK_ENV"] = "development"
