@@ -105,7 +105,9 @@ def get_StudyUID_zip(
     return local_zip_file_path
 
 
-def unpack_subject_zip(zip_file: str, temp_folder: str = "/toshiba4/tmp") -> tempfile.TemporaryDirectory:
+def unpack_subject_zip(
+    zip_file: str, temp_folder: str = "/toshiba4/tmp"
+) -> tempfile.TemporaryDirectory:
     """
     Unpack the given Zip file to a temporary folder and return the reference to that temporary folder.
     :param zip_file:

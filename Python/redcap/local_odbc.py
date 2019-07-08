@@ -13,7 +13,10 @@ from redcap.transaction import RedcapTransaction
 #  Local ODBC
 # ----------------------------------------------------------------------------------------------------------------------
 
-def get_database_column_names(table_info, transaction: RedcapTransaction) -> List[Field]:
+
+def get_database_column_names(
+    table_info, transaction: RedcapTransaction
+) -> List[Field]:
     """
     Returns a list of fields contained within a database table.
     :param table_info: Table Information
@@ -107,7 +110,11 @@ def get_cnfunid_by_cnnid(cnnid: int) -> int:
     """
 
     # Preparing CNN database - SQL request.
-    select_statement = ("SELECT baby.PatientUI FROM Admission admission, Baby baby WHERE admission.CaseId = '" + cnnid + "' AND admission.BabyId=baby.BabyId")
+    select_statement = (
+        "SELECT baby.PatientUI FROM Admission admission, Baby baby WHERE admission.CaseId = '"
+        + cnnid
+        + "' AND admission.BabyId=baby.BabyId"
+    )
 
     # Connecting to CNN database.
     conn = pyodbc.connect(get_connection_string(1))
@@ -127,7 +134,9 @@ def get_cnfunid_by_cnnid(cnnid: int) -> int:
 
     # Preparing CNFUN database - SQL request.
     patientui = data[0]
-    select_statement = ("SELECT PatientId FROM Patients WHERE CNNPatientUI = '" + patientui + "'")
+    select_statement = (
+        "SELECT PatientId FROM Patients WHERE CNNPatientUI = '" + patientui + "'"
+    )
 
     # Connecting to CNFUN database.
     conn = pyodbc.connect(get_connection_string(2))
@@ -158,7 +167,11 @@ def get_cnfunid_by_mrn(mrn: int) -> int:
     """
 
     # Preparing CNN database - SQL request.
-    select_statement = ("SELECT baby.PatientUI FROM Admission admission, Baby baby WHERE admission.HospitalRecordNumber = '" + mrn + "' AND admission.BabyId=baby.BabyId")
+    select_statement = (
+        "SELECT baby.PatientUI FROM Admission admission, Baby baby WHERE admission.HospitalRecordNumber = '"
+        + mrn
+        + "' AND admission.BabyId=baby.BabyId"
+    )
 
     # Connecting to CNN database.
     conn = pyodbc.connect(get_connection_string(1))
@@ -178,7 +191,9 @@ def get_cnfunid_by_mrn(mrn: int) -> int:
 
     # Preparing CNFUN database - SQL request.
     patientui = data[0]
-    select_statement = ("SELECT PatientId FROM Patients WHERE CNNPatientUI = '" + patientui + "'")
+    select_statement = (
+        "SELECT PatientId FROM Patients WHERE CNNPatientUI = '" + patientui + "'"
+    )
 
     # Connecting to CNFUN database.
     conn = pyodbc.connect(get_connection_string(2))

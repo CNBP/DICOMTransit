@@ -84,7 +84,14 @@ def process_table(index_table, transaction: RedcapTransaction) -> None:
         )
 
 
-def process_row(current_table_redcap_fields, database_column_list, index_row, index_table, rows, transaction) -> None:
+def process_row(
+    current_table_redcap_fields,
+    database_column_list,
+    index_row,
+    index_table,
+    rows,
+    transaction,
+) -> None:
     """
     Process each each reference row.
     :param current_table_redcap_fields: Current table REDCap fields

@@ -16,7 +16,14 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def process_field(index_field, current_table_redcap_fields, database_column_list, index_row, record_text, rows) -> None:
+def process_field(
+    index_field,
+    current_table_redcap_fields,
+    database_column_list,
+    index_row,
+    record_text,
+    rows,
+) -> None:
     """
     Process the field of the row within the table.
     :param index_field: Index of current REDCap field
@@ -47,8 +54,14 @@ def process_field(index_field, current_table_redcap_fields, database_column_list
         record_text[current_table_redcap_fields[index_field][1]] = str(value)
 
     except ValueError:
-        if current_table_redcap_fields[index_field][1] not in redcap_fields_to_ignore_process_field_warnings:
-            logger.warning('The current REDCap field (' + current_table_redcap_fields[index_field][1] +
-                           ') does not exist in the database column list.')
+        if (
+            current_table_redcap_fields[index_field][1]
+            not in redcap_fields_to_ignore_process_field_warnings
+        ):
+            logger.warning(
+                "The current REDCap field ("
+                + current_table_redcap_fields[index_field][1]
+                + ") does not exist in the database column list."
+            )
 
         pass

@@ -9,6 +9,7 @@ from joblib import Parallel, delayed
 import multiprocessing
 from DICOM.validate import DICOM_validate
 from PythonUtils.folder import recursive_list
+
 logger = logging.getLogger()
 
 # Getting credential from the environment.
@@ -40,9 +41,7 @@ def read_upload_file(path_file):
         content = read_file(path_file)
 
         # Upload and keep track of success.
-        success = orthanc_query.upload(
-            path_file, credential, content
-        )
+        success = orthanc_query.upload(path_file, credential, content)
         logger.debug(f"Finished uploading:{path_file}")
         return success
     else:
@@ -78,7 +77,7 @@ def upload_retrospective_study(path_study_root_folder_path):
         total_file_count = len(list_files)
 
         # Serial process them:
-        #for file in tqdm(list_files):
+        # for file in tqdm(list_files):
         #    if read_upload_file(file):
         #        success_count += 1
 
@@ -87,7 +86,7 @@ def upload_retrospective_study(path_study_root_folder_path):
 
         # Store the output in a list
         results = Parallel(n_jobs=num_cores)(
-             delayed(read_upload_file)(i) for i in list_files
+            delayed(read_upload_file)(i) for i in list_files
         )
 
         # Count success.

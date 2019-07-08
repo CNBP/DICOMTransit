@@ -265,7 +265,7 @@ class DICOMTransitImport(object):
         self.orthanc_list_all_StudiesUIDs: list = []
         # this variable keeps track of the INDEX among the list returned by Orthanc which the current processing is being done. In theory, it should never be more than 1 as WHEN we detected already inserted subjects against local database, we removed that entry from the list and go to the next one.
         self.orthanc_index_current_study = 0
-        self.orthanc_studies_buffer_limit: int = 50 # the maximum number of studies that will be kept in Orthanc.
+        self.orthanc_studies_buffer_limit: int = 50  # the maximum number of studies that will be kept in Orthanc.
 
     def setup_machine(self):
 

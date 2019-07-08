@@ -247,9 +247,7 @@ if __name__ == "__main__":
         logger.info(f"The arguments are: {str(sys.argv)}")
 
     if len(sys.argv) != 3:
-        input_root_folder = (
-            r"/toshiba2/Mathieus_MRI_Sab/dTGA_toConvert/dTGA_025_post_14-06-2019_FromClinicalPACs"
-        )
+        input_root_folder = r"/toshiba2/Mathieus_MRI_Sab/dTGA_toConvert/dTGA_025_post_14-06-2019_FromClinicalPACs"
     else:
         logger.info(f"First Argument, input root folder path:{sys.argv[1]}")
         logger.info(f"Second Argument, output folder path: {sys.argv[2]}")

@@ -33,7 +33,7 @@ redcap_repeat_instance_key_name = "redcap_repeat_instance"
 redcap_complete_status_suffix = "_complete"
 redcap_complete_status_value = 2
 redcap_form_holding_ids_directly_linked_to_hospital_record_numbers = "admission"
-redcap_fields_to_ignore_process_field_warnings = ["masterid","cnbpid"]
+redcap_fields_to_ignore_process_field_warnings = ["masterid", "cnbpid"]
 
 mysql_export_enabled = environment.MYSQL_EXPORT_ENABLED
 mysql_export_host = environment.MYSQL_EXPORT_HOST

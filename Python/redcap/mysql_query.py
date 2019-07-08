@@ -8,7 +8,13 @@
 
 import mysql.connector
 from mysql.connector.cursor import MySQLCursorPrepared
-from redcap.constants import mysql_export_host, mysql_export_port, mysql_export_database, mysql_export_user, mysql_export_password
+from redcap.constants import (
+    mysql_export_host,
+    mysql_export_port,
+    mysql_export_database,
+    mysql_export_user,
+    mysql_export_password,
+)
 from redcap.enums import MySQLType
 from redcap.transaction import RedcapTransaction
 from itertools import groupby
@@ -39,10 +45,13 @@ def send_mysql_data(transaction: RedcapTransaction) -> (bool, str):
         if not tablename == "unknown":
             create_mysql_table(tablename, tablefields)
         else:
-            logger.info('Warning! : An unknown table name detected')
+            logger.info("Warning! : An unknown table name detected")
 
     # Get entries to create.  (Group by table name - get_mysql_tablename return the tablename to use)
-    entrieslist = groupby(transaction.redcap_queue, lambda f: get_mysql_tablename(transaction.redcap_metadata, f[0]))
+    entrieslist = groupby(
+        transaction.redcap_queue,
+        lambda f: get_mysql_tablename(transaction.redcap_metadata, f[0]),
+    )
 
     # For each table - (insert entries/lines).
     for tablename, entries in entrieslist:
@@ -79,7 +88,7 @@ def get_mysql_tablename(metadata: list, entries: dict) -> str:
     for field in metadata:
 
         # For each fields inside the entries/fields (the line to insert)
-        listentries = [(k,v) for k,v in entries.items()]
+        listentries = [(k, v) for k, v in entries.items()]
         for entry in reversed(listentries):
 
             # If the entry dictionary contains the field name. (field[0] = fieldname)
@@ -102,13 +111,18 @@ def prepare_mysql_metadata_stage5(transaction: RedcapTransaction) -> RedcapTrans
     """
 
     # Get entries to create.  (Group by table name - get_mysql_tablename return the tablename to use)
-    entrieslist_redcap_queue = groupby(transaction.redcap_queue, lambda f: get_mysql_tablename(transaction.redcap_metadata, f[0]))
+    entrieslist_redcap_queue = groupby(
+        transaction.redcap_queue,
+        lambda f: get_mysql_tablename(transaction.redcap_metadata, f[0]),
+    )
 
     # For each table - (insert entries/lines).
     for tablename_redcap_queue, entries_redcap_queue in entrieslist_redcap_queue:
 
         # Get the list of metadata for a specific tablename - x[3] is the tablename.
-        table_redcap_metadata = [x for x in transaction.redcap_metadata if x[3] == tablename_redcap_queue]
+        table_redcap_metadata = [
+            x for x in transaction.redcap_metadata if x[3] == tablename_redcap_queue
+        ]
 
         # For each entries / lines to add inside the database.
         for fields in entries_redcap_queue:
@@ -129,13 +143,20 @@ def prepare_mysql_metadata_stage5(transaction: RedcapTransaction) -> RedcapTrans
 
                 # If not found, then we need to add metadata.
                 if found == False:
-                    data = [fieldname, convert_redcap_to_mysql_fieldtype("text"), fieldname, tablename_redcap_queue]
+                    data = [
+                        fieldname,
+                        convert_redcap_to_mysql_fieldtype("text"),
+                        fieldname,
+                        tablename_redcap_queue,
+                    ]
                     table_redcap_metadata.append(data)
                     transaction.redcap_metadata.append(data)
 
     # We need to order the redcap_metadata using tablename - f[3]
     # Otherwise group will not work.
-    transaction.redcap_metadata = sorted(transaction.redcap_metadata, key=lambda f: f[3])
+    transaction.redcap_metadata = sorted(
+        transaction.redcap_metadata, key=lambda f: f[3]
+    )
 
     # Return the updated repcap transaction (stage 5)
     return transaction
@@ -161,14 +182,24 @@ def create_mysql_table(tablename: str, tablefields: iter) -> None:
             query += ", "
 
         # Add field and flag not as the first one.
-        query += convert_redcap_to_mysql_fieldname(tablename, field[0]) + " " + convert_redcap_to_mysql_fieldtype(field[1])
+        query += (
+            convert_redcap_to_mysql_fieldname(tablename, field[0])
+            + " "
+            + convert_redcap_to_mysql_fieldtype(field[1])
+        )
         first = False
 
     # Close SQL query.
     query += ");"
 
     # Connecting to MySQL database.
-    conn = mysql.connector.connect(host=mysql_export_host, port=mysql_export_port, database=mysql_export_database, user=mysql_export_user, password=mysql_export_password)
+    conn = mysql.connector.connect(
+        host=mysql_export_host,
+        port=mysql_export_port,
+        database=mysql_export_database,
+        user=mysql_export_user,
+        password=mysql_export_password,
+    )
     mysql_cursor = conn.cursor()
 
     # Execute MySQL request.
@@ -186,7 +217,14 @@ def insert_mysql_entries(tablename: str, entries: iter) -> None:
 
     # Connecting to MySQL database.
     # Take note here that we need to use Pure to allow us to use prepare statement.
-    conn = mysql.connector.connect(host=mysql_export_host, port=mysql_export_port, database=mysql_export_database, user=mysql_export_user, password=mysql_export_password, use_pure=True)
+    conn = mysql.connector.connect(
+        host=mysql_export_host,
+        port=mysql_export_port,
+        database=mysql_export_database,
+        user=mysql_export_user,
+        password=mysql_export_password,
+        use_pure=True,
+    )
 
     # For each entries / lines to add inside the database.
     for fields in entries:
@@ -256,9 +294,17 @@ def convert_redcap_to_mysql_fieldname(tablename: str, fieldname: str) -> str:
     # (It will think it's a mysql parameter)
 
     if tablename.startswith("mst"):
-        return fieldname.replace(tablename[3:] + "_", "").replace("order", "position").replace("system", "system_")
+        return (
+            fieldname.replace(tablename[3:] + "_", "")
+            .replace("order", "position")
+            .replace("system", "system_")
+        )
     else:
-        return fieldname.replace(tablename + "_", "").replace("order", "position").replace("system", "system_")
+        return (
+            fieldname.replace(tablename + "_", "")
+            .replace("order", "position")
+            .replace("system", "system_")
+        )
 
 
 def wipe_all_mysql_data() -> None:
@@ -268,17 +314,22 @@ def wipe_all_mysql_data() -> None:
     """
 
     # Deleting old MySQL database SQL request.
-    select_statement = ("DROP DATABASE IF EXISTS " + mysql_export_database + ";")
+    select_statement = "DROP DATABASE IF EXISTS " + mysql_export_database + ";"
 
     # Connecting to MySQL database.
-    conn = mysql.connector.connect(host=mysql_export_host, port=mysql_export_port, user=mysql_export_user, password=mysql_export_password)
+    conn = mysql.connector.connect(
+        host=mysql_export_host,
+        port=mysql_export_port,
+        user=mysql_export_user,
+        password=mysql_export_password,
+    )
     mysql_cursor = conn.cursor()
 
     # Execute MySQL request.
     mysql_cursor.execute(select_statement)
 
     # Creating new database.
-    select_statement = ("CREATE DATABASE " + mysql_export_database + ";")
+    select_statement = "CREATE DATABASE " + mysql_export_database + ";"
 
     # Execute MySQL request.
     mysql_cursor.execute(select_statement)

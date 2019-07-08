@@ -55,7 +55,7 @@ class RedcapTransaction:
         :return: None
         """
         if cnbp_id is None:
-            cnbp_id = ''
+            cnbp_id = ""
 
         self.CNBPId = cnbp_id
 
@@ -105,7 +105,11 @@ class RedcapTransaction:
             equal_length = len(dictionary1 & dictionary2)
 
             # If the same element, then we need to do nothing, (already exist).
-            if equal_length == len(dictionary1) and equal_length == len(dictionary2) and queue_element[1] == element[1]:
+            if (
+                equal_length == len(dictionary1)
+                and equal_length == len(dictionary2)
+                and queue_element[1] == element[1]
+            ):
                 return True
 
             # Element not found.

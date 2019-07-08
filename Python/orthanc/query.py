@@ -94,7 +94,7 @@ class orthanc_query:
             r = s.delete(
                 # form the full path to the end point by combining the URL with the end point.
                 urllib.parse.urljoin(credential.url, endpoint),
-                auth=HTTPBasicAuth(credential.user, credential.password)
+                auth=HTTPBasicAuth(credential.user, credential.password),
             )
             logger.debug(f"Deletion Result: {str(r.status_code)} {r.reason}")
         return r.status_code, r.json()
@@ -195,7 +195,6 @@ class orthanc_query:
 
         # Try to upload
         try:
-
 
             response_code, response_ = orthanc_query.postOrthanc(
                 urllib.parse.urljoin(credential.url, "instances"), credential, data
