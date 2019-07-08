@@ -16,21 +16,21 @@ An intermediate server that built around Orthanc server to include several commo
 - All DICOMToolkit included. 
 - Basic anonymization routine to guarntee the removal of the NAME and SUBJECT ID.
 - Basic SQLite database to store research ID substitution. 
-- HeuDiCom conversion of incoming DICOM files into BIDS compatible format.
-- Automated BIDS validation. 
+- TODO: HeuDiCom conversion of incoming DICOM files into BIDS compatible format.
+- TODO: Automated BIDS validation. 
 
 ## Outgoing:
 - Remote SSH upload
 - Conversation/interaction (e.g LORIS) with remote system substitute and modify DICOM. E.g. obtain an ID remotely, write info into DICOM. 
 
-## Security:
-- Unerasble, auditable trail of all actions taken.
-- Unerasble, auditable record of all settings.
+## Security / Logging:
+- Finite State Machine implementation: Sentry.IO remote automated bug report. 
+- TODO: Unerasble, auditable trail of all actions taken.
+- TODO: Unerasble, auditable record of all settings.
 
 # Funding and Support:
-* Maybe Canadian Neonatal Brain Platform, Canada? TBD
-* Maybe Cyclotron Research Centre,  University of Liège, Belgium? TBD
+* Currently, Canadian Neonatal Brain Platform, Canada
 
 # Continuous Integration:
 - TravisCI
-- Appveyor
+- TODO: Appveyor
