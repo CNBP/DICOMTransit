@@ -1,5 +1,5 @@
 import functools
-
+import os, sys
 from flask import (
     Blueprint,
     flash,
@@ -11,6 +11,13 @@ from flask import (
     url_for,
 )
 from werkzeug.security import check_password_hash, generate_password_hash
+
+# OCD path adding to sys.path to absolutely ensure execution will work no matter what.
+from pathlib import Path
+
+path_file = os.path.dirname(os.path.realpath(__file__))
+path_module = Path(path_file)
+sys.path.append(f"{path_module}")
 
 from db import get_db
 

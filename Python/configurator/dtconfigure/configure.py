@@ -1,5 +1,12 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from werkzeug.exceptions import abort
+import os, sys
+
+from pathlib import Path
+
+path_file = os.path.dirname(os.path.realpath(__file__))
+path_module = Path(path_file)
+sys.path.append(f"{path_module}")
 
 from auth import login_required
 from db import get_db
@@ -215,11 +222,13 @@ def check_form_inputs(form):
     return data
 
 
-""" Get configuration and check if user matches """
-
-
 def get_configuration(id, check_user=True):
-
+    """
+    Get configuration and check if user matches. 
+    :param id:
+    :param check_user:
+    :return:
+    """
     configuration = (
         get_db()
         .execute(

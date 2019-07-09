@@ -40,6 +40,7 @@ def check_status() -> bool:
     else:
         return False
 
+
 def get_list_CNBPID() -> List[str]:
     """
     Return a list of all CNBPID (Key) from the database.
@@ -57,9 +58,7 @@ def get_list_CNBPID() -> List[str]:
     for row in result_rows:
         list_CNBPID.append(row[0])  # MRN is the first variable requested.
 
-    return (
-        list_CNBPID
-    )
+    return list_CNBPID
 
 
 def get_list_MRN() -> List[int]:
@@ -472,7 +471,7 @@ def append_StudyUID(MRN: int, StudyUID: str):
     # JSON dumps.
     json_seriesUID = json.dumps(list_StudyUID_total)
 
-    # Update the MRN record with UUID
+    # Update the MRN record with StudyUID
     LocalDB_query.update_entry(
         database_path,
         CNBP_blueprint.table_name,

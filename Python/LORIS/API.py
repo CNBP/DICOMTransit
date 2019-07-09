@@ -7,7 +7,7 @@ from LORIS.trigger_dicom_insert import trigger_dicom_insert
 from typing import List
 from settings import config_get
 import logging
-
+from urllib.parse import urljoin
 
 logger = logging.getLogger()
 
@@ -183,7 +183,7 @@ def create_candidate(project, birthday, gender) -> (bool, int, int):
 
 def get_all_timepoints(DCCID: int) -> List[str]:
     """
-    Get a list of all possible timepoints associated with a UUID.
+    Get a list of all possible timepoints associated with a DCCID.
     :param DCCID:
     :return:
     """

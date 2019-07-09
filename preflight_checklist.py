@@ -7,6 +7,7 @@ import webbrowser
 
 # Run this before anything.
 import os
+
 path_module = os.path.dirname(os.path.realpath(__file__))
 
 # Some preliminary work to automaticly source the binaries. Not working yet. todo: testing in Win and Linux, for subprocesses.
@@ -25,8 +26,8 @@ if not dotenv.load_dotenv():
     raise ValueError(".Env file not found. Contact DICOMTransit author!")
 
 # Check production and development
-import redcap.production
-import redcap.development
+# import redcap.production
+# import redcap.development
 
 # Creat the local configuration database if it hasn't already exist.
 if not os.path.exists("LocalDB/dtconfigure.sqlite"):
@@ -58,6 +59,6 @@ except Exception as e:
     raise ValueError
 
 # Wait 5s before opening webbrower.
-time.sleep(5)
+time.sleep(15)
 
 webbrowser.open("http://127.0.0.1:5000/")  # Open the webpage

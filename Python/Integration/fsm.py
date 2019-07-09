@@ -18,6 +18,10 @@ from datetime import time as timeobject
 # Sentry Log Monitoring Service SDK:
 import sentry_sdk
 
+# in order for prod and dev esting, both bool needs to change here.
+run_production: bool = False
+run_dev: bool = True
+
 sentry_sdk.init("https://d788d9bf391a4768a22ea6ebabfb4256@sentry.io/1385114")
 
 # Set all debugging level:
@@ -59,7 +63,7 @@ STATUS_NETWORK = status binary variable.
 TR_ZipFiles = "TR_ZipFiles"
 
 # Orthanc handling transitions
-TR_CheckLocalDBUUID = "TR_CheckLocalDBUUID"
+TR_CheckLocalDBStudyUID = "TR_CheckLocalDBStudyUID"
 TR_UpdateOrthancNewDataStatus = "TR_UpdateOrthancNewDataStatus"
 TR_HandlePotentialOrthancData = "TR_HandlePotentialOrthancData"
 TR_DownloadNewData = "TR_DownloadNewData"
@@ -259,9 +263,13 @@ class DICOMTransitImport(object):
         ##################
         # Orthanc
         ##################
-        self.credential = orthanc.API.get_prod_orthanc_credentials()
+        if run_production is True and run_dev is False:
+            self.credential = orthanc.API.get_prod_orthanc_credentials()
+        else:
+            self.credential = orthanc.API.get_dev_orthanc_credentials()
+
         self.orthanc_has_new_data = False
-        # the list of all subjet UUIDs returned by Orthanc.
+        # the list of all StudyUIDs returned by Orthanc.
         self.orthanc_list_all_StudiesUIDs: list = []
         # this variable keeps track of the INDEX among the list returned by Orthanc which the current processing is being done. In theory, it should never be more than 1 as WHEN we detected already inserted subjects against local database, we removed that entry from the list and go to the next one.
         self.orthanc_index_current_study = 0
@@ -309,9 +317,9 @@ class DICOMTransitImport(object):
             conditions=self.has_new_data.__name__,
         )
 
-        # After checking orthanc status, check with localDB for existing UUID
+        # After checking orthanc status, check with localDB for existing StudyUID
         machine.add_transition(
-            TR_CheckLocalDBUUID,
+            TR_CheckLocalDBStudyUID,
             ST_detected_new_data,
             ST_determined_orthanc_StudyUID_status,
             prepare=self.UpdateLocalDBStatus.__name__,
@@ -724,7 +732,7 @@ class DICOMTransitImport(object):
     def GetOrthancList(self):
         logger.info("Transition: Checking Orthanc for new data!")
 
-        # Get updated orthanc UUID.
+        # Get updated orthanc StudyUID.
         self.orthanc_list_all_StudiesUIDs = orthanc.API.get_all_subject_StudyUIDs(
             self.credential
         )
@@ -824,8 +832,11 @@ class DICOMTransitImport(object):
         Properly create the DICOM package and update its relevant basic informations like files reference and UIDs
         :return:
         """
+
+        path_temp_zip = config_get("ZipPath")
+
         # Properly set the DICOM_package.
-        temporary_folder = orthanc.API.unpack_subject_zip(self.DICOM_zip)
+        temporary_folder = orthanc.API.unpack_subject_zip(self.DICOM_zip, path_temp_zip)
 
         # Orthanc files are GUARNTEED to have consistency name and ID so no need to check that. A cursory DICOM check is good enough for performance reasons.
 
@@ -1144,6 +1155,7 @@ class DICOMTransitImport(object):
         from LORIS.API import check_status
 
         self.STATUS_LORIS = check_status()
+
         if self.STATUS_LORIS:
             logger.debug("LORIS production system status OKAY!")
         else:
@@ -1173,9 +1185,13 @@ class DICOMTransitImport(object):
 
     def UpdateOrthancStatus(self):
         # Check ENV for the predefined Orthanc URL to ensure that it exists.
-        from orthanc.API import check_status
+        from orthanc.API import check_prod_orthanc_status, check_dev_orthanc_status
 
-        self.STATUS_ORTHANC = check_status()
+        if run_production is True and run_dev is False:
+            self.STATUS_ORTHANC = check_prod_orthanc_status()
+        else:
+            self.STATUS_ORTHANC = check_dev_orthanc_status()
+
         if self.STATUS_ORTHANC:
             logger.debug("Orthanc system status OKAY!")
         else:
@@ -1310,7 +1326,7 @@ if __name__ == "__main__":
             # Need to loop back here.
             if current_import_process.has_new_data():
 
-                current_import_process.trigger_wrap(TR_CheckLocalDBUUID)
+                current_import_process.trigger_wrap(TR_CheckLocalDBStudyUID)
 
                 if current_import_process.has_matched_orthanc_StudyUID():
                     current_import_process.trigger_wrap(

@@ -251,7 +251,7 @@ class DICOMPackage:
 
     def update_sUID(self) -> List[str]:
         """
-        Check all dicom files to get a unique list of all possible UUIDs.
+        Check all dicom files to get a unique list of all possible series UIDs.
         :return:
         """
         from DICOM.elements_batch import DICOM_elements_batch

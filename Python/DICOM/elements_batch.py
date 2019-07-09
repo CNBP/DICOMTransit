@@ -13,7 +13,7 @@ class DICOM_elements_batch:
     @staticmethod
     def retrieve_sUID(dicom_files: list, sample_rate: int = 10) -> List[str]:
         """
-        Check all dicom files to get a unique list of all possible UUIDs.
+        Check all dicom files to get a unique list of all possible series UIDs.
         :param dicom_files:
         :return:
         """

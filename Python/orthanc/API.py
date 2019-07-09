@@ -11,14 +11,31 @@ import json
 logger = logging.getLogger()
 
 
-def check_status() -> bool:
+def check_dev_orthanc_status() -> bool:
+    """
+    Check the orthanc status to ensure that it is online.
+    :return:
+    """
+    credential = get_dev_orthanc_credentials()
+    try:
+
+        endpoint = urllib.parse.urljoin(credential.url, "studies")
+        reseponse_code, _ = orthanc_query.getOrthanc(endpoint, credential)
+        success = LORIS_helper.is_response(reseponse_code, 200)
+    except:
+        # in case any thing goes wrong
+        return False
+    return success
+
+
+def check_prod_orthanc_status() -> bool:
     """
     Check the orthanc status to ensure that it is online.
     :return:
     """
     credential = get_prod_orthanc_credentials()
     try:
-        endpoint = f"{credential.url}studies/"
+        endpoint = urllib.parse.urljoin(credential.url, "studies")
         reseponse_code, _ = orthanc_query.getOrthanc(endpoint, credential)
         success = LORIS_helper.is_response(reseponse_code, 200)
     except:
@@ -86,7 +103,7 @@ def get_StudyUID_zip(
     orthanc_URL_with_StudyUID: str, credential: orthanc_credential
 ) -> str:
     """
-    Obtain the actual zip files of the subject based on the UUID given and unzip them to a temporary folder, and return it.
+    Obtain the actual zip files of the subject based on the StudyUID given and unzip them to a temporary folder, and return it.
     :param orthanc_URL_with_StudyUID:
     :return: the temporary folder object which contain the reference to the folder in the .name attribute
     """
@@ -114,7 +131,7 @@ def unpack_subject_zip(
     :return:
     """
 
-    # Create the temporary directory
+    # Create the temporary directory at the location specified, auto erased later as system reclaim resource.
     folder = tempfile.TemporaryDirectory(prefix=unique_name(), dir=temp_folder)
 
     logger.debug("Subject ZIP temporary location created at:" + folder.name)

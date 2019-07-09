@@ -3,7 +3,7 @@ import orthanc.API
 import LORIS.API
 import LocalDB.API
 from DICOM.DICOMPackage import DICOMPackage
-
+from settings import config_get
 import os
 
 if __name__ == "__main__":
@@ -27,7 +27,11 @@ if __name__ == "__main__":
             )  # it must contain patients/ and archive in the path name
 
             zip_file = orthanc.API.get_StudyUID_zip(subject_url, credential)
-            dicom_folder = orthanc.API.unpack_subject_zip(zip_file)
+
+            # Location to write small buffer.
+            path_temp = config_get("ZipPath")
+
+            dicom_folder = orthanc.API.unpack_subject_zip(zip_file, path_temp)
 
             # Convert it to a DICOMPackage, it checks for a bunch of validity, update a bunch of its meta information regarding the entire archive
             DICOM_package = DICOMPackage(dicom_folder)

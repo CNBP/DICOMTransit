@@ -1,8 +1,13 @@
-import os
+import os, sys
 
 from flask import Flask
 
 from pathlib import Path
+
+
+path_file = os.path.dirname(os.path.realpath(__file__))
+path_module = Path(path_file)
+sys.path.append(f"{path_module}")
 
 
 def create_app(test_config=None):
@@ -37,17 +42,17 @@ def create_app(test_config=None):
         return "Hello, World!"
 
     # import and register the functions to setup the app db
-    from . import db
+    import db
 
     db.init_app(app)
 
     # import and register the auth blueprint
-    from . import auth
+    import auth
 
     app.register_blueprint(auth.bp)
 
     # import and register the configure blueprint
-    from . import configure
+    import configure
 
     app.register_blueprint(configure.bp)
     app.add_url_rule("/", endpoint="index")
