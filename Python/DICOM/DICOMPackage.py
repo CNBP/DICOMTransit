@@ -68,7 +68,7 @@ class DICOMPackage:
 
         success = self.update_scan_date()
         if success:
-            logger.info("Subject specific scan date pass check.")
+            logger.debug("Subject specific scan date retrieved and past check.")
         else:
             logger.error(
                 "Subject scan data did not include scan date, high likelyhood of corrupt data or non-patient data. Assuming a default scan date of 1900-01-01"
@@ -77,7 +77,7 @@ class DICOMPackage:
 
         success = self.update_birthdate()
         if success:
-            logger.info("Subject specific birthdate pass check.")
+            logger.debug("Subject specific birthdate retrieved and past check.")
         else:
             logger.error(
                 "Subjects have NO BIRTHDATE! LORIS interaction will not function."
@@ -86,7 +86,7 @@ class DICOMPackage:
 
         success = self.update_sex()
         if success:
-            logger.info("Subject specific sex pass check.")
+            logger.debug("Subject specific sex field from DICOM past check.")
         else:
             logger.error(
                 "Subjects have NO BIRTHDATE! LORIS interaction will not function."
@@ -95,7 +95,7 @@ class DICOMPackage:
 
         success = self.update_gender()
         if success:
-            logger.info("Subject specific gender pass check.")
+            logger.debug("Subject specific LORIS gender field past check.")
         else:
             logger.error("Subject gender failed check.")
             ValueError("DICOM")

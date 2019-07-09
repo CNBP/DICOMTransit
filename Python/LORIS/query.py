@@ -4,6 +4,7 @@ import requests
 
 from LORIS.helper import LORIS_helper
 from settings import config_get
+from urllib.parse import urljoin
 
 logger = logging.getLogger()
 
@@ -47,7 +48,7 @@ class LORIS_query:
 
         logger.debug(f"Getting LORIS endpoint: {endpoint} at")
         url = config_get("LORISurl")
-        updatedurl = url + endpoint
+        updatedurl = urljoin(url, endpoint)
         logger.debug(updatedurl)
         HEADERS = {"Authorization": "token {}".format(token)}
 
@@ -70,10 +71,8 @@ class LORIS_query:
 
         logger.debug("Posting data to: " + endpoint)
         logger.debug("Data: " + data)
-        logger.debug(
-            "!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!"
-        )
         url = config_get("LORISurl")
+        updatedurl = urljoin(url, endpoint)
         updatedurl = url + endpoint
 
         HEADERS = {"Authorization": "token {}".format(token)}
@@ -97,11 +96,9 @@ class LORIS_query:
 
         logger.debug("Putting data to: " + endpoint)
         logger.debug("Data: " + data)
-        logger.debug(
-            "!!!!!!!!!!BEWARE THAT SOME ENDPOINTS HAVE TRAILING SLASH, OTHERS DON'T.!!!!!!!!!!!!!!"
-        )
 
         url = config_get("LORISurl")
+
         updatedurl = url + endpoint
 
         HEADERS = {"Authorization": "token {}".format(token)}

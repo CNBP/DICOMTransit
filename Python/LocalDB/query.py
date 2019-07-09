@@ -178,7 +178,9 @@ class LocalDB_query:
             ConnectedDatabase = sqlite3.connect(database_path)
             c = ConnectedDatabase.cursor()
 
-            logger.info("Update records in SQLite database.")
+            logger.info(
+                f"Updating records in SQLite database {table_name} table {field} for the record."
+            )
 
             # Update SQLite record row where key field values are found (inspired by: https://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html)
             c.execute(

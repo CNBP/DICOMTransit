@@ -28,6 +28,7 @@ sentry_sdk.init("https://d788d9bf391a4768a22ea6ebabfb4256@sentry.io/1385114")
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 # Create logger.
+# Root Logger (for debug transition)
 logger = logging.getLogger()
 
 # Set logger path.
@@ -35,8 +36,9 @@ log_file_path = os.path.join(
     config_get("LogPath"), f"DICOMTransit_FSM_Log_{unique_name()}.txt"
 )
 
-# Set transition logger path:
-logging.getLogger("transition").setLevel(logging.DEBUG)
+# Set logging level for the sub modules:
+logging.getLogger("transitions.core").setLevel(logging.ERROR)
+logging.getLogger("urllib3").setLevel(logging.INFO)
 
 # create the logging file handler
 filehandler = logging.FileHandler(log_file_path)
@@ -730,7 +732,7 @@ class DICOMTransitImport(object):
             png.write(output_object)
 
     def GetOrthancList(self):
-        logger.info("Transition: Checking Orthanc for new data!")
+        logger.info("Checking Orthanc for new data!")
 
         # Get updated orthanc StudyUID.
         self.orthanc_list_all_StudiesUIDs = orthanc.API.get_all_subject_StudyUIDs(
@@ -792,7 +794,7 @@ class DICOMTransitImport(object):
         Download the new data for a SINGLE subject. We will return to this state when more subjects exist. Since this state is reached once we confirm there are new data.
         :return:
         """
-        logger.info("Transition: Downloading new data now!")
+        logger.info("Downloading new data now!")
 
         subject = self.orthanc_list_all_StudiesUIDs[self.orthanc_index_current_study]
 
@@ -996,11 +998,11 @@ class DICOMTransitImport(object):
     def RetrieveGender(self):
         success = self.DICOM_package.update_sex()
         assert success
-        logger.info("Subject specific sex pass check.")
+        logger.info("Subject specific sex DICOM field pass check.")
 
         success = self.DICOM_package.update_gender()
         assert success
-        logger.info("Subject specific gender pass check.")
+        logger.info("Subject specific LORIS specific gender information determined.")
 
     def RetrieveBirthday(self):
         success = self.DICOM_package.update_birthdate()
