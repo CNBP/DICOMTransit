@@ -41,7 +41,7 @@ class CNBP_blueprint:
     # this must pass at ALL TIME
     assert len(fields) == len(fields_types)
 
-    # todo: cross checek these with schema.sql from dtconfigurator as well!
+    # @todo: cross checek these with schema.sql from dtconfigurator as well!
     dotenv_variables = [
         "created",
         "LORISurl",

@@ -20,4 +20,4 @@ class UT_LORISTimepoint(unittest.TestCase):
                 == LORIS_timepoint.visit_number_extraction(tupleItem[1])[0]
             )
 
-        # todo: 10+ timepoint number WILL FAIL!
+        # @todo: 10+ timepoint number WILL FAIL!

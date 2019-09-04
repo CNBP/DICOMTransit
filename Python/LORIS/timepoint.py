@@ -89,7 +89,7 @@ class LORIS_timepoint:
         :param DCCID: the DCCID of the existing subject.
         :return: if creation request is successful, and what label is actually created.
         """
-        # todo: must handle the special edge case where timepoint reach V10 etc where two or three more digits are there!
+        # @todo: must handle the special edge case where timepoint reach V10 etc where two or three more digits are there!
 
         timepoint_label = ""
 

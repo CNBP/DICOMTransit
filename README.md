@@ -5,19 +5,19 @@
 An intermediate server that built around Orthanc server to include several commonly used components to serve a variety of functions to facilicate data transport and exchange from the scanner all the way to data storage services such as LORIS or offsite tertiary storage servers. 
 
 ## Planned features and other details forthcoming:
-- Everything should be containerized in an latest Ubuntu OS.
-- Basic Python 3.6 support.
+- @TODO: Everything should be containerized in an latest Ubuntu OS.
+- @TODO: Everything should be containerized in an latest Docker
+- @TODO: HeuDiCom conversion of incoming DICOM files into BIDS compatible format.
+- @TODO: Automated BIDS validation. 
 
-## Incoming:
-- Orthanc server for Ubuntu included
+
+## Incoming Data Stream:
+- Listen to Orthanc server at the default configuration.  
+
 
 ## Automated Conversion, DICOM Manipuation:
-- All MINCToolkit included.
-- All DICOMToolkit included. 
-- Basic anonymization routine to guarntee the removal of the NAME and SUBJECT ID.
-- Basic SQLite database to store research ID substitution. 
-- TODO: HeuDiCom conversion of incoming DICOM files into BIDS compatible format.
-- TODO: Automated BIDS validation. 
+- Basic anonymization routine to guarantee the removal of the NAME and SUBJECT ID for now. 
+- Basic SQLite database to store the anonymization process and the results research ID substitution. 
 
 ## Outgoing:
 - Remote SSH upload
@@ -25,12 +25,13 @@ An intermediate server that built around Orthanc server to include several commo
 
 ## Security / Logging:
 - Finite State Machine implementation: Sentry.IO remote automated bug report. 
-- TODO: Unerasble, auditable trail of all actions taken.
-- TODO: Unerasble, auditable record of all settings.
+- @TODO: Unerasble, auditable trail of all actions taken.
+- @TODO: Unerasble, auditable record of all settings.
 
 # Funding and Support:
 * Currently, Canadian Neonatal Brain Platform, Canada
 
 # Continuous Integration:
-- TravisCI
-- TODO: Appveyor
+- TravisCI for unit testings
+- Sentry for Logging
+- @TODO: Appveyor

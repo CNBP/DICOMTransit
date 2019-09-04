@@ -826,7 +826,7 @@ class DICOMTransitImport(object):
         # As this is EQUIVALENT of moving the index forward
         del self.orthanc_list_all_StudiesUIDs[self.orthanc_index_current_study]
         # Now, the index will refer to the next subject. Also, we can recycle the state/list length check etc.
-        # todo: check how the deletion work in a real scenerio.
+        # @todo: check how the deletion work in a real scenerio.
         logger.debug("Mock deleting the subject currently")
 
     def UnpackNewData(self):
@@ -1010,7 +1010,7 @@ class DICOMTransitImport(object):
         logger.info("Subject specific birthdate pass check.")
 
     def RetrieveStudy(self):
-        # todo: For now, all project are under LORIS. The projectID etc systems are not being actively used.
+        # @todo: For now, all project are under LORIS. The projectID etc systems are not being actively used.
         self.DICOM_package.project = "loris"
         # raise NotImplementedError
 
@@ -1211,7 +1211,7 @@ class DICOMTransitImport(object):
         self.STATUS_FILE = True
         logger.debug("File(s) status APPEAR OKAY!")
 
-    # Meta methods todo
+    # Meta methods @todo
     def RetryPreviousActions(self):
         pass
 

@@ -38,7 +38,7 @@ class DICOM_elements:
             element_values = DICOM_data.data_element(data_element).value
             return True, element_values
         except KeyError:
-            # todo: dicomdir situation most likely ends here.
+            # @todo: dicomdir situation most likely ends here.
             fail_reason = f"In memory retrieve of DICOM element failed. The data element provided: {data_element}, does not appear to exist"
             logger.error(fail_reason)
             return False, fail_reason
@@ -181,9 +181,9 @@ class DICOM_elements:
         :param file_path:
         :return: MRN number, as a STRING
         """
-        # todo see if there are ways to validate this part vs study before returning.
+        # @todo see if there are ways to validate this part vs study before returning.
 
-        # todo: to be debugged. Check detailed conditions.
+        # @todo: to be debugged. Check detailed conditions.
         from datetime import datetime
 
         # Retrieve the data element.
@@ -222,7 +222,7 @@ class DICOM_elements:
         elif not success or value is None:
             logger.error("Retrieval of study value failed. Invalid value.")
             return False, None
-        else:  # todo see if there are ways to validate this part vs study
+        else:  # @todo see if there are ways to validate this part vs study
             return True, value
 
     @staticmethod
@@ -277,7 +277,7 @@ class DICOM_elements:
         :param file_path:
         :return: Age as a relative delta time object.
         """
-        # todo: refactor using existing functions.
+        # @todo: refactor using existing functions.
 
         from dateutil.relativedelta import relativedelta
 

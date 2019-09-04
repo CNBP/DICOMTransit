@@ -13,5 +13,4 @@ flask
 transitions
 SimpleITK
 mysql-connector-python
-couchdb
 openpyxl

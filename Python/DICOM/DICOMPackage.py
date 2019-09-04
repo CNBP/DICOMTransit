@@ -58,11 +58,11 @@ class DICOMPackage:
 
         logger.info("Commencing subject specific checks. ")
 
-        # todo study inference is not robust. Need debug and refactoring.
+        # @todo study inference is not robust. Need debug and refactoring.
         # success = self.update_study()
         # assert success
 
-        # todo project inference is not robust. Need debug and refactoring.
+        # @todo project inference is not robust. Need debug and refactoring.
         # success = self.update_project()
         # assert success
 
@@ -106,7 +106,7 @@ class DICOMPackage:
 
     def check_validity(self):
         """
-        #todo: this KEY WRAPPER FUNCTION function to check the validity of the object before conducting anything else. Currently not working because I am not using decorator functions properly.
+        #@todo: this KEY WRAPPER FUNCTION function to check the validity of the object before conducting anything else. Currently not working because I am not using decorator functions properly.
         :param package_function: the package_function to be performed
         :return:
         """

@@ -45,7 +45,7 @@ if __name__ == "__main__":
                 # Attempt to generate the CNBPID/PSCID based on study protocol.
                 # DICOM_package.CNBPID = LocalDB.API.propose_CNBPID(DICOM_package.studies[0])
 
-                # todo: For now, all project are under LORIS. The projectID etc systems are not being actively used.
+                # @todo: For now, all project are under LORIS. The projectID etc systems are not being actively used.
                 DICOM_package.project = "loris"
 
                 # create new PSCID and get DCCID

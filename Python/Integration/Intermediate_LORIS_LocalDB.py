@@ -18,8 +18,8 @@ def findTimePointUpdateDatabase(token, DCCID, database_path, table_name):
 
     MRN = -1
 
-    # todo: permission must be checked to ensure we are not geting 401 error! which is an access issue.
-    # todo: 2018-07-24 continue debug this code about entry creation.
+    # @todo: permission must be checked to ensure we are not geting 401 error! which is an access issue.
+    # @todo: 2018-07-24 continue debug this code about entry creation.
     time_point = LORIS_timepoint.findLatestTimePoint(token, DCCID)
 
     # Timepoint Check

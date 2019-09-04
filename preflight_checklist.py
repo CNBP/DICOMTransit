@@ -10,7 +10,7 @@ import os
 
 path_module = os.path.dirname(os.path.realpath(__file__))
 
-# Some preliminary work to automaticly source the binaries. Not working yet. todo: testing in Win and Linux, for subprocesses.
+# Some preliminary work to automaticly source the binaries. Not working yet. @todo: testing in Win and Linux, for subprocesses.
 sys.path.append(f"{path_module}/BinDependency/dcm2nii")
 sys.path.append(f"{path_module}/BinDependency/dcm2niix")
 sys.path.append(f"{path_module}/BinDependency/dcmtoolkit")
@@ -46,7 +46,7 @@ try:
     if sys.platform == "win32":
         pid = subprocess.Popen(
             ["flask", "run"], creationflags=DETACHED_PROCESS
-        ).pid  # todo: wrap this into a starter function to run at will.
+        ).pid  # @todo: wrap this into a starter function to run at will.
     else:
 
         # linux might need

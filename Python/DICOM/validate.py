@@ -74,8 +74,8 @@ class DICOM_validate:
             # Not useful when dealing with ORTHANC output files.
 
             if consistency_check:
-                # todo: what if one of them is NONE?
-                # todo: what if the date and other things are inconsistent?
+                # @todo: what if one of them is NONE?
+                # @todo: what if the date and other things are inconsistent?
                 # Record first instance of patient ID and patient name.
                 if PatientID == "" and PatientName == "":
                     Success, PatientID = DICOM_elements.retrieve(file, "PatientID")

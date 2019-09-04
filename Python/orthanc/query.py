@@ -23,7 +23,7 @@ orthanc_credential = collections.namedtuple("orthanc_credential", "url user pass
 class orthanc_query:
     @staticmethod
     def authenticateOrthanc():
-        # todo: all the get, set can be potentially using a decorator function to authenticate.
+        # @todo: all the get, set can be potentially using a decorator function to authenticate.
         raise NotImplementedError
         pass
 
@@ -168,7 +168,7 @@ class orthanc_query:
     @staticmethod
     def upload(path, credential: orthanc_credential, data):
         """
-        todo: should really bench mark this library vs the request library we typically use to upload for the rest of the project.
+        @todo: should really bench mark this library vs the request library we typically use to upload for the rest of the project.
         A method to upload files to orthanc.
 
         # Orthanc - A Lightweight, RESTful DICOM Store

@@ -11,7 +11,7 @@ def trigger_dicom_insert(scans):
     dicom file to insert
     :returns:
     """
-    # todo: 2018-11-30T133155EST should clean up here and ensure loading the URL using .env.
+    # @todo: 2018-11-30T133155EST should clean up here and ensure loading the URL using .env.
     # Create a dictionary with the required key 'dicoms'. Key value is scans
     p = {"dicoms": scans}
 

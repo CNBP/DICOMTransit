@@ -415,7 +415,7 @@ def trigger_insertion(file_name):
             # Secure version.
              r = s.post(r"http://dev.cnbp.ca/cnbp/upload_dicoms.php", data=data_json)
 
-            # todo: Non-secure version until we fix the SSL issue
+            # @todo: Non-secure version until we fix the SSL issue
             # r = requests.api.request('post', "https://dev.cnbp.ca/cnbp/upload_dicoms.php", data=data_json)
 
             print("Post Result:" + str(r.status_code) + r.reason)

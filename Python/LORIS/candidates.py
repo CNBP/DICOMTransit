@@ -43,7 +43,7 @@ class LORIS_candidates:
 
     @staticmethod
     def deleteCandidateCNBP(DCCID, PSCID):
-        # todo: this should really be done through API. But Currently LORIS does not offer such API.
+        # @todo: this should really be done through API. But Currently LORIS does not offer such API.
         # NOTE! If you EVER get NULL coalesce not recognized error, make sure that the PHP version being called from
         # the SSH session is 7+ or else. We had a major issue where the PHP version from SSH session being LOWER
         # than the .bashrc profile imported edition. Also keep in mind that EVEN if .bashrc import this, it MOST LIKELY
@@ -99,7 +99,7 @@ class LORIS_candidates:
             birth_date
         ) or not LORIS_validation.validate_gender(
             gender
-        ):  # not LORIS_validation.validate_project(project) or #todo fix this project validation part during creation.
+        ):  # not LORIS_validation.validate_project(project) or #@todo fix this project validation part during creation.
             logger.error(
                 "Non-compliant PSCID component detected. Aborting PSCID creation "
             )
@@ -131,7 +131,7 @@ class LORIS_candidates:
     def checkPSCIDExist(token, proposed_PSCID):
         """
         Check if Site/Study already contain the PSCID
-        todo: mostly obsolete as now PSCID is completely generated server side.
+        @todo: mostly obsolete as now PSCID is completely generated server side.
         HOWEVER! THere are /candidate_list that can once for all get
 
         :param token:
@@ -193,7 +193,7 @@ class LORIS_candidates:
         if not LORIS_validation.validate_DCCID(proposed_DCCID):
             raise ValueError("DCCID is not valid!")
 
-        # todo: This area has projects/loris dependency. Refactor to enable multiple projects handling.
+        # @todo: This area has projects/loris dependency. Refactor to enable multiple projects handling.
         response, JSON = LORIS_query.getCNBP(
             token, r"candidates/" + str(proposed_DCCID)
         )

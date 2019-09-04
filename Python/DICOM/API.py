@@ -30,7 +30,7 @@ def anonymize_to_zip(folder_path: str, zip_ID: str):
 
     zip_with_name(
         folder_path, zip_ID
-    )  # todo! it does not check if there are OTHER files in there!
+    )  # @todo! it does not check if there are OTHER files in there!
 
 
 def change_to_zip_dir():
@@ -74,7 +74,7 @@ def check_anonymization(files: list, anonymized_name) -> bool:
 
     NOTE!!!!
     This is the part where we have to ensure all the values are properly anonymized.
-    todo: generalize this such that it will provide a list of fields and then anonymize them all from the database etc.
+    @todo: generalize this such that it will provide a list of fields and then anonymize them all from the database etc.
     :param files: File must be the absolute path!
     :param anonymized_name:
     :return:
@@ -163,7 +163,7 @@ def study_validation(study: str) -> str:
 
     # check if project ID is in the projectID list.
     key = dictionary_search(projectID_list, study)
-    # todo: what if the key does not exist?
+    # @todo: what if the key does not exist?
 
     return key
 

@@ -26,7 +26,7 @@ class UT_LORISCandidates(unittest.TestCase):
 
         success, DCCID = LORIS_candidates.createCandidate(
             token, "loris", "1986-11-18", "Male"
-        )  # todo: check project ensure it is validated. Might need reassignment
+        )  # @todo: check project ensure it is validated. Might need reassignment
         assert success
         LORIS_candidates.deleteCandidateCNBP(DCCID, PSCID)
 

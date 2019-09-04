@@ -80,7 +80,7 @@ def get_list_MRN() -> List[int]:
 
     return (
         list_MRN
-    )  # todo: verify this is in integer? or string as that has dire consequences.
+    )  # @todo: verify this is in integer? or string as that has dire consequences.
 
 
 def get_list_StudyUID() -> List[List[str]]:
@@ -102,7 +102,7 @@ def get_list_StudyUID() -> List[List[str]]:
 
     return (
         list_StudyUID
-    )  # todo: verify this is in integer? or string as that has dire consequences.
+    )  # @todo: verify this is in integer? or string as that has dire consequences.
 
 
 def check_MRN(MRN: int) -> bool:
