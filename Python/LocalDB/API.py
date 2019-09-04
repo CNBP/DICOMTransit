@@ -1,16 +1,11 @@
-import sqlite3
-
+import os
+import logging
 from LocalDB.query import LocalDB_query
 from LocalDB.schema import CNBP_blueprint
 from LORIS.validate import LORIS_validation
-import logging
-
-import os
 from settings import config_get
-from PythonUtils.env import load_validate_dotenv
 from PythonUtils.env import load_dotenv_var
 from PythonUtils.intmath import int_incrementor
-from redcap import development as environment
 from typing import List, Optional
 import json
 

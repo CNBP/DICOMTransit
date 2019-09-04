@@ -2,7 +2,6 @@ import unittest
 import DICOM.API
 
 
-@pytest.mark.skip
 class UT_DICOMAnonymization(unittest.TestCase):
     @staticmethod
     def test_folder():

@@ -4,6 +4,7 @@ from orthanc.query import orthanc_query, orthanc_credential
 from LORIS.helper import LORIS_helper
 from PythonUtils.file import unique_name
 import logging
+import tempfile
 from typing import List
 import urllib.parse
 import json
@@ -123,11 +124,12 @@ def get_StudyUID_zip(
 
 
 def unpack_subject_zip(
-    zip_file: str, temp_folder: str = "/tmp"
+    zip_file: str, temp_folder: str = tempfile.gettempdir()
 ) -> tempfile.TemporaryDirectory:
     """
     Unpack the given Zip file to a temporary folder and return the reference to that temporary folder.
     :param zip_file:
+    :param temp_folder: the system's temporary folder
     :return:
     """
 
