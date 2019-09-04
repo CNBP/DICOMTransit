@@ -1,6 +1,3 @@
 [submodule "Python/PythonUtils"]
 	path = Python/PythonUtils
 	url = https://github.com/dyt811/PythonUtils
-[submodule "Python/PyCap"]
-	path = Python/PyCap
-	url = https://github.com/CNBP/PyCap
