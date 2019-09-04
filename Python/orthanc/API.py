@@ -123,7 +123,7 @@ def get_StudyUID_zip(
 
 
 def unpack_subject_zip(
-    zip_file: str, temp_folder: str = "/toshiba4/tmp"
+    zip_file: str, temp_folder: str = "/tmp"
 ) -> tempfile.TemporaryDirectory:
     """
     Unpack the given Zip file to a temporary folder and return the reference to that temporary folder.
