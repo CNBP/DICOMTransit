@@ -30,10 +30,10 @@ class DICOM_converter:
         else:
             os.chdir(output_folder)
 
-        DICOM_converter.raw(input_folder, output_folder)
+        #DICOM_converter.raw(input_folder, output_folder)
         DICOM_converter.raw_sorted(input_folder, output_folder)
-        DICOM_converter.raw_sorted_decompressed(input_folder, output_folder)
-        DICOM_converter.nii(input_folder, output_folder)
+        #DICOM_converter.raw_sorted_decompressed(input_folder, output_folder)
+        #DICOM_converter.nii(input_folder, output_folder)
         from pathlib import Path
 
         nii_cube = Path.joinpath(Path(output_folder), "raw_sorted_decompressed")
@@ -248,6 +248,9 @@ if __name__ == "__main__":
 
     if len(sys.argv) != 3:
         input_root_folder = r"/toshiba2/Mathieus_MRI_Sab/dTGA_toConvert/dTGA_025_post_14-06-2019_FromClinicalPACs"
+        input_root_folder = (
+            r"/tmp/VXS38"
+        )
     else:
         logger.info(f"First Argument, input root folder path:{sys.argv[1]}")
         logger.info(f"Second Argument, output folder path: {sys.argv[2]}")
@@ -255,4 +258,3 @@ if __name__ == "__main__":
         output_folder = sys.argv[2]
 
     DICOM_converter.DICOM_universal_convert_default(input_root_folder)
-    # DICOM_decompress.decompress_folder(r"/toshiba2/Mathieus_MRI_Sab/HIE_Raw/HIE_023_3226838_DICOMUniversal_2019-04-03/raw_sorted_decompressed")

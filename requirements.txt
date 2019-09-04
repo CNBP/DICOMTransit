@@ -14,3 +14,5 @@ transitions
 SimpleITK
 mysql-connector-python
 openpyxl
+joblib
+sentry_sdk
