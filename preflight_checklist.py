@@ -14,9 +14,9 @@ path_module = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(f"{path_module}/BinDependency/dcm2nii")
 sys.path.append(f"{path_module}/BinDependency/dcm2niix")
 sys.path.append(f"{path_module}/BinDependency/dcmtoolkit")
-sys.path.append(f"{path_module}/Python/PythonUtils")
-sys.path.append(f"{path_module}/Python/")
-sys.path.append(f"{path_module}/Python/configurator")
+sys.path.append(f"{path_module}/DICOMTransit/PythonUtils")
+sys.path.append(f"{path_module}/DICOMTransit/")
+sys.path.append(f"{path_module}/DICOMTransit/configurator")
 
 os.environ["FLASK_APP"] = "configurator.dtconfigure"
 os.environ["FLASK_ENV"] = "development"
@@ -32,7 +32,7 @@ if not dotenv.load_dotenv():
 # Creat the local configuration database if it hasn't already exist.
 if not os.path.exists("LocalDB/dtconfigure.sqlite"):
     try:
-        os.chdir("Python")
+        os.chdir("DICOMTransit")
         subprocess.check_output(["flask", "--help"])
         subprocess.check_output(["flask", "init-db"])
     except Exception as e:

@@ -20,12 +20,12 @@ install:
   - unzip dcm2niix_25-Nov-2018_lnx.zip
   - export PATH=$PATH:$(pwd)
 
-  # install Python dependencies
+  # install DICOMTransit dependencies
   - pip install -r requirements.txt
 
 # command to run tests
 script:
-  - cd "Python" # pytest MUST BE initiaited from the python folder.
+  - cd "DICOMTransit" # pytest MUST BE initiaited from the python folder.
   - python -m pytest -s --cov # Run test with automated coverage reporting
   
 # After successful test, run coverage and send data to Coverall
