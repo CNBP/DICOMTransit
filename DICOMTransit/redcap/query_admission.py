@@ -52,7 +52,7 @@ class admission_project:
 
     def get_caseIDwithCNBPID(self, CNBPID: str or List[str]):
         """
-        Get a list of CaseD using data provided list of CNBPID.
+        Get a list of CaseD using data provided list of CNBPIDs.
         :param dataset: the indexing list of dictionary showing correspondence
         :param list_CNBPID:
         :return:
@@ -65,15 +65,15 @@ class admission_project:
 
     def filter_with_CNBPID(self, CNBPID: str or List[str]):
         """
-        Check the list, only retain the relevant CNBPID interested.
-        :param dataset: CNBPID & record ID correspondence list.
+        Check the list, only retain the relevant CNBPIDs interested.
+        :param dataset: CNBPIDs & record ID correspondence list.
         :param CNBPID:
         :return:
         """
         list_filtered = None
 
         filtered_field = "cnbpid"
-        # Hnadling when CNBPID is string instead of list (allowing batch function).
+        # Hnadling when CNBPIDs is string instead of list (allowing batch function).
         if type(CNBPID) is str:
             CNBPID = [CNBPID]
 
@@ -83,7 +83,7 @@ class admission_project:
 
     def get_babyIDwithCNBPID(self, CNBPID: str or List[str]):
         """
-        Get a list of CaseD using data provided list of CNBPID.
+        Get a list of CaseD using data provided list of CNBPIDs.
         :param dataset: the indexing list of dictionary showing correspondence
         :param list_CNBPID:
         :return:
@@ -97,7 +97,7 @@ class admission_project:
     def get_all_CNBPIDs(self):
         """
         Obtain all the CNBPIDs from the RedCap database.
-        :return: CNBPID & record ID correspondence list.
+        :return: CNBPIDs & record ID correspondence list.
         """
         subset = self.project.export_records(fields=["cnbpid"])
         # @todo strip this into more easily digestable format

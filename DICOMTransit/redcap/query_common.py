@@ -52,9 +52,9 @@ def filter_records(
     dataset: List[dict], filter_field: str, list_filtered_value: str or List[str]
 ):
     """
-    Generic filtering method, by checking the list, only retain the relevant CNBPID interested.
+    Generic filtering method, by checking the list, only retain the relevant CNBPIDs interested.
     :param list_filtered_value & record ID correspondence list.
-    :param CNBPID:
+    :param CNBPIDs:
     :return:
     """
     if type(list_filtered_value) is str:

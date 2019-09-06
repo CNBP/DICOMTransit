@@ -46,8 +46,8 @@ class baby_project:
 
     def filter_with_BabyID(self, babyID: str or List[str]):
         """
-        Check the list, only retain the relevant CNBPID interested.
-        :param dataset: CNBPID & record ID correspondence list.
+        Check the list, only retain the relevant CNBPIDs interested.
+        :param dataset: CNBPIDs & record ID correspondence list.
         :param babyID:
         :return:
         """
@@ -55,7 +55,7 @@ class baby_project:
 
         filtered_field = "babyid"
 
-        # Handling when babyID is string instead of list (allowing batch function).
+        # Handling when babyIDs is string instead of list (allowing batch function).
         if type(babyID) is str:
             babyID = [babyID]
 
@@ -104,7 +104,7 @@ class baby_project:
 
     def get_records_baby(self, BabyID: str or List[str]):
         """
-        Retrieve the cases based on their INDEX which is the
+        Do a full fields retrieve of the cases based on their INDEX which is the babyID
         :param cases:
         :return:
         """
