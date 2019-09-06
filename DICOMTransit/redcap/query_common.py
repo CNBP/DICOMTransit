@@ -3,7 +3,6 @@ from DICOMTransit.redcap import development as environment
 from redcap import Project  # note this is from PyCap.redcap
 from typing import List
 
-
 """
 These functions serves as the basis function used to query the variety of table groups in RedCap. It takes care of basic communications etc. 
 """
@@ -58,34 +57,41 @@ def filter_records(
     :param CNBPID:
     :return:
     """
-    if type(list_filtered_value) == "str":
+    if type(list_filtered_value) is str:
         list_filtered_value = [list_filtered_value]
+
     list_filtered = list(
         filter(lambda person: person[filter_field] in list_filtered_value, dataset)
     )
     return list_filtered
 
 
-def get_recordfields(field_data: str, field_filter: str, filter_value: str):
+def get_fields(project: Project, fields: List[str]):
     """
-    An attempt to produce generalized function to get records from RedCap filtering for the fieldvalue from field.
+    A generalized function to get all records from certain fields.
+    :param project:
+    :param fields:
+    :return:
+    """
+    list_dict = project.export_records(fields=fields)
+    return list_dict
+
+
+def get_recordfields_common(
+    project: Project, field_data: str, field_filter: str, filter_value: str
+) -> List[dict]:
+    """
+    This is a lighter query used to only retrieve partial information to minimize the download time
     :param targetted_project:
     :param field_data: the field name fo the data field.
     :param field_filter: the field used to filter the the entire database.
     :param filter_value: the values checked in field_filter used to remove the not needed records.
     :return: field_value: str,
     """
-    project_admission = createProject()
 
-    # Will need to return at least these two fields
-    list_dict = project_admission.export_records(fields=[field_data, field_filter])
+    # Get all records only containing the two fields needed.
+    list_dict = project.export_records(fields=[field_data, field_filter])
+
+    # Filter the list of dict to include ONLY records matching the filtered valuse in the filter field.
     list_filtered_dict = filter_records(list_dict, field_filter, filter_value)
-
-    # Extract the actual data from the case.
-    list_caseID = []
-    for case in list_filtered_dict:
-        list_caseID.append(case[field_data])
-    return list_caseID
-
-
-g
+    return list_filtered_dict
