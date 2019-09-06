@@ -4,6 +4,11 @@ from redcap import Project  # note this is from PyCap.redcap
 from typing import List
 
 
+"""
+These functions serves as the basis function used to query the variety of table groups in RedCap. It takes care of basic communications etc. 
+"""
+
+
 def createProject(
     Token=environment.REDCAP_TOKEN_CNN_ADMISSION, URL="https://redcap.cnbp.ca/api/"
 ):
@@ -81,3 +86,6 @@ def get_recordfields(field_data: str, field_filter: str, filter_value: str):
     for case in list_filtered_dict:
         list_caseID.append(case[field_data])
     return list_caseID
+
+
+g
