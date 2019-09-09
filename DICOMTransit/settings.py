@@ -16,12 +16,16 @@ def config_get(variable_name):
     """
     from DICOMTransit.LocalDB.schema import CNBP_blueprint
     from DICOMTransit.LocalDB.API import get_setting
+    from PythonUtils.env import is_travis, get_travis_setting
 
     # Check if variable is an anticipated variable.
     if validate_dotenv_var(variable_name, CNBP_blueprint.dotenv_variables):
 
-        # Use local databse API to load the variable.
-        env_variable = get_setting(variable_name)
+        # If in CI mode, directly load the variables.
+        if is_travis():
+            env_variable = get_travis_setting(variable_name)
+        else:  # Use local databse API to load the variable if not using TravisCI:
+            env_variable = get_setting(variable_name)
 
         return env_variable
 
