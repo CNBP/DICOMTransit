@@ -113,7 +113,7 @@ class admission_project:
         return cases_data
 
 
-if __name__ == "__main__":
+def test_query_admission():
     # def test_get_all_CNBPIDs():
     admission = admission_project()
     print(admission.get_all_CNBPIDs())

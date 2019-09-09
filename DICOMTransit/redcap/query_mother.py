@@ -53,9 +53,7 @@ class mother_project:
         return cases_data
 
 
-if __name__ == "__main__":
-    # def test_get_all_CNBPIDs():
-
+def test_query_mother():
     mother = mother_project()
     cnbpid = "6368"
     test = mother.get_records_mother(cnbpid)

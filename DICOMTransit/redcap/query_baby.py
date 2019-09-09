@@ -114,7 +114,7 @@ class baby_project:
         return cases_data
 
 
-if __name__ == "__main__":
+def test_query_baby():
     # def test_get_all_CNBPIDs():
 
     baby = baby_project()
