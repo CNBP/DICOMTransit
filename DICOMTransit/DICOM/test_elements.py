@@ -1,7 +1,7 @@
 import unittest
 
 from DICOMTransit.DICOM.elements import DICOM_elements
-from PythonUtils.folder import recursive_list
+from PythonUtils.PUFolder import recursive_list
 
 
 class UT_DICOMElement(unittest.TestCase):

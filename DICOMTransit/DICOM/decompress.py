@@ -1,6 +1,6 @@
 import os, sys
 import pydicom, subprocess
-from PythonUtils.folder import recursive_list
+from PythonUtils.PUFolder import recursive_list
 from tqdm import tqdm
 
 from pathlib import Path

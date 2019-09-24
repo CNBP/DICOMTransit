@@ -1,6 +1,6 @@
 from DICOMTransit.DICOM.validate import DICOM_validate
 from DICOMTransit.DICOM.elements_batch import DICOM_elements_batch
-from PythonUtils.file import zip_with_name
+from PythonUtils.PUFile import zip_with_name
 from DICOMTransit.LORIS.validate import LORIS_validation
 from DICOMTransit.LORIS.timepoint import LORIS_timepoint
 from DICOMTransit.settings import config_get

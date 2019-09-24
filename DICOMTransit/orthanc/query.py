@@ -8,7 +8,7 @@ import shutil
 import zipfile
 import collections
 import urllib.parse
-from PythonUtils.file import is_name_unique, unique_name
+from PythonUtils.PUFile import is_name_unique, unique_name
 from requests.auth import HTTPBasicAuth
 
 

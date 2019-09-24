@@ -10,7 +10,7 @@ import DICOMTransit.LORIS.API
 import DICOMTransit.LocalDB.API
 import pickle
 from DICOMTransit.DICOM.DICOMPackage import DICOMPackage
-from PythonUtils.file import unique_name
+from PythonUtils.PUFile import unique_name
 from PythonUtils.PUDateTime import sleep_until
 from DICOMTransit.settings import config_get
 from datetime import time as timeobject

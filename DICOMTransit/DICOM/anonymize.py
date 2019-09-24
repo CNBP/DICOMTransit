@@ -2,7 +2,7 @@ from DICOMTransit.DICOM.validate import DICOM_validate
 from DICOMTransit.DICOM.elements import DICOM_elements
 import logging
 from tqdm import tqdm
-from PythonUtils.folder import recursive_list
+from PythonUtils.PUFolder import recursive_list
 
 from typing import List
 

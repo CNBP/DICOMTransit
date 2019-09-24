@@ -63,8 +63,8 @@ def pythonutil_check():
     Check to see if we can import from PythonUtils
     :return:
     """
-    import PythonUtils.folder
-    import PythonUtils.file
+    import PythonUtils.PUFolder
+    import PythonUtils.PUFile
 
     return True
 

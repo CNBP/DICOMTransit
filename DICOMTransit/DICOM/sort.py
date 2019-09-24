@@ -4,8 +4,12 @@ import shutil
 from DICOMTransit.DICOM.elements import DICOM_elements
 from DICOMTransit.DICOM.validate import DICOM_validate
 from tqdm import tqdm
-
+from pathlib import Path
 logger = logging.getLogger()
+import numpy as np
+import pydicom
+from PIL import Image
+from PythonUtils.PUFile import unique_name
 
 
 class DICOM_sort:
@@ -19,8 +23,8 @@ class DICOM_sort:
 
         # Element to check: Series number.
 
-        from PythonUtils.file import flatcopy
-        from PythonUtils.folder import recursive_list
+        from PythonUtils.PUFile import flatcopy
+        from PythonUtils.PUFolder import recursive_list
 
         # Get files
         file_list = recursive_list(input_folder)
@@ -74,6 +78,50 @@ class DICOM_sort:
 
             shutil.move(file, os.path.join(DestinationFolder, filename))
         logger.info(f"Total error encountered: {str(exception_encountered)}")
+
+    @staticmethod
+    def into_subfolder(input_folder, output_folder):
+        """
+        This function sort a input folder with or without sub layers and automaticlly flatten everything into subfolders.
+        It assume sort_into_folder has already ran and now you can further strategy based on criteria.
+        :param input_folder: this is most likely the output folder from "into_folder" function. Which contain a list of ALREADY validated DICOM files.
+        :return:
+        """
+
+        # Element to check: Series number.
+
+        from PythonUtils.PUFile import flatcopy
+        from PythonUtils.PUFolder import recursive_list
+
+        list_bad_files = []
+
+        # Get files
+        file_list = recursive_list(input_folder)
+
+        logger.info("Generating sorted and decompressed DICOM files:")
+        for file in tqdm(file_list):
+
+            # Get TR and TE informaiton.
+            success, TR = DICOM_elements.retrieve_TR(file)
+            if not success:
+                list_bad_files.append(file)
+
+            success, TE = DICOM_elements.retrieve_TE(file)
+            if not success:
+                list_bad_files.append(file)
+
+            # Make TR_TE folder.
+            path_TRTE = Path(output_folder).joinpath(f"TR{TR}_TE{TE}")
+            os.makedirs(path_TRTE, exist_ok=True)
+
+            # Save the image files to new time stamped location.
+            image_raw = pydicom.dcmread(file)
+            image_numpy = image_raw.pixel_array
+            image_PIL = Image.fromarray(image_numpy)
+            image_PIL.save(path_TRTE.joinpath(unique_name()+'.jpeg'))
+
+        logger.info(f"Total error encountered: {len(list_bad_files)}")
+        logger.info(list_bad_files)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ import json
 import logging
 from DICOMTransit.settings import config_get
 
-from PythonUtils.file import dictionary_search
+from PythonUtils.PUFile import dictionary_search
 from DICOMTransit.LORIS.candidates import LORIS_candidates
 from datetime import datetime
 import math

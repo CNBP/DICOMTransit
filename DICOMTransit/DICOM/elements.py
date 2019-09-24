@@ -141,6 +141,40 @@ class DICOM_elements:
             return True, name
 
     @staticmethod
+    def retrieve_TR(file_path: str):
+        """
+        Read the PatientName field. No checking. Used for validation post anonymization.
+        :param file_path:
+        :return: MRN number, as a STRING
+        """
+
+        success, name = DICOM_elements.retrieve(file_path, "RepetitionTime")
+
+        if not success:
+            logger.error("Was not able to access/read the file!")
+            return False, None
+
+        else:
+            return True, name
+
+    @staticmethod
+    def retrieve_TE(file_path: str):
+        """
+        Read the PatientName field. No checking. Used for validation post anonymization.
+        :param file_path:
+        :return: MRN number, as a STRING
+        """
+
+        success, name = DICOM_elements.retrieve(file_path, "EchoTime")
+
+        if not success:
+            logger.error("Was not able to access/read the file!")
+            return False, None
+
+        else:
+            return True, name
+
+    @staticmethod
     def retrieve_name(file_path):
         """
         Read the PatientName field. No checking. Used for validation post anonymization.
