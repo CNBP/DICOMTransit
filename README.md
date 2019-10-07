@@ -4,7 +4,9 @@
 
 An intermediate server that built around Orthanc server to include several commonly used components to serve a variety of functions to facilicate data transport and exchange from the scanner all the way to data storage services such as LORIS or offsite tertiary storage servers. 
 
+
 ## Planned features and other details forthcoming:
+- @TODO: Sphinx documentation
 - @TODO: Everything should be containerized in an latest Ubuntu OS.
 - @TODO: Everything should be containerized in an latest Docker
 - @TODO: HeuDiCom conversion of incoming DICOM files into BIDS compatible format.
