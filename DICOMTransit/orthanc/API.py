@@ -2,7 +2,7 @@ import os
 import tempfile
 from DICOMTransit.orthanc.query import orthanc_query, orthanc_credential
 from DICOMTransit.LORIS.helper import LORIS_helper
-from PythonUtils.file import unique_name
+from PythonUtils.PUFile import unique_name
 import logging
 import tempfile
 from typing import List

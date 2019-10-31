@@ -1,6 +1,6 @@
 from DICOMTransit.DICOM.validate import DICOM_validate
 from DICOMTransit.DICOM.elements_batch import DICOM_elements_batch
-from PythonUtils.file import zip_with_name
+from PythonUtils.PUFile import zip_with_name
 from DICOMTransit.LORIS.validate import LORIS_validation
 from DICOMTransit.LORIS.timepoint import LORIS_timepoint
 from DICOMTransit.settings import config_get
@@ -22,8 +22,8 @@ class DICOMPackage:
         logger.info("Creating subject specific DICOM package class")
         # Set the DICOM_folder attribute
         self.__dicom_folder__ = (
-            dicom_folder
-        )  # reference kept to prevent auto garbage collection
+            dicom_folder  # reference kept to prevent auto garbage collection
+        )
         self.dicom_folder: str = dicom_folder.name
 
         # Set default value.
@@ -34,7 +34,11 @@ class DICOMPackage:
         self.list_series_UID = None
 
         # Update validity and dicom_files. This flag is used successful
-        self.validity, self.dicom_files, self.list_series_UID = DICOM_elements_batch.traversal(
+        (
+            self.validity,
+            self.dicom_files,
+            self.list_series_UID,
+        ) = DICOM_elements_batch.traversal(
             self.dicom_folder, consistency_check
         )  # actual path stored in name.
 

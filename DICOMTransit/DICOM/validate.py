@@ -1,7 +1,7 @@
 import logging
 import os
 from tqdm import tqdm
-from PythonUtils.folder import recursive_list
+from PythonUtils.PUFolder import recursive_list
 
 from pydicom.filereader import InvalidDicomError
 from pydicom.filereader import read_file

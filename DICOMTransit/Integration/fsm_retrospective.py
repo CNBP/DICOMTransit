@@ -8,7 +8,7 @@ from pathlib import Path
 from joblib import Parallel, delayed
 import multiprocessing
 from DICOMTransit.DICOM.validate import DICOM_validate
-from PythonUtils.folder import recursive_list
+from PythonUtils.PUFolder import recursive_list
 
 logger = logging.getLogger()
 

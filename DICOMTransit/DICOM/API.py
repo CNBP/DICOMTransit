@@ -1,9 +1,9 @@
 from tempfile import TemporaryDirectory
 from shutil import copyfile
 from DICOMTransit.LORIS.validate import LORIS_validation
-from PythonUtils.file import dictionary_search
+from PythonUtils.PUFile import dictionary_search
 from DICOMTransit.settings import config_get
-from PythonUtils.folder import get_abspath
+from PythonUtils.PUFolder import get_abspath
 from tqdm import tqdm
 from typing import List
 from pathlib import Path
@@ -26,7 +26,7 @@ def anonymize_to_zip(folder_path: str, zip_ID: str):
 
     change_to_zip_dir()
 
-    from PythonUtils.file import zip_with_name
+    from PythonUtils.PUFile import zip_with_name
 
     zip_with_name(
         folder_path, zip_ID

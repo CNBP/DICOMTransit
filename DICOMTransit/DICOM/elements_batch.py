@@ -3,7 +3,7 @@ from typing import List, Optional
 from tqdm import tqdm
 import logging
 import os
-from PythonUtils.folder import recursive_list
+from PythonUtils.PUFolder import recursive_list
 from pydicom.dataset import FileDataset
 
 logger = logging.getLogger()

@@ -3,8 +3,8 @@
 from DICOMTransit.DICOM.sort import DICOM_sort
 from DICOMTransit.DICOM.decompress import DICOM_decompress
 import os
-from PythonUtils.folder import create, recursive_list
-from PythonUtils.file import flatcopy, unique_name
+from PythonUtils.PUFolder import create, recursive_list
+from PythonUtils.PUFile import flatcopy, unique_name
 from DICOMTransit.DICOM.convert import DICOM_convert
 from DICOMTransit.DICOM.validate import DICOM_validate
 import glob

@@ -11,7 +11,7 @@ from DICOMTransit.settings import config_get
 from DICOMTransit.Integration.fsm_states import *
 from DICOMTransit.Integration.fsm_transitions import *
 
-from PythonUtils.file import unique_name
+from PythonUtils.PUFile import unique_name
 
 # Sentry Log Monitoring Service SDK:
 import sentry_sdk

@@ -19,8 +19,8 @@ class DICOM_sort:
 
         # Element to check: Series number.
 
-        from PythonUtils.file import flatcopy
-        from PythonUtils.folder import recursive_list
+        from PythonUtils.PUFile import flatcopy
+        from PythonUtils.PUFolder import recursive_list
 
         # Get files
         file_list = recursive_list(input_folder)
