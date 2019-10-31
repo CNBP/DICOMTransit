@@ -66,7 +66,6 @@ STATUS_NETWORK = status binary variable.
 """
 
 
-
 class DICOMTransitImport(object):
 
     # Class Variables: shared across instances!!!!!
@@ -74,18 +73,15 @@ class DICOMTransitImport(object):
     states = [
         # New patient path.
         ST_waiting,
-
         # Orthanc related:
         ST_determined_orthanc_new_data_status,
         ST_determined_orthanc_StudyUID_status,
-
         # File related:
         ST_detected_new_data,
         ST_obtained_new_data,
         ST_unpacked_new_data,
         ST_obtained_MRN,
         ST_determined_MRN_status,
-
         # Main analyses path:
         ST_processing_old_patient,
         ST_processing_new_patient,
@@ -204,13 +200,13 @@ class DICOMTransitImport(object):
         # Initialize the state machine
         machine = Machine(
             model=self,
-            auto_transitions=True, # this is enabled such taht we can FORCE reset the state of the machine for error recovery
+            auto_transitions=True,  # this is enabled such taht we can FORCE reset the state of the machine for error recovery
             states=self.states,
             # send_event=True,
             # title="Import Process is Messy",
             # show_auto_transitions=True,
             # show_conditions=True,
-            before_state_change=self.record_last_state.__name__, # record the last state and transition before changing.
+            before_state_change=self.record_last_state.__name__,  # record the last state and transition before changing.
             initial=ST_waiting,
         )
 
@@ -720,9 +716,7 @@ class DICOMTransitImport(object):
 
         subject = self.orthanc_list_all_StudiesUIDs[self.orthanc_index_current_study]
 
-        subject_url = (
-            f"{self.credential.url}/studies/{subject}/archive"
-        )  # it must contain patients/ and archive in the path name
+        subject_url = f"{self.credential.url}/studies/{subject}/archive"  # it must contain patients/ and archive in the path name
 
         self.DICOM_zip = DICOMTransit.orthanc.API.get_StudyUID_zip(
             subject_url, self.credential
@@ -774,9 +768,7 @@ class DICOMTransitImport(object):
         # Update unique UID information to help discriminate existing scans.
         # self.DICOM_package.update_sUID()
 
-        self.DICOM_package.project = (
-            "loris"
-        )  # fixme: this is a place holder. This neeeds to be dyanmiclly updated.
+        self.DICOM_package.project = "loris"  # fixme: this is a place holder. This neeeds to be dyanmiclly updated.
 
         # Update the self.files to be scrutinized
         self.files.clear()
@@ -1116,7 +1108,9 @@ class DICOMTransitImport(object):
         if self.STATUS_LORIS:
             logger.debug("LORIS production system status OKAY!")
         else:
-            logger.critical("!!!LORIS system is DOWN!!!")
+            logger.critical(
+                "LORIS system not accessible using the provided credential. Either LORIS system is DOWN OR your credential is no longer valid."
+            )
             self.trigger_wrap(TR_DetectedLORISError)
 
     def UpdateNetworkStatus(self):
@@ -1173,7 +1167,6 @@ class DICOMTransitImport(object):
         self.STATUS_FILE = True
         logger.debug("File(s) status APPEAR OKAY!")
 
-
     def RetryPreviousActions(self):
         """
         This method is called when detected an error of SOME sort.
@@ -1183,23 +1176,33 @@ class DICOMTransitImport(object):
         last_transition = self.transitions_last[-1]
 
         if self.retry == 0:  # immediately retry
-            logger.info(f"Transition from {last_state} using {last_transition} failed and is now being retried first time.")
+            logger.info(
+                f"Transition from {last_state} using {last_transition} failed and is now being retried first time."
+            )
             logger.info(f"Immediately retrying. Current time: {unique_name()}")
 
         elif self.retry <= 5:  # wait for minutes at a time. ,
-            logger.warning(f"Warning! Transition from {last_state} using {last_transition} failed and is now being retried on Retry#{self.retry}.")
-            logger.warning(f"Sleeping {self.retry} minutes. Current time: {unique_name()}")
+            logger.warning(
+                f"Warning! Transition from {last_state} using {last_transition} failed and is now being retried on Retry#{self.retry}."
+            )
+            logger.warning(
+                f"Sleeping {self.retry} minutes. Current time: {unique_name()}"
+            )
             sleep(m=self.retry)
         elif self.retry <= 10:  # wait for hours at a time.
             logger.error(
-                f"ERROR!! Transition from {last_state} using {last_transition} failed and is now being retried on Retry#{self.retry}.")
+                f"ERROR!! Transition from {last_state} using {last_transition} failed and is now being retried on Retry#{self.retry}."
+            )
             logger.error(f"Sleeping {self.retry} hours. Current time: {unique_name()}")
             sleep(h=self.retry - 5)
-        else: # FINAL issues, wait for a few hours.
+        else:  # FINAL issues, wait for a few hours.
             logger.critical(
-                f"CRITICAL!!! Transition from {last_state} using {last_transition} failed and is now being retried on Retry#{self.retry}.")
-            logger.critical(f"Sleeping {self.retry} days. Current time: {unique_name()}")
-            sleep(h=(self.retry - 10)*24)
+                f"CRITICAL!!! Transition from {last_state} using {last_transition} failed and is now being retried on Retry#{self.retry}."
+            )
+            logger.critical(
+                f"Sleeping {self.retry} days. Current time: {unique_name()}"
+            )
+            sleep(h=(self.retry - 10) * 24)
 
         # Set to previous state.
         self.machine.set_state(last_state)
@@ -1247,7 +1250,7 @@ class DICOMTransitImport(object):
         Keeping an archive of the states this instance has been to.
         :return:
         """
-        self.states_last.append(self.machine.state)
+        self.states_last.append(self.state)
 
     def ExceedMaxRetry(self):
         """
@@ -1276,4 +1279,3 @@ class DICOMTransitImport(object):
     def SaveStatusToDisk(self):
 
         raise NotImplementedError
-
