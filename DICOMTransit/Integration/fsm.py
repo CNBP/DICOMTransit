@@ -19,8 +19,8 @@ from datetime import time as timeobject
 import sentry_sdk
 
 # in order for prod and dev esting, both bool needs to change here.
-run_production: bool = False
-run_dev: bool = True
+run_production: bool = True
+run_dev: bool = False
 
 sentry_sdk.init("https://d788d9bf391a4768a22ea6ebabfb4256@sentry.io/1385114")
 
@@ -43,7 +43,7 @@ logging.getLogger("urllib3").setLevel(logging.INFO)
 # create the logging file handler
 filehandler = logging.FileHandler(log_file_path)
 formatter = logging.Formatter(
-    "%(asctime)s\t\t%(name)s\t\t%(funcName)s():\t\tLine %(lineno)i:\t\t%(levelname)s\t\t%(message)s"
+    "[%(asctime)s]\t\t%(name)s\t\t[%(levelname)8s]\t\t[%(funcName)32s():\tLine %(lineno)i]:\t\t%(message)s"
 )
 filehandler.setFormatter(formatter)
 
@@ -1195,6 +1195,7 @@ class DICOMTransitImport(object):
         if self.STATUS_LORIS:
             logger.debug("LORIS production system status OKAY!")
         else:
+            logger.critical("!!!LORIS system is DOWN!!!")
             self.trigger_wrap(TR_DetectedLORISError)
 
     def UpdateNetworkStatus(self):
@@ -1207,6 +1208,7 @@ class DICOMTransitImport(object):
         if self.STATUS_NETWORK:
             logger.debug("General Network system status OKAY!")
         else:
+            logger.critical("!!!General Network system is DOWN!!!")
             self.trigger_wrap(TR_DetectedNetworkError)
 
     def UpdateLocalDBStatus(self):
@@ -1217,6 +1219,7 @@ class DICOMTransitImport(object):
         if self.STATUS_LOCALDB:
             logger.debug("LocalDB system status OKAY!")
         else:
+            logger.critical("!!!LocalDB system is DOWN!!!")
             self.trigger_wrap(TR_DetectedLocalDBError)
 
     def UpdateOrthancStatus(self):
@@ -1234,6 +1237,7 @@ class DICOMTransitImport(object):
         if self.STATUS_ORTHANC:
             logger.debug("Orthanc system status OKAY!")
         else:
+            logger.critical("!!!Orthanc system is DOWN!!!")
             self.trigger_wrap(TR_DetectedOrthancError)
 
     def UpdateFileStatus(self):
