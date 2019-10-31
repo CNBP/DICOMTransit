@@ -1,19 +1,23 @@
-import os, sys, inspect, io, time
+import os, sys, io
 import datetime
 import logging
 from transitions import Machine
-from transitions import MachineError
+
 
 # from transitions.extensions import GraphMachine as Machine
 import DICOMTransit.orthanc.API
 import DICOMTransit.LORIS.API
 import DICOMTransit.LocalDB.API
-import pickle
+
 from DICOMTransit.DICOM.DICOMPackage import DICOMPackage
-from PythonUtils.file import unique_name
-from PythonUtils.PUDateTime import sleep_until
+from PythonUtils.PUFile import unique_name
+from PythonUtils.PUDateTime import sleep
+
 from DICOMTransit.settings import config_get
-from datetime import time as timeobject
+
+# Import the states and transition definitions
+from DICOMTransit.Integration.fsm_states import *
+from DICOMTransit.Integration.fsm_transitions import *
 
 # Sentry Log Monitoring Service SDK:
 import sentry_sdk
@@ -22,6 +26,9 @@ import sentry_sdk
 run_production: bool = True
 run_dev: bool = False
 
+##################
+# Logging sections
+##################
 sentry_sdk.init("https://d788d9bf391a4768a22ea6ebabfb4256@sentry.io/1385114")
 
 # Set all debugging level:
@@ -45,6 +52,7 @@ filehandler = logging.FileHandler(log_file_path)
 formatter = logging.Formatter(
     "[%(asctime)s]\t\t%(name)s\t\t[%(levelname)8s]\t\t[%(funcName)32s():\tLine %(lineno)i]:\t\t%(message)s"
 )
+
 filehandler.setFormatter(formatter)
 
 # add handler to logger object
@@ -55,102 +63,8 @@ logger.addHandler(filehandler)
 has_new_data = Method
 has_new_data = Variable. 
 STATUS_NETWORK = status binary variable. 
-
 """
 
-#############################
-# Transition Naming Variables:
-#############################
-# Exists purely to ensure IDE can help mis spellings vs strings, which IDE DO NOT CHECK
-TR_ZipFiles = "TR_ZipFiles"
-
-# Orthanc handling transitions
-TR_CheckLocalDBStudyUID = "TR_CheckLocalDBStudyUID"
-TR_UpdateOrthancNewDataStatus = "TR_UpdateOrthancNewDataStatus"
-TR_HandlePotentialOrthancData = "TR_HandlePotentialOrthancData"
-TR_DownloadNewData = "TR_DownloadNewData"
-
-# File handling transitions
-TR_UnpackNewData = "TR_UnpackNewData"
-TR_ObtainDICOMMRN = "TR_ObtainDICOMMRN"
-TR_UpdateNewMRNStatus = "TR_UpdateNewMRNStatus"
-TR_ProcessPatient = "TR_ProcessPatient"
-
-TR_FindInsertionStatus = "TR_FindInsertionStatus"
-TR_ProcessNextSubject = "TR_ProcessNextSubject"
-
-# Process Old Subjects transitions
-TR_QueryLocalDBForDCCID = "TR_QueryLocalDBForDCCID"
-TR_QueryRemoteUID = "TR_QueryRemoteUID"
-TR_IncrementRemoteTimepoint = "TR_IncrementRemoteTimepoint"
-TR_UpdateLocalRecords = "TR_UpdateLocalRecords"
-
-# Process New Subjects transitions
-TR_RetrieveGender = "TR_RetrieveGender"
-TR_RetrieveBirthday = "TR_RetrieveBirthday"
-TR_RemoteCreateSubject = "TR_RemoteCreateSubject"
-TR_LocalDBCreateSubject = "TR_LocalDBCreateSubject"
-
-# Files handling transitions.
-TR_AnonymizeFiles = "TR_AnonymizeFiles"
-TR_UploadZip = "TR_UploadZip"
-TR_InsertSubjectData = "TR_InsertSubjectData"
-TR_RecordInsertion = "TR_RecordInsertion"
-TR_ResumeMonitoring = "TR_ResumeMonitoring"
-
-# Error handling transitions
-TR_reattempt = "TR_reattempt"
-TR_DetectedOrthancError = "TR_DetectedOrthancError"
-TR_DetectedLORISError = "TR_DetectedLORISError"
-TR_DetectedFileError = "TR_DetectedFileError"
-TR_DetectedLocalDBError = "TR_DetectedLocalDBError"
-TR_DetectedNetworkError = "TR_DetectedNetworkError"
-
-#############################
-# State Naming Variables:
-#############################
-# Exists purely to ensure IDE can help mis spellings vs strings, which IDE DO NOT CHECK
-ST_waiting = "ST_waiting"
-ST_determined_orthanc_new_data_status = "ST_determined_orthanc_new_data_status"
-ST_determined_orthanc_StudyUID_status = "ST_determined_orthanc_StudyUID_status"
-ST_detected_new_data = "ST_detected_new_data"
-ST_confirmed_new_data = "ST_confirmed_new_data"
-ST_obtained_new_data = "ST_obtained_new_data"
-ST_unpacked_new_data = "ST_unpacked_new_data"
-
-# Old subject states
-ST_obtained_MRN = "ST_obtained_MRN"
-ST_determined_MRN_status = "ST_determined_MRN_status"
-ST_processing_old_patient = "ST_processing_old_patient"
-ST_processing_new_patient = "ST_processing_new_patient"
-ST_found_insertion_status = "ST_found_insertion_status"
-ST_ensured_only_new_subjects_remain = "ST_ensured_only_new_subjects_remain"
-ST_obtained_DCCID_CNBPID = "ST_obtained_DCCID_CNBPID"
-ST_crosschecked_seriesUID = "ST_crosschecked_seriesUID"
-ST_updated_remote_timepoint = "ST_updated_remote_timepoint"
-
-# New subject states
-ST_obtained_new_subject_gender = "ST_obtained_new_subject_gender"
-ST_obtained_new_subject_birthday = "ST_obtained_new_subject_birthday"
-ST_created_remote_subject = "ST_created_remote_subject"
-ST_harmonized_timepoints = "ST_harmonized_timepoints"
-
-# Files states
-ST_files_anonymized = "ST_files_anonymized"
-ST_files_zipped = "ST_files_zipped"
-ST_zip_uploaded = "ST_zip_uploaded"
-ST_zip_inserted = "ST_zip_inserted"
-ST_insertion_recorded = "ST_insertion_recorded"
-
-# Error handling states.
-ST_retry = "ST_retry"
-ST_error_orthanc = "ST_error_orthanc"
-ST_error_LORIS = "ST_error_LORIS"
-ST_error_localDB = "ST_error_localDB"
-ST_error_file_corruption = "ST_error_file_corruption"
-ST_error_sqlite = "ST_error_sqlite"
-ST_error_network = "ST_error_network"
-ST_human_intervention_required = "ST_human_intervention_required"
 
 
 class DICOMTransitImport(object):
@@ -160,15 +74,18 @@ class DICOMTransitImport(object):
     states = [
         # New patient path.
         ST_waiting,
+
         # Orthanc related:
         ST_determined_orthanc_new_data_status,
         ST_determined_orthanc_StudyUID_status,
+
         # File related:
         ST_detected_new_data,
         ST_obtained_new_data,
         ST_unpacked_new_data,
         ST_obtained_MRN,
         ST_determined_MRN_status,
+
         # Main analyses path:
         ST_processing_old_patient,
         ST_processing_new_patient,
@@ -240,8 +157,9 @@ class DICOMTransitImport(object):
         ##################
         # Current retry number.
         self.retry = 0
+
         # The maximum number of retry before machine hangs or ask for human intervention
-        self.max_retry = 5
+        self.max_retry = 12  # first retry in minutes, then in hours, lastly in days.
 
     def __init__(self):
 
@@ -260,7 +178,7 @@ class DICOMTransitImport(object):
         self.transitions_last: list = []
         self.states_last: list = []
         # This is the state machine which will be updated as the analyses process.
-        self.machine = None
+        self.machine: Machine = None
 
         ##################
         # Orthanc
@@ -278,17 +196,21 @@ class DICOMTransitImport(object):
         self.orthanc_studies_buffer_limit: int = 50  # the maximum number of studies that will be kept in Orthanc.
 
     def setup_machine(self):
+        """
+        This sections etup the finite state machine, while also define the traversal pathways among the states within them.
+        :return:
+        """
 
         # Initialize the state machine
         machine = Machine(
             model=self,
-            auto_transitions=False,
+            auto_transitions=True, # this is enabled such taht we can FORCE reset the state of the machine for error recovery
             states=self.states,
             # send_event=True,
             # title="Import Process is Messy",
             # show_auto_transitions=True,
             # show_conditions=True,
-            finalize_event=self.record_last_state.__name__,
+            before_state_change=self.record_last_state.__name__, # record the last state and transition before changing.
             initial=ST_waiting,
         )
 
@@ -874,9 +796,8 @@ class DICOMTransitImport(object):
 
         if not success:
             self.DICOM_package.MRN = 999999
-            # fixme: add a notifier for this event!
-            logger.info(
-                "Non-compliant MRN detected! Assigning default placeholder MRN of 9999999"
+            logger.warning(
+                "Non-compliant MRN detected! Assigning default placeholder MRN of 9999999."
             )
         else:
             logger.info("Subject specific MRN pass check.")
@@ -1252,11 +1173,50 @@ class DICOMTransitImport(object):
         self.STATUS_FILE = True
         logger.debug("File(s) status APPEAR OKAY!")
 
-    # Meta methods @todo
+
     def RetryPreviousActions(self):
+        """
+        This method is called when detected an error of SOME sort.
+        :return:
+        """
+        last_state = self.states_last[-1]
+        last_transition = self.transitions_last[-1]
+
+        if self.retry == 0:  # immediately retry
+            logger.info(f"Transition from {last_state} using {last_transition} failed and is now being retried first time.")
+            logger.info(f"Immediately retrying. Current time: {unique_name()}")
+
+        elif self.retry <= 5:  # wait for minutes at a time. ,
+            logger.warning(f"Warning! Transition from {last_state} using {last_transition} failed and is now being retried on Retry#{self.retry}.")
+            logger.warning(f"Sleeping {self.retry} minutes. Current time: {unique_name()}")
+            sleep(m=self.retry)
+        elif self.retry <= 10:  # wait for hours at a time.
+            logger.error(
+                f"ERROR!! Transition from {last_state} using {last_transition} failed and is now being retried on Retry#{self.retry}.")
+            logger.error(f"Sleeping {self.retry} hours. Current time: {unique_name()}")
+            sleep(h=self.retry - 5)
+        else: # FINAL issues, wait for a few hours.
+            logger.critical(
+                f"CRITICAL!!! Transition from {last_state} using {last_transition} failed and is now being retried on Retry#{self.retry}.")
+            logger.critical(f"Sleeping {self.retry} days. Current time: {unique_name()}")
+            sleep(h=(self.retry - 10)*24)
+
+        # Set to previous state.
+        self.machine.set_state(last_state)
+
+        # Trigger the previous transition
+        self.trigger_wrap(last_transition)
+
+        # Try to increment the retry counter.
+        self.retry += 1
         pass
 
     def trigger_wrap(self, transition_name):
+        """
+        a wrapped call to trigger the transition.
+        :param transition_name:
+        :return:
+        """
         # A wrapped call to the machine trigger function.
         self.transitions_last.append(transition_name)
         self.trigger(transition_name)
@@ -1287,203 +1247,33 @@ class DICOMTransitImport(object):
         Keeping an archive of the states this instance has been to.
         :return:
         """
-        self.states_last.append(self.state)
+        self.states_last.append(self.machine.state)
 
     def ExceedMaxRetry(self):
+        """
+        Signal for human intervention.
+        :return:
+        """
         if self.retry >= self.max_retry:
             return True
         else:
             return False
 
+    '''
+    def set_state(self, state: str):
+        """
+        Hard reset the machine to a known state: WARNING DOES NOT CHECK STATE belong.
+        :param state:
+        :return:
+        """
+        try:
+            fun_to_state = getattr(self.machine, f"to_{state}")
+            fun_to_state(self.machine)
+        except AttributeError:
+            logger.critical("State not found during set_to_state")
+    '''
+
     def SaveStatusToDisk(self):
 
         raise NotImplementedError
 
-
-if __name__ == "__main__":
-
-    # Periodically trigger this:
-    cmd_folder = os.path.realpath(
-        os.path.dirname(
-            os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0])
-        )
-    )
-
-    if cmd_folder not in sys.path:
-        sys.path.insert(0, cmd_folder)
-
-    current_import_process = DICOMTransitImport()
-    current_import_process.setup_machine()
-
-    """
-    The main entry point of the application
-    """
-
-    delete_LocalDB = False
-
-    if delete_LocalDB:
-        ####DELETE THIS PART, fixme
-        # Debug deletion of the temporary database
-        from DICOMTransit.settings import config_get
-
-        localDB_path = config_get("LocalDatabasePath")
-        os.remove(localDB_path)
-        from LocalDB.create_CNBP import LocalDB_createCNBP
-
-        LocalDB_createCNBP.database(localDB_path)
-        ####DELETE THIS PART
-
-    # System initialization check.
-    current_import_process.UpdateOrthancStatus()
-    current_import_process.UpdateNetworkStatus()
-    current_import_process.UpdateLocalDBStatus()
-    current_import_process.UpdateLORISStatus()
-
-    # From this point onward, going to assume, they remain the same for the duration of the transaction.
-    # Current system is NOT robust enough to deal with mid interruption. It will just trigger failed insertion to try again.
-
-    # Import1.show_graph()
-
-    # current_import.waiting is the default state.
-
-    # Execute the following every 10 mintes:
-    # fixme: disable transition error. Let silent fail.
-
-    monitoring = True
-
-    # This variable controls whether in this loop, we are processing new data or just processing existing data.
-    # This controls whether "orthanc_list_all_subjectUUIDs" list get updated from Orthanc or not.
-    check_new_data = True
-
-    while monitoring:
-        try:
-            # Initial state MUST be waiting:
-            current_import_process.reinitialize()
-
-            if check_new_data:
-                current_import_process.trigger_wrap(TR_UpdateOrthancNewDataStatus)
-
-            current_import_process.trigger_wrap(
-                TR_HandlePotentialOrthancData
-            )  # has its own branching termination state.
-            # Need to loop back here.
-            if current_import_process.has_new_data():
-
-                current_import_process.trigger_wrap(TR_CheckLocalDBStudyUID)
-
-                if current_import_process.has_matched_orthanc_StudyUID():
-                    current_import_process.trigger_wrap(
-                        TR_ProcessNextSubject
-                    )  # either way, gonna trigger this transition.
-                    # Need to loop back based on the beginning BUT not get new data.
-                    check_new_data = False
-                    continue
-
-                current_import_process.trigger_wrap(TR_DownloadNewData)
-                current_import_process.trigger_wrap(TR_UnpackNewData)
-                current_import_process.trigger_wrap(TR_ObtainDICOMMRN)
-                current_import_process.trigger_wrap(TR_UpdateNewMRNStatus)
-            else:
-                # that previous statement will transition to waiting state.
-                logger.info(
-                    f"Orthanc did not detect any new data. Sleeping until 19:00. Current time:{unique_name()}"
-                )
-                check_new_data = True
-
-                sleep_until(timeobject(hour=19))
-
-                continue
-
-            current_import_process.trigger_wrap(
-                TR_ProcessPatient
-            )  # has its own branching termination state.
-
-            if current_import_process.found_MRN():
-                ###################
-                # old patients path
-                ###################
-                current_import_process.trigger_wrap(TR_FindInsertionStatus)
-
-                # First date match loop back.
-                if current_import_process.has_matched_localUID():
-                    current_import_process.trigger_wrap(
-                        TR_ProcessNextSubject
-                    )  # either way, gonna trigger this transition.
-                    # Need to loop back based on the beginning BUT not get new data.
-                    check_new_data = False
-                    continue
-                else:
-                    current_import_process.trigger_wrap(TR_QueryLocalDBForDCCID)
-                    current_import_process.trigger_wrap(TR_QueryRemoteUID)
-
-                    # Second UID match loop back.
-                    if current_import_process.has_matched_remoteUID():
-                        current_import_process.trigger_wrap(
-                            TR_ProcessNextSubject
-                        )  # either way, gonna trigger this transition.
-                        # Need to loop back based on the beginning BUT not get new data.
-                        check_new_data = False
-                        continue
-                    current_import_process.trigger_wrap(TR_IncrementRemoteTimepoint)
-                    current_import_process.trigger_wrap(TR_UpdateLocalRecords)
-            else:
-                ###################
-                # new patient path
-                ###################
-                current_import_process.trigger_wrap(TR_RetrieveGender)
-                current_import_process.trigger_wrap(TR_RetrieveBirthday)
-                current_import_process.trigger_wrap(TR_RemoteCreateSubject)
-                current_import_process.trigger_wrap(TR_LocalDBCreateSubject)
-
-            current_import_process.trigger_wrap(TR_AnonymizeFiles)
-
-            current_import_process.trigger_wrap(TR_ZipFiles)
-            # If anonymization fails, loop back.
-
-            current_import_process.trigger_wrap(TR_UploadZip)
-            current_import_process.trigger_wrap(TR_InsertSubjectData)
-            current_import_process.trigger_wrap(TR_RecordInsertion)
-
-            if current_import_process.has_more_data():
-                current_import_process.trigger_wrap(TR_ProcessNextSubject)
-                check_new_data = False
-
-                logger.info("One insertion cycle complete. Check next subject.")
-                continue
-
-            current_import_process.trigger_wrap(TR_ResumeMonitoring)
-
-            logger.info(
-                f"One pass through insertion of ALL orthanc data is now complete. Sleeping until 19:00 before checking next cycle. Current time: {unique_name()}"
-            )
-            check_new_data = True
-            sleep_until(timeobject(hour=19))
-
-        except (NotImplementedError, ValueError):
-            # except (ValueError, AssertionError, IOError, OSError, AssertionError, MachineError, ConnectionError):
-
-            current_study_UID = current_import_process.orthanc_list_all_StudiesUIDs[
-                current_import_process.orthanc_index_current_study
-            ]
-            logger.critical(
-                f"A critical error has been encountered which aborted the subject scan for {current_study_UID}"
-            )
-
-            from DICOMTransit.settings import config_get
-
-            zip_path = config_get("ZipPath")
-            name_log = os.path.join(
-                zip_path, "StateMachineDump_" + unique_name() + ".pickle"
-            )
-            with open(name_log, "wb") as f:
-                # Pickle the 'data' dictionary using the highest protocol available.
-                pickle.dump(current_import_process.machine, f, pickle.HIGHEST_PROTOCOL)
-            logger.warning(
-                f"A finite state machine pickle dump has been made at {name_log}"
-            )
-            logger.warning("Check that path for more detail. ")
-            current_import_process.critical_error = True
-            current_import_process.trigger_wrap(
-                TR_ProcessNextSubject
-            )  # When ONE subject impede flow, go to the next one (without checking new data)!
-            check_new_data = False
