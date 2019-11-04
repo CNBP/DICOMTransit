@@ -13,8 +13,8 @@ from PythonUtils.PUFolder import recursive_list
 logger = logging.getLogger()
 
 # Getting credential from the environment.
-credential = DICOMTransit.orthanc.API.get_prod_orthanc_credentials()
-# url, username, password = orthanc.API.get_dev_orthanc_credentials()
+# credential = DICOMTransit.orthanc.API.get_prod_orthanc_credentials()
+credential = DICOMTransit.orthanc.API.get_dev_orthanc_credentials()
 
 url_instances = urllib.parse.urljoin(credential.url, "/instances")
 
@@ -109,7 +109,7 @@ if __name__ == "__main__":
 
     start = time.time()
     logging.basicConfig(level=logging.INFO)
-    path_input = r"/toshiba2/PRO_011_MathieuStudies/Mathieus_MRI_Sab/NewSubjects"
+    path_input = r"//toshiba4/PRO_091_AlexPACS"
     upload_retrospective_study(path_input)
     end = time.time()
     print(str((end - start) / 60 / 60) + " hours")

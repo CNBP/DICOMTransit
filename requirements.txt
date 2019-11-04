@@ -19,3 +19,4 @@ sentry_sdk
 PyCap
 pandas
 flask-sqlalchemy
+luigi
