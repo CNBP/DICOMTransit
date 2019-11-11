@@ -42,6 +42,4 @@ class CheckOrthancUID(luigi.Task):
         return
 
     def output(self):
-        return luigi.LocalTarget(
-            path_output_pickle.join(f" {self.UID}.pickle")
-        )
+        return luigi.LocalTarget(path_output_pickle.join(f" {self.UID}.pickle"))
