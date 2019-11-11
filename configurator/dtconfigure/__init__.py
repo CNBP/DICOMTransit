@@ -15,7 +15,7 @@ def create_app(test_config=None):
     path_current_file = Path(__file__)
     path_project = path_current_file.parents[3]
     path_LocalDB = path_project.joinpath("LocalDB")
-    string_LocalDB = path_LocalDB.joinpath("dtconfigure.sqlite").resolve().as_posix()
+    string_LocalDB = str(path_LocalDB.joinpath("dtconfigure.sqlite"))
 
     print(string_LocalDB)
 
@@ -42,19 +42,19 @@ def create_app(test_config=None):
         return "Hello, World!"
 
     # import and register the functions to setup the app db
-    import configurator.db
+    import configurator.dtconfigure.db
 
-    configurator.db.init_app(app)
+    configurator.dtconfigure.db.init_app(app)
 
     # import and register the auth blueprint
-    import configurator.auth
+    import configurator.dtconfigure.auth
 
-    app.register_blueprint(configurator.auth.bp)
+    app.register_blueprint(configurator.dtconfigure.auth.bp)
 
     # import and register the configure blueprint
-    import configurator.configure
+    import configurator.dtconfigure.configure
 
-    app.register_blueprint(configurator.configure.bp)
+    app.register_blueprint(configurator.dtconfigure.configure.bp)
     app.add_url_rule("/", endpoint="index")
 
     return app

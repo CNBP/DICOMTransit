@@ -115,3 +115,4 @@ dtconfigures.sqlite
 log/
 
 logs/
+*.pickle
