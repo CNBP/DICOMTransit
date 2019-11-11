@@ -1,7 +1,9 @@
 import luigi
 import logging
+import pickle
 
 from DICOMTransit.IntegrationModules.LIM_Status import UpdateLocalDBStatus
+from DICOMTransit.IntegrationModules.LIM_ENV import path_output_pickle
 from DICOMTransit.orthanc.API import (
     get_prod_orthanc_credentials,
     get_dev_orthanc_credentials,
@@ -10,23 +12,16 @@ from DICOMTransit.orthanc.API import (
 logger = logging.getLogger()
 
 
-class getCredential(luigi.Config):
-    credential = None
-
+class GetDevOrthancCredential(luigi.Task):
     def requires(self):
         return [UpdateLocalDBStatus()]
 
-    # credential = luigi.Parameter(default=get_dev_orthanc_credentials()
     def run(self):
-        self.credential = get_dev_orthanc_credentials()
-        # self.credential = get_prod_orthanc_credentials()
+        credential = (
+            get_dev_orthanc_credentials()
+        )  # to be overwritten by LIM_Credential
+        with open(self.output().path, "wb") as out_file:
+            pickle.dump(credential, out_file)
 
     def output(self):
-        return luigi.LocalTarget("Credential.txt")
-
-    def complete(self):
-        if self.STATUS_NETWORK is not None:
-            logger.debug("Orthanc credential retrieved successfully.")
-            return True
-        else:
-            return False
+        return luigi.LocalTarget(path_output_pickle.join("OrthancCredential.pickle"))

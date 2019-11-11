@@ -716,7 +716,9 @@ class DICOMTransitImport(object):
 
         subject = self.orthanc_list_all_StudiesUIDs[self.orthanc_index_current_study]
 
-        subject_url = f"{self.credential.url}/studies/{subject}/archive"  # it must contain patients/ and archive in the path name
+        subject_url = (
+            f"{self.credential.url}/studies/{subject}/archive"
+        )  # it must contain patients/ and archive in the path name
 
         self.DICOM_zip = DICOMTransit.orthanc.API.get_StudyUID_zip(
             subject_url, self.credential
@@ -768,7 +770,9 @@ class DICOMTransitImport(object):
         # Update unique UID information to help discriminate existing scans.
         # self.DICOM_package.update_sUID()
 
-        self.DICOM_package.project = "loris"  # fixme: this is a place holder. This neeeds to be dyanmiclly updated.
+        self.DICOM_package.project = (
+            "loris"
+        )  # fixme: this is a place holder. This neeeds to be dyanmiclly updated.
 
         # Update the self.files to be scrutinized
         self.files.clear()
