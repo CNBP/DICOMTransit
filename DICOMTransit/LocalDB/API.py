@@ -665,16 +665,16 @@ def get_setting(setting_name: str):
     from datetime import datetime
 
     # Load env on where the setting database is located.
-    path_config_database = load_dotenv_var(
-        "config_database"
+    path_datagator_database = load_dotenv_var(
+        "datagator_database"
     )  # Default location to dtconfigure_old.sqlite
-    name_config_table = load_dotenv_var(
-        "config_table"
+    name_datagator_table = load_dotenv_var(
+        "datagator_table"
     )  # Default location to dtconfigure_old.sqlite
 
     # Look for setting variable in the DEFAULT ORDER
     success, records_setting = LocalDB_query.get_all(
-        path_config_database, name_config_table, setting_name
+        path_datagator_database, name_datagator_table, setting_name
     )
     assert success
     assert len(records_setting) > 0
@@ -684,7 +684,7 @@ def get_setting(setting_name: str):
 
     # Retrieve TIMESTAMP of all records. in the DEFAULT ORDER
     success, records_timestamp = LocalDB_query.get_all(
-        path_config_database, name_config_table, "created"
+        path_datagator_database, name_datagator_table, "created"
     )
     assert success
     assert len(records_timestamp) > 0
