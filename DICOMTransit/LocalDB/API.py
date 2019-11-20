@@ -659,50 +659,48 @@ def get_setting(setting_name: str):
     :param setting_name: assumed the string already exist. Prior method need to check that.
     :return:
     """
-    from DICOMTransit.LocalDB.query import LocalDB_query
+    # Experimental attempt to replace with SQLALchemy
+    from datagator.test import DICOMTransitConfig
 
-    from PythonUtils.env import validate_dotenv_var
-    from datetime import datetime
+    # Make a query to find all Persons in the database
+    config_latest = DICOMTransitConfig.query.order_by("timestamp").first()
+    return getattr(config_latest, setting_name)
 
-    # Load env on where the setting database is located.
-    path_datagator_database = load_dotenv_var(
-        "datagator_database"
-    )  # Default location to dtconfigure_old.sqlite
-    name_datagator_table = load_dotenv_var(
-        "datagator_table"
-    )  # Default location to dtconfigure_old.sqlite
 
-    # Look for setting variable in the DEFAULT ORDER
-    success, records_setting = LocalDB_query.get_all(
-        path_datagator_database, name_datagator_table, setting_name
-    )
-    assert success
-    assert len(records_setting) > 0
+"""
+# Look for setting variable in the DEFAULT ORDER
+success, records_setting = LocalDB_query.get_all(
+    path_datagator_database, name_datagator_table, setting_name
+)
+assert success
+assert len(records_setting) > 0
 
-    # Ensure that timestamp is still a relevant field in the table. Cross validate against blueprint.
-    assert validate_dotenv_var("created", CNBP_blueprint.dotenv_variables)
+# Ensure that timestamp is still a relevant field in the table. Cross validate against blueprint.
+assert validate_dotenv_var("timestamp", CNBP_blueprint.dotenv_variables)
 
-    # Retrieve TIMESTAMP of all records. in the DEFAULT ORDER
-    success, records_timestamp = LocalDB_query.get_all(
-        path_datagator_database, name_datagator_table, "created"
-    )
-    assert success
-    assert len(records_timestamp) > 0
+# Retrieve TIMESTAMP of all records. in the DEFAULT ORDER
+success, records_timestamp = LocalDB_query.get_all(
+    path_datagator_database, name_datagator_table, "timestamp"
+)
+assert success
+assert len(records_timestamp) > 0
 
-    # Find the index of the record that has the latest timepoint.
-    list_datetime = []
-    for record in records_timestamp:
-        record_time = datetime.strptime(record[0], "%Y-%m-%d %H:%M:%S")
-        list_datetime.append(record_time)
-    timestamp_latest = max(list_datetime)
-    index_timestamp_latest = list_datetime.index(timestamp_latest)
+# Find the index of the record that has the latest timepoint.
+list_datetime = []
+for record in records_timestamp:
+    record_time = datetime.strptime(record[0], "%Y-%m-%d %H:%M:%S")
+    list_datetime.append(record_time)
+timestamp_latest = max(list_datetime)
+index_timestamp_latest = list_datetime.index(timestamp_latest)
 
-    # in that row, retrieve setting.
-    setting_value = records_setting[index_timestamp_latest][0]
+# in that row, retrieve setting.
+setting_value = records_setting[index_timestamp_latest][0]
 
-    return setting_value
+return setting_value
+"""
 
 
 if __name__ == "__main__":
 
-    propose_CNBPID("GregoryLodygensky012 Study")
+    # propose_CNBPID("GregoryLodygensky012 Study")
+    get_setting("DevOrthancIP")
