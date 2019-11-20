@@ -1,4 +1,0 @@
-include dtconfigure/schema.sql
-graft dtconfigure/static
-graft dtconfigure/templates
-global-exclude *.pyc

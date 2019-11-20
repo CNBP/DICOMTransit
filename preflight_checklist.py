@@ -4,9 +4,11 @@ import os
 import time
 import dotenv
 import webbrowser
+from dotenv import load_dotenv
 
+# NOTE! This is the setup script to ensure all environment are properly configured and ready to og.
 # Run this before anything.
-import os
+
 
 path_module = os.path.dirname(os.path.realpath(__file__))
 
@@ -14,29 +16,37 @@ path_module = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(f"{path_module}/BinDependency/dcm2nii")
 sys.path.append(f"{path_module}/BinDependency/dcm2niix")
 sys.path.append(f"{path_module}/BinDependency/dcmtoolkit")
-sys.path.append(f"{path_module}/DICOMTransit/PythonUtils")
+sys.path.append(f"{path_module}/datagator")
+sys.path.append(f"{path_module}/PythonUtils")
 sys.path.append(f"{path_module}/DICOMTransit/")
-sys.path.append(f"{path_module}/DICOMTransit/configurator")
-
-os.environ["FLASK_APP"] = "configurator.dtconfigure"
-os.environ["FLASK_ENV"] = "development"
 
 # Check .env exist.
 if not dotenv.load_dotenv():
-    raise ValueError(".Env file not found. Contact DICOMTransit author!")
+    raise ValueError(
+        ".Env file not found. Contact DICOMTransit author!"
+    )  # fixme: be more helpful here.
+
+# Path of the database URL is obtained from the environment or using the default string.
+SQLALCHEMY_DATABASE_URI = os.environ.get(
+    "datagator_database"
+) or "sqlite:///" + os.path.join(path_module, "LocalDB", "DataGator.sqlite")
+
+
+os.chdir("DataGator")
+os.environ["FLASK_APP"] = "index.py"
+os.environ["FLASK_ENV"] = "development"
 
 # Check production and development
 # import redcap.production
 # import redcap.development
 
 # Creat the local configuration database if it hasn't already exist.
-if not os.path.exists("LocalDB/dtconfigure.sqlite"):
+if not os.path.exists(SQLALCHEMY_DATABASE_URI):
+    print(f"Flask database path: {SQLALCHEMY_DATABASE_URI}")
     try:
-        os.chdir("DICOMTransit")
-        subprocess.check_output(["flask", "--help"])
-        subprocess.check_output(["flask", "init-db"])
+        subprocess.check_output(["flask", "db", "upgrade"])
     except Exception as e:
-        raise ValueError("Could not initialize local database")
+        raise ValueError("Could not initialize and update the local database!")
 
 # fixme: gotta be platform independent. Need CentOS validation and Ubuntu.
 DETACHED_PROCESS = 0x00000008
@@ -59,6 +69,6 @@ except Exception as e:
     raise ValueError
 
 # Wait 5s before opening webbrower.
-time.sleep(15)
+time.sleep(5)
 
 webbrowser.open("http://127.0.0.1:5000/")  # Open the webpage
