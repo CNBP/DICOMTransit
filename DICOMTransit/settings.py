@@ -15,7 +15,7 @@ def config_get(variable_name):
     :return:
     """
     from DICOMTransit.LocalDB.schema import CNBP_blueprint
-    from DICOMTransit.LocalDB.API import get_setting
+    from DICOMTransit.LocalDB_DataGator.API import get_setting
     from PythonUtils.env import is_travis, get_travis_setting
 
     # Check if variable is an anticipated variable.

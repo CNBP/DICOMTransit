@@ -1,0 +1,1 @@
+This folder contains APIs and functions related to integration between datagator database and the API interface to retrieve data from them through a mock Flask app by using Flask-SQLAlchemy 

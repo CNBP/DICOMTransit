@@ -4,16 +4,16 @@ from DICOMTransit.LocalDB.query import LocalDB_query
 from DICOMTransit.LocalDB.schema import CNBP_blueprint
 from DICOMTransit.LORIS.validate import LORIS_validation
 from DICOMTransit.settings import config_get
-from PythonUtils.env import load_dotenv_var
 from PythonUtils.intmath import int_incrementor
 from typing import List, Optional
 import json
 
 logger = logging.getLogger()
 
+# todo: refactor this using SQLAlchemy standard format
+
 
 def check_status() -> bool:
-    from DICOMTransit.settings import config_get
 
     # Load local database from .env file
     database_path = config_get("LocalDatabasePath")
@@ -653,20 +653,6 @@ def load_hospital_record_numbers(use_predefined: bool):
     return return_list
 
 
-def get_setting(setting_name: str):
-    """
-    Used to access the dtconfigure_old.sqlite database to retrieve the settings necessary for most other operations.
-    :param setting_name: assumed the string already exist. Prior method need to check that.
-    :return:
-    """
-    # Experimental attempt to replace with SQLALchemy
-    from datagator.test import DICOMTransitConfig
-
-    # Make a query to find all Persons in the database
-    config_latest = DICOMTransitConfig.query.order_by("timestamp").first()
-    return getattr(config_latest, setting_name)
-
-
 """
 # Look for setting variable in the DEFAULT ORDER
 success, records_setting = LocalDB_query.get_all(
@@ -701,6 +687,4 @@ return setting_value
 
 
 if __name__ == "__main__":
-
-    # propose_CNBPID("GregoryLodygensky012 Study")
-    get_setting("DevOrthancIP")
+    pass
