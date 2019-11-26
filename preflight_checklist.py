@@ -5,6 +5,8 @@ import time
 import dotenv
 import webbrowser
 from dotenv import load_dotenv
+from datagator.config import get_DataGator_DataBaseURI
+
 
 # NOTE! This is the setup script to ensure all environment are properly configured and ready to og.
 # Run this before anything.
@@ -27,10 +29,7 @@ if not dotenv.load_dotenv():
     )  # fixme: be more helpful here.
 
 # Path of the database URL is obtained from the environment or using the default string.
-SQLALCHEMY_DATABASE_URI = os.environ.get(
-    "datagator_database"
-) or "sqlite:///" + os.path.join(path_module, "LocalDB", "DataGator.sqlite")
-
+SQLALCHEMY_DATABASE_URI = get_DataGator_DataBaseURI()
 
 os.chdir("DataGator")
 os.environ["FLASK_APP"] = "index.py"
