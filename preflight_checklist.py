@@ -5,7 +5,7 @@ import time
 import dotenv
 import webbrowser
 from dotenv import load_dotenv
-from datagator.config import get_DataGator_DataBaseURI
+from datagator.config_datagator import get_DataGator_DataBaseURI
 
 
 # NOTE! This is the setup script to ensure all environment are properly configured and ready to og.
