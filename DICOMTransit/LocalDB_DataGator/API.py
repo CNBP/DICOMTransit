@@ -10,7 +10,8 @@ def get_setting(setting_name: str):
     """
 
     # Make a query to find the latest setting record from the database
-    config_latest = DICOMTransitConfig.query.order_by("timestamp").first()
+    configs_latest = DICOMTransitConfig.query.order_by("timestamp")
+    config_latest = configs_latest.first()
     return getattr(config_latest, setting_name)
 
 

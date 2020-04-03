@@ -22,11 +22,9 @@ flask-sqlalchemy
 luigi
 flask-mail
 pyjwt
-werkzeug
 wtforms
 flask_login
 flask-migrate
-flask-sqlalchemy
 flask-wtf
 flask-bootstrap
 flask-moment
@@ -34,6 +32,6 @@ flask-babel
 sqlalchemy-utils
 gunicorn
 #flask-debugtoolbar
+flask-restplus
 psycopg2
-python-dotenv
 cryptography
