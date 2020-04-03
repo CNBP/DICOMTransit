@@ -2,17 +2,16 @@ import sys
 import subprocess
 import os
 import time
-import dotenv
 import webbrowser
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from datagator.config import get_DataGator_DataBaseURI
+from pathlib import Path
 
 
 # NOTE! This is the setup script to ensure all environment are properly configured and ready to og.
 # Run this before anything.
 
-
-path_module = os.path.dirname(os.path.realpath(__file__))
+path_module = Path(os.path.dirname(os.path.realpath(__file__)))
 
 # Some preliminary work to automaticly source the binaries. Not working yet. @todo: testing in Win and Linux, for subprocesses.
 sys.path.append(f"{path_module}/BinDependency/dcm2nii")
@@ -22,16 +21,17 @@ sys.path.append(f"{path_module}/datagator")
 sys.path.append(f"{path_module}/PythonUtils")
 sys.path.append(f"{path_module}/DICOMTransit/")
 
-# Check .env exist.
-if not dotenv.load_dotenv():
-    raise ValueError(
-        ".Env file not found. Contact DICOMTransit author!"
-    )  # fixme: be more helpful here.
+
+load_dotenv(find_dotenv())
 
 # Path of the database URL is obtained from the environment or using the default string.
 SQLALCHEMY_DATABASE_URI = get_DataGator_DataBaseURI()
 
 os.chdir("datagator")
+# Check datagator/.env exist.
+path_datagator_env = path_module / "datagator" / ".env"
+if not path_datagator_env.exists():
+    path_datagator_env.touch()
 os.environ["FLASK_APP"] = "index.py"
 os.environ["FLASK_ENV"] = "development"
 

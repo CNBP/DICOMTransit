@@ -10,11 +10,9 @@ logger = logging.getLogger()
 
 
 class LORIS_instrument:
-
     @staticmethod
     def upload_entry():
-
-
+        pass
 
 
 # Only executed when running directly.
