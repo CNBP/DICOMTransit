@@ -1,0 +1,88 @@
+version: '3.7'
+# This is the Docker-Compose orchestration of CNBP Data Upload Platform
+# This version does rely on the image from DockerHub and is a LOCAL BUILD
+# Last updated: 2020-04-09T200332EST
+# Maintainer: Yang Ding (it@cnbp.ca)
+
+services:
+
+    # This is the orthanc database service which we will use to deploy
+    #
+
+    orthancdb:
+        # Orthanc
+        # Documentation at: https://book.orthanc-server.com/users/docker.html
+        # Osimis Orthanc is a more complete package at:
+
+        # docker run --publish=80:8042 --publish=104:4242 osimis/orthanc
+        image: osimis/orthanc:20.4.0
+        restart: unless-stopped
+        # Environmental variables to configure the settings for various modules.
+        # SQLite-based Index and filesystem-based Storage backends
+        # https://osimis.atlassian.net/wiki/spaces/OKB/pages/26738689/How+to+use+osimis+orthanc+Docker+images
+        environment:
+            - NAME=My Orthanc
+            - WVB_ENABLED=true
+            - DICOM_AET=MY_ORTHANC
+            - AC_REGISTERED_USERS={${Orthanc_User}:${Orthanc_Password}}
+        networks:
+            - backend
+        ports:
+            - ${Ext_Port_DICOM}:4242
+            - ${Ext_Port_HTTP_Orthanc}:8042
+
+        volumes:
+            - orthanc-storage:/var/lib/orthanc/db:Z
+
+
+    # The loris frontned is HARDCODED to be recognized in subroutines as "loris" DO NOT CHANGE THIS NAME.
+    DICOMTransit:
+         # Container name and label
+        #container_name: LORIS_${tag}
+
+        # Building instructions.
+        build:
+            context: ../
+            dockerfile: DockerBuilds/Dockerfile.DICOMTransit
+        # restart: unless-stopped
+        # Where to push eventually.
+        image: neonatalbrainplatform/DICOMTransit:v01
+
+        networks:
+            - backend
+
+        depends_on:
+            - orthancdb
+
+        volumes:
+            - DTvolume:/DT
+
+        ports:
+            - ${Ext_Port_HTTP_DICOMTransit}:80
+            - ${Ext_Port_HTTPS}:443
+
+
+volumes:
+    # FOR THE LOCATION OF ORTHANC DATA STORAGE!
+    # This is where we specify the persistent volume reside and the name which they share under
+    orthanc-storage:
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: ${folder_orthanc}
+    # This is where we specify the persistent volume reside and the name which they share under
+    DTvolume:
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: ${folder_dt}
+
+# Networks allow connection with EXTERNAL containers and PROJECTS
+networks:
+    backend:
+        driver: "bridge"
+
+# To run:
+# docker-compose -f ComposeCNBP.yml --verbose build

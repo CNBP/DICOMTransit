@@ -1,4 +1,3 @@
-from DICOMTransit.redcap.query_common import get_fields
 from DICOMTransit.redcap import development as environment
 from redcap import Project  # note this is from PyCap.redcap
 from typing import List

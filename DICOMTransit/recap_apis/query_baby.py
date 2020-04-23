@@ -1,10 +1,5 @@
 from typing import List
-from DICOMTransit.redcap.query_common import (
-    filter_records,
-    get_recordfields_common,
-    get_fields,
-    get_records,
-)
+from DICOMTransit.recap_apis.query_common import filter_records, ProjectMixins
 from DICOMTransit.redcap import development as environment
 from redcap import Project  # note this is from PyCap.redcap
 
@@ -13,7 +8,7 @@ These functions deal with the accessing and basic interaction with the BABY tabl
 """
 
 
-class baby_project:
+class baby_project(ProjectMixins):
     """
     One baby can have many admissions CaseIDs.
     One hospital record can have many CaseIDs.
@@ -38,7 +33,7 @@ class baby_project:
         fields_keyid = ["babyid", "motherid", "baby_patieui"]
 
         # For now, make sure to onyl get the data related to these key ids to reduce load time
-        self.data = get_fields(self.project, fields_keyid)
+        self.data = self.get_fields(fields_keyid)
 
         # if specified, get all the records.
         if get_all_field:
@@ -71,9 +66,7 @@ class baby_project:
         :param filter_value:
         :return:
         """
-        self.data = get_recordfields_common(
-            self.project, field_data, field_filter, filter_value
-        )
+        self.data = self.get_recordfields_common(field_data, field_filter, filter_value)
 
     def get_PatientUI_with_BabyID(self, BabyID: str or List[str]):
         """

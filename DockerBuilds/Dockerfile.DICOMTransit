@@ -1,0 +1,52 @@
+# Use an official Python runtime as a parent image
+FROM python:3.8.2-buster
+
+LABEL maintainer="Yang Ding, it@cnbp.ca"
+LABEL description="This bundles the basic DICOMTransit setup."
+LABEL type="DICOMTransit Base Image"
+
+# Update APT-GET as root, install SUDO
+RUN apt-get update
+
+# ARG ARGS_MySQLHost=PlaceHolderHost
+
+# install dependencies:
+RUN apt-get update && apt-get install -y dcmtk unixodbc-dev
+
+# 1st add, to allow greater layer reuse.
+ADD ./requirements.txt /DT/requirements.txt
+
+# Set the working directory to /app
+WORKDIR /DT/
+
+# Run pip install
+RUN pip install -r requirements.txt
+
+
+# 2nd add, adding the more volatile files that can be updated. Greatly reduce rebuild speed.
+# Copy the current directory contents into the container at /app
+ADD . /DT
+#ADD ./BinDependency /DT/BinDependency
+#ADD ./DICOMTransit /DT/DICOMTransit
+#ADD ./datagator /DT/datagator
+#ADD ./PythonUtils /DT/PythonUtils
+#COPY preflight_checklist.py requirements.txt /DT/
+
+
+
+# Run app.py when the container launches
+# CMD ["python", "./Integration/fsm.py"]
+EXPOSE 5000
+WORKDIR /DT
+RUN ["python", "preflight_checklist.py"]
+WORKDIR /DT/datagator/
+
+CMD ["flask", "run", "--host", "0.0.0.0"]
+
+# To build this, use command at the ROOT repo directory
+# Because the context issue. Make sure to include the DOT at the end.
+###########
+# docker build -f DockerBuilds/Dockerfile.DICOMTransit .
+###########
+# To run
+# docker run -p 55000:5000 XXXXXXX

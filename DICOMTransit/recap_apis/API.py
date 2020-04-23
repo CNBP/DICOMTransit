@@ -1,8 +1,15 @@
-from DICOMTransit.redcap.query_admission import admission_project
-from DICOMTransit.redcap.query_baby import baby_project
-from DICOMTransit.redcap.query_mother import mother_project
-from DICOMTransit.redcap.query_CNFUN import CNFUN_project
+from DICOMTransit.recap_apis.query_admission import admission_project
+from DICOMTransit.recap_apis.query_baby import baby_project
+from DICOMTransit.recap_apis.query_mother import mother_project
+from DICOMTransit.recap_apis.query_CNFUN import CNFUN_project
 from typing import List
+from DICOMTransit.redcap.development import (
+    REDCAP_TOKEN_CNN_ADMISSION,
+    REDCAP_TOKEN_CNFUN_PATIENT,
+    REDCAP_TOKEN_CNN_BABY,
+    REDCAP_TOKEN_CNN_MASTER,
+    REDCAP_TOKEN_CNN_MOTHER,
+)
 
 """
 Higher level wrapper of query_admission for simple to use API function calls against the admission tables 
@@ -15,14 +22,25 @@ class CNNCNFUN_data_retrieval:
     Upon initialization, it will then get any information based on needed.
     """
 
-    def __init__(self, CNBPID: str or List[str]):
+    def __init__(
+        self, CNBPID: str or List[str], Tokens=None, URL=None,
+    ):
+        if Tokens is None:
+            Tokens = {
+                "admission": REDCAP_TOKEN_CNN_ADMISSION,
+                "baby": REDCAP_TOKEN_CNN_BABY,
+                "mother": REDCAP_TOKEN_CNN_MOTHER,
+                "cnfun": REDCAP_TOKEN_CNFUN_PATIENT,
+            }
+        if URL is None:
+            URL = "https://redcap.cnbp.ca/api/"
 
         # Initialize the CNBPID and then create the respective projects using default credentials (without retrieving bulk of the data)
         self.CNBPIDs = CNBPID
-        self.admission_project = admission_project()
-        self.baby_project = baby_project()
-        self.mother_project = mother_project()
-        self.CNFUN_project = CNFUN_project()
+        self.admission_project = admission_project(Token=Tokens["admission"], URL=URL)
+        self.baby_project = baby_project(Token=Tokens["baby"], URL=URL)
+        self.mother_project = mother_project(Token=Tokens["mother"], URL=URL)
+        self.CNFUN_project = CNFUN_project(Token=Tokens["cnfun"], URL=URL)
 
         # Use CNBPID to retrieve the other two key IDs.
         self.caseIDs = self.admission_project.get_caseIDwithCNBPID(CNBPID)
@@ -80,3 +98,7 @@ def test_CNNCNFUN_data_retrieval():
     d = retrieval.get_mother_data()
     assert len(d) > 0
     print("Completed")
+    print(a)
+    print(b)
+    print(c)
+    print(d)

@@ -15,10 +15,10 @@ logger = logging.getLogger()
 
 class UT_LORISAPI(unittest.TestCase):
     def test_CheckLORISStatus(self):
-        return check_online_status()
+        assert check_status()
 
     def test_CheckNetworkStatus(self):
-        return check_status()
+        assert check_online_status()
 
     def test_GetTimePoint(self):
         return get_all_timepoints(471400)

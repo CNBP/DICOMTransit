@@ -5,6 +5,7 @@ import requests
 from DICOMTransit.LORIS.helper import LORIS_helper
 from DICOMTransit.settings import config_get
 from urllib.parse import urljoin
+from furl import furl
 
 logger = logging.getLogger()
 
@@ -26,7 +27,11 @@ class LORIS_query:
 
         # Login URL
         url = config_get("LORISurl")
-        updated_url = url + "login"
+
+        if type(url) is furl:
+            updated_url = url.url + "login"
+        else:
+            updated_url = url + "login"
 
         # requests style login # NOT WORKING!
         r = requests.post(updated_url, data=data)

@@ -1,4 +1,4 @@
-from DICOMTransit.redcap.query_common import filter_records, get_fields
+from DICOMTransit.recap_apis.query_common import filter_records, ProjectMixins
 from DICOMTransit.redcap import development as environment
 from redcap import Project  # note this is from PyCap.redcap
 from typing import List
@@ -8,7 +8,7 @@ This class of functions are responsible of retrieving relevant data structures f
 """
 
 
-class CNFUN_project:
+class CNFUN_project(ProjectMixins):
     """
     One baby can have many admissions CaseIDs.
     One hospital record can have many CaseIDs.
@@ -33,7 +33,7 @@ class CNFUN_project:
         fields_keyid = ["patientID", "cf_p_cnnpatientui"]
 
         # For now, make sure to onyl get the data related to these key ids to reduce load time
-        self.data = get_fields(self.project, fields_keyid)
+        self.data = self.get_fields(fields_keyid)
 
         # if specified, get all the records.
         if get_all_field:
