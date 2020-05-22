@@ -29,18 +29,23 @@ SQLALCHEMY_DATABASE_URI = get_DataGator_DataBaseURI()
 
 os.chdir("datagator")
 
-# Check datagator .env exist.
+# Check datagator .env exist, if not exist, creates it.
 path_datagator_env = path_module / "datagator" / ".env"
 if not path_datagator_env.exists():
+    print("DataGator .env does not appear to exist. Create empty place holder.")
     path_datagator_env.touch()
 
 # Check dictomtransit .env exist.
 path_dicomtransit_env = path_module / ".env"
 if not path_dicomtransit_env.exists():
+    print("DICOMTransit .env does not appear to exist. Create empty place holder.")
     path_dicomtransit_env.touch()
     with open(path_dicomtransit_env, "w") as file_env:
         file_env.write(
             f"datagator_database={path_module / 'LocalDB' / 'dtconfigure.sqlite'}\nconfig_table=configuration"
+        )
+        print(
+            "DICOMTransit .env updated with the default relative 'LocalDB' folder path, and configuration table."
         )
 os.environ["FLASK_APP"] = "index.py"
 os.environ["FLASK_ENV"] = "development"

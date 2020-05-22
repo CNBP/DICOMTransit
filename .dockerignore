@@ -1,4 +1,4 @@
-.git
+
 .idea
 .pytest_cache
 /DockerBuilds
@@ -19,3 +19,4 @@ logo.png
 .env
 **/developemnt.py
 **/production.py
+**/.git/

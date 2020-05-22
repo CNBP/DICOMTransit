@@ -8,8 +8,6 @@ LABEL type="DICOMTransit Base Image"
 # Update APT-GET as root, install SUDO
 RUN apt-get update
 
-# ARG ARGS_MySQLHost=PlaceHolderHost
-
 # install dependencies:
 RUN apt-get update && apt-get install -y dcmtk unixodbc-dev
 
@@ -25,28 +23,44 @@ RUN pip install -r requirements.txt
 
 # 2nd add, adding the more volatile files that can be updated. Greatly reduce rebuild speed.
 # Copy the current directory contents into the container at /app
-ADD . /DT
-#ADD ./BinDependency /DT/BinDependency
-#ADD ./DICOMTransit /DT/DICOMTransit
-#ADD ./datagator /DT/datagator
-#ADD ./PythonUtils /DT/PythonUtils
-#COPY preflight_checklist.py requirements.txt /DT/
-
-
+# ADD . /DT
+ADD ./BinDependency /DT/BinDependency
+ADD ./DICOMTransit /DT/DICOMTransit
+ADD ./datagator /DT/datagator
+ADD ./PythonUtils /DT/PythonUtils
 
 # Run app.py when the container launches
-# CMD ["python", "./Integration/fsm.py"]
 EXPOSE 5000
 WORKDIR /DT
-RUN ["python", "preflight_checklist.py"]
+
+# Ensure the path has been updated to include everything ever needed.
+# this include: /DT, /DT/PythonUtils, /DT/DICOMTransit, /DT/BinDependency/dcm2nii, /DT/BinDependency/dcm2niix, /DT/BinDependency/dcmtoolkit
+ENV PATH="/DT:/DT/PythonUtils:/DT/DICOMTransit:/DT/BinDependency/dcm2nii/:/DT/BinDependency/dcm2niix:/DT/BinDependency/dcmtoolkit:${PATH}"
+
 WORKDIR /DT/datagator/
 
-CMD ["flask", "run", "--host", "0.0.0.0"]
+# This will run the flask db upgrade process
+RUN ./upgradedb.sh
 
+# IMPORTANT
+# These two system level pth variables will be loaded by the program
+ENV datagator_database="/DT/datagator/app.db"
+ENV config_table=configuration
+
+ENV FLASK_APP=index.py
+ENV FLASK_ENV=development
+
+ENTRYPOINT ["flask", "run", "--host=0.0.0.0"]
+
+###########
+# To Build: make sure it is in the root directory of the repository
 # To build this, use command at the ROOT repo directory
 # Because the context issue. Make sure to include the DOT at the end.
 ###########
-# docker build -f DockerBuilds/Dockerfile.DICOMTransit .
+# docker build -f DockerBuilds/Dockerfile.DICOMTransit -t neonatalbrainplatform/dicomtransit:v0.0.2 .
+# docker build -f DockerBuilds/Dockerfile.DICOMTransit -t neonatalbrainplatform/dicomtransit:latest .
+
 ###########
-# To run
-# docker run -p 55000:5000 XXXXXXX
+# To run the actual docker.
+###########
+# docker run -p 54300:5000 neonatalbrainplatform/dicomtransit:latest

@@ -4,3 +4,6 @@
 [submodule "datagator"]
 	path = datagator
 	url = https://github.com/CNBP/datagator
+[submodule "DICOMTransit/RCAPI"]
+	path = DICOMTransit/RCAPI
+	url = https://github.com/CNBP/RCAPI

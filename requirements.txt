@@ -35,3 +35,4 @@ gunicorn
 flask-restplus
 psycopg2
 cryptography
+email_validator

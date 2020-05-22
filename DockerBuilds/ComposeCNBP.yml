@@ -21,10 +21,10 @@ services:
         # SQLite-based Index and filesystem-based Storage backends
         # https://osimis.atlassian.net/wiki/spaces/OKB/pages/26738689/How+to+use+osimis+orthanc+Docker+images
         environment:
-            - NAME=My Orthanc
+            - NAME=CNBPLocalOrthanc
             - WVB_ENABLED=true
             - DICOM_AET=MY_ORTHANC
-            - AC_REGISTERED_USERS={${Orthanc_User}:${Orthanc_Password}}
+            - AC_REGISTERED_USERS={"${Orthanc_User}":"${Orthanc_Password}"}
         networks:
             - backend
         ports:
@@ -46,7 +46,7 @@ services:
             dockerfile: DockerBuilds/Dockerfile.DICOMTransit
         # restart: unless-stopped
         # Where to push eventually.
-        image: neonatalbrainplatform/DICOMTransit:v01
+        image: neonatalbrainplatform/dicomtransit:latest
 
         networks:
             - backend
@@ -58,7 +58,7 @@ services:
             - DTvolume:/DT
 
         ports:
-            - ${Ext_Port_HTTP_DICOMTransit}:80
+            - ${Ext_Port_HTTP_DICOMTransit}:5000
             - ${Ext_Port_HTTPS}:443
 
 
@@ -84,5 +84,12 @@ networks:
     backend:
         driver: "bridge"
 
-# To run:
+#####################
+# To Locally build:
+#####################
 # docker-compose -f ComposeCNBP.yml --verbose build
+
+#####################
+# To run:
+#####################
+# docker-compose -f ComposeCNBP.yml up
