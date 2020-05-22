@@ -7,15 +7,15 @@ An intermediate server that built around Orthanc server to include several commo
 
 ## Planned features and other details forthcoming:
 - @TODO: Sphinx documentation
-- @TODO: Everything should be containerized in an latest Ubuntu OS.
-- @TODO: Everything should be containerized in an latest Docker
 - @TODO: HeuDiCom conversion of incoming DICOM files into BIDS compatible format.
 - @TODO: Automated BIDS validation. 
 
+## Deployment: 
+- Containerized and deployable via Docker or Docker-Compose.
+- Bundled Osimis Orthanc for MRI console connectivity
 
 ## Incoming Data Stream:
 - Listen to Orthanc server at the default configuration.  
-
 
 ## Automated Conversion, DICOM Manipuation:
 - Basic anonymization routine to guarantee the removal of the NAME and SUBJECT ID for now. 
