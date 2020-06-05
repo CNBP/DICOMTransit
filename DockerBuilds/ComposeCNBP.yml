@@ -1,7 +1,7 @@
 version: '3.7'
 # This is the Docker-Compose orchestration of CNBP Data Upload Platform
 # This version does rely on the image from DockerHub and is a LOCAL BUILD
-# Last updated: 2020-04-09T200332EST
+# Last updated: 2020-06-04T214455EST
 # Maintainer: Yang Ding (it@cnbp.ca)
 
 services:
@@ -32,11 +32,14 @@ services:
         ports:
             - ${Ext_Port_DICOM}:4242
             - ${Ext_Port_HTTP_Orthanc}:8042
-
         volumes:
-            - orthanc-storage:/var/lib/orthanc/db:Z
+            - orthanc-storage:/var/lib/orthanc/db
 
 
+    # The loris frontned is HARDCODED to be recognized in subroutines as "loris" DO NOT CHANGE THIS NAME.
+    DICOMTransit:
+         # Container name and label
+        #container_name: LORIS_${tag}
 
         # Building instructions.
         build:
@@ -45,7 +48,7 @@ services:
         # restart: unless-stopped
         # Where to push eventually.
         image: neonatalbrainplatform/dicomtransit:latest
-
+        restart: unless-stopped
         networks:
             - backend
 
@@ -69,6 +72,14 @@ volumes:
             type: none
             o: bind
             device: ${folder_orthanc}
+
+    # This is where we specify the persistent volume reside and the name which they share under
+    DTvolume:
+        driver: local
+        driver_opts:
+            type: none
+            o: bind
+            device: ${folder_dt}
 
 # Networks allow connection with EXTERNAL containers and PROJECTS
 networks:
